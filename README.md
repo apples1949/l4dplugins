@@ -7,7 +7,7 @@ If you need to pick up
 可选-修复类(v1.0.2)(修复玩家正在连接时不出特感)    
 必选-修复类(v1.0.4)(幸存者闲置修复)  
 必选-修复类(v1.1.1)(修复女巫丢失目标)//witch_prevent_target_loss.smx-4人关  
-必选-修复类(v1.2.2-git135)(linux版本)(修复c6m1实体过多任务失败炸服)
+必选-修复类(v1.2.2-git135)(linux版本)(修复c6m1实体过多任务失败炸服)  
 必选-修复类(v1.4)(修复女巫攻击错误的惊扰者)//Witch_Target_patch.smx-4人关  
 必选-修复类(v1.7)(幸存者身份修复)//l4d_survivor_identity_fix.smx-4人关  
 必选-修复类(v2.0.1)(修复电击器救起存活的幸存者)  
@@ -52,7 +52,7 @@ If you need to pick up
 [addons]l4d2_item_hint.smx [addons]l4d_use_priority.smx 标记物品特感和位置插件和修复插件 https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_item_hint   
 [addons]l4d_bunnyhop.smx 连跳插件 https://forums.alliedmods.net/showthread.php?t=298555  
 [addons]TDR2.smx 坦克伤害统计 https://forums.alliedmods.net/showthread.php?p=2673801#post2673801//测试  
-[addons]l4d_witch_damage_announce.smx 女巫伤害统计 https://github.com/SirPlease/L4D2-Competitive-  Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp  
+[addons]l4d_witch_damage_announce.smx 女巫伤害统计 https://github.com/SirPlease/L4D2-Competitive- Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp  
 [addons]l4d_ffannounce.smx 友伤显示 https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_ffannounce  
 [addons]l4d2_sgfix.smx 修复sg552换弹问题 https://forums.alliedmods.net/showthread.php?p=1551119  
 [addons]lfd_both_fixSG552.smx 修复sg552高tick下换弹问题 https://forums.alliedmods.net/showthread.php?t=322141  
