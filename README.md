@@ -57,7 +57,7 @@
 [addons]l4d_ffannounce.smx 友伤显示 https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_ffannounce  
 [addons]l4d2_sgfix.smx 修复sg552换弹问题 https://forums.alliedmods.net/showthread.php?p=1551119  
 [addons]lfd_both_fixSG552.smx 修复sg552高tick下换弹问题 https://forums.alliedmods.net/showthread.php?t=322141  
-[addons]l4d2_msg_system_zh.smx 各种消息提示 https://github.com/9-BAKA/sourcemod/blob/master/l4d2_msg_system_zh.sp  
+[addons]l4d2_msg_system_zh.smx 各种消息提示 https://github.com/9-BAKA/sourcemod/blob/master/l4d2_msg_system_zh.sp (其实才发现不需要）  
 [addons]l4d_coop_markers.smx 路程提示 https://forums.alliedmods.net/showthread.php?t=321288  
 [addons]l4d_headshot_buff 爆头提示音 https://forums.alliedmods.net/showthread.php?t=336523  
 [addons]l4d_gear_transfer.smx 按键给物品 https://forums.alliedmods.net/showthread.php?t=137616  
