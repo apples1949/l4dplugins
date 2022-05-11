@@ -361,9 +361,9 @@ public int Menu_TopItemHandler(TopMenu topmenu, TopMenuAction action, TopMenuObj
 		if (object_id == director_menu)
 			Format(buffer, maxlength, "僵尸管理");
 		else if (object_id == spawn_special_infected_menu)
-			Format(buffer, maxlength, "生成特殊僵尸");
-		else if (object_id == spawn_uncommon_infected_menu)
 			Format(buffer, maxlength, "生成特感");
+		else if (object_id == spawn_uncommon_infected_menu)
+			Format(buffer, maxlength, "生成特殊僵尸");
 		else if (object_id == spawn_melee_weapons_menu)
 			Format(buffer, maxlength, "生成近战");
 		else if (object_id == spawn_weapons_menu)
@@ -818,7 +818,7 @@ void Do_EnableAutoPlacement(int client, bool value) {
 	if (value == true)
 		NotifyPlayers(client, "自动放置感染者已启动.");
 	else
-		NotifyPlayers(client, "自ID哦放置感染者已关闭");
+		NotifyPlayers(client, "自动放置感染者已关闭");
 	//LogAction(client, -1, "(%L) set %s to %i", client, "a4d_automatic_placement", value);	
 }
 
@@ -1129,7 +1129,7 @@ public Action Menu_CreateDirectorMenu(int client, int args) {
 	if (director_force_tank.BoolValue) { menu.AddItem("ft", "停止导演系统在本局生成坦克"); } else { menu.AddItem("ft", "强制导演系统在本局生成一个坦克"); }
 	if (director_force_witch.BoolValue) { menu.AddItem("fw", "停止导演系统在本局生成女巫"); } else { menu.AddItem("fw", "强制导演系统在本局生成一个女巫"); }
 	if (always_force_bosses.BoolValue) { menu.AddItem("fd", "强制停止持续生成特感"); } else { menu.AddItem("fw", "强制持续生成特感"); }
-	menu.AddItem("mz", "本局中设定更多的僵尸");	
+	menu.AddItem("mz", "设定更多的僵尸");	
 	menu.Display( client, MENU_TIME_FOREVER);
 	return Plugin_Handled;
 }
