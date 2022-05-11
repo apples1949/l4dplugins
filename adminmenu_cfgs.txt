@@ -1,0 +1,34 @@
+/**
+ * List config files here (relative to moddir) to have them added to the exec config menu list
+ * Left side is the filename, right side is the text to be added to the menu
+ */
+Configs
+{
+	"cfg/server.cfg"			"重载server.cfg"
+	"cfg/admincfg/duorenon.cfg"			"多人配置开启"
+	"cfg/admincfg/duorenoff.cfg"			"多人配置关闭"
+	"cfg/admincfg/bhopon.cfg"			"连跳开启"
+	"cfg/admincfg/bhopoff.cfg"			"连跳关闭"	
+	"cfg/admincfg/antiffon.cfg"			"反伤开启"
+	"cfg/admincfg/antiffoff.cfg"			"反伤关闭"
+	"cfg/admincfg/sbfixon.cfg"			"bot二次加强开启"
+	"cfg/admincfg/sbfixoff.cfg"			"bot二次加强关闭"
+	"cfg/admincfg/specialspatchon.cfg"			"特感主动攻击开启"
+	"cfg/admincfg/specialspatchoff.cfg"			"特感主动攻击关闭"
+	"cfg/admincfg/antimeleeon.cfg"			"近战对坦克伤害控制开启"
+	"cfg/admincfg/antimeleeoff.cfg"			"近战对坦克伤害关闭"
+	"cfg/admincfg/moreammoon.cfg"			"动态多倍补给开启"
+	"cfg/admincfg/moreammooff.cfg"			"动态多倍补给关闭"
+	"cfg/admincfg/nekoon.cfg"			"Neko多特开启"
+	"cfg/admincfg/nekooff.cfg"			"Neko多特关闭"
+	"cfg/admincfg/autoshoton.cfg"			"半自动武器连射开启"
+	"cfg/admincfg/autoshotoff.cfg"			"半自动武器连射关闭"
+	"cfg/admincfg/ffannounceon.cfg"			"友伤显示开启"
+	"cfg/admincfg/ffannounceoff.cfg"			"友伤显示关闭"
+	"cfg/admincfg/incapmagnumon.cfg"			"倒地马格南开启"
+	"cfg/admincfg/incapmagnumoff.cfg"			"倒地马格南关闭"
+	"cfg/admincfg/multslotson.cfg"			"多人插件开启"
+	"cfg/admincfg/multslotsoff.cfg"			"多人插件关闭"
+	"cfg/admincfg/tankhealthon.cfg"			"坦克动态血量开启"
+	"cfg/admincfg/tankhealthoff.cfg"			"坦克动态血量关闭"
+}
