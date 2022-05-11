@@ -52,8 +52,8 @@
 [addons]mvpnowy.smx 去除望夜广告的排行榜插件 https://github.com/apples1949/l4dplugins/blob/main/mvpnowy.sp  
 [addons]l4d2_item_hint.smx [addons]l4d_use_priority.smx 标记物品特感和位置插件和修复插件 https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_item_hint   
 [addons]l4d_bunnyhop.smx 连跳插件 https://forums.alliedmods.net/showthread.php?t=298555  
-[addons]TDR2.smx 坦克伤害统计 https://forums.alliedmods.net/showthread.php?p=2673801#post2673801//测试  
-[addons]l4d_witch_damage_announce.smx 女巫伤害统计 https://github.com/SirPlease/L4D2-Competitive- Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp  
+[addons]l4d2_tda.sp 支持多人坦克伤害统计 https://github.com/apples1949/l4dplugins/blob/main/l4d2_tda.sp （某群友给的不方便透露）//测试  
+[addons]l4d_witch_damage_announce.smx 女巫伤害统计 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp （zm版本不支持多人 用的是之前smside论坛找的支持多人的插件 忘了存源码）  
 [addons]l4d_ffannounce.smx 友伤显示 https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_ffannounce  
 [addons]l4d2_sgfix.smx 修复sg552换弹问题 https://forums.alliedmods.net/showthread.php?p=1551119  
 [addons]lfd_both_fixSG552.smx 修复sg552高tick下换弹问题 https://forums.alliedmods.net/showthread.php?t=322141  
