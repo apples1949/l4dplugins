@@ -69,7 +69,7 @@
 [addons]show_mic.smx/[addons]ThirdPersonShoulder_Detect.smx 显示谁在说话 https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic  
 [addons]l4d2_skill_detect.smx/[addons]l4d2_stats.smx 特殊操作提示 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_skill_detect.sp/https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_stats.sp  
 [addons]l4d2_ellis_hunter_bandaid_fix.smx ellis起身修复 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ellis_hunter_bandaid_fix.sp  
-[addons]drop_secondary.smx 死亡掉落副武器 https://github.com/umlka/l4d2/tree/main/drop_secondary  
+死亡掉落副武器 https://steamcommunity.com/sharedfiles/filedetails/?id=2608563050  
 [addons]l4d_nightvision.smx 夜视仪 https://github.com/Dragoon666/l4d2_supercoop_standard/blob/win/left4dead2/addons/sourcemod/scripting/_sc_l4d_nightvision.sp  
 [addons]l4d_automatic_weapons.smx 部分单发武器连射   https://github.com/AldoDiaz01/Left4Dead2_Sourcemod_Plugins/blob/master/left4dead2/addons/sourcemod/scripting/l4d_automatic_weapons.sp  
 [addons]anti_bot_medkit.smx 阻止ai打包 https://github.com/SamuelXXX/l4d2_supercoop_for2/blob/master/left4dead2/addons/sourcemod/scripting/_sc_anti_bot_medkit.sp  
