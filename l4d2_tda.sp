@@ -49,11 +49,6 @@ public void OnMapStart()
 {    
 	ClearTankDamage(); 
 } 
-public void OnClientDisconnect_Post(int client)  
-{    
-	if (!g_bIsTankInPlay || client != g_iTankClient) return;
-	CreateTimer(0.1, Timer_CheckTank, client); // Use a delayed timer due to bugs where the tank passes to another player
-} 	
 public void Event_PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!g_bIsTankInPlay) 
@@ -82,7 +77,7 @@ public void Event_PlayerKilled(Event event, const char[] name, bool dontBroadcas
 
 	int victim = GetClientOfUserId(GetEventInt(event, "userid")); 
 
-	if(victim ==0) return;
+	if(victim == 0) return;
 	if  (!IsTank(victim)) return;
 	// Award the killing blow's damage to the attacker; we don't award
 	// damage from player_hurt after the tank has died/is dying
