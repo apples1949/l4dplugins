@@ -547,14 +547,14 @@ public Action Vocalize_Listener(int client, const char[] command, int argc)
 							}
 							else if (StrContains(sEntModelName, "/melee/") != -1)   // entity is not in the listb(custom melee weapon model)
 							{
-								FormatEx(sItemName, sizeof sItemName, "%s", "Melee!");
+								FormatEx(sItemName, sizeof sItemName, "%s", "近战");
 								fHeight = 5.0;
 
 								bIsVaildItem = true;
 							}
 							else if (StrContains(sEntModelName, "/weapons/") != -1) // entity is not in the list (custom weapom model)
 							{
-								FormatEx(sItemName, sizeof sItemName, "%s", "Weapons!");
+								FormatEx(sItemName, sizeof sItemName, "%s", "武器");
 								fHeight = 10.0;
 
 								bIsVaildItem = true;
@@ -1351,7 +1351,7 @@ void CreateInstructorHint(int client, const float vOrigin[3], const char[] sItem
 		{
 			if( Create_info_target(iEntity, vOrigin, sTargetName, g_fSpotMarkGlowTimer) )
 			{
-				FormatEx(sCaption, sizeof sCaption, "%N Marked something here", client);
+				FormatEx(sCaption, sizeof sCaption, "%N在这里做了标记", client);
 				Create_env_instructor_hint(iEntity, view_as<EHintType>(eSpotMarker), vOrigin, sTargetName, g_sSpotMarkInstructorIcon, sCaption, g_sSpotMarkInstructorColor, g_fSpotMarkGlowTimer, g_fSpotMarkUseRange);
 			}
 		}
