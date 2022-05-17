@@ -60,7 +60,7 @@
 [addons]l4d2_msg_system_zh.smx 各种消息提示 https://github.com/9-BAKA/sourcemod/blob/master/l4d2_msg_system_zh.sp (其实才发现不需要）  
 [addons]l4d_coop_markers.smx 路程提示 https://forums.alliedmods.net/showthread.php?t=321288  
 [addons]l4d_headshot_buff 爆头提示音 https://forums.alliedmods.net/showthread.php?t=336523  
-[addons]l4d_gear_transfer.smx 按键给物品 https://forums.alliedmods.net/showthread.php?t=137616  
+[addons]l4d_gear_transfer.smx 按键给物品 https://github.com/apples1949/l4dplugins/blob/main/l4d_gear_transfer.sp 自己汉化cvar说明 顺便改了下翻译问题  
 [addons]l4d2_sb_fix.smx bot加强 https://forums.alliedmods.net/showthread.php?p=2774567#post2774567  
 [addons]l4d2_server_update_checker.smx 服务器自动更新后重启 https://github.com/fdxx/l4d2_plugins/blob/main/l4d2_server_update_checker.sp  
 [addons]anti-friendly_fire.smx 反伤插件 https://github.com/fbef0102/Rotoblin-AZMod/blob/master/SourceCode/scripting-az/anti-friendly_fire.sp  
