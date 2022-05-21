@@ -74,5 +74,6 @@ meleedrop.vpk 死亡掉落副武器 https://steamcommunity.com/sharedfiles/filed
 [addons]l4d_automatic_weapons.smx 部分单发武器连射   https://github.com/AldoDiaz01/Left4Dead2_Sourcemod_Plugins/blob/master/left4dead2/addons/sourcemod/scripting/l4d_automatic_weapons.sp  
 [addons]anti_bot_medkit.smx 阻止ai打包 https://github.com/SamuelXXX/l4d2_supercoop_for2/blob/master/left4dead2/addons/sourcemod/scripting/_sc_anti_bot_medkit.sp  
 [addons]all4dead2.smx 另外个游戏控制插件 https://github.com/apples1949/l4dplugins/blob/main/all4dead2.sp  
+stringpool_fix.smx 修复崩服的一种情况 根据原贴https://forums.alliedmods.net/showthread.php?t=328421 后自改 https://github.com/apples1949/l4dplugins/blob/main/stringpool_fix.sp  
 zmweapon.vpk zm参数小枪 https://steamcommunity.com/sharedfiles/filedetails/?id=2297989083  
 awpandscout.vpk 自改awp325伤害 scout250伤害 写实小僵尸一枪倒 https://github.com/apples1949/l4dplugins/blob/main/awpandscout.vpk  
