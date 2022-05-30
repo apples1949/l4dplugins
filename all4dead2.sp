@@ -352,7 +352,7 @@ public int Menu_CategoryHandler(TopMenu topmenu, TopMenuAction action, TopMenuOb
 	if (action == TopMenuAction_DisplayTitle)
 		Format(buffer, maxlength, "All4Dead菜单:");
 	else if (action == TopMenuAction_DisplayOption)
-		Format(buffer, maxlength, "All4Dead菜单");
+		Format(buffer, maxlength, "All4Dead菜单-apples1949汉化");
 }
 /// Handles what happens someone opens the "All4Dead" category from the menu.
 public int Menu_TopItemHandler(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int client, char[] buffer, int maxlength) {
