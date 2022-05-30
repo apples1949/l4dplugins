@@ -17,29 +17,29 @@
 #define ARMS 			1	//武器
 #define WEAPON			2	//近战
 #define PROPS 			3	//道具
-#define	PISTOL			10	//手枪
-#define	MAGNUM			11	//马格南手枪
-#define	SMG				12	//冲锋枪
-#define	SMGSILENCED		13	//消声冲锋枪
-#define	AddFullCount		14	//满属性体验卡
+#define PISTOL			10	//手枪
+#define MAGNUM			11	//马格南手枪
+#define SMG				12	//冲锋枪
+#define SMGSILENCED		13	//消声冲锋枪
+#define AddFullCount		14	//满属性体验卡
 #define PUMPSHOTGUN1	15	//老式单发霰弹
 #define PUMPSHOTGUN2	16	//新式单发霰弹
-#define	AUTOSHOTGUN1	17	//老式连发霰弹
-#define	AUTOSHOTGUN2	18	//新式连发霰弹
+#define AUTOSHOTGUN1	17	//老式连发霰弹
+#define AUTOSHOTGUN2	18	//新式连发霰弹
 #define HUNTING1		19	//猎枪
-#define	HUNTING2		20	//G3SG1狙击枪
+#define HUNTING2		20	//G3SG1狙击枪
 #define M16				23  //M16
-#define	AK47			24   //AK47
-#define	SCAR			25	//三连发
-#define	AWP			26	//AWP
-#define	grenadelauncher			27	//榴弹
-#define	sniperscout			28	//AWP
-#define	m60			29	//m60
+#define AK47			24   //AK47
+#define SCAR			25	//三连发
+#define AWP			26	//AWP
+#define grenadelauncher			27	//榴弹
+#define sniperscout			28	//AWP
+#define m60			29	//m60
 //补给物品
-#define	ADRENALINE		50	//肾上腺素
-#define	PAINPILLS		51	//药丸
-#define	FIRSTAIDKIT		52	//医疗包
-#define	GASCAN		53	//油桶
+#define ADRENALINE		50	//肾上腺素
+#define PAINPILLS		51	//药丸
+#define FIRSTAIDKIT		52	//医疗包
+#define GASCAN		53	//油桶
 #define LASERLIGHT		54//激光瞄准器
 /** 属性上限 **/
 enum data
@@ -81,11 +81,10 @@ public void OnPluginStart()
 	RegConsoleCmd("say",		Command_Say);
 	RegConsoleCmd("say_team",		Command_SayTeam);
 	HookEvent("player_death", Event_PlayerDeath);
-	HookEvent("round_start", event_RoundStart);
 	HookEvent("mission_lost", EventHook:GiveMoney, EventHookMode_PostNoCopy);
 	HookEvent("map_transition", EventHook:ResetMoney, EventHookMode_PostNoCopy);
 	HookEvent("finale_win", EventHook:ResetMoney, EventHookMode_PostNoCopy);
-	g_BShuiLimit = CreateConVar("BS_limit", "500");
+	g_BShuiLimit = CreateConVar("BS_limit", "750");
 	HookConVarChange(g_BShuiLimit, Cvar_BShuiLimit);
 	BShuiLimit = GetConVarInt(g_BShuiLimit);
 }
@@ -318,7 +317,7 @@ public Action:AddStrength(Client, args)
 	{
 		if (args < 1)
 		{
-			if(player_data[Client][MELEE] + 1 > 5)
+			if(player_data[Client][MELEE] + 1 > 14)
 			{
 				return Plugin_Handled;
 			}
@@ -419,11 +418,12 @@ public Action:MenuFunc_AddStatus(Client)
 	decl String:line[256];
 	Format(line, sizeof(line), "B数: %d", player_data[Client][MONEY]);
 	SetPanelTitle(menu, line);
-
 	Format(line, sizeof(line), "出门近战 (%d/%d)", player_data[Client][MELEE], 14);
 	DrawPanelItem(menu, line);
 	Format(line, sizeof(line), "1砍刀 2斧头 3小刀 4武士刀 5马格南");
+	DrawPanelText(menu, line);
 	Format(line, sizeof(line), "6棒球棒 7板球棒 8撬棍 9吉他 10平底锅");
+	DrawPanelText(menu, line);
 	Format(line, sizeof(line), "11警棍 12高尔夫球棍 13干草叉 14铲子 ");
 	DrawPanelText(menu, line);
 	Format(line, sizeof(line), "杀特回血 (%d/%d)", player_data[Client][BLOOD], 1);
@@ -438,13 +438,13 @@ public Action:MenuFunc_AddStatus(Client)
 //技能加点
 public MenuHandler_AddStatus(Handle:menu, MenuAction:action, Client, param)
 {
-			switch(param)
-			{
+	switch(param)
+	{
 				
-				case 1:	AddStrength(Client, 0);
-				case 2:	AddEndurance(Client, 0);
-				case 3:	ResetBshu(Client, 0);
-			}
+		case 1:	AddStrength(Client, 0);
+		case 2:	AddEndurance(Client, 0);
+		case 3:	ResetBshu(Client, 0);
+	}
 }
 
 /*-----------------------------------------方法区--------------------------------------------------*/
@@ -746,7 +746,7 @@ public CharArmsMenu(Handle:menu, MenuAction:action, param1, param2)
 					}
 					else
 					{
-						BypassAndExecuteCommand(param1, "give", "upgrade_laser_sight");
+						BypassAndExecuteCommand(param1, "upgrade_add", "laser_sight");
 						player_data[param1][MONEY] -= 250;
 						PrintToChatAll("\x04%N\x03花了250点B数为自己的武器添加了激光瞄准器", param1);
 					}
@@ -783,6 +783,7 @@ public ShowTypeMenu(Client,type)
 			Format(money,sizeof(money),"马格南手枪(%d点B数)",50);
 			IntToString(MAGNUM, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
+
 			Format(money,sizeof(money),"UZI冲锋枪(%d点B数)",0);
 			IntToString(SMG, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
@@ -797,7 +798,7 @@ public ShowTypeMenu(Client,type)
 					
 			Format(money,sizeof(money),"二代单发霰弹枪(%d点B数)",0);
 			IntToString(PUMPSHOTGUN2, sMenuEntry, sizeof(sMenuEntry));
-			AddMenuItem(menu, sMenuEntry, money);			}
+			AddMenuItem(menu, sMenuEntry, money);			
 			
 			Format(money,sizeof(money),"一代连发霰弹枪(%d点B数)",200);
 			IntToString(AUTOSHOTGUN1, sMenuEntry, sizeof(sMenuEntry));
@@ -843,6 +844,7 @@ public ShowTypeMenu(Client,type)
 			IntToString(m60, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 		}
+
 		
 		case PROPS:
 		{
