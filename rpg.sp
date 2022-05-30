@@ -524,35 +524,23 @@ public CharArmsMenu(Handle:menu, MenuAction:action, param1, param2)
 				}
 				case SMG:	
 				{	
-					if(BuyCount[param1] == 0)
-					{
 						BypassAndExecuteCommand(param1, "give", "smg");
 						PrintToChatAll("\x04%N\x03白嫖了UZI冲锋枪",param1);
-					}
 				}
 				case SMGSILENCED:	
 				{	
-					if(BuyCount[param1] == 0)
-					{
 						BypassAndExecuteCommand(param1, "give", "smg_silenced");
 						PrintToChatAll("\x04%N\x03白嫖了SMG冲锋枪",param1);
-					}
 				}
 				case PUMPSHOTGUN1:
 				{
-					if(BuyCount[param1] == 0)
-					{
 						BypassAndExecuteCommand(param1, "give", "pumpshotgun");
 						PrintToChatAll("\x04%N\x03白嫖了一代单发霰弹枪",param1);
-					}
 				}
 				case PUMPSHOTGUN2:
 				{
-					if(IsSurvivor(param1) && BuyCount[param1] == 0)
-					{
 						BypassAndExecuteCommand(param1, "give", "shotgun_chrome");
 						PrintToChatAll("\x04%N\x03白嫖了二代单发霰弹枪",param1);
-					}
 				}
 				case AUTOSHOTGUN1:
 				{
@@ -760,7 +748,7 @@ public CharArmsMenu(Handle:menu, MenuAction:action, param1, param2)
 					{
 						BypassAndExecuteCommand(param1, "give", "upgrade_laser_sight");
 						player_data[param1][MONEY] -= 250;
-						PrintToChatAll("\x04%N\x03花了200点B数购买了激光瞄准器", param1);
+						PrintToChatAll("\x04%N\x03花了250点B数为自己的武器添加了激光瞄准器", param1);
 					}
 				}
 				}
