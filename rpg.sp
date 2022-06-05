@@ -17,30 +17,35 @@
 #define ARMS 			1	//武器
 #define WEAPON			2	//近战
 #define PROPS 			3	//道具
-#define PISTOL			10	//手枪
-#define MAGNUM			11	//马格南手枪
-#define SMG				12	//冲锋枪
-#define SMGSILENCED		13	//消声冲锋枪
-#define AddFullCount		14	//满属性体验卡
+#define	PISTOL			10	//手枪
+#define	MAGNUM			11	//马格南手枪
+#define	SMG				12	//冲锋枪
+#define	SMGSILENCED		13	//消声冲锋枪
+#define	AddFullCount		14	//满属性体验卡
 #define PUMPSHOTGUN1	15	//老式单发霰弹
 #define PUMPSHOTGUN2	16	//新式单发霰弹
-#define AUTOSHOTGUN1	17	//老式连发霰弹
-#define AUTOSHOTGUN2	18	//新式连发霰弹
+#define	AUTOSHOTGUN1	17	//老式连发霰弹
+#define	AUTOSHOTGUN2	18	//新式连发霰弹
 #define HUNTING1		19	//猎枪
-#define HUNTING2		20	//G3SG1狙击枪
+#define	HUNTING2		20	//G3SG1狙击枪
 #define M16				23  //M16
-#define AK47			24   //AK47
-#define SCAR			25	//三连发
-#define AWP			26	//AWP
-#define grenadelauncher			27	//榴弹
-#define sniperscout			28	//AWP
-#define m60			29	//m60
+#define	AK47			24   //AK47
+#define	SCAR			25	//三连发
+#define	AWP			26	//AWP
+#define	grenadelauncher			27	//榴弹
+#define	sniperscout			28	//AWP
+#define	m60			29	//m60
 //补给物品
-#define ADRENALINE		50	//肾上腺素
-#define PAINPILLS		51	//药丸
-#define FIRSTAIDKIT		52	//医疗包
-#define GASCAN		53	//油桶
+#define	ADRENALINE		50	//肾上腺素
+#define	PAINPILLS		51	//药丸
+#define	FIRSTAIDKIT		52	//医疗包
+#define	GASCAN		53	//油桶
 #define LASERLIGHT		54//激光瞄准器
+#define DEFIBRILLATOR		55//电击器
+#define PIPEBOMB		56//炸弹
+#define MOLOTOV			57//燃烧瓶
+#define VOMITJAR		58//胆汁
+
 /** 属性上限 **/
 enum data
 {
@@ -51,6 +56,8 @@ enum data
 int player_data[MAXPLAYERS+1][data];
 #define colored	1
 #define simple	2
+new BuyCount[MAXPLAYERS+1];
+new Handle:ReturnBlood;
 #define SCORE_DELAY_EMPTY_SERVER 3.0
 #define L4D_MAXHUMANS_LOBBY_OTHER 3
 new Float:lastDisconnectTime;
@@ -81,10 +88,12 @@ public void OnPluginStart()
 	RegConsoleCmd("say",		Command_Say);
 	RegConsoleCmd("say_team",		Command_SayTeam);
 	HookEvent("player_death", Event_PlayerDeath);
+	HookEvent("round_start", event_RoundStart);
 	HookEvent("mission_lost", EventHook:GiveMoney, EventHookMode_PostNoCopy);
 	HookEvent("map_transition", EventHook:ResetMoney, EventHookMode_PostNoCopy);
 	HookEvent("finale_win", EventHook:ResetMoney, EventHookMode_PostNoCopy);
-	g_BShuiLimit = CreateConVar("BS_limit", "750");
+	ReturnBlood = CreateConVar("ReturnBlood", "0");
+	g_BShuiLimit = CreateConVar("BS_limit", "500");
 	HookConVarChange(g_BShuiLimit, Cvar_BShuiLimit);
 	BShuiLimit = GetConVarInt(g_BShuiLimit);
 }
@@ -93,7 +102,13 @@ public Cvar_BShuiLimit( Handle:cvar, const String:oldValue[], const String:newVa
 {
 	BShuiLimit = GetConVarInt(g_BShuiLimit);
 }
-
+public event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	for (new client = 1; client <= MaxClients; client++) 
+	{	
+		BuyCount[client] = 0;
+	}
+}
 public OnMapStart()
 {
 	RPGSave = CreateKeyValues("United RPG Save");
@@ -174,20 +189,20 @@ public Action:Timer_AutoGive(Handle:timer,any client)
 		BypassAndExecuteCommand(client, "give", "machete");
 	}
 	if (player_data[client][MELEE] == 2) 
-	{
-		BypassAndExecuteCommand(client, "give", "fireaxe");
+	{ 
+		BypassAndExecuteCommand(client, "give","fireaxe"); 
 	}
 	if (player_data[client][MELEE] == 3) 
-	{
-		BypassAndExecuteCommand(client, "give", "knife");
+	{ 
+		BypassAndExecuteCommand(client, "give","knife"); 
 	}
 	if (player_data[client][MELEE] == 4) 
-	{
-		BypassAndExecuteCommand(client, "give", "katana");
+	{ 
+		BypassAndExecuteCommand(client, "give","katana"); 
 	}
 	if (player_data[client][MELEE] == 5) 
-	{
-		BypassAndExecuteCommand(client, "give", "pistol_magnum");
+	{ 
+		BypassAndExecuteCommand(client, "give","pistol_magnum"); 
 	}
 	if (player_data[client][MELEE] == 6)
 	{
@@ -272,6 +287,8 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 				
 					if(!IsFakeClient(attacker))
 					{
+						if(bool:GetConVarBool(ReturnBlood))
+						{
 							new maxhp = GetEntProp(attacker, Prop_Data, "m_iMaxHealth");
 							new targetHealth = GetSurvivorPermHealth(attacker);
 							if(player_data[attacker][BLOOD] > 0)
@@ -286,6 +303,7 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 							{
 								SetSurvivorPermHealth(attacker, targetHealth);
 							}
+						}
 					}
 					else
 					{
@@ -425,11 +443,15 @@ public Action:MenuFunc_AddStatus(Client)
 	Format(line, sizeof(line), "6棒球棒 7板球棒 8撬棍 9吉他 10平底锅");
 	DrawPanelText(menu, line);
 	Format(line, sizeof(line), "11警棍 12高尔夫球棍 13干草叉 14铲子 ");
-	DrawPanelText(menu, line);
-	Format(line, sizeof(line), "杀特回血 (%d/%d)", player_data[Client][BLOOD], 1);
-	DrawPanelItem(menu, line);
-	Format(line, sizeof(line), "击特回2点实血，无法超过生命值上限");
-	DrawPanelText(menu, line);
+	DrawPanelText(menu, line);	
+	if(bool:GetConVarBool(ReturnBlood))
+	{
+
+		Format(line, sizeof(line), "杀特回血 (%d/%d)", player_data[Client][BLOOD], 1);
+		DrawPanelItem(menu, line);
+		Format(line, sizeof(line), "击特回2点实血，无法超过生命值上限");
+		DrawPanelText(menu, line);
+	}
 	Format(line, sizeof(line), "重置技能");
 	DrawPanelItem(menu, line);
 
@@ -438,12 +460,26 @@ public Action:MenuFunc_AddStatus(Client)
 //技能加点
 public MenuHandler_AddStatus(Handle:menu, MenuAction:action, Client, param)
 {
-	switch(param)
+	if(action == MenuAction_Select)
 	{
+		if(bool:GetConVarBool(ReturnBlood))
+		{
+			switch(param)
+			{
 				
-		case 1:	AddStrength(Client, 0);
-		case 2:	AddEndurance(Client, 0);
-		case 3:	ResetBshu(Client, 0);
+				case 1:	AddStrength(Client, 0);
+				case 2:	AddEndurance(Client, 0);
+				case 3:	ResetBshu(Client, 0);
+			}
+		}
+		else
+		{
+			switch(param)
+			{
+				case 1:	AddStrength(Client, 0);
+				case 2:	ResetBshu(Client, 0);
+			}
+		}
 	}
 }
 
@@ -519,226 +555,289 @@ public CharArmsMenu(Handle:menu, MenuAction:action, param1, param2)
 					{
 						BypassAndExecuteCommand(param1, "give", "pistol_magnum");
 						player_data[param1][MONEY] -= 50;
-						PrintToChatAll("\x04%N\x03花了50点B数购买了马格南手枪",param1);
+						PrintToChatAll("\x04%N\x03白嫖了一把马格南手枪",param1);
 					}
 				}
 				case SMG:	
 				{	
+					if(BuyCount[param1] == 0)
+					{
 						BypassAndExecuteCommand(param1, "give", "smg");
-						PrintToChatAll("\x04%N\x03白嫖了UZI冲锋枪",param1);
+						BuyCount[param1] += 1;
+						PrintToChatAll("\x04%N\x03白嫖了一把UZI冲锋枪",param1);
+					}
+					else
+					{
+						BypassAndExecuteCommand(param1, "give", "smg");
+						PrintToChatAll("\x04%N\x03白嫖了一把UZI冲锋枪",param1);
+					}
 				}
 				case SMGSILENCED:	
 				{	
+					if(BuyCount[param1] == 0)
+					{
 						BypassAndExecuteCommand(param1, "give", "smg_silenced");
-						PrintToChatAll("\x04%N\x03白嫖了SMG冲锋枪",param1);
+						BuyCount[param1] += 1;
+						PrintToChatAll("\x04%N\x03白嫖了一把SMG冲锋枪",param1);
+					}
+					else
+					{
+						BypassAndExecuteCommand(param1, "give", "smg_silenced");
+						PrintToChatAll("\x04%N\x03白嫖了一把SMG冲锋枪",param1);
+					}
 				}
 				case PUMPSHOTGUN1:
 				{
+					if(BuyCount[param1] == 0)
+					{
 						BypassAndExecuteCommand(param1, "give", "pumpshotgun");
-						PrintToChatAll("\x04%N\x03白嫖了一代单发霰弹枪",param1);
+						BuyCount[param1] += 1;
+						PrintToChatAll("\x04%N\x03白嫖了一把一代单发霰弹枪",param1);
+					}
+					else
+					{
+						BypassAndExecuteCommand(param1, "give", "pumpshotgun");
+						PrintToChatAll("\x04%N\x03白嫖了一把一代单发霰弹枪",param1);
+					}
 				}
 				case PUMPSHOTGUN2:
 				{
+					if(IsSurvivor(param1) && BuyCount[param1] == 0)
+					{
 						BypassAndExecuteCommand(param1, "give", "shotgun_chrome");
-						PrintToChatAll("\x04%N\x03白嫖了二代单发霰弹枪",param1);
+						BuyCount[param1] += 1;
+						PrintToChatAll("\x04%N\x03白嫖了一把二代单发霰弹枪",param1);
+					}
+					else if(BuyCount[param1] != 0)
+					{
+						BypassAndExecuteCommand(param1, "give", "shotgun_chrome");
+						PrintToChatAll("\x04%N\x03白嫖了一把二代单发霰弹枪",param1);
+					}
 				}
 				case AUTOSHOTGUN1:
 				{
-					if(player_data[param1][MONEY] < 200)
+					if(player_data[param1][MONEY] < 100)
 					{ 
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "autoshotgun");
-						player_data[param1][MONEY] -= 200;
-						PrintToChatAll("\x04%N\x03花了200点B数购买了一代连发霰弹枪",param1);
+						player_data[param1][MONEY] -= 100;
+						PrintToChatAll("\x04%N\x03花了100点B数购买了一代连发霰弹枪",param1);
 					}
 				}
 				case AUTOSHOTGUN2:
 				{
-					if(player_data[param1][MONEY] < 200)
+					if(player_data[param1][MONEY] < 100)
 					{
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "shotgun_spas");
-						player_data[param1][MONEY] -= 200;
-						PrintToChatAll("\x04%N\x03花了200点B数购买了二代连发霰弹枪",param1);
+						player_data[param1][MONEY] -= 100;
+						PrintToChatAll("\x04%N\x03花了100点B数购买了二代连发霰弹枪",param1);
 					}
 				}
 				case HUNTING1:
 				{
-					if(player_data[param1][MONEY] < 200)
+					if(player_data[param1][MONEY] < 100)
 					{ 
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "hunting_rifle");
-						player_data[param1][MONEY] -= 200;
-						PrintToChatAll("\x04%N\x03花了200点B数购买了一代狙击枪",param1);
+						player_data[param1][MONEY] -= 100;
+						PrintToChatAll("\x04%N\x03花了100点B数购买了一代狙击枪",param1);
 					}
 				}
 				case HUNTING2:
 				{
-					if(player_data[param1][MONEY] < 200)
+					if(player_data[param1][MONEY] < 100)
 					{
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "sniper_military");
-						player_data[param1][MONEY] -= 200;
-						PrintToChatAll("\x04%N\x03花了200点B数购买了二代狙击枪",param1);
+						player_data[param1][MONEY] -= 100;
+						PrintToChatAll("\x04%N\x03花了100点B数购买了二代狙击枪",param1);
 					}
 				}
 				
 				case M16:
 				{
-					if(player_data[param1][MONEY] < 200)
+					if(player_data[param1][MONEY] < 100)
 					{ 
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "rifle");
-						player_data[param1][MONEY] -= 200;
-						PrintToChatAll("\x04%N\x03花了200点B数购买了M16步枪",param1);
+						player_data[param1][MONEY] -= 100;
+						PrintToChatAll("\x04%N\x03花了100点B数购买了M16步枪",param1);
 					}
 				}
 				case AK47:
 				{
-					if(player_data[param1][MONEY] < 200)
+					if(player_data[param1][MONEY] < 100)
 					{ 
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "rifle_ak47");
-						player_data[param1][MONEY] -= 200;
-						PrintToChatAll("\x04%N\x03花了200点B数购买了AK47步枪",param1);
+						player_data[param1][MONEY] -= 100;
+						PrintToChatAll("\x04%N\x03花了100点B数购买了AK47步枪",param1);
 					}
 				}
 				case SCAR:
 				{
-					if(player_data[param1][MONEY] < 200)
+					if(player_data[param1][MONEY] < 100)
 					{ 
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "rifle_desert");
-						player_data[param1][MONEY] -= 200;
-						PrintToChatAll("\x04%N\x03花了200点B数购买了SCAR步枪",param1);
+						player_data[param1][MONEY] -= 100;
+						PrintToChatAll("\x04%N\x03花了100点B数购买了SCAR步枪",param1);
 					}
 				}
 				case AWP:
 				{
-					if(player_data[param1][MONEY] < 500)
+					if(player_data[param1][MONEY] < 250)
 					{
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "sniper_awp");
-						player_data[param1][MONEY] -= 500;
-						PrintToChatAll("\x04%N\x03花了500点B数购买了AWP狙击枪",param1);
+						player_data[param1][MONEY] -= 250;
+						PrintToChatAll("\x04%N\x03花了250点B数购买了AWP狙击枪",param1);
 					}
 				}
 				case grenadelauncher:
 				{
-					if(player_data[param1][MONEY] <500)
+					if(player_data[param1][MONEY] <250)
 					{ 
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "grenade_launcher");
-						player_data[param1][MONEY] -= 500;
-						PrintToChatAll("\x04%N\x03花了500点B数购买了榴弹发射器",param1);
+						player_data[param1][MONEY] -= 250;
+						PrintToChatAll("\x04%N\x03花了250点B数购买了榴弹发射器",param1);
 					}
 				}
 				case sniperscout:
 				{
-					if(player_data[param1][MONEY] < 300)
+					if(player_data[param1][MONEY] < 150)
 					{ 
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "sniper_scout");
-						player_data[param1][MONEY] -= 300;
-						PrintToChatAll("\x04%N\x03花了300点B数购买了鸟狙",param1);
+						player_data[param1][MONEY] -= 150;
+						PrintToChatAll("\x04%N\x03花了150点B数购买了鸟狙",param1);
 					}
 				}
 				case m60:
 				{
-					if(player_data[param1][MONEY] < 500)
+					if(player_data[param1][MONEY] < 250)
 					{ 
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else if(IsSurvivor(param1))
 					{
 						BypassAndExecuteCommand(param1, "give", "rifle_m60");
-						player_data[param1][MONEY] -= 500;
-						PrintToChatAll("\x04%N\x03花了500点B数购买了M60",param1);
+						player_data[param1][MONEY] -= 250;
+						PrintToChatAll("\x04%N\x03花了250点B数购买了M60",param1);
 					}
 				}
 				case ADRENALINE:
 				{
-					if(player_data[param1][MONEY] < 300)
+					if(player_data[param1][MONEY] < 100)
 					{ 
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "adrenaline");
-						player_data[param1][MONEY] -= 300;
-						PrintToChatAll("\x04%N\x03花了300点B数购买了肾上腺素",param1);
+						player_data[param1][MONEY] -= 100;
+						PrintToChatAll("\x04%N\x03花了100点B数购买了肾上腺素",param1);
 					}
 				}
 				case PAINPILLS:
 				{
-					if(player_data[param1][MONEY] < 400)
+					if(player_data[param1][MONEY] < 250)
 					{
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "pain_pills");
-						player_data[param1][MONEY] -= 400;
-						PrintToChatAll("\x04%N\x03花了400点B数购买了止痛药",param1);
+						player_data[param1][MONEY] -= 250;
+						PrintToChatAll("\x04%N\x03花了250点B数购买了止痛药",param1);
 					}
 				}
 				case FIRSTAIDKIT:
 				{
-					if(player_data[param1][MONEY] < 500)
+					if(player_data[param1][MONEY] < 400)
 					{ 
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "first_aid_kit");
-						player_data[param1][MONEY] -= 500;
+						player_data[param1][MONEY] -= 400;
 						PrintToChatAll("\x04%N\x03花了500点B数购买了急救包",param1);
 					}
 				}
 				case GASCAN:
 				{
-					if(player_data[param1][MONEY] < 200)
+					if(player_data[param1][MONEY] < 50)
 					{
 						PrintToChat(param1,"\x03你自己心里没有点B数吗?");
 					} 
 					else
 					{
 						BypassAndExecuteCommand(param1, "give", "gascan");
-						player_data[param1][MONEY] -= 200;
+						player_data[param1][MONEY] -= 50;
 						PrintToChatAll("\x04%N\x03花了200点B数购买了油桶",param1);
 					}
 				}
 				case LASERLIGHT:
+				{
+					if (player_data[param1][MONEY] < 50)
+					{
+						PrintToChat(param1, "\x03你自己心里没有点B数吗?");
+					}
+					else
+					{
+						BypassAndExecuteCommand(param1, "upgrade_add", "laser_sight");
+						player_data[param1][MONEY] -= 50;
+						PrintToChatAll("\x04%N\x03花了50点B数为自己的武器添加了激光瞄准器", param1);
+					}
+				}
+				case PIPEBOMB:
+				{
+					if (player_data[param1][MONEY] < 150)
+					{
+						PrintToChat(param1, "\x03你自己心里没有点B数吗?");
+					}
+					else
+					{
+						BypassAndExecuteCommand(param1, "give", "pipe_bomb");
+						player_data[param1][MONEY] -= 150;
+						PrintToChatAll("\x04%N\x03花了150点B数购买了引诱手雷", param1);
+					}
+				}
+				
+				case DEFIBRILLATOR:
 				{
 					if (player_data[param1][MONEY] < 250)
 					{
@@ -746,12 +845,40 @@ public CharArmsMenu(Handle:menu, MenuAction:action, param1, param2)
 					}
 					else
 					{
-						BypassAndExecuteCommand(param1, "upgrade_add", "laser_sight");
+						BypassAndExecuteCommand(param1, "give", "defibrillator");
 						player_data[param1][MONEY] -= 250;
-						PrintToChatAll("\x04%N\x03花了250点B数为自己的武器添加了激光瞄准器", param1);
+						PrintToChatAll("\x04%N\x03花了250点B数购买了电击器准备复活队友", param1);
 					}
 				}
+				
+				case MOLOTOV:
+				{
+					if (player_data[param1][MONEY] < 100)
+					{
+						PrintToChat(param1, "\x03你自己心里没有点B数吗?");
+					}
+					else
+					{
+						BypassAndExecuteCommand(param1, "give", "molotov");
+						player_data[param1][MONEY] -= 100;
+						PrintToChatAll("\x04%N\x03花了100点B数购买了燃烧瓶", param1);
+					}
 				}
+				
+				case VOMITJAR:
+				{
+					if (player_data[param1][MONEY] < 200)
+					{
+						PrintToChat(param1, "\x03你自己心里没有点B数吗?");
+					}
+					else
+					{
+						BypassAndExecuteCommand(param1, "give", "vomitjar");
+						player_data[param1][MONEY] -= 200;
+						PrintToChatAll("\x04%N\x03花了200点B数购买了胆汁", param1);
+					}
+				}												
+			}
 		}
 		case MenuAction_Cancel:
 		{
@@ -783,64 +910,87 @@ public ShowTypeMenu(Client,type)
 			Format(money,sizeof(money),"马格南手枪(%d点B数)",50);
 			IntToString(MAGNUM, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
-
-			Format(money,sizeof(money),"UZI冲锋枪(%d点B数)",0);
-			IntToString(SMG, sMenuEntry, sizeof(sMenuEntry));
-			AddMenuItem(menu, sMenuEntry, money);
+			
+			if(BuyCount[Client] == 0)
+			{
+				Format(money,sizeof(money),"UZI冲锋枪(%d点B数)",0);
+				IntToString(SMG, sMenuEntry, sizeof(sMenuEntry));
+				AddMenuItem(menu, sMenuEntry, money);
 				
-			Format(money,sizeof(money),"SMG冲锋枪(%d点B数)",0);
-			IntToString(SMGSILENCED, sMenuEntry, sizeof(sMenuEntry));
-			AddMenuItem(menu, sMenuEntry, money);
+				Format(money,sizeof(money),"SMG冲锋枪(%d点B数)",0);
+				IntToString(SMGSILENCED, sMenuEntry, sizeof(sMenuEntry));
+				AddMenuItem(menu, sMenuEntry, money);
 			
-			Format(money,sizeof(money),"一代单发霰弹枪(%d点B数)",0);
-			IntToString(PUMPSHOTGUN1, sMenuEntry, sizeof(sMenuEntry));
-			AddMenuItem(menu, sMenuEntry, money);
+				Format(money,sizeof(money),"一代单发霰弹枪(%d点B数)",0);
+				IntToString(PUMPSHOTGUN1, sMenuEntry, sizeof(sMenuEntry));
+				AddMenuItem(menu, sMenuEntry, money);
 					
-			Format(money,sizeof(money),"二代单发霰弹枪(%d点B数)",0);
-			IntToString(PUMPSHOTGUN2, sMenuEntry, sizeof(sMenuEntry));
-			AddMenuItem(menu, sMenuEntry, money);			
+				Format(money,sizeof(money),"二代单发霰弹枪(%d点B数)",0);
+				IntToString(PUMPSHOTGUN2, sMenuEntry, sizeof(sMenuEntry));
+				AddMenuItem(menu, sMenuEntry, money);
+				
+				
+			}
+			else
+			{
+				Format(money,sizeof(money),"UZI冲锋枪(%d点B数)",0);
+				IntToString(SMG, sMenuEntry, sizeof(sMenuEntry));
+				AddMenuItem(menu, sMenuEntry, money);
+				
+				Format(money,sizeof(money),"SMG冲锋枪(%d点B数)",0);
+				IntToString(SMGSILENCED, sMenuEntry, sizeof(sMenuEntry));
+				AddMenuItem(menu, sMenuEntry, money);
+					
+				Format(money,sizeof(money),"一代单发霰弹枪(%d点B数)",0);
+				IntToString(PUMPSHOTGUN1, sMenuEntry, sizeof(sMenuEntry));
+				AddMenuItem(menu, sMenuEntry, money);
+					
+				Format(money,sizeof(money),"二代单发霰弹枪(%d点B数)",0);
+				IntToString(PUMPSHOTGUN2, sMenuEntry, sizeof(sMenuEntry));
+				AddMenuItem(menu, sMenuEntry, money);
+			}
 			
-			Format(money,sizeof(money),"一代连发霰弹枪(%d点B数)",200);
+			Format(money,sizeof(money),"一代连发霰弹枪(%d点B数)",100);
 			IntToString(AUTOSHOTGUN1, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 					
-			Format(money,sizeof(money),"二代连发霰弹枪(%d点B数)",200);
+			Format(money,sizeof(money),"二代连发霰弹枪(%d点B数)",100);
 			IntToString(AUTOSHOTGUN2, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 					
-			Format(money,sizeof(money),"一代狙击枪(%d点B数)",200);
+			Format(money,sizeof(money),"一代狙击枪(%d点B数)",100);
 			IntToString(HUNTING1, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 					
-			Format(money,sizeof(money),"二代狙击枪(%d点B数)",200);
+			Format(money,sizeof(money),"二代狙击枪(%d点B数)",100);
 			IntToString(HUNTING2, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 			
-			Format(money,sizeof(money),"M16步枪(%d点B数)",200);
+			Format(money,sizeof(money),"M16步枪(%d点B数)",100);
 			IntToString(M16, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 			
-			Format(money,sizeof(money),"AK47步枪(%d点B数)",200);
+			Format(money,sizeof(money),"AK47步枪(%d点B数)",100);
 			IntToString(AK47, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 			
-			Format(money,sizeof(money),"SCAR步枪(%d点B数)",200);
+			Format(money,sizeof(money),"SCAR步枪(%d点B数)",100);
 			IntToString(SCAR, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 			
-			Format(money,sizeof(money),"AWP狙击枪(%d点B数)",500);
+			Format(money,sizeof(money),"AWP狙击枪(%d点B数)",250);
 			IntToString(AWP, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 			
-			Format(money,sizeof(money),"榴弹发射器(%d点B数)",500);
+			Format(money,sizeof(money),"榴弹发射器(无法补充弹药)(%d点B数)",250);
 			IntToString(grenadelauncher, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 			
-			Format(money,sizeof(money),"鸟狙(%d点B数)",300);
+			Format(money,sizeof(money),"鸟狙(%d点B数)",150);
 			IntToString(sniperscout, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 			
-			Format(money,sizeof(money),"M60(%d点B数)",500);
+			Format(money,sizeof(money),"M60(无法补充弹药,但无限备单)(%d点B数)",250);
 			IntToString(m60, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 		}
@@ -850,25 +1000,41 @@ public ShowTypeMenu(Client,type)
 		{
 			SetMenuTitle(menu, "B数:%i",player_data[Client][MONEY]);
 			
-			Format(money,sizeof(money),"肾上腺素(%d点B数)",300);
+			Format(money,sizeof(money),"肾上腺素(%d点B数)",100);
 			IntToString(ADRENALINE, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 			
-			Format(money,sizeof(money),"止痛药(%d点B数)",400);
+			Format(money,sizeof(money),"止痛药(%d点B数)",250);
 			IntToString(PAINPILLS, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 			
-			Format(money,sizeof(money),"医疗包(%d点B数)",500);
+			Format(money,sizeof(money),"医疗包(%d点B数)",400);
 			IntToString(FIRSTAIDKIT, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 			
-			Format(money,sizeof(money),"油桶(%d点B数)",200);
+			Format(money,sizeof(money),"油桶(%d点B数)",50);
 			IntToString(GASCAN, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
 
-			Format(money, sizeof(money), "激光瞄准器(%d点B数)", 250);
+			Format(money, sizeof(money), "激光瞄准器(%d点B数)", 50);
 			IntToString(LASERLIGHT, sMenuEntry, sizeof(sMenuEntry));
 			AddMenuItem(menu, sMenuEntry, money);
+			
+			Format(money,sizeof(money),"电击器(%d点B数)",250);
+			IntToString(DEFIBRILLATOR, sMenuEntry, sizeof(sMenuEntry));
+			AddMenuItem(menu, sMenuEntry, money);
+			
+			Format(money,sizeof(money),"燃烧瓶(%d点B数)",100);
+			IntToString(MOLOTOV, sMenuEntry, sizeof(sMenuEntry));
+			AddMenuItem(menu, sMenuEntry, money);
+			
+			Format(money,sizeof(money),"引诱手雷(%d点B数)",150);
+			IntToString(PIPEBOMB, sMenuEntry, sizeof(sMenuEntry));
+			AddMenuItem(menu, sMenuEntry, money);
+
+			Format(money,sizeof(money),"胆汁(%d点B数)",150);
+			IntToString(VOMITJAR, sMenuEntry, sizeof(sMenuEntry));
+			AddMenuItem(menu, sMenuEntry, money);									
 		}
 	}
 	SetMenuExitButton(menu, true);
