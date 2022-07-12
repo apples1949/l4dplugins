@@ -1,4 +1,4 @@
-﻿/*
+/*
 *	Anti Rush
 *	Copyright (C) 2022 Silvers
 *
