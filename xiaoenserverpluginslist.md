@@ -1,4 +1,4 @@
-自找插件：
+自找插件：  
 all4dead2 物品特感生成 自改自翻译 https://github.com/apples1949/l4dplugins/tree/main/all4dead2 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2  
 l4d_anti_rush 反跑图 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush/sourcemod 来自 https://forums.alliedmods.net/showthread.php?t=322392  
 l4d_coop_markers 路程进度主动显示 https://github.com/apples1949/l4dplugins/tree/main/l4d_coop_markers 来自https://forums.alliedmods.net/showthread.php?t=321288  
