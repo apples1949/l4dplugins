@@ -67,15 +67,15 @@
 [addons]l4d2_incap_magnum.smx 倒地马格南 https://forums.alliedmods.net/showthread.php?t=120575  
 [addons]NekoAdminMenu.smx/[addons]NekoSpecials.smx Neko多特 https://github.com/himenekocn/NekoSpecials-L4D2  
 [addons]show_mic.smx/[addons]ThirdPersonShoulder_Detect.smx 显示谁在说话 https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic  
-[addons]l4d2_skill_detect.smx/[addons]l4d2_stats.smx 特殊操作提示 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_skill_detect.sp/https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_stats.sp  
+[addons]l4d2_skill_detect.smx/[addons]l4d2_stats.smx 特殊操作提示 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_skill_detect.sp  https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_stats.sp  
 [addons]l4d2_ellis_hunter_bandaid_fix.smx ellis起身修复 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ellis_hunter_bandaid_fix.sp  
-meleedrop.vpk 死亡掉落副武器 https://steamcommunity.com/sharedfiles/filedetails/?id=2608563050  
-[addons]l4d_nightvision.smx 夜视仪 https://github.com/Dragoon666/l4d2_supercoop_standard/blob/win/left4dead2/addons/sourcemod/scripting/_sc_l4d_nightvision.sp  
+[addons]l4d_nightvision.smx 夜视仪 https://forums.alliedmods.net/showthread.php?t=164911  
 [addons]l4d_automatic_weapons.smx 部分单发武器连射   https://github.com/AldoDiaz01/Left4Dead2_Sourcemod_Plugins/blob/master/left4dead2/addons/sourcemod/scripting/l4d_automatic_weapons.sp  
 [addons]anti_bot_medkit.smx 阻止ai打包 https://github.com/SamuelXXX/l4d2_supercoop_for2/blob/master/left4dead2/addons/sourcemod/scripting/_sc_anti_bot_medkit.sp  
 [addons]all4dead2.smx 另外个游戏控制插件 https://github.com/apples1949/l4dplugins/blob/main/all4dead2.sp  
 stringpool_fix.smx 修复崩服的一种情况 根据原贴https://forums.alliedmods.net/showthread.php?t=328421 后自改 https://github.com/apples1949/l4dplugins/blob/main/stringpool_fix.sp  
 [addons]l4d_anti_rush.smx 反跑图 https://forums.alliedmods.net/showthread.php?t=322392 自汉化 https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush/sourcemod  
-[addons]l4d_TankOnSpawn.smx 产生多个坦克 https://forums.alliedmods.net/showthread.php?t=323813 自汉化 https://github.com/apples1949/l4dplugins/tree/main/TankOnSpawn 
+[addons]l4d_TankOnSpawn.smx 产生多个坦克 https://forums.alliedmods.net/showthread.php?t=323813  自汉化 https://github.com/apples1949/l4dplugins/tree/main/TankOnSpawn 
 zmweapon.vpk zm参数小枪 https://steamcommunity.com/sharedfiles/filedetails/?id=2297989083  
 awpandscout.vpk 自改awp325伤害 scout250伤害 写实小僵尸一枪倒 https://github.com/apples1949/l4dplugins/blob/main/awpandscout.vpk  
+meleedrop.vpk 死亡掉落副武器 https://steamcommunity.com/sharedfiles/filedetails/?id=2608563050  
