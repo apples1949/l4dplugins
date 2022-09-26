@@ -21,3 +21,4 @@ l4d_votes_5 投票插件 自翻cvar介绍和文本 https://github.com/apples1949
 lerptracker 显示lerp 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/blob/main/lerptracker.sp  
 l4d2_Death_Survivor 防止死亡玩家刷复活 https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_Death_Survivor  
 l4d_current_survivor_progress !cur显示目前路程百分比 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_current_survivor_progress  
+l4d_graves 生还者死亡后生成坟墓 自翻cvar介绍 https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves  
