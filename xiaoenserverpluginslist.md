@@ -20,3 +20,4 @@ l4dinfectedbots 哈利dalao的多特插件 包括其他功能 https://github.com
 l4d_votes_5 投票插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_votes_5 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_votes_5  
 lerptracker 显示lerp 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/blob/main/lerptracker.sp  
 l4d2_Death_Survivor 防止死亡玩家刷复活 https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_Death_Survivor  
+l4d_current_survivor_progress !cur显示目前路程百分比 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_current_survivor_progress  
