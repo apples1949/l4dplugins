@@ -26,3 +26,4 @@ l4d_tankAttackOnSpawn 战役模式中强制生成的坦克行动 https://github.
 l4d_rock_lagcomp 战役模式中给坦克石头提供滞后补偿 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp  
 votemanager2 禁止玩家使用自带投票 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/blob/main/votemanager2.sp 来自 https://forums.alliedmods.net/showthread.php?p=2788129#post2788129  
 l4d2_mapfinalenext 官图战役打完换图 https://forums.alliedmods.net/showthread.php?t=285155  
+l4d2_boss_spawn 每关生成坦克和妹子 翻到neko的翻译版本白嫖了 https://github.com/himenekocn/NekoSpecials-L4D2/blob/NSPRE-SM1.11/addons/sourcemod/scripting/l4d2_boss_spawn.sp 原作者发布地址：https://forums.alliedmods.net/showthread.php?t=323402  
