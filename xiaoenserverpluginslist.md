@@ -25,3 +25,4 @@ l4d_graves 生还者死亡后生成坟墓 自翻cvar介绍 https://github.com/ap
 l4d_tankAttackOnSpawn 战役模式中强制生成的坦克行动 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_tankAttackOnSpawn  
 l4d_rock_lagcomp 战役模式中给坦克石头提供滞后补偿 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp  
 votemanager2 禁止玩家使用自带投票 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/blob/main/votemanager2.sp 来自 https://forums.alliedmods.net/showthread.php?p=2788129#post2788129  
+l4d2_mapfinalenext 官图战役打完换图 https://forums.alliedmods.net/showthread.php?t=285155  
