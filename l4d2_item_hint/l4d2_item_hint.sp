@@ -130,7 +130,7 @@ public void OnPluginStart()
 	g_hItemInstructorIcon	= CreateConVar("l4d2_item_instructorhint_icon", "icon_interact", "物品上方提示的图标(更多图标查看https://developer.valvesoftware.com/wiki/Env_instructor_hint)", FCVAR_NOTIFY);
 
 	g_hSpotMarkCoolDown			= CreateConVar("l4d2_spot_marker_cooldown_time", "2.5", "玩家使用语音菜单的‘看’创建标记的冷却时间", FCVAR_NOTIFY, true, 0.0);
-	g_hSpotMarkUseRange     	= CreateConVar("l4d2_spot_marker_use_range", "1800", 玩家可以标记的最大范围", FCVAR_NOTIFY, true, 1.0);
+	g_hSpotMarkUseRange     	= CreateConVar("l4d2_spot_marker_use_range", "1800", "玩家可以标记的最大范围", FCVAR_NOTIFY, true, 1.0);
 	g_hSpotMarkUseSound     	= CreateConVar("l4d2_spot_marker_use_sound", "buttons/blip1.wav", "标记提示音(格式一般是：sound/,无内容：禁用)", FCVAR_NOTIFY);
 	g_hSpotMarkGlowTimer		= CreateConVar("l4d2_spot_marker_duration", "10.0", "标记持续时间", FCVAR_NOTIFY, true, 0.0);
 	g_hSpotMarkCvarColor		= CreateConVar("l4d2_spot_marker_color", "200 200 200", "标记颜色，自行去https://tool.oschina.net/commons?type=3比对颜色(无内容=禁用标记)", FCVAR_NOTIFY);

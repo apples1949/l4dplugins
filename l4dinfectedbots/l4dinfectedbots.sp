@@ -955,7 +955,7 @@ public void OnPluginStart()
 	h_PlayerAddTankHealth = CreateConVar("l4d_infectedbots_add_tankhealth", "500", "玩家数量超过5个时，最大特感数量上限 = max_specials + [(存活的生还者数量-4) ÷ 'add_specials_scale'] × 'add_specials'", FCVAR_NOTIFY, true, 0.0);
 	h_InfectedSpawnTimeMax = CreateConVar("l4d_infectedbots_spawn_time_max", "60", "设置插件生成的特感最大时间", FCVAR_NOTIFY, true, 1.0);
 	h_InfectedSpawnTimeMin = CreateConVar("l4d_infectedbots_spawn_time_min", "40", "设置插件生成的特感最小时间", FCVAR_NOTIFY, true, 1.0);
-	h_CoopPlayableTank = CreateConVar("l4d_infectedbots_coop_versus_tank_playable", "0", "如果为1，玩家可以在战役/写实/生还者模式中接管坦克, FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_CoopPlayableTank = CreateConVar("l4d_infectedbots_coop_versus_tank_playable", "0", "如果为1，玩家可以在战役/写实/生还者模式中接管坦克", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	h_JoinableTeams = CreateConVar("l4d_infectedbots_coop_versus", "1", "如果为1，则玩家可以在战役/写实/生还者模式中加入感染者(!ji加入感染者 !js加入生还者)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	if (!g_bL4D2Version)
 	{

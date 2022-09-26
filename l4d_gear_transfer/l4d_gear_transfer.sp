@@ -642,7 +642,7 @@ public void OnPluginStart()
 
 	// Cvars
 	g_hCvarAllow =			CreateConVar(	"l4d_gear_transfer_allow",			"1",			"0=插件关闭, 1=插件开启 On.", CVAR_FLAGS);
-	g_hCvarModesBot =		CreateConVar(	"l4d_gear_transfer_modes_bot",		"",				"不允许电脑在什么模式下给于或拾取物品., 用逗号隔开(无空格). (无设定 = 留空)."", CVAR_FLAGS );
+	g_hCvarModesBot =		CreateConVar(	"l4d_gear_transfer_modes_bot",		"",				"不允许电脑在什么模式下给于或拾取物品., 用逗号隔开(无空格). (无设定 = 留空).", CVAR_FLAGS );
 	g_hCvarModesOn =		CreateConVar(	"l4d_gear_transfer_modes_on",		"",				"在哪些游戏模式中开启插件,用逗号隔开(无空格).(全部开启=留空)默认全部开启.", CVAR_FLAGS );
 	g_hCvarModesOff =		CreateConVar(	"l4d_gear_transfer_modes_off",		"",				"在哪些游戏模式中关闭插件,用逗号隔开(无空格).(不自定=留空).", CVAR_FLAGS );
 	g_hCvarModesTog =		CreateConVar(	"l4d_gear_transfer_modes_tog",		"0",			"在这些游戏模式中开启插件. 0=所有, 1=合作, 2=生存, 4=对抗, 8=清道夫.任意数字组合选择物品.", CVAR_FLAGS );

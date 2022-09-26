@@ -1146,7 +1146,7 @@ public void AnyHp()
 //================================
 void CheckVotes()
 {
-	PrintHintTextToAll("同意的玩家: \x04%i\不同意的玩家: \x04%i", Votey, Voten);
+	PrintHintTextToAll("同意的玩家: \x04%i\n不同意的玩家: \x04%i", Votey, Voten);
 }
 public Action VoteEndDelay(Handle timer)
 {
