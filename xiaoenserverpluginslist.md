@@ -75,7 +75,6 @@ bequiet 过滤部分聊天输出 https://github.com/apples1949/l4dplugins/blob/m
 l4dinfectedbots 哈利dalao的多特插件 包括其他功能 https://github.com/apples1949/l4dplugins/tree/main/l4dinfectedbots 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dinfectedbots  
 l4d_votes_5 投票插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_votes_5 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_votes_5  
 lerptracker 显示lerp 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/blob/main/lerptracker.sp  
-l4d2_Death_Survivor 防止死亡玩家刷复活 https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_Death_Survivor  
 l4d_current_survivor_progress !cur显示目前路程百分比 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_current_survivor_progress  
 l4d_graves 生还者死亡后生成坟墓 自翻cvar介绍 https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves  
 l4d_tankAttackOnSpawn 战役模式中强制生成的坦克行动 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_tankAttackOnSpawn  
