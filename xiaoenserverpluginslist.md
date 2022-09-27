@@ -84,6 +84,8 @@ sm_l4d_mapchanger 官图战役打完换图 自用 https://github.com/apples1949/
 zombie_spawn_fix 修复可能会有的感染者玩家修复插件 https://forums.alliedmods.net/showthread.php?t=333351  
 l4d_rescue_vehicle_leave_timer 救援倒计时 自翻cvar https://github.com/apples1949/l4dplugins/tree/main/l4d_rescue_vehicle_leave_timer 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rescue_vehicle_leave_timer  
 l4d_death_soul 死去的幸存者的灵魂飞向来世 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_death_soul  
+l4d_votedifficulty 投票更改难度 自翻译文本 自用删掉了简单难度选项 https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty 来自 https://forums.alliedmods.net/showthread.php?t=317257  
+RestrictedGameModes 锁定服务器难度和游戏模式 https://github.com/fantasylidong/L4d2_plugins/blob/main/RestrictGamemode/RestrictedGameModes.sp  
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
