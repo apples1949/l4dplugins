@@ -79,8 +79,10 @@ l4d_current_survivor_progress !cur显示目前路程百分比 https://github.com
 l4d_graves 生还者死亡后生成坟墓 自翻cvar介绍 https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves  
 l4d_tankAttackOnSpawn 战役模式中强制生成的坦克行动 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_tankAttackOnSpawn  
 l4d_rock_lagcomp 战役模式中给坦克石头提供滞后补偿 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp  
-l4d2_mapfinalenext 官图战役打完换图 https://forums.alliedmods.net/showthread.php?t=285155  
+sm_l4d_mapchanger 官图战役打完换图 自用 https://github.com/apples1949/l4dplugins/tree/main/sm_l4d_mapchanger 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/sm_l4d_mapchanger  
 zombie_spawn_fix 修复可能会有的感染者玩家修复插件 https://forums.alliedmods.net/showthread.php?t=333351  
+l4d_rescue_vehicle_leave_timer 救援倒计时 自翻cvar https://github.com/apples1949/l4dplugins/tree/main/l4d_rescue_vehicle_leave_timer 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rescue_vehicle_leave_timer  
+l4d_death_soul 死去的幸存者的灵魂飞向来世 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_death_soul  
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
