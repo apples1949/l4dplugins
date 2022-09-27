@@ -81,10 +81,9 @@ l4d_graves 生还者死亡后生成坟墓 自翻cvar介绍 https://github.com/ap
 l4d_tankAttackOnSpawn 战役模式中强制生成的坦克行动 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_tankAttackOnSpawn  
 l4d_rock_lagcomp 战役模式中给坦克石头提供滞后补偿 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp  
 l4d2_mapfinalenext 官图战役打完换图 https://forums.alliedmods.net/showthread.php?t=285155  
-l4d2_boss_spawn 每关生成坦克和妹子 翻到neko的翻译版本白嫖了 https://github.com/himenekocn/NekoSpecials-L4D2/blob/NSPRE-SM1.11/addons/sourcemod/scripting/l4d2_boss_spawn.sp 原作者发布地址：https://forums.alliedmods.net/showthread.php?t=323402  
 
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
 [mod]zmweapon.vpk zm参数小枪  
-[mod]knife.vpk 恢复小刀 来自anne https://github.com/Caibiii/AnneServer/blob/main/left4dead2/addons/Anne.vpk  
+[mod]knife.vpk 恢复小刀 来自anne https://github.com/Caibiii/AnneServer/blob/main/left4dead2/addons/knife.vpk  
