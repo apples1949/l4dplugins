@@ -48,7 +48,6 @@
 自选-幸存者死亡和被制服提示  
 自选-幸存者闲置状态快速双击鼠标右键使用自由视角(v1.0.0)(豆瓣酱な)  
 自选-幸存者自杀指令  
-自选-修改近战对坦克和女巫的比例伤害或固定伤害(v1.0)(Visor)  
 自选-战役模式设置没有倒地时阻止不正常的心跳声(修改-豆瓣酱な)(原作者Sir)(内有作者原版)  
 自选-CFG类(开服专用配置文件)  
 自选-M60正常化(可更换弹夹)+可拾取弹药(包括榴弹发射器)(Lux)  
@@ -81,7 +80,6 @@ l4d_current_survivor_progress !cur显示目前路程百分比 https://github.com
 l4d_graves 生还者死亡后生成坟墓 自翻cvar介绍 https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves  
 l4d_tankAttackOnSpawn 战役模式中强制生成的坦克行动 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_tankAttackOnSpawn  
 l4d_rock_lagcomp 战役模式中给坦克石头提供滞后补偿 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp  
-votemanager2 禁止玩家使用自带投票 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/blob/main/votemanager2.sp 来自 https://forums.alliedmods.net/showthread.php?p=2788129#post2788129  
 l4d2_mapfinalenext 官图战役打完换图 https://forums.alliedmods.net/showthread.php?t=285155  
 l4d2_boss_spawn 每关生成坦克和妹子 翻到neko的翻译版本白嫖了 https://github.com/himenekocn/NekoSpecials-L4D2/blob/NSPRE-SM1.11/addons/sourcemod/scripting/l4d2_boss_spawn.sp 原作者发布地址：https://forums.alliedmods.net/showthread.php?t=323402  
 
