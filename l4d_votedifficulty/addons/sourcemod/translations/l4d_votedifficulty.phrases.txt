@@ -1,0 +1,130 @@
+/*
+	Following named colors are supported:
+	 - {white}	(use instead of \x01 )
+	 - {cyan}	(use instead of \x03 )
+	 - {orange}	(use instead of \x04 )
+	 - {green}	(use instead of \x05 )
+*/
+
+"Phrases"
+{
+	"MenuVoteDifficulty"
+	{
+		"en"		"Change difficulty to"
+		"ru"		"Изменить сложность на"
+		"chi"		"难度改为"
+	}
+	"Easy"
+	{
+		"en"		"Easy"
+		"ru"		"Легко"
+		"chi"		"简单"
+	}
+	"Normal"
+	{
+		"en"		"Normal"
+		"ru"		"Нормально"
+		"chi"		"普通"
+	}
+	"Hard"
+	{
+		"en"		"Hard"
+		"ru"		"Мастер"
+		"chi"		"困难"
+	}
+	"Hard+"
+	{
+		"en"		"Hard +"
+		"ru"		"Мастер +"
+		"en"		"困难+"
+	}
+	"Impossible"
+	{
+		"en"		"Impossible"
+		"ru"		"Эксперт"
+		"chi"		"专家"
+		
+	}
+	"Impossible+"
+	{
+		"en"		"Impossible +"
+		"ru"		"Эксперт +"
+		"chi"		"专家+"
+	}
+	"Yes"
+	{
+		"en"		"Yes"
+		"ru"		"Да"
+		"chi"		"是"
+	}
+	"No"
+	{
+		"en"		"No"
+		"ru"		"Нет"
+		"chi"		"否"
+	}
+	"too_often"
+	{
+		"en"		"{orange}You can't vote too often!"
+		"ru"		"{orange}Вы не можете голосовать слишком часто!"
+		"chi"		"{orange}你投票的太频繁!"
+	}
+	"access_denied"
+	{
+		"en"		"{orange}You have no access to this vote!"
+		"ru"		"{orange}У вас нет доступа к этому голосованию!"
+		"chi"		"{orange}你没有权限参与这个投票!"
+	}
+	"other_vote"
+	{
+		"en"		"{orange}Other vote is still not over!"
+		"ru"		"{orange}Другое голосование ещё не закончилось!"
+		"chi"		"{orange}其他投票正在进行中!"
+	}
+	"veto"
+	{
+		"en"		"{orange}Current vote is vetoed by {green}%N"
+		"ru"		"{green}%N {orange}наложил вето на голосование"
+		"chi"		"{orange}投票被{green}%N{orange}否决"
+	}
+	"votepass"
+	{
+		"en"		"{cyan}Current vote is passed by {green}%N"
+		"ru"		"{green}%N {cyan}принудительно продвинул голосование"
+		"chi"		"{orange}投票被{green}%N{orange}强制通过"
+	}
+	"vote_failed"
+	{
+		"en"		"{cyan}Vote for difficulty {orange}is failed."
+		"ru"		"{cyan}Голосование за сложность {orange}провалилось."
+		"chi"		"{cyan}投票{orange}没有通过."
+	}
+	"vote_success"
+	{
+		"#format"	"{1:t}"
+		"en"		"{orange}Difficulty is changed to: {green}{1}"
+		"ru"		"{orange}Сложность изменена на: {green}{1}"
+		"chi"		"{orange}难度被改为:{green}{1}"
+	}
+	"vote_started"
+	{
+		"#format"	"{1:t}"
+		"en"		"{green}%N {orange}is started vote for difficulty: {cyan}{1}"
+		"ru"		"{green}%N {orange}начал голосование за сложность: {cyan}{1}"
+		"chi"		"{green}%N {orange}发起了一个{cyan}{1}{orange}难度的投票"
+	}
+	"vote_started_announce"
+	{
+		"#format"	"{1:t}"
+		"en"		"Change difficulty to: {1} ?"
+		"ru"		"Изменить сложность на: {1} ?"
+		"chi"		"难度是否更改为{1} ?"
+	}
+	"not_enough_players"
+	{
+		"#format"	"{1:i}"
+		"en"		"{orange}Not enough players to start the vote. {cyan}Required minimum: {1}"
+		"ru"		"{orange}Слишком мало игроков для голосования. {cyan}Нужно минимум: {1}"
+		"chi"		"{orange}没有足够的玩家可参加投票 {cyan}至少需要{1}{orange}位玩家"
+	}
+}
