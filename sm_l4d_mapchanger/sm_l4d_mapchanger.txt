@@ -1,0 +1,76 @@
+"ForceMissionChangerSettings"
+{
+	"c1m4_atrium"    // current map
+	{
+		"next mission map" "c2m1_highway" // <-- new map in coop/versus/realism
+		"next mission name" "黑色嘉年华" // <-- map name whatever
+	}
+	"c2m5_concert"
+	{
+		"next mission map" "c3m1_plankcountry"
+		"next mission name" "沼泽激战"
+	}
+	"c3m4_plantation"
+	{
+		"next mission map" "c4m1_milltown_a"
+		"next mission name" "暴风骤雨"
+	}
+	"c4m5_milltown_escape"
+	{
+		"next mission map" "c5m1_waterfront"
+		"next mission name" "教区"
+	}
+	"c5m5_bridge"
+	{
+		"next mission map" "c6m1_riverbank"
+		"next mission name" "短暂时刻"
+	}
+	"c6m3_port"
+	{
+		"next mission map" "c7m1_docks"
+		"next mission name" "牺牲)"
+	}
+	"c7m3_port"
+	{
+		"next mission map" "c8m1_apartment"
+		"next mission name" "毫不留情"
+	} 
+	"c8m5_rooftop"  // current map
+	{
+		"next mission map" "c9m2_lots" 					// <-- new map in coop/versus/realism
+		"next mission name" "坠机险途" 	// <-- map name whatever
+		
+		"survival_nextmap" "c1m2_streets"			 	// <-- new map in survival mode
+		"survival_nextname" "死亡中心 - 街道" 	// <-- map name whatever
+	}
+	"c9m2_lots"
+	{
+		"next mission map" "c10m1_caves"
+		"next mission name" "死亡丧钟"
+	}
+	"c10m5_houseboat"
+	{
+		"next mission map" "c11m1_greenhouse"
+		"next mission name" "寂静时分"
+	}
+	"c11m5_runway"
+	{
+		"next mission map" "c12m1_hilltop"
+		"next mission name" "血腥收获"
+	}
+	"c12m5_cornfield"
+	{
+		"next mission map" "c13m1_alpinecreek"
+		"next mission name" "刺骨寒溪"
+	}
+	"c13m4_cutthroatcreek"
+	{
+		"next mission map" "c14m1_junkyard"
+		"next mission name" "背水一战"
+	}
+	"c14m2_lighthouse"
+	{
+		"next mission map" "c1m1_hotel"
+		"next mission name" "死亡中心"
+	}
+}
