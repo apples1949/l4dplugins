@@ -63,6 +63,7 @@ l4d_gear_transfer 按键给予物品 自翻cvar介绍和文本 https://github.co
 show_mic 屏幕中心显示谁在说话 https://github.com/apples1949/l4dplugins/tree/main/show_mic 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic  
 superversus1.8.15.5改(多人插件)-v1.11.0  来自 https://github.com/umlka/l4d2/tree/main/superversus1.8.15.5-modify  
 TankOnSpawn 每次生成多个坦克 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/TankOnSpawn 来自 https://forums.alliedmods.net/showthread.php?t=323813  
+l4d2_item_hint 标记插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush 来自https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_item_hint  
 l4d_automatic_weapons 半自动武器全自动射击 来自 https://github.com/AldoDiaz01/Left4Dead2_Sourcemod_Plugins/blob/master/left4dead2/addons/sourcemod/scripting/l4d_automatic_weapons.sp
 l4d_bunnyhop 连跳插件 来自 https://forums.alliedmods.net/showthread.php?t=298555  
 l4d2_incap_magnum 倒地马格南 来自 https://forums.alliedmods.net/showthread.php?t=120575  
