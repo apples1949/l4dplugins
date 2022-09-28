@@ -80,6 +80,8 @@ l4d_rescue_vehicle_leave_timer 救援倒计时 自翻cvar https://github.com/app
 l4d_death_soul 死去的幸存者的灵魂飞向来世 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_death_soul  
 l4d_votedifficulty 投票更改难度 自翻译文本 自用删掉了简单难度选项 https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty 来自 https://forums.alliedmods.net/showthread.php?t=317257  
 RestrictedGameModes 锁定服务器难度和游戏模式 https://github.com/fantasylidong/L4d2_plugins/blob/main/RestrictGamemode/RestrictedGameModes.sp  
+l4d_nightvision 夜视仪 翻译了下文本 https://github.com/apples1949/l4dplugins/blob/main/l4d_nightvision.sp 来自 https://forums.alliedmods.net/showthread.php?p=2666575#post2666575  
+self_help 自救插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/self_help 来自 https://forums.alliedmods.net/showthread.php?p=2766775#post2766775
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
