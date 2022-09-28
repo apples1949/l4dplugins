@@ -1409,7 +1409,7 @@ void CreateInstructorHint(int client, const float vOrigin[3], const char[] sItem
 		{
 			if( Create_info_target(iEntity, vOrigin, sTargetName, g_fSpotMarkGlowTimer) )
 			{
-				FormatEx(sCaption, sizeof sCaption, "%N Marked something here", client);
+				FormatEx(sCaption, sizeof sCaption, "%N在这里做了个标记", client);
 				Create_env_instructor_hint(iEntity, view_as<EHintType>(eSpotMarker), vOrigin, sTargetName, g_sSpotMarkInstructorIcon, sCaption, g_sSpotMarkInstructorColor, g_fSpotMarkGlowTimer, g_fSpotMarkUseRange);
 			}
 		}

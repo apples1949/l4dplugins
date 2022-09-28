@@ -1,0 +1,56 @@
+"Games"
+{
+	"left4dead"
+	{
+		"Signatures"
+		{
+			"OnStaggered"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
+				"windows" 	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+				/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? 56 57 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B ? 8B
+				 * Using a long local jump as the unique portion (last few bytes of sig)
+				 */
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			"SetHealthBuffer"
+			{
+				"library" "server"
+				"linux" "@_ZN13CTerrorPlayer15SetHealthBufferEf"
+				"windows" "\x55\x8B\xEC\xF3\x0F\x10\x45\x08\x0F\x57\xC9\x0F\x2F\xC1\x56"
+				/* 55 8B EC F3 0F 10 45 08 0F 57 C9 0F 2F C1 56 */
+			}
+			"OnAdrenalineUsed"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer16OnAdrenalineUsedEf"
+				"windows"	"\x55\x8B\x2A\x51\x53\x56\x8B\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8"
+				/* 55 8B ? 51 53 56 8B ? 8D ? ? ? ? ? 57 8B ? E8 */
+				/* Search: "%s used adrenaline\n" call is 3rd above, match to Linux. */
+			}
+			"OnRevived"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\xCE"
+				/* ? ? ? ? ? ? 53 56 8B F1 8B 06 8B 90 ? ? ? ? 57 FF D2 84 C0 0F 84 ? ? ? ? 8B CE */
+			}
+			"OnStaggered"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
+				"windows" 	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+				/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? 56 57 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B ? 8B
+				 * Using a long local jump as the unique portion (last few bytes of sig)
+				 */
+			}
+		}
+	}
+}

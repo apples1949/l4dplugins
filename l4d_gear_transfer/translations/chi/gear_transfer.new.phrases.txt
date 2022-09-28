@@ -3,57 +3,57 @@
 	"Gave"
 	{
 		"#format"		"{1:s},{2:s},{3:s}"
-		"zho"			"{1} 给了 {3} {2}"
+		"chi"			"{1} 给了 {3} {2}"
 	}
 	"Grabbed"
 	{
 		"#format"		"{1:s},{2:s},{3:s}"
-		"zho"			"{1} 拿了 {3} 的 {2}"
+		"chi"			"{1} 拿了 {3} 的 {2}"
 	}
 	"BotGrabbed"
 	{
 		"#format"		"{1:s},{2:s}"
-		"zho"			"{1} 拿了 {2}"
+		"chi"			"{1} 拿了 {2}"
 	}
 	"Switched"
 	{
 		"#format"		"{1:s},{2:s},{3:s}"
-		"zho"			"{1} 拿 {2} 与 {3} 交換"
+		"chi"			"{1} 拿 {2} 与 {3} 交換"
 	}
 	"weapon_molotov"
 	{
-		"zho"			"燃烧瓶"
+		"chi"			"燃烧瓶"
 	}
 	"weapon_pipe_bomb"
 	{
-		"zho"			"土制炸彈"
+		"chi"			"土制炸彈"
 	}
 	"weapon_vomitjar"
 	{
-		"zho"			"胆汁"
+		"chi"			"胆汁"
 	}
 	"weapon_first_aid_kit"
 	{
-		"zho"			"急救包"
+		"chi"			"急救包"
 	}
 	"weapon_pain_pills"
 	{
-		"zho"			"止痛药"
+		"chi"			"止痛药"
 	}
 	"weapon_adrenaline"
 	{
-		"zho"			"肾上腺素"
+		"chi"			"肾上腺素"
 	}
 	"weapon_upgradepack_explosive"
 	{
-		"zho"			"高爆弹药包"
+		"chi"			"高爆弹药包"
 	}
 	"weapon_upgradepack_incendiary"
 	{
-		"zho"			"燃烧弹药包"
+		"chi"			"燃烧弹药包"
 	}
 	"weapon_defibrillator"
 	{
-		"zho"			"电击器"
+		"chi"			"电击器"
 	}
 }

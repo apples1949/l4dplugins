@@ -164,27 +164,6 @@
 		"zho"			"禁止回靈魂復活!!"
 		"chi"			"禁止回灵魂复活!!"
 	}
-	"Not allowed to suicide during current mode"
-	{
-		"en"			"Not allowed to suicide during current mode"
-		"ru"			"Запрещено самоубийство в текущем режиме"
-		"zho"			"目前模式禁止自殺!"
-		"chi"			"目前模式禁止自杀!"
-	}
-	"Not allowed to suicide so quickly"
-	{
-		"en"			"Not allowed to suicide so quickly after spawn, you dumb fuck!"
-		"ru"			"Нельзя так быстро совершать самоубийство после возрождения, ты, тупой урод!"
-		"zho"			"復活後短時間內禁止自殺!"
-		"chi"			"复活后短时间内禁止自杀!"
-	}
-	"Not allowed to suicide"
-	{
-		"en"			"Not allowed to suicide when pinning survivor, you dumb fuck!"
-		"ru"			"Нельзя совершать самоубийство, когда пригвоздили выжившего, тупой ублюдок!"
-		"zho"			"禁止抓住人類期間自殺!"
-		"chi"			"禁止抓住人类期间自杀!"
-	}
 	"Join infected team in coop/survival/realism(adm only)"
 	{
 		"en"			"Type !ji to join infected team. (Adm only)"
