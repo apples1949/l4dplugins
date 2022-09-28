@@ -221,9 +221,9 @@ void ProcessPlayerLerp(int client,bool teamchange = false)
 			if(ShouldAnnounceLerpChanges())
 			{
 				if (iTeam == 2)
-					CPrintToChatAll("<{olive}Lerp{default}> {blue}%N{green}'s Lerp改变 {olive}%.01f {green}成 {olive}%.01f", client, GetCurrentLerp(client)*1000, m_fLerpTime*1000);
+					CPrintToChatAll("<{olive}Lerp{default}> {blue}%N{green}的Lerps从{olive}%.01f{green}变成了{olive}%.01f", client, GetCurrentLerp(client)*1000, m_fLerpTime*1000);
 				else if (iTeam == 3)
-					CPrintToChatAll("<{olive}Lerp{default}> {red}%N{green}'s Lerp改变 {olive}%.01f {green}成 {olive}%.01f", client, GetCurrentLerp(client)*1000, m_fLerpTime*1000);
+					CPrintToChatAll("<{olive}Lerp{default}> {red}%N{green}的Lerps从{olive}%.01f{green}变成了{olive}%.01f", client, GetCurrentLerp(client)*1000, m_fLerpTime*1000);
 			}
 		}
 	}
@@ -248,7 +248,7 @@ void ProcessPlayerLerp(int client,bool teamchange = false)
 	
 	if ( ((FloatCompare(m_fLerpTime, cVarMinLerp.FloatValue) == -1) || (FloatCompare(m_fLerpTime, cVarMaxLerp.FloatValue) == 1)) && GetClientTeam(client) != 1) {
 		
-		CPrintToChatAll("<{olive}Lerp{default}> {lightgreen}%N{default}的Lerp {olive}%.01f{default} 所以被移动到旁观!", client, m_fLerpTime*1000);
+		CPrintToChatAll("<{olive}Lerp{default}>因为{lightgreen}%N{default}的Lerp{olive}%.01f{default}所以被移动到旁观!", client, m_fLerpTime*1000);
 		ChangeClientTeam(client, 1);
 		CPrintToChat(client, "{blue}{default}[{green}提示{default}] 非法的Lerps值 (min: {olive}%.01f{default}, max: {olive}%.01f{default})",
 					cVarMinLerp.FloatValue*1000, cVarMaxLerp.FloatValue*1000);

@@ -292,21 +292,21 @@ public Action Callvote_Handler(int client, int args)
 	
 	if (voteInProgress)
 	{
-		PrintToChat(client, "\x04[VOTE] \x01在当前投票结束之前，你不能开始投票。");
+		PrintToChat(client, "\x04[VOTE]\x01在当前投票结束之前，你不能开始投票。");
 		LogVote(client, " <%s> 尝试发起一个投票但已有一个投票正在进行中.", voteName);
 		return Plugin_Handled;
 	}
 
 	if (postVoteDelay)
 	{
-		PrintToChat(client, "\x04[VOTE] \x01请在 \x03%f 秒 \x01再投票.", VOTE_DELAY);
+		PrintToChat(client, "\x04[VOTE]\x01请在 \x03%f 秒 \x01再投票.", VOTE_DELAY);
 		LogVote(client, " <%s>尝试发起一个投票但离他上一次投票时间太短", voteName);
 		return Plugin_Handled;
 	}
 	
 	if (!isValidVote(voteName))
 	{
-		PrintToChat(client,"\x04[VOTE] \无效投票类型: \x03%s", voteName);
+		PrintToChat(client,"\x04[VOTE]\x01无效投票类型: \x03 %s", voteName);
 		LogVote(client, "尝试发起一个无效投票类型: <%s>", voteName);
 		return Plugin_Handled;
 	}
@@ -314,7 +314,7 @@ public Action Callvote_Handler(int client, int args)
 	if (isInVoteTimeout(client))
 	{
 		LogVote(client, "无法发起一个<%s>投票 原因:超时", voteName);
-		PrintToChat(client, "\x04[VOTE] \x01你必须在 \x03%.1f秒\x01后发起一次投票.", GetConVarFloat(voteTimeout));
+		PrintToChat(client, "\x04[VOTE]\x01你必须在\x03%.1f秒\x01后发起一次投票.", GetConVarFloat(voteTimeout));
 		return Plugin_Handled;		
 	}
 
@@ -339,13 +339,13 @@ public Action Callvote_Handler(int client, int args)
 		}
 
 		LogVote(client, "started a <%s> vote", voteName);
-		Notify(client, "\x04[VOTE] \x03%s \x01发起了一个\x03%s \x01投票.", initiatorName, voteName);
+		Notify(client, "\x04[VOTE] \x03%s\x01发起了一个\x03%s \x01投票.", initiatorName, voteName);
 		return Plugin_Continue;
 	}
 	else
 	{
 		LogVote(client, "一个<%s>投票被阻止 原因:访问被拒绝", voteName);
-		Notify(client, "\x04[VOTE] \x03%s \x01尝试发起一个\x03%s \x01投票！访问被拒绝！", initiatorName, voteName);
+		Notify(client, "\x04[VOTE]\x03%s\x01尝试发起一个\x03%s \x01投票！访问被拒绝！", initiatorName, voteName);
 		return Plugin_Handled;
 	}
 }
@@ -369,8 +369,8 @@ public Action Kick_Vote_Logic(int client, int args)
 	if (target <= 0 || target > MaxClients || !IsClientInGame(target))
 	{
 		LogVote(client, "一次对<%s>的踢出投票被阻止 原因:目标无效", arg2);
-		Notify(client, "\x04[VOTE] \x03%s \尝试投票踢出\x03%s \x01但目标玩家不存在", initiatorName, arg2);
-		PrintToChat(client, "\x04[VOTE] \x01如果你想手动发起一次踢出玩家投票，指令格式为: 'callvote kick <玩家id>'");
+		Notify(client, "\x04[VOTE]\x03 %s\x01尝试投票踢出\x03%s\x01但目标玩家不存在", initiatorName, arg2);
+		PrintToChat(client, "\x04[VOTE]\x01如果你想手动发起一次踢出玩家投票，指令格式为: 'callvote kick <玩家id>'");
 		return Plugin_Handled;
 	}
 
@@ -384,7 +384,7 @@ public Action Kick_Vote_Logic(int client, int args)
 		if (StrContains(model, "hulk", false) > 0)
 		{
 			LogVote(client, "一次对<%s>的踢出投票被阻止 原因: 该玩家正在扮演坦克", targetName);
-			Notify(client,"\x04[VOTE] \x03%s \x01尝试对\x03%s \x01发起一次踢出投票但坦克玩家无法被踢出", initiatorName, targetName);
+			Notify(client,"\x04[VOTE]\x03%s\x01尝试对\x03%s\x01发起一次踢出投票但坦克玩家无法被踢出", initiatorName, targetName);
 			return Plugin_Handled;
 		}
 	}
@@ -392,7 +392,7 @@ public Action Kick_Vote_Logic(int client, int args)
 	if (GetClientTeam(client) == TEAM_SPECTATOR)
 	{
 		LogVote(client, "一次对<%s>的踢出投票被阻止 原因:旁观无法发起踢出玩家投票 ", targetName);
-		Notify(client, "\x04[VOTE] \x03%s \尝试发起对x03%s \x01发起一次踢出玩家投票但旁观无法踢出玩家", initiatorName, targetName);
+		Notify(client, "\x04[VOTE]\x03%s\x01尝试对\x03%s\x01发起一次踢出玩家投票但旁观无法踢出玩家", initiatorName, targetName);
 		return Plugin_Handled;
 	}
 
@@ -406,14 +406,14 @@ public Action Kick_Vote_Logic(int client, int args)
 			if (!CanAdminTarget(clientAdminId, targetAdminId))
 			{
 				LogVote(client, "一次对<%s>的踢出投票被阻止 原因: 目标玩家豁免被踢", targetName);
-				Notify(client, "\x04[VOTE] \x03%s \尝试对 \x03%s \发起一次踢出投票但失败了", initiatorName, targetName);
+				Notify(client, "\x04[VOTE]\x03%s\x01尝试对\x03%s\x01发起一次踢出投票但失败了", initiatorName, targetName);
 				return Plugin_Handled;
 			}
 		}
 	}
 	
 	LogVote(client, "发起一次对<%s>的踢出投票.", targetName);
-	Notify(client, "\x04[VOTE] \x03%s \x01is starting a Kick Vote against \x03%s", initiatorName, targetName);
+	Notify(client, "\x04[VOTE]\x03%s\x01is starting a Kick Vote against\x03%s", initiatorName, targetName);
 	return Plugin_Continue;
 }
 
@@ -429,7 +429,7 @@ public Action Veto_Handler(int client, int args)
 		LogVote(client, "投票被否决但没有正在进行的投票");
 		if (client != 0)
 		{
-			PrintToChat(client, "\x04[VOTE] \x01没有可否决的投票"); 
+			PrintToChat(client, "\x04[VOTE]\x01没有可否决的投票"); 
 		}
 		
 		return Plugin_Handled;
@@ -440,7 +440,7 @@ public Action Veto_Handler(int client, int args)
 		Veto();
 	
 		LogVote(client, "否决了一场投票");
-		Notify(0, "\x04[VOTE] \服务器否决了这个投票");
+		Notify(0, "\x04 [VOTE]\x01服务器否决了这个投票");
 		return Plugin_Continue;
 	}
 
@@ -452,12 +452,12 @@ public Action Veto_Handler(int client, int args)
 		Veto();
 		
 		LogVote(client, "否决了一场投票");
-		Notify(client, "\x04[VOTE] \x03%s \否决了一场投票", vetoerName);
+		Notify(client, "\x04 [VOTE]\x03%s\x01否决了一场投票", vetoerName);
 		return Plugin_Continue;
 	}
 
 	LogVote(client, "否决一场投票失败 原因:访问被拒绝 ");
-	Notify(client, "\x04[VOTE] \x03%s \x01尝试否决一场投票但他没有权限", vetoerName);
+	Notify(client, "\x04[VOTE]\x03%s\x01尝试否决一场投票但他没有权限", vetoerName);
 	return Plugin_Handled;
 }
 
@@ -480,7 +480,7 @@ public Action PassVote_Handler(int client, int args)
 		LogVote(client, "强制通过了一场投票但没有可强制通过的投票");
 		if (client != 0)
 		{
-			PrintToChat(client, "\x04[VOTE] \x01没有可强制通过的投票"); 
+			PrintToChat(client, "\x04[VOTE]\x01没有可强制通过的投票"); 
 		}
 		return Plugin_Handled;
 	}
@@ -490,7 +490,7 @@ public Action PassVote_Handler(int client, int args)
 		PassVote();
 	
 		LogVote(client, "已通过投票");
-		Notify(0, "\x04[VOTE] \x01服务器通过了这个投票");
+		Notify(0, "\x04[VOTE]\x01服务器通过了这个投票");
 		return Plugin_Continue;
 	}
 
@@ -502,12 +502,12 @@ public Action PassVote_Handler(int client, int args)
 		PassVote();
 		
 		LogVote(client, "已通过投票");
-		Notify(client, "\x04[VOTE] \x03%s \x01已通过这个投票", passerName);
+		Notify(client, "\x04[VOTE]\x03%s\x01已通过这个投票", passerName);
 		return Plugin_Continue;
 	}
 
 	LogVote(client, "否决一场投票失败 原因:访问被拒绝");
-	Notify(client, "\x04[VOTE] \x03%s \x01尝试强制通过一场投票但他没有权限", passerName);
+	Notify(client, "\x04[VOTE]\x03%s\x01尝试强制通过一场投票但他没有权限", passerName);
 	return Plugin_Handled;
 }
 
@@ -561,7 +561,7 @@ public Action CustomVote_Handler(int client, int args)
 	else
 	{
 		LogVote(client, "尝试发起一场自定义投票但一场投票正在进行中");
-		Notify(client, "\x04[VOTE] \x03%s \x01尝试发起一场自定义投票但一场投票正在进行中", initiatorName);
+		Notify(client, "\x04[VOTE]\x03%s\x01尝试发起一场自定义投票但一场投票正在进行中", initiatorName);
 	}
 	
 	return Plugin_Handled;
@@ -591,7 +591,7 @@ public Action Custom_Vote_Logic(int client, int args)
 		FakeClientCommandEx(client, "Vote Yes");
 		
 		LogVote(client, "启动了自定义投票");
-		Notify(client, "\x04[VOTE] \x03%s \x01发起了一场自定义投票", initiatorName);
+		Notify(client, "\x04[VOTE]\x03%s\x01发起了一场自定义投票", initiatorName);
 		
 		CreateTimer(30.0, EndCustomVote, client);
 		
