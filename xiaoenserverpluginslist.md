@@ -81,7 +81,8 @@ l4d_votedifficulty 投票更改难度 自翻译文本 自用删掉了简单难�
 RestrictedGameModes 锁定服务器难度和游戏模式 https://github.com/fantasylidong/L4d2_plugins/blob/main/RestrictGamemode/RestrictedGameModes.sp  
 l4d_nightvision 夜视仪 翻译了下文本 https://github.com/apples1949/l4dplugins/blob/main/l4d_nightvision.sp 来自 https://forums.alliedmods.net/showthread.php?p=2666575#post2666575  
 self_help 自救插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/self_help 来自 https://forums.alliedmods.net/showthread.php?p=2766775#post2766775  
-l4d_reservedslots 管理员通道 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_reservedslots  
+l4d2_unreservelobby 动态大厅 https://github.com/Attano/Left4Downtown2/blob/master/scripting/l4d2_unreservelobby.sp  
+
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
