@@ -39,6 +39,7 @@
 自选-显示谁在按C骂人(v1.5)(Accelerator)  
 自选-显示幸存者开关安全门或次数限制  
 自选-小手枪替换成马格南(脚本)  
+自选-幸存者倒地使用马格南(v1.0.2)(sorallll)  
 自选-幸存者黑白发光(v2.0.2)(Lux)  
 自选-幸存者死亡和被制服提示(v1.0.1)(豆瓣酱な-死亡提示嫖至sorallll)  
 自选-幸存者闲置状态快速双击鼠标右键使用自由视角(v1.0.0)(豆瓣酱な)  
@@ -48,7 +49,7 @@
 自选-M60正常化(可更换弹夹)+可拾取弹药(包括榴弹发射器)(Lux)  
 自选-MOD(8人大厅)  
 自选-tick解锁扩展(启动项加 -tickrate 100)(需要配合tick设置插件使用)  
-新加-自选-指令!un关闭匹配和指令!sn崩溃服务端(v1.0.0)(豆瓣酱な)  
+自选-指令!un关闭匹配和指令!sn崩溃服务端(v1.0.0)(豆瓣酱な)  
 
 自找插件：  
 all4dead2 物品特感生成 自改自翻译 https://github.com/apples1949/l4dplugins/tree/main/all4dead2 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2  
@@ -78,7 +79,6 @@ sm_l4d_mapchanger 官图战役打完换图 自用 https://github.com/apples1949/
 l4d_rescue_vehicle_leave_timer 救援倒计时 自翻cvar https://github.com/apples1949/l4dplugins/tree/main/l4d_rescue_vehicle_leave_timer 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rescue_vehicle_leave_timer  
 l4d_death_soul 死去的幸存者的灵魂飞向来世 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_death_soul  
 l4d_votedifficulty 投票更改难度 自翻译文本 自用删掉了简单难度选项 https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty 来自 https://forums.alliedmods.net/showthread.php?t=317257  
-RestrictedGameModes 锁定服务器难度和游戏模式 https://github.com/fantasylidong/L4d2_plugins/blob/main/RestrictGamemode/RestrictedGameModes.sp  
 l4d_nightvision 夜视仪 翻译了下文本 https://github.com/apples1949/l4dplugins/blob/main/l4d_nightvision.sp 来自 https://forums.alliedmods.net/showthread.php?p=2666575#post2666575  
 self_help 自救插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/self_help 来自 https://forums.alliedmods.net/showthread.php?p=2766775#post2766775  
 l4d2_unreservelobby 动态大厅 https://github.com/Attano/Left4Downtown2/blob/master/scripting/l4d2_unreservelobby.sp  
