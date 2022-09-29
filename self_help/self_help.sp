@@ -139,8 +139,8 @@ public void OnPluginStart()
 	shKillAttacker = CreateConVar("self_help_kill_attacker", "1", "是否将攻击玩家的特感杀死", FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.0, true, 1.0);
 	shBot = CreateConVar("self_help_bot", "1", "AI是否可以自救", FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.0, true, 1.0);
 	shBotChance = CreateConVar("self_help_bot_chance", "1", "AI自救频率: 1=有时, 2=经常, 3=很少", FCVAR_NOTIFY|FCVAR_SPONLY, true, 1.0, true, 3.0);
-	shHardHP = CreateConVar("self_help_hard_hp", "50", "自救后多少实血", FCVAR_NOTIFY|FCVAR_SPONLY, true, 1.0);
-	shTempHP = CreateConVar("self_help_temp_hp", "50.0", "自救后多少", FCVAR_NOTIFY|FCVAR_SPONLY, true, 1.0);
+	shHardHP = CreateConVar("self_help_hard_hp", "50.0", "自救后多少实血", FCVAR_NOTIFY|FCVAR_SPONLY, true, 1.0);
+	shTempHP = CreateConVar("self_help_temp_hp", "30.0", "自救后多少虚血", FCVAR_NOTIFY|FCVAR_SPONLY, true, 1.0);
 	
 	if (bIsL4D)
 	{
@@ -351,7 +351,7 @@ public void OnPlayerDown(Event event, const char[] name, bool dontBroadcast)
 		
 		if (StrEqual(name, "player_incapacitated"))
 		{
-			PrintHintText(wounded, "(按住换弹键以复活其他倒地的生还者");
+			PrintHintText(wounded, "按住换弹键以复活其他倒地的生还者");
 			
 			if (bIsL4D)
 			{
@@ -360,7 +360,7 @@ public void OnPlayerDown(Event event, const char[] name, bool dontBroadcast)
 					iSHCount[wounded] = iMaxCount - 1;
 				}
 				
-				CPrintToChat(wounded, "你倒地了! [{green}%d{default}/{green}%i{default}]", iSHCount[wounded] + 1, iMaxCount);
+				CPrintToChat(wounded, "你倒地了! 倒地次数：[{green}%d{default}/{green}%i{default}]", iSHCount[wounded] + 1, iMaxCount);
 				if (iSHCount[wounded] == iMaxCount)
 				{
 					for (int i = 1; i <= MaxClients; i++)
@@ -382,7 +382,7 @@ public void OnPlayerDown(Event event, const char[] name, bool dontBroadcast)
 					iReviveCount = iMaxIncapCount - 1;
 				}
 				
-				CPrintToChat(wounded, "你倒地了! |{green}%d{default}/{green}%i{default}|", iReviveCount + 1, iMaxIncapCount);
+				CPrintToChat(wounded, "你倒地了! 倒地次数：|{green}%d{default}/{green}%i{default}|", iReviveCount + 1, iMaxIncapCount);
 				if (iReviveCount == iMaxIncapCount)
 				{
 					for (int i = 1; i <= MaxClients; i++)
@@ -963,7 +963,7 @@ public void OnReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 			{
 				if (!IsFakeClient(reviver))
 				{
-					CPrintToChat(reviver, "{blue}(S★H) {default}你救了{olive}%N{default}!", revived);
+					CPrintToChat(reviver, "你救了{olive}%N{default}!", revived);
 				}
 				
 				if (!IsFakeClient(revived))
@@ -975,7 +975,7 @@ public void OnReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 			{
 				if (!IsFakeClient(revived))
 				{
-					CPrintToChat(revived, "你救了你自己!");
+					CPrintToChat(revived, "你自救了!");
 				}
 			}
 		}
@@ -993,7 +993,7 @@ public void OnReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 				{
 					if (!IsFakeClient(revived))
 					{
-						CPrintToChat(revived, "你救了你自己! |{green}%d{default}/{green}%i{default}|", iReviveCount, iMaxIncapCount);
+						CPrintToChat(revived, "你自救了! |{green}%d{default}/{green}%i{default}|", iReviveCount, iMaxIncapCount);
 					}
 				}
 				else
@@ -1087,7 +1087,7 @@ public void OnHealSuccess(Event event, const char[] name, bool dontBroadcast)
 		}
 		
 		UnloopAnnoyingMusic(healed, sGameSounds[5]);
-		PrintHintTextToAll("%N被%N完全治愈!", healed, healer);
+		PrintHintTextToAll("[%N]被[%N]完全治愈!", healed, healer);
 		
 		if (bIsL4D && iSHCount[healed] != 0)
 		{
