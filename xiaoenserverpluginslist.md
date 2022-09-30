@@ -96,7 +96,7 @@ lagpreventor 优化某些三方图炸ping问题 https://forums.alliedmods.net/sh
 l4d_lift_music 电梯放音乐 https://forums.alliedmods.net/showthread.php?t=157267  
 l4d2_block_pour_gascan 可以多人同时罐油和放可乐 https://forums.alliedmods.net/showthread.php?p=2739649  
 l4d2_biletheworld 胖子死亡可糊其他感染者\胆汁砸中生还者被糊脸扣血 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_biletheworld.sp 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_biletheworld  
-
+l4dhots 缓慢回血 更改默认设置以及增加自动生成cfg https://github.com/apples1949/l4dplugins/blob/main/l4dhots.sp 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4dhots.sp  
 
 
 vpk功能包：  
