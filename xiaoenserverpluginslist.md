@@ -88,7 +88,7 @@ l4d2_ThirdpersonShoulderShotgunSoundFix  第三人称霰弹无声音修复 来�
 l4d2_Survivor_Legs 显示双腿 来自 https://forums.alliedmods.net/showthread.php?t=299560  
 l4d_dynamic_light 手电筒显示动态光 翻译cvar说明及文本增加夜视仪说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_dynamic_light 来自 https://forums.alliedmods.net/showthread.php?t=186558
 l4d2_spit_glow 口水酸液显示动态光 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_spit_glow.sp 来自 https://forums.alliedmods.net/showthread.php?t=330835  
-
+l4d_fire_glow 燃烧瓶扔出及燃烧显示动态光 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_fire_glow.sp 来自 https://forums.alliedmods.net/showthread.php?t=186617  
 
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
