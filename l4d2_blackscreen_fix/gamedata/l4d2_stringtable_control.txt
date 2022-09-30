@@ -1,0 +1,100 @@
+"Games"
+{
+	"left4dead"
+	{
+		"Functions"
+        {
+            "SV_CreateDictionary"
+			{
+				"signature" "SV_CreateDictionary"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+            }
+		}
+		"Signatures"
+		{
+			"CNetworkStringTable::DeleteAllStrings"
+			{
+				"library"   "engine"
+				"linux"	 	"@_ZN19CNetworkStringTable16DeleteAllStringsEv"
+				"windows"	 	"\x53\x56\x8B\xF1\x8B\x4E\x38\x33\xDB"
+			}
+			"CNetworkStringTable::FindTable"
+			{
+				"library"   "engine"
+				"linux"	 	"@_ZNK28CNetworkStringTableContainer9FindTableEPKc"
+				"windows"	 	"\x53\x56\x57\x8B\xF9\x33\xF6\x39\x77\x1C"
+			}
+			"SV_CreateDictionary"
+			{
+				"library"	"engine"
+				"linux" "@_ZL74__CreateCNetworkStringTableContainerINetworkStringTableContainer_interfacev_0"
+				"windows" "\xB8\xF4\x2E\x2A\x2A\xC3"
+			}
+			"RemoveTables"
+			{
+				"library"	"engine"
+				"linux" "@_ZN28CNetworkStringTableContainer15RemoveAllTablesEv"
+				"windows" "\x56\x8B\xF1\x83\x7E\x1C\x00\x7E"
+			}
+		}
+	}
+	"left4dead2"
+	{
+		"Functions"
+        {
+            "SV_CreateDictionary"
+			{
+				"signature" "SV_CreateDictionary"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+            }
+		}
+		"Signatures"
+		{
+			"CNetworkStringTable::DeleteAllStrings"
+			{
+				"library"   "engine"
+				"linux"	 	"@_ZN19CNetworkStringTable16DeleteAllStringsEv"
+				"windows"	 	"\x53\x56\x8B\xF1\x8B\x4E\x38\x33\xDB"
+				//"windows"	 	"\x55\x8B\xEC\x53\x57\x8B\xF9\x33\xDB\x39\x5F\x1C"
+			}
+			"CNetworkStringTable::FindTable"
+			{
+				"library"   "engine"
+				"linux"	 	"@_ZN28CNetworkStringTableContainerC2Ev"
+				"windows"	 	"\x55\x8B\xEC\x53\x56\x57\x8B\xF9\x33\xF6\x39\x77\x1C"
+			}
+			"SV_CreateDictionary"
+			{
+				"library"	"engine"
+				"linux" "@_ZL51__CreateCServerPluginIServerPluginHelpers_interfacev"
+				"windows" "\xB8\x70\x14\x2A\x2A\xC3"
+			}
+			"RemoveTables"
+			{
+				"library"	"engine"
+				"linux" "@_ZN28CNetworkStringTableContainer15RemoveAllTablesEv"
+				"windows" "\x56\x8B\xF1\x83\x7E\x1C\x00\x7E"
+			}
+		}
+		"Addresses" // Dont touch please. I know it.
+		{
+			"SV_CreateDictionary"
+			{
+				"windows"
+                {
+                    "signature" "SV_CreateDictionary"
+					"read" "6"
+                }
+                "linux"
+                {
+                    "signature" "SV_CreateDictionary"
+                }
+				"read" "0"
+			}
+		}
+	}
+}
