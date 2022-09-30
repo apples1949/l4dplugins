@@ -92,6 +92,8 @@ l4d_fire_glow 燃烧瓶扔出及燃烧显示动态光 翻译cvar说明 https://g
 l4d2_DefibUsingBots 强制bot使用电击器 来自 https://github.com/apples1949/l4dplugins/blob/main/l4d2_DefibUsingBots.sp  
 l4d_grenade_throwing_bots 允许bot扔投抛 https://github.com/apples1949/l4dplugins/blob/main/l4d_grenade_throwing_bots.sp 来自 https://forums.alliedmods.net/showthread.php?t=296150&page=16  
 l4d_healing_field 坦克死亡留下治疗阵 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/blob/main/l4d_healing_field.sp 来自 https://forums.alliedmods.net/showthread.php?t=324501  
+lagpreventor 优化某些三方图炸ping问题 https://forums.alliedmods.net/showthread.php?p=2758895  
+
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
