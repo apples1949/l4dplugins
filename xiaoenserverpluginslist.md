@@ -57,7 +57,7 @@ l4d_anti_rush 反跑图 自翻cvar介绍和文本 https://github.com/apples1949/
 l4d_coop_markers 路程进度主动显示 https://github.com/apples1949/l4dplugins/tree/main/l4d_coop_markers 来自https://forums.alliedmods.net/showthread.php?t=321288  
 l4d_dissolve_infected 僵尸溶解 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_dissolve_infected 来自 https://forums.alliedmods.net/showthread.php?t=306789  
 l4d_gear_transfer 按键给予物品 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_gear_transfer 来自 https://forums.alliedmods.net/showthread.php?t=137616&  
-show_mic 屏幕中心显示谁在说话 https://github.com/apples1949/l4dplugins/tree/main/show_mic 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic  
+show_mic/ThirdPersonShoulder_Detect 屏幕中心显示谁在说话/第三人称指令查询简化 https://github.com/apples1949/l4dplugins/tree/main/show_mic 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic/https://forums.alliedmods.net/showthread.php?p=2529779  
 superversus1.8.15.5改(多人插件)-v1.11.1  来自 https://github.com/umlka/l4d2/tree/main/superversus1.8.15.5-modify  
 TankOnSpawn 每次生成多个坦克 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/TankOnSpawn 来自 https://forums.alliedmods.net/showthread.php?t=323813  
 l4d2_item_hint 标记插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush 来自https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_item_hint  
@@ -82,6 +82,7 @@ l4d_votedifficulty 投票更改难度 自翻译文本 自用删掉了简单难�
 l4d_nightvision 夜视仪 翻译了下文本 https://github.com/apples1949/l4dplugins/blob/main/l4d_nightvision.sp 来自 https://forums.alliedmods.net/showthread.php?p=2666575#post2666575  
 self_help 自救插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/self_help 来自 https://forums.alliedmods.net/showthread.php?p=2766775#post2766775  
 l4d2_unreservelobby 动态大厅 https://github.com/Attano/Left4Downtown2/blob/master/scripting/l4d2_unreservelobby.sp  
+l4d2_blackscreen_fix/sm_stringtable_dumper 黑屏加载修复/转储所有字符串表的记录 https://github.com/apples1949/l4dplugins/tree/main/l4d2_blackscreen_fix 来自 https://forums.alliedmods.net/showthread.php?t=318739 / https://forums.alliedmods.net/showthread.php?p=2689943  
 
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
