@@ -1,0 +1,15 @@
+﻿"Phrases"
+{
+	"DynamicLight_Toggle"
+	{
+		"chi"			"双击手电筒按键 (F) 切换动态光源及夜视仪"
+	}
+	"DynamicLight_TurnedOn"
+	{
+		"chi"			"动态光源和夜视仪开启. 双击手电筒按键 (F) 切换."
+	}
+	"DynamicLight_TurnedOff"
+	{
+		"chi"			"动态光源和夜视仪关闭. 双击手电筒按键 (F) 切换."
+	}
+}

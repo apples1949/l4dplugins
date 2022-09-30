@@ -1,0 +1,15 @@
+﻿"Phrases"
+{
+	"DynamicLight_Toggle"
+	{
+		"ru"			"Включите динамический свет, дважды нажав (F) клавиша фонарика."
+	}
+	"DynamicLight_TurnedOn"
+	{
+		"ru"			"Дважды нажмите (F) чтобы выключить."
+	}
+	"DynamicLight_TurnedOff"
+	{
+		"ru"			"Дважды нажмите (F) чтобы включить."
+	}
+}

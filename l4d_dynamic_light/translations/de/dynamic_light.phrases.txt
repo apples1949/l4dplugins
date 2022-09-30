@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"DynamicLight_Toggle"
+	{
+		"de"			"Schalte das dynamische Licht durch doppeltes Antippen der Taschenlampen Taste (F) ein/aus."
+	}
+	"DynamicLight_TurnedOn"
+	{
+		"de"			"Dynamisches Licht an. Zum Einschalten tippe deine Taschenlampen Taste (F) doppelt an."
+	}
+	"DynamicLight_TurnedOff"
+	{
+		"de"			"Dynamisches Licht aus. Zum Einschalten tippe deine Taschenlampen Taste (F) doppelt an."
+	}
+}

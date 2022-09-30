@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"DynamicLight_Toggle"
+	{
+		"en"			"Toggle the dynamic light by double tapping your flashlight key (F)."
+	}
+	"DynamicLight_TurnedOn"
+	{
+		"en"			"Dynamic Light On. Double tap your flashlight key (F) to toggle."
+	}
+	"DynamicLight_TurnedOff"
+	{
+		"en"			"Dynamic Light Off. Double tap your flashlight key (F) to toggle."
+	}
+}

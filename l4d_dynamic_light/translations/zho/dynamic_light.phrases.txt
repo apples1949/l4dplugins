@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"DynamicLight_Toggle"
+	{
+		"zho"			"雙擊手電筒按鍵 (F) 切換動態光源."
+	}
+	"DynamicLight_TurnedOn"
+	{
+		"zho"			"動態光源開啟. 雙擊手電筒按鍵 (F) 切換."
+	}
+	"DynamicLight_TurnedOff"
+	{
+		"zho"			"動態光源關閉. 雙擊手電筒按鍵 (F) 切換."
+	}
+}
