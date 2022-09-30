@@ -1,6 +1,8 @@
+#pragma semicolon 1
+#pragma newdecls required
 #include <sourcemod>
 #include <sdktools>
-#include "left4downtown.inc"
+#include <left4dhooks>
 
 #define UNRESERVE_VERSION "2.0.0"
 
@@ -13,142 +15,133 @@
 #define L4D_MAXHUMANS_LOBBY_VERSUS 8
 #define L4D_MAXHUMANS_LOBBY_OTHER 4
 
-new bool:g_bUnreserved = false;
+bool g_bUnreserved = false;
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "L4D 1/2 Remove Lobby Reservation",
 	author = "Downtown1, Anime4000",
 	description = "Removes lobby reservation when server is full",
 	version = UNRESERVE_VERSION,
-	url = "https://github.com/Attano/Left4Downtown2/blob/master/scripting/l4d2_unreservelobby.sp"
+	url = "http://forums.alliedmods.net/showthread.php?t=87759"
 }
 
-new Handle:cvarUnreserve = INVALID_HANDLE;
-new Handle:cvarAutoLobby = INVALID_HANDLE;
+ConVar g_hcvarUnreserve;
+ConVar g_hcvarAutoLobby;
+ConVar g_hcvarGameMode;
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
-	HookEvent("player_disconnect", OnPlayerDisconnect)
-	RegAdminCmd("sm_unreserve", Command_Unreserve, ADMFLAG_BAN, "sm_unreserve - 手动强制删除大厅");
+	HookEvent("player_disconnect", OnPlayerDisconnect);
+	RegAdminCmd("sm_unreserve", Command_Unreserve, ADMFLAG_BAN, "sm_unreserve - manually force removes the lobby reservation");
 
-	cvarUnreserve = CreateConVar("l4d_unreserve_full", "1", "是否满人后删除大厅", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_NOTIFY);
-	cvarAutoLobby = CreateConVar("l4d_autolobby", "1", "仅自动调整sv_allow_lobby_connect_only。当大厅已满时设置为0，当服务器为空时设置为1", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_NOTIFY);
-	CreateConVar("l4d_unreserve_version", UNRESERVE_VERSION, "Version of the Lobby Unreserve plugin.", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_NOTIFY);
+	g_hcvarUnreserve = CreateConVar("l4d_unreserve_full", "1", "Automatically unreserve server after a full lobby joins", FCVAR_SPONLY|FCVAR_NOTIFY);
+	g_hcvarAutoLobby = CreateConVar("l4d_autolobby", "1", "Automatically adjust sv_allow_lobby_connect_only. When lobby full it set to 0, when server empty it set to 1", FCVAR_SPONLY|FCVAR_NOTIFY);
+	CreateConVar("l4d_unreserve_version", UNRESERVE_VERSION, "Version of the Lobby Unreserve plugin.", FCVAR_SPONLY|FCVAR_NOTIFY);
+	g_hcvarGameMode = FindConVar("mp_gamemode");
 }
 
-//DDRKhat thanks http://forums.alliedmods.net/showpost.php?p=811533&postcount=76
-Gamemode() // 1 = Co-Op, 2 = Versus, 3 = Survival. False on anything else.
+bool IsVersusOrScavengeMode()
 {
-	new String:gmode[32];
-	GetConVarString(FindConVar("mp_gamemode"),gmode,sizeof(gmode));
-	if (strncmp(gmode,"coop",sizeof(gmode),false)==0) return 1;
-	else if (strncmp(gmode,"versus",sizeof(gmode),false)==0) return 2;
-	else if (strncmp(gmode,"survival",sizeof(gmode),false)==0) return 3;
-	else if (strncmp(gmode,"scavenge",sizeof(gmode),false)==0) return 4;
-	else if (strncmp(gmode,"realism",sizeof(gmode),false)==0) return 5;
-        else return false;
+	char sGameMode[32];
+	g_hcvarGameMode.GetString(sGameMode, sizeof(sGameMode));
+	if(strncmp(sGameMode, "versus", sizeof(sGameMode), false) == 0)
+		return true;
+
+	if(strncmp(sGameMode, "scavenge", sizeof(sGameMode), false) == 0)
+		return true;
+
+	return false;
 }
 
-IsServerLobbyFull()
+bool IsServerLobbyFull()
 {
-	new humans = GetHumanCount();
-	new gamemode = Gamemode();
+	int humans = GetHumanCount();
 
-	DebugPrintToAll("IsServerLobbyFull : humans = %d, gamemode = %d", humans, gamemode);
-
-	if(gamemode == 2 || gamemode == 4)
-	{
+	if(IsVersusOrScavengeMode())
 		return humans >= L4D_MAXHUMANS_LOBBY_VERSUS;
-	}
 
 	return humans >= L4D_MAXHUMANS_LOBBY_OTHER;
 }
 
-IsAllowLobby(bool:e)
+void IsAllowLobby(int value)
 {
-	if(GetConVarBool(cvarAutoLobby))
-		SetConVarBool(FindConVar("sv_allow_lobby_connect_only"), e);
+	if(g_hcvarAutoLobby.BoolValue)
+		FindConVar("sv_allow_lobby_connect_only").SetInt(value);
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
 	DebugPrintToAll("Client put in server %N", client);
 
-	if(GetConVarBool(cvarUnreserve) && !g_bUnreserved && IsServerLobbyFull())
+	if(g_hcvarUnreserve.BoolValue && !g_bUnreserved && IsServerLobbyFull())
 	{
-		if (GetConVarInt(FindConVar("sv_hosting_lobby")) > 0)
+		if(FindConVar("sv_hosting_lobby").IntValue > 0)
 		{
 			LogMessage("[UL] A full lobby has connected, automatically unreserving the server.");
 			L4D_LobbyUnreserve();
 			g_bUnreserved = true;
-			IsAllowLobby(false);
+			IsAllowLobby(0);
 		}
 	}
 }
+
 //OnClientDisconnect will fired when changing map, issued by gH0sTy at http://docs.sourcemod.net/api/index.php?fastload=show&id=390&
-public Action:OnPlayerDisconnect(Handle:event, const String:name[], bool:dontBroadcast)
+public Action OnPlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (client == 0)
+	if(client == 0)
 		return;
 
-	if (IsFakeClient(client))
+	if(IsFakeClient(client))
 		return;
-	
-	if (!RealClientsInServer(client))
+
+	if(!RealClientsInServer(client))
 	{
 		PrintToServer("[UL] No human want to play in this server. :(");
 		g_bUnreserved = false;
-		IsAllowLobby(true);
+		IsAllowLobby(1);
 	}
 }
 
-public Action:Command_Unreserve(client, args)
+public Action Command_Unreserve(int client, int args)
 {
 	if(g_bUnreserved)
-	{
 		ReplyToCommand(client, "[UL] Server has already been unreserved.");
-	}
 	else
 	{
 		L4D_LobbyUnreserve();
 		g_bUnreserved = true;
 		ReplyToCommand(client, "[UL] Lobby reservation has been removed.");
-		IsAllowLobby(false);
+		IsAllowLobby(0);
 	}
 
 	return Plugin_Handled;
 }
 
 //client is in-game and not a bot
-stock bool:IsClientInGameHuman(client)
+stock bool IsClientInGameHuman(int client)
 {
 	return IsClientInGame(client) && !IsFakeClient(client);
 }
 
-stock GetHumanCount()
+stock int GetHumanCount()
 {
-	new humans = 0;
-
-	new i;
-	for(i = 1; i < L4D_MAXCLIENTS_PLUS1; i++)
+	int humans;
+	for(int i = 1; i < L4D_MAXCLIENTS_PLUS1; i++)
 	{
 		if(IsClientInGameHuman(i))
-		{
-			humans++
-		}
+			humans++;
 	}
-
 	return humans;
 }
 
-DebugPrintToAll(const String:format[], any:...)
+void DebugPrintToAll(const char[] format, any ...)
 {
 	#if UNRESERVE_DEBUG	|| UNRESERVE_DEBUG_LOG
-	decl String:buffer[192];
+	char buffer[192];
 
 	VFormat(buffer, sizeof(buffer), format, 2);
 
@@ -168,13 +161,13 @@ DebugPrintToAll(const String:format[], any:...)
 }
 
 //No need check client in game, issue when client left and server empty, then got client still connecting.
-public RealClientsInServer(client)
+bool RealClientsInServer(int client)
 {
-	for (new i = 1; i <= MaxClients; i++)
+	for(int i = 1; i <= MaxClients; i++)
 	{
-		if (i != client)
+		if(i != client)
 		{
-			if (IsClientConnected(i) && !IsFakeClient(i))
+			if(IsClientConnected(i) && !IsFakeClient(i))
 				return true;
 		}
 	}
