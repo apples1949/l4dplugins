@@ -90,6 +90,7 @@ l4d_dynamic_light 手电筒显示动态光 翻译cvar说明及文本增加夜视
 l4d2_spit_glow 口水酸液显示动态光 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_spit_glow.sp 来自 https://forums.alliedmods.net/showthread.php?t=330835  
 l4d_fire_glow 燃烧瓶扔出及燃烧显示动态光 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_fire_glow.sp 来自 https://forums.alliedmods.net/showthread.php?t=186617  
 l4d2_DefibUsingBots 强制bot使用电击器 来自 https://github.com/apples1949/l4dplugins/blob/main/l4d2_DefibUsingBots.sp  
+l4d_grenade_throwing_bots 允许bot扔投抛 https://github.com/apples1949/l4dplugins/blob/main/l4d_grenade_throwing_bots.sp 来自 https://forums.alliedmods.net/showthread.php?t=296150&page=16  
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
