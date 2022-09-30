@@ -95,6 +95,8 @@ l4d_healing_field 坦克死亡留下治疗阵 自翻cvar说明及文本 https://
 lagpreventor 优化某些三方图炸ping问题 https://forums.alliedmods.net/showthread.php?p=2758895  
 l4d_lift_music 电梯放音乐 https://forums.alliedmods.net/showthread.php?t=157267  
 l4d2_block_pour_gascan 可以多人同时罐油和放可乐 https://forums.alliedmods.net/showthread.php?p=2739649  
+l4d2_biletheworld 胖子死亡可糊其他感染者\胆汁砸中生还者被糊脸扣血 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_biletheworld.sp 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_biletheworld  
+
 
 
 vpk功能包：  
