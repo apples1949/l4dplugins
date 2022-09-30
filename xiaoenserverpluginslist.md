@@ -85,7 +85,7 @@ l4d2_unreservelobby 动态大厅 https://github.com/Attano/Left4Downtown2/blob/m
 l4d2_blackscreen_fix/sm_stringtable_dumper 黑屏加载修复/转储所有字符串表的记录 https://github.com/apples1949/l4dplugins/tree/main/l4d2_blackscreen_fix 来自 https://forums.alliedmods.net/showthread.php?t=318739 / https://forums.alliedmods.net/showthread.php?p=2689943  
 l4d_TankStuckTeleport 坦克防卡 翻译cvar说明及注释debug输出 https://github.com/apples1949/l4dplugins/blob/main/l4d_TankStuckTeleport.sp 来自 https://forums.alliedmods.net/showthread.php?t=314741  
 l4d2_ThirdpersonShoulderShotgunSoundFix  第三人称霰弹无声音修复 来自 https://forums.alliedmods.net/showthread.php?t=259986  
-
+l4d2_Survivor_Legs 显示双腿 来自 https://forums.alliedmods.net/showthread.php?t=299560  
 
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
