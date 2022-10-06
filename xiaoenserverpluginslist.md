@@ -86,7 +86,6 @@ l4d2_blackscreen_fix/sm_stringtable_dumper 黑屏加载修复/转储所有字符
 l4d_TankStuckTeleport 坦克防卡 翻译cvar说明及注释debug输出 https://github.com/apples1949/l4dplugins/blob/main/l4d_TankStuckTeleport.sp 来自 https://forums.alliedmods.net/showthread.php?t=314741  
 l4d2_ThirdpersonShoulderShotgunSoundFix  第三人称霰弹无声音修复 来自 https://forums.alliedmods.net/showthread.php?t=259986  
 l4d2_Survivor_Legs 显示双腿 来自 https://forums.alliedmods.net/showthread.php?t=299560  
-l4d_dynamic_light 手电筒显示动态光 翻译cvar说明及文本增加夜视仪说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_dynamic_light 来自 https://forums.alliedmods.net/showthread.php?t=186558
 l4d2_spit_glow 口水酸液显示动态光 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_spit_glow.sp 来自 https://forums.alliedmods.net/showthread.php?t=330835  
 l4d_fire_glow 燃烧瓶扔出及燃烧显示动态光 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_fire_glow.sp 来自 https://forums.alliedmods.net/showthread.php?t=186617  
 l4d2_DefibUsingBots 强制bot使用电击器 来自 https://github.com/apples1949/l4dplugins/blob/main/l4d2_DefibUsingBots.sp  
