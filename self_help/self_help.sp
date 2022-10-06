@@ -382,7 +382,7 @@ public void OnPlayerDown(Event event, const char[] name, bool dontBroadcast)
 					iReviveCount = iMaxIncapCount - 1;
 				}
 				
-				CPrintToChat(wounded, "你倒地了! 倒地次数：|{green}%d{default}/{green}%i{default}|", iReviveCount + 1, iMaxIncapCount);
+				CPrintToChat(wounded, "你倒地了! 倒地次数：[{green}%d{default}/{green}%i{default}]", iReviveCount + 1, iMaxIncapCount);
 				if (iReviveCount == iMaxIncapCount)
 				{
 					for (int i = 1; i <= MaxClients; i++)
@@ -993,7 +993,7 @@ public void OnReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 				{
 					if (!IsFakeClient(revived))
 					{
-						CPrintToChat(revived, "你自救了! |{green}%d{default}/{green}%i{default}|", iReviveCount, iMaxIncapCount);
+						CPrintToChat(revived, "你自救了! 倒地次数:[{green}%d{default}/{green}%i{default}]", iReviveCount, iMaxIncapCount);
 					}
 				}
 				else
@@ -1005,12 +1005,12 @@ public void OnReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 							CPrintToChatAll("{%N在黑白状态下救了{olive}%N!", reviver, revived);
 						}
 						
-						CPrintToChat(reviver, "你救了{olive}%N{default}! |{green}%d{default}/{green}%i{default}|", revived, iReviveCount, iMaxIncapCount);
+						CPrintToChat(reviver, "你救了{olive}%N{default}! 倒地次数:[{green}%d{default}/{green}%i{default}]", revived, iReviveCount, iMaxIncapCount);
 					}
 					
 					if (!IsFakeClient(revived))
 					{
-						CPrintToChat(revived, "{olive}%N{default}救了你! |{green}%d{default}/{green}%i{default}|", reviver, iReviveCount, iMaxIncapCount);
+						CPrintToChat(revived, "{olive}%N{default}救了你! 倒地次数:[{green}%d{default}/{green}%i{default}]", reviver, iReviveCount, iMaxIncapCount);
 					}
 				}
 			}
@@ -1037,7 +1037,7 @@ public void OnReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 				{
 					if (!IsFakeClient(revived))
 					{
-						CPrintToChat(revived, "你救了你自己! |{green}%d{default}/{green}%i{default}|", iSHCount[revived], iMaxCount);
+						CPrintToChat(revived, "你救了你自己! 倒地次数：[{green}%d{default}/{green}%i{default}]", iSHCount[revived], iMaxCount);
 					}
 				}
 				else
@@ -1049,12 +1049,12 @@ public void OnReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 							CPrintToChatAll("%N在黑白状态下救了{olive}%N", reviver, revived);
 						}
 						
-						CPrintToChat(reviver, "你救了{olive}%N{default}! |{green}%d{default}/{green}%i{default}|", revived, iSHCount[revived], iMaxCount);
+						CPrintToChat(reviver, "你救了{olive}%N{default}! 倒地次数：[{green}%d{default}/{green}%i{default}]", revived, iSHCount[revived], iMaxCount);
 					}
 					
 					if (!IsFakeClient(revived))
 					{
-						CPrintToChat(revived, "%N{default}救了你! |{green}%d{default}/{green}%i{default}|", reviver, iSHCount[revived], iMaxCount);
+						CPrintToChat(revived, "%N{default}救了你! 倒地次数：[{green}%d{default}/{green}%i{default}]", reviver, iSHCount[revived], iMaxCount);
 					}
 				}
 			}
@@ -1187,19 +1187,19 @@ public Action DelaySHNotify(Handle timer, Handle dpDefibAnnounce)
 	{
 		if (!IsFakeClient(defibbed))
 		{
-			CPrintToChat(defibbed, "{blue}}你自杀了! |{green}%d{default}/{green}%i{default}|", iReviveCount, iMaxIncapCount);
+			CPrintToChat(defibbed, "{blue}}你自杀了! 倒地次数：[{green}%d{default}/{green}%i{default}]", iReviveCount, iMaxIncapCount);
 		}
 	}
 	else
 	{
 		if (!IsFakeClient(defibber))
 		{
-			CPrintToChat(defibber, "你杀死了{olive}%N{default}! |{green}%d{default}/{green}%i{default}|", defibbed, iReviveCount, iMaxIncapCount);
+			CPrintToChat(defibber, "你杀死了{olive}%N{default}! 倒地次数：[{green}%d{default}/{green}%i{default}]", defibbed, iReviveCount, iMaxIncapCount);
 		}
 		
 		if (!IsFakeClient(defibbed))
 		{
-			CPrintToChat(defibbed, "%N{default}杀死了你! |{green}%d{default}/{green}%i{default}|", defibber, iReviveCount, iMaxIncapCount);
+			CPrintToChat(defibbed, "%N{default}杀死了你! 倒地次数：[{green}%d{default}/{green}%i{default}]", defibber, iReviveCount, iMaxIncapCount);
 		}
 	}
 	

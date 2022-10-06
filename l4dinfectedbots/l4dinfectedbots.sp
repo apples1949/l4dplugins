@@ -1,6 +1,6 @@
 /********************************************************************************************
 * Plugin	: L4D/L4D2 InfectedBots (Versus Coop/Coop Versus)
-* Version	: 2.7.4 (2009-2022)
+* Version	: 2.7.5 (2009-2022)
 * Game		: Left 4 Dead 1 & 2
 * Author	: djromero (SkyDavid, David) and MI 5 and Harry Potter
 * Website	: https://forums.alliedmods.net/showpost.php?p=2699220&postcount=1371
@@ -8,6 +8,11 @@
 * Purpose	: This plugin spawns infected bots in L4D1/2, and gives greater control of the infected bots in L4D1/L4D2.
 * WARNING	: Please use sourcemod's latest 1.10 branch snapshot.
 * REQUIRE	: left4dhooks  (https://forums.alliedmods.net/showthread.php?p=2684862)
+* Version 2.7.5
+*	   - Spawn special infected near the survivor who is ahead of team
+*	   - When game couldn't find a valid spawn position, continue to spawn other speical infected left
+*	   - Delete convar "l4d_infectedbots_spawn_range_max", "l4d_infectedbots_spawn_range_final"
+
 * Version 2.7.4
 *	   - Fixed wrong spawn timer after survivor wipe out 
 *	   - Fixed Game does not spawn infected if numbers of human infected player equal to max_specials limit
@@ -685,7 +690,7 @@
 #include <multicolors>
 #undef REQUIRE_PLUGIN
 #include <left4dhooks>
-#define PLUGIN_VERSION "2.7.4"
+#define PLUGIN_VERSION "2.7.5"
 #define DEBUG 0
 
 #define TEAM_SPECTATOR		1
@@ -792,8 +797,6 @@ ConVar h_Difficulty;
 ConVar cvarZombieHP[7];				// Array of handles to the 4 cvars we have to hook to monitor HP changes
 ConVar h_SafeSpawn;
 ConVar h_SpawnDistanceMin;
-ConVar h_SpawnDistanceMax;
-ConVar h_SpawnDistanceFinal;
 ConVar h_WitchPeriodMax;
 ConVar h_WitchPeriodMin;
 ConVar h_WitchSpawnFinal;
@@ -826,8 +829,6 @@ Handle DisplayTimer = null;
 Handle SpawnInfectedBotTimer[L4D_MAXPLAYERS+1] = {null};
 
 //signature call
-static Handle hSpec = null;
-static Handle hSwitch = null;
 static Handle hFlashLightTurnOn = null;
 static Handle hCreateSmoker = null;
 #define NAME_CreateSmoker "NextBotCreatePlayerBot<Smoker>"
@@ -910,13 +911,14 @@ public void OnPluginStart()
 	// Add a sourcemod command so players can easily join infected in coop/realism/survival
 	RegConsoleCmd("sm_ji", JoinInfected);
 	RegConsoleCmd("sm_js", JoinSurvivors);
+	RegConsoleCmd("sm_zs", ForceInfectedSuicide,"suicide myself (if infected get stuck or somthing)");
 	RegAdminCmd("sm_zlimit", Console_ZLimit, ADMFLAG_SLAY,"control max special zombies limit");
 	RegAdminCmd("sm_timer", Console_Timer, ADMFLAG_SLAY,"control special zombies spawn timer");
 	#if DEBUG
 	RegConsoleCmd("sm_sp", JoinSpectator);
 	RegConsoleCmd("sm_gamemode", CheckGameMode);
-	RegConsoleCmd("sm_checkqueue", CheckQueue);
 	#endif
+	RegConsoleCmd("sm_checkqueue", CheckQueue);
 
 	// Hook "say" so clients can toggle HUD on/off for themselves
 	RegConsoleCmd("sm_infhud", Command_Say);
@@ -974,8 +976,6 @@ public void OnPluginStart()
 	h_ReducedSpawnTimesOnPlayer = CreateConVar("l4d_infectedbots_adjust_reduced_spawn_times_on_player", "1", "每增加一位生还者，则减少复活时间（初始4位生还者也算在内）", FCVAR_NOTIFY, true, 0.0);
 	h_SafeSpawn = CreateConVar("l4d_infectedbots_safe_spawn", "0", "如果为1，则生还者离开安全区域才生成特感", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	h_SpawnDistanceMin = CreateConVar("l4d_infectedbots_spawn_range_min", "400", "生成特感的最小范围（默认550，仅战役/写实模式）", FCVAR_NOTIFY, true, 0.0);
-	h_SpawnDistanceMax = CreateConVar("l4d_infectedbots_spawn_range_max", "2000", "生成特感的最大范围（默认1500，仅战役/写实模式）", FCVAR_NOTIFY, true, 1.0);
-	h_SpawnDistanceFinal = CreateConVar("l4d_infectedbots_spawn_range_final", "0", "救援开始时生成特感的范围（仅战役/写实模式）", FCVAR_NOTIFY, true, 0.0);
 	h_WitchPeriodMax = CreateConVar("l4d_infectedbots_witch_spawn_time_max", "120.0", "插件生成女巫的最大时间", FCVAR_NOTIFY, true, 1.0);
 	h_WitchPeriodMin = CreateConVar("l4d_infectedbots_witch_spawn_time_min", "90.0", "插件生成女巫的最小时间", FCVAR_NOTIFY, true, 1.0);
 	h_WitchSpawnFinal = CreateConVar("l4d_infectedbots_witch_spawn_final", "0", "如果为1，则救援开始时会生成女巫", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -1041,8 +1041,6 @@ public void OnPluginStart()
 	g_bVersusCoop = h_VersusCoop.BoolValue;
 	g_bJoinableTeams = h_JoinableTeams.BoolValue; bDisableSurvivorModelGlow = !g_bJoinableTeams;
 	h_SpawnDistanceMin.AddChangeHook(ConVarDistanceChanged);
-	h_SpawnDistanceMax.AddChangeHook(ConVarDistanceChanged);
-	h_SpawnDistanceFinal.AddChangeHook(ConVarDistanceChanged);
 	h_MaxPlayerZombies.AddChangeHook(ConVarMaxPlayerZombies);
 	h_VersusCoop.AddChangeHook(ConVarVersusCoop);
 	h_JoinableTeams.AddChangeHook(ConVarCoopVersus);
@@ -1334,7 +1332,6 @@ void TweakSettings()
 				SetConVarInt(FindConVar("z_exploding_limit"), 0);
 				SetConVarInt(FindConVar("z_hunter_limit"), 0);
 			}
-			//SetConVarInt(FindConVar("z_scrimmage_sphere"), 0);
 		}
 		case 2: // Versus, Better Versus Infected AI
 		{
@@ -1347,8 +1344,6 @@ void TweakSettings()
 				SetConVarInt(FindConVar("z_spitter_limit"), 0);
 				SetConVarInt(FindConVar("z_jockey_limit"), 0);
 				SetConVarInt(FindConVar("z_charger_limit"), 0);
-				SetConVarInt(FindConVar("z_jockey_leap_time"), 0);
-				SetConVarInt(FindConVar("z_spitter_max_wait_time"), 0);
 			}
 			else
 			{
@@ -1388,17 +1383,18 @@ void TweakSettings()
 				SetConVarInt(FindConVar("z_exploding_limit"), 0);
 				SetConVarInt(FindConVar("z_hunter_limit"), 0);
 			}
-			//SetConVarInt(FindConVar("z_scrimmage_sphere"), 0);
 		}
 	}
 
 	//Some cvar tweaks
-	SetConVarInt(FindConVar("z_attack_flow_range"), 50000);
-	SetConVarInt(FindConVar("director_spectate_specials"), 1);
-	SetConVarInt(FindConVar("z_spawn_flow_limit"), 50000);
+	
+	//SetConVarInt(FindConVar("z_attack_flow_range"), 50000);
+	//SetConVarInt(FindConVar("director_spectate_specials"), 1);
+	//SetConVarInt(FindConVar("z_spawn_flow_limit"), 50000);
 	if (g_bL4D2Version)
 	{
-		SetConVarInt(FindConVar("versus_special_respawn_interval"), 99999999);
+		SetConVarInt(FindConVar("director_allow_infected_bots"), 0);
+		//SetConVarInt(FindConVar("versus_special_respawn_interval"), 99999999);
 	}
 	#if DEBUG
 	LogMessage("Tweaking Settings");
@@ -1414,7 +1410,6 @@ void ResetCvars()
 
 	if (g_iCurrentMode == 1)
 	{
-		//ResetConVar(FindConVar("z_scrimmage_sphere"), true, true);
 		if (g_bL4D2Version)
 		{
 			ResetConVar(FindConVar("survival_max_smokers"), true, true);
@@ -1463,8 +1458,6 @@ void ResetCvars()
 			ResetConVar(FindConVar("z_spitter_limit"), true, true);
 			ResetConVar(FindConVar("z_jockey_limit"), true, true);
 			ResetConVar(FindConVar("z_charger_limit"), true, true);
-			ResetConVar(FindConVar("z_jockey_leap_time"), true, true);
-			ResetConVar(FindConVar("z_spitter_max_wait_time"), true, true);
 		}
 		else
 		{
@@ -1472,7 +1465,6 @@ void ResetCvars()
 			ResetConVar(FindConVar("z_exploding_limit"), true, true);
 			ResetConVar(FindConVar("z_hunter_limit"), true, true);
 		}
-		//ResetConVar(FindConVar("z_scrimmage_sphere"), true, true);
 	}
 }
 
@@ -2123,7 +2115,7 @@ public Action CheckQueue(int client, int args)
 		else
 			CountInfected_Coop();
 
-		PrintToChat(client, "InfectedBotQueue = %i, InfectedBotCount = %i, InfectedRealCount = %i, InfectedRealQueue = %i", InfectedBotQueue, InfectedBotCount, InfectedRealCount, InfectedRealQueue);
+		CPrintToChat(client, "InfectedBotQueue = {green}%i{default}, InfectedBotCount = {green}%i{default}, InfectedRealCount = {green}%i{default}, InfectedRealQueue = {green}%i{default}", InfectedBotQueue, InfectedBotCount, InfectedRealCount, InfectedRealQueue);
 	}
 
 	return Plugin_Handled;
@@ -2161,6 +2153,38 @@ public Action JoinSurvivors(int client, int args)
 	if (client && (g_iCurrentMode == 1 || g_iCurrentMode == 3))
 	{
 		SwitchToSurvivors(client);
+	}
+
+	return Plugin_Handled;
+}
+
+public Action ForceInfectedSuicide(int client, int args)
+{
+	if( g_bCvarAllow == false) return Plugin_Handled;
+
+	if (client && GetClientTeam(client) == 3 && !IsFakeClient(client) && IsPlayerAlive(client) && !IsPlayerGhost(client))
+	{
+		int bGameMode = g_iCurrentMode;
+		if(bGameMode == 3) bGameMode = 4;
+		if(bGameMode & g_iZSDisableGamemode)
+		{
+			PrintHintText(client,"%T","Not allowed to suicide during current mode",client);
+			return Plugin_Handled;
+		}
+
+		if(GetEngineTime() - fPlayerSpawnEngineTime[client] < SUICIDE_TIME)
+		{
+			PrintHintText(client,"%T","Not allowed to suicide so quickly",client);
+			return Plugin_Handled;
+		}
+
+		if( L4D_GetSurvivorVictim(client) != -1 )
+		{
+			PrintHintText(client,"%T","Not allowed to suicide",client);
+			return Plugin_Handled;
+		}
+
+		ForcePlayerSuicide(client);
 	}
 
 	return Plugin_Handled;
@@ -2914,11 +2938,13 @@ void CheckIfBotsNeeded(bool spawn_immediately)
 		SpawnInfectedBotTimer[0] = CreateTimer(g_fInitialSpawn, Timer_Spawn_InfectedBot, 0);
 		g_bInitialSpawn = false;
 	}
-	else // server can't find a valid position, we use the normal time ..
+	else // server can't find a valid position
 	{
-		int SpawnTime = GetRandomInt(g_iInfectedSpawnTimeMin, g_iInfectedSpawnTimeMax);
-		if (g_bAdjustSpawnTimes && g_iMaxPlayerZombies != HumansOnInfected()) SpawnTime = SpawnTime  - (TrueNumberOfAliveSurvivors() * g_iReducedSpawnTimesOnPlayer);
-		if(SpawnTime < 3) SpawnTime = 3;
+		// int SpawnTime = GetRandomInt(g_iInfectedSpawnTimeMin, g_iInfectedSpawnTimeMax);
+		// if (g_bAdjustSpawnTimes && g_iMaxPlayerZombies != HumansOnInfected()) SpawnTime = SpawnTime  - (TrueNumberOfAliveSurvivors() * g_iReducedSpawnTimesOnPlayer);
+		// if(SpawnTime < 3) SpawnTime = 3;
+
+		int SpawnTime = 10;
 
 		#if DEBUG
 			LogMessage("InfectedBotQueue + 1, %d spawntime", SpawnTime);
@@ -3115,7 +3141,7 @@ public Action KickWitch_Timer(Handle timer, int ref)
 				if(IsClientInGame(i) && GetClientTeam(i) == TEAM_SURVIVORS && IsPlayerAlive(i))
 				{
 					GetClientAbsOrigin(i, clientOrigin);
-					if (GetVectorDistance(clientOrigin, witchOrigin, true) < Pow(h_SpawnDistanceMax.FloatValue,2.0))
+					if (GetVectorDistance(clientOrigin, witchOrigin, true) < Pow(1500.0,2.0))
 					{
 						bKill = false;
 						break;
@@ -3617,10 +3643,10 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 	}
 
 	// We get any client ....
-	int anyclient = my_GetRandomClient();
+	int anyclient = GetAheadSurvivor();
 	if(anyclient == 0)
 	{
-		PrintToServer("Couldn't find a valid alive survivor to spawn S.I. at this moment.",ZOMBIESPAWN_Attempts);
+		//PrintToServer("Couldn't find a valid alive survivor to spawn S.I. at this moment.",ZOMBIESPAWN_Attempts);
 		CreateTimer(1.0, CheckIfBotsNeededLater, g_bInitialSpawn ? true: g_bIsCoordination? true: false, TIMER_FLAG_NO_MAPCHANGE);
 
 		if(InfectedBotQueue > 0) InfectedBotQueue--;
@@ -3723,7 +3749,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 		}
 		else
 		{
-			CreateTimer(1.0, CheckIfBotsNeededLater, false, TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(0.2, CheckIfBotsNeededLater, false, TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
 	else
@@ -3870,7 +3896,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 		}
 		else
 		{
-			CreateTimer(10.0, CheckIfBotsNeededLater, false, TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(0.2, CheckIfBotsNeededLater, false, TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
 
@@ -4079,7 +4105,7 @@ bool AreTherePlayersWhoAreNotTanks ()
 	return false;
 }
 
-bool BotsAlive ()
+stock bool BotsAlive ()
 {
 	for (int i=1;i<=MaxClients;i++)
 	{
@@ -4140,8 +4166,6 @@ public void OnPluginEnd()
 		ResetConVar(FindConVar("z_spitter_limit"), true, true);
 		ResetConVar(FindConVar("z_jockey_limit"), true, true);
 		ResetConVar(FindConVar("z_charger_limit"), true, true);
-		ResetConVar(FindConVar("z_jockey_leap_time"), true, true);
-		ResetConVar(FindConVar("z_spitter_max_wait_time"), true, true);
 	}
 	else
 	{
@@ -4153,20 +4177,19 @@ public void OnPluginEnd()
 		ResetConVar(FindConVar("z_exploding_limit"), true, true);
 		ResetConVar(FindConVar("z_hunter_limit"), true, true);
 	}
-	ResetConVar(FindConVar("director_no_specials"), true, true);
-	ResetConVar(FindConVar("z_attack_flow_range"), true, true);
-	ResetConVar(FindConVar("director_spectate_specials"), true, true);
+	//ResetConVar(FindConVar("z_attack_flow_range"), true, true);
+	//ResetConVar(FindConVar("director_spectate_specials"), true, true);
 	ResetConVar(FindConVar("z_spawn_safety_range"), true, true);
-	ResetConVar(FindConVar("z_spawn_range"), true, true);
+	//ResetConVar(FindConVar("z_spawn_range"), true, true);
 	if(g_bL4D2Version)
 	{
-		ResetConVar(FindConVar("z_finale_spawn_tank_safety_range"), true, true);
-		ResetConVar(FindConVar("z_finale_spawn_mob_safety_range"), true, true);
+		//ResetConVar(FindConVar("z_finale_spawn_tank_safety_range"), true, true);
+		//ResetConVar(FindConVar("z_finale_spawn_mob_safety_range"), true, true);
+		ResetConVar(FindConVar("director_allow_infected_bots"), true, true);
 	}
-	ResetConVar(FindConVar("z_spawn_flow_limit"), true, true);
+	//ResetConVar(FindConVar("z_spawn_flow_limit"), true, true);
 	if(g_bTankHealthAdjust) ResetConVar(cvarZombieHP[6], true, true);
 	if(g_bCommonLimitAdjust) ResetConVar(h_common_limit_cvar, true, true);
-	//ResetConVar(FindConVar("z_scrimmage_sphere"), true, true);
 	vs_max_team_switches.SetInt(vs_max_team_switches_default);
 	if (!g_bL4D2Version)
 	{
@@ -4349,10 +4372,10 @@ public void ShowInfectedHUD(int src)
 	}
 
 	// If no bots are alive, no point in showing the HUD
-	if (g_iCurrentMode == 2 && !BotsAlive())
-	{
-		return;
-	}
+	// if (g_iCurrentMode == 2 && !BotsAlive())
+	// {
+	// 	return;
+	// }
 
 	#if DEBUG
 		char calledFunc[255];
@@ -4375,7 +4398,7 @@ public void ShowInfectedHUD(int src)
 		PrintToChatAll("\x01\x04[infhud]\x01 [%f] ShowInfectedHUD() called by [\x04%i\x01] '\x03%s\x01'", GetGameTime(), src, calledFunc);
 	#endif
 
-	int i, iHP;
+	int iHP;
 	char iClass[100],lineBuf[100],iStatus[25];
 
 	// Display information panel to infected clients
@@ -4393,7 +4416,7 @@ public void ShowInfectedHUD(int src)
 	{
 		#if !DEBUG
 		// Loop through infected players and show their status
-		for (i = 1; i <= MaxClients; i++)
+		for (int i = 1; i <= MaxClients; i++)
 		{
 			if (!IsClientInGame(i)) continue;
 			if (GetClientTeam(i) == TEAM_INFECTED)
@@ -4491,7 +4514,7 @@ public void ShowInfectedHUD(int src)
 		#endif
 
 		#if DEBUG
-		for(i = 0; i <= L4D_MAXPLAYERS; i++)
+		for(int i = 0; i <= L4D_MAXPLAYERS; i++)
 		{
 			if(SpawnInfectedBotTimer[i] != null)
 			{
@@ -4505,11 +4528,11 @@ public void ShowInfectedHUD(int src)
 	// Output the current team status to all infected clients
 	// Technically the below is a bit of a kludge but we can't be 100% sure that a client status doesn't change
 	// between building the panel and displaying it.
-	for (i = 1; i <= MaxClients; i++)
+	for (int i = 1; i <= MaxClients; i++)
 	{
 		if (IsClientInGame(i) && !IsFakeClient(i))
 		{
-			if ( (GetClientTeam(i) == TEAM_INFECTED))
+			if ( GetClientTeam(i) == TEAM_INFECTED /*|| GetClientTeam(i) == TEAM_SPECTATOR*/ )
 			{
 				if( hudDisabled[i] == 0 && (GetClientMenu(i) == MenuSource_RawPanel || GetClientMenu(i) == MenuSource_None))
 				{
@@ -4787,8 +4810,8 @@ void SwitchToSurvivors(int client)
 		PrintHintText(client, "No alive survivor bots to take over.");
 		return;
 	}
-	SDKCall(hSpec, bot, client);
-	SDKCall(hSwitch, client, true);
+	L4D_SetHumanSpec(bot, client);
+	L4D_TakeOverBot(client);
 	return;
 }
 
@@ -4840,6 +4863,7 @@ void GetSpawnDisConvars()
 {
 	if(g_iCurrentMode != 1) return;
 
+	/*
 	if(g_bMapStarted && L4D_IsMissionFinalMap())
 	{
 		if(g_bL4D2Version)
@@ -4862,14 +4886,14 @@ void GetSpawnDisConvars()
 	int flags3 = (FindConVar("z_spawn_range")).Flags;
 	SetConVarBounds(FindConVar("z_spawn_range"), ConVarBound_Upper, false);
 	SetConVarFlags(FindConVar("z_spawn_range"), flags3 & ~FCVAR_NOTIFY);
+	SetConVarInt(FindConVar("z_spawn_range"),h_SpawnDistanceMax.IntValue);
+	*/
 
 	// Removes the boundaries for z_spawn_safety_range and notify flag
 	int flags4 = FindConVar("z_spawn_safety_range").Flags;
 	SetConVarBounds(FindConVar("z_spawn_safety_range"), ConVarBound_Upper, false);
 	SetConVarFlags(FindConVar("z_spawn_safety_range"), flags4 & ~FCVAR_NOTIFY);
-
 	SetConVarInt(FindConVar("z_spawn_safety_range"),h_SpawnDistanceMin.IntValue);
-	SetConVarInt(FindConVar("z_spawn_range"),h_SpawnDistanceMax.IntValue);
 }
 
 public Action SpawnWitchAuto(Handle timer)
@@ -4888,11 +4912,11 @@ public Action SpawnWitchAuto(Handle timer)
 		witches++;
 	}
 
-	int anyclient = my_GetRandomClient();
+	int anyclient = GetAheadSurvivor();
 	int witch;
 	if(anyclient == 0)
 	{
-		PrintToServer("Couldn't find a valid alive survivor to spawn witch at this moment.",ZOMBIESPAWN_Attempts);
+		//PrintToServer("Couldn't find a valid alive survivor to spawn witch at this moment.",ZOMBIESPAWN_Attempts);
 	}
 	else if (witches < h_WitchLimit.IntValue)
 	{
@@ -4911,7 +4935,7 @@ public Action SpawnWitchAuto(Handle timer)
 		}
 		else
 		{
-			PrintToServer("Couldn't find a Witch Spawn position in %d tries", ZOMBIESPAWN_Attempts);
+			//PrintToServer("Couldn't find a Witch Spawn position in %d tries", ZOMBIESPAWN_Attempts);
 		}
 	}
 
@@ -5123,17 +5147,30 @@ void SetTankFrustration(int client, int iFrustration)
 	SetEntProp(client, Prop_Send, "m_frustration", 100 - iFrustration);
 }
 
-int my_GetRandomClient()
+int GetAheadSurvivor()
 {
-	int iClientCount, iClients[MAXPLAYERS+1];
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientInGame(i) && GetClientTeam(i) == 2 && IsPlayerAlive(i))
+	float max_flow = 0.0;
+	float tmp_flow, origin[3];
+	int iAheadSurvivor = 0, iTemp;
+	Address pNavArea;
+	for (int client = 1; client <= MaxClients; client++) {
+		if(IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client))
 		{
-			iClients[iClientCount++] = i;
+			iTemp = client;
+			GetClientAbsOrigin(client, origin);
+			pNavArea = L4D2Direct_GetTerrorNavArea(origin);
+			if (pNavArea == Address_Null) continue;
+			
+			tmp_flow = L4D2Direct_GetTerrorNavAreaFlow(pNavArea);
+			if(tmp_flow >= max_flow)
+			{
+				max_flow = tmp_flow;
+				iAheadSurvivor = iTemp;
+			}
 		}
 	}
-	return (iClientCount == 0) ? 0 : iClients[GetRandomInt(0, iClientCount - 1)];
+
+	return (iAheadSurvivor == 0) ? iTemp : iAheadSurvivor;
 }
 
 void CheckandPrecacheModel(const char[] model)
@@ -5241,20 +5278,6 @@ void GetGameData()
 
 void PrepSDKCall()
 {
-	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(hGameConf, SDKConf_Signature, "SetHumanSpec");
-	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-	hSpec = EndPrepSDKCall();
-	if( hSpec == null)
-		SetFailState("Could not prep the \"SetHumanSpec\" function.");
-
-	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(hGameConf, SDKConf_Signature, "TakeOverBot");
-	PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
-	hSwitch = EndPrepSDKCall();
-	if( hSwitch == null)
-		SetFailState("Could not prep the \"TakeOverBot\" function.");
-
 	if(g_bL4D2Version)
 	{
 		StartPrepSDKCall(SDKCall_Player);

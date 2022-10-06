@@ -172,7 +172,6 @@ public Action CommandRestartMap(int client, int args)
 {	
 	if(!isMapRestartPending)
 	{
-		CPrintToChatAll("{default}[{olive}TS{default}] Map restart in {green}%d{default} seconds.", READY_RESTART_MAP_DELAY+1);
 		CPrintToChatAll("地图将在{green}%d{default}秒后重置", READY_RESTART_MAP_DELAY+1);		
 		RestartMapDelayed();
 	}
@@ -340,7 +339,7 @@ public Action Command_Votes(int client, int args)
 	}
 	else
 	{
-		CPrintToChat(client, "{default}[{olive}TS{default}] 投票菜单插件已关闭!");
+		CPrintToChat(client, "投票菜单插件已关闭!");
 	}
 	
 	return Plugin_Stop;
@@ -356,7 +355,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensHpE_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "{default}[{olive}TS{default}] 禁用回血");
+					CPrintToChat(client, "回血已禁用");
 				}
 				else if (VotensHpE_D == true)
 				{
@@ -368,7 +367,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensAlltalkE_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "{default}[{olive}TS{default}] 禁用开启全体语音");
+					CPrintToChat(client, "开启全体语音已禁用");
 				}
 				else if (VotensAlltalkE_D == true)
 				{
@@ -380,7 +379,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensAlltalk2E_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "{default}[{olive}TS{default}] 禁用关闭全体语音");
+					CPrintToChat(client, "关闭全体语音已禁用");
 				}
 				else if (VotensAlltalk2E_D == true)
 				{
@@ -392,7 +391,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensRestartmapE_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "{default}[{olive}TS{default}] 禁用重置当前地图");
+					CPrintToChat(client, "重置当前地图已禁用");
 				}
 				else if (VotensRestartmapE_D == true)
 				{
@@ -404,7 +403,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensMapE_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "{default}[{olive}TS{default}] 禁用投票更换官图");
+					CPrintToChat(client, "投票更换官图已禁用");
 				}
 				else if (VotensMapE_D == true)
 				{
@@ -416,7 +415,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensMap2E_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "{default}[{olive}TS{default}] 禁用投票更换三方图");
+					CPrintToChat(client, "投票更换三方图已禁用");
 				}
 				else if (VotensMap2E_D == true)
 				{
@@ -428,7 +427,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (g_bVotensKickED == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "{default}[{olive}TS{default}] 禁用踢出玩家");
+					CPrintToChat(client, "踢出玩家已禁用");
 				}
 				else if (g_bVotensKickED == true)
 				{
@@ -440,7 +439,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (g_bVotensForceSpectateED == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "{default}[{olive}TS{default}] 禁用强制玩家旁观");
+					CPrintToChat(client, "强制玩家旁观已禁用");
 				}
 				else if (g_bVotensForceSpectateED == true)
 				{
@@ -827,7 +826,7 @@ public Action Command_Votemaps2Menu(int client, int args)
 	}
 	else if(g_bEnable == false || VotensMap2E_D == false)
 	{
-		CPrintToChat(client, "{default}[{olive}TS{default}] Change Custom map vote is prohibited");
+		CPrintToChat(client, "投票更换三方图已禁用");
 	}
 	return Plugin_Handled;
 }
@@ -1071,7 +1070,7 @@ public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int pa
 			g_votedelay = VOTEDELAY_TIME;
 			CreateTimer(1.0, Timer_VoteDelay, _, TIMER_REPEAT| TIMER_FLAG_NO_MAPCHANGE);
 			EmitSoundToAll("ui/beep_error01.wav");
-			CPrintToChatAll("{default}{red}投票失败。{default}至少{red}%d%%%%{default}的玩家同意。(同意的玩家： {green}%d%%%%{default}, 不同意的玩家： {green}%i {default})", RoundToNearest(100.0*g_fLimit), RoundToNearest(100.0*percent), totalVotes);
+			CPrintToChatAll("{default}{red}投票失败。{default}至少{red}%d%%%%{default}的玩家同意。(同意： {green}%d%%%{default}, 不同意的玩家： {green}%i%%%{default})", RoundToNearest(100.0*g_fLimit), RoundToNearest(100.0*percent), totalVotes);
 			CreateTimer(2.0, VoteEndDelay);
 		}
 		else
@@ -1079,7 +1078,7 @@ public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int pa
 			g_votedelay = VOTEDELAY_TIME;
 			CreateTimer(1.0, Timer_VoteDelay, _, TIMER_REPEAT| TIMER_FLAG_NO_MAPCHANGE);
 			EmitSoundToAll("ui/menu_enter05.wav");
-			CPrintToChatAll("{default}{blue}投票通过。{default}(同意的玩家：{green}%d%%%%{default}, 不同意的玩家：{green}%i {default})", RoundToNearest(100.0*percent), totalVotes);
+			CPrintToChatAll("{default}{blue}投票通过。{default}(同意：{green}%d%%%{default}, 不同意：{green}%i%%%{default})", RoundToNearest(100.0*percent), totalVotes);
 			CreateTimer(2.0, VoteEndDelay);
 			CreateTimer(3.0, COLD_DOWN,_);
 		}
@@ -1283,7 +1282,7 @@ public Action COLD_DOWN(Handle timer,any client)
 		case (view_as<voteType>(map)):
 		{
 			CreateTimer(5.0, Changelevel_Map);
-			CPrintToChatAll("[{olive}TS{default}] {green}5{default} sec to change map {blue}%s",votesmapsname);
+			CPrintToChatAll("{green}5{default}秒后将切换地图为{blue}%s",votesmapsname);
 			//CPrintToChatAll("{blue}%s",votesmaps);
 			//DisplayBuiltinVotePass(vote, "Vote to change map pass");
 			LogMessage("更换地图 %s %s 通过",votesmaps,votesmapsname);
