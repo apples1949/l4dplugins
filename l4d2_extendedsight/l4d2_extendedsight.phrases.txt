@@ -1,0 +1,45 @@
+"Phrases"
+{
+	"ACTIVATED"
+	{
+		"en"			"Extended Sight is now activated!"
+		"ru"			"Расширенное зрение активировано!"
+		"chi"			"扩展视野已激活"
+	}
+	"DEACTIVATED"
+	{
+		"en"			"Extended Sight is now deactivated!"
+		"ru"			"Расширенное зрение деактивировано!"
+		"chi"			"扩展视野已关闭"
+	}
+	"DURATIONEXTENDED"
+	{
+		"en"			"Extended Sight's duration extended!"
+		"ru"			"Срок действия расширенного зрения продлен!"
+		"chi"			"扩展视野持续时间已延长"
+	}
+	"COMMANDUSAGE"
+	{
+		"en"			"Usage: sm_extendedsight <on|off>"
+		"ru"			"Используйте: sm_extendedsight <on|off>"
+		"chi"			"用法：sm_extendedsight <on|off>"
+	}
+	"ACTIVATEDPERMANENTLY"
+	{
+		"en"			"Extended Sight activated permanently!"
+		"ru"			"Расширенное зрение активировано перманентно!"
+		"chi"			"扩展视野持续时间已永久激活"
+	}
+	"ALREADYACTIVE"
+	{
+		"en"			"Extended Sight is already activated!"
+		"ru"			"Расширенное зрение уже активировано!"
+		"chi"			"扩展视野持续时间已激活"
+	}	
+	"NOTACTIVE"
+	{
+		"en"			"Extended Sight is not activated!"
+		"ru"			"Расширенное зрение не активировано!"
+		"chi"			"扩展视野持续时间已关闭"
+	}
+}
