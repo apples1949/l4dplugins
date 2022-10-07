@@ -1,6 +1,7 @@
 豆瓣包(2022-9-27a豆瓣酱な (v1.1.1)(6911-1148)战役整合包)：  
 1.1.1插件平台linux版(6911-1148)(必须先启用这个)  
 必选-功能类插件(left4dhooks)(v1.116)(SilverShot)  
+必选-功能类插件(WeaponHandling)(v1.0.6)(Lux)  
 必选-功能类扩展(sourcescramble.ext)(v0.7.0)  
 必选-功能类扩展(voicehook.ext)  
 必选-修复类(v1.1.1)(修复女巫丢失目标)(Lux)  
@@ -96,6 +97,7 @@ l4d_lift_music 电梯放音乐 https://forums.alliedmods.net/showthread.php?t=15
 l4d2_block_pour_gascan 可以多人同时罐油和放可乐 https://forums.alliedmods.net/showthread.php?p=2739649  
 l4d2_biletheworld 胖子死亡可糊其他感染者\胆汁砸中生还者被糊脸扣血 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_biletheworld.sp 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_biletheworld  
 l4dhots 缓慢回血 更改默认设置以及增加自动生成cfg https://github.com/apples1949/l4dplugins/blob/main/l4dhots.sp 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4dhots.sp  
+l4d_incapped_weapons 倒地允许使用任何武器 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_incapped_weapons 来自 https://forums.alliedmods.net/showthread.php?t=322859  
 
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
