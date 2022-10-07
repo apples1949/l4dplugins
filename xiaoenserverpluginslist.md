@@ -98,6 +98,8 @@ l4d2_block_pour_gascan 可以多人同时罐油和放可乐 https://forums.allie
 l4d2_biletheworld 胖子死亡可糊其他感染者\胆汁砸中生还者被糊脸扣血 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_biletheworld.sp 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_biletheworld  
 l4dhots 缓慢回血 更改默认设置以及增加自动生成cfg https://github.com/apples1949/l4dplugins/blob/main/l4dhots.sp 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4dhots.sp  
 l4d_incapped_weapons 倒地允许使用任何武器 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_incapped_weapons 来自 https://forums.alliedmods.net/showthread.php?t=322859  
+l4d2_extendedsight 生还透视特感 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_extendedsight 来自 https://forums.alliedmods.net/showthread.php?p=2666299  
+ghostfly 特感灵魂飞行 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/ghostfly.sp 来自 https://forums.alliedmods.net/showthread.php?p=1662857  
 
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
