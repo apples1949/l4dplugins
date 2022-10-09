@@ -100,7 +100,8 @@ l4dhots 缓慢回血 更改默认设置以及增加自动生成cfg https://githu
 l4d_incapped_weapons 倒地允许使用任何武器 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_incapped_weapons 来自 https://forums.alliedmods.net/showthread.php?t=322859  
 l4d2_extendedsight 生还透视特感 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_extendedsight 来自 https://forums.alliedmods.net/showthread.php?p=2666299  
 ghostfly 特感灵魂飞行 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/ghostfly.sp 来自 https://forums.alliedmods.net/showthread.php?p=1662857  
-l4d2_practice 灵魂状态下右键切换特感（注意数据文件） 来自https://github.com/devilesk/rl4d2l-plugins/blob/master/l4d2_practice.sp  
+l4d2_practice 灵魂状态下右键切换特感（注意数据文件） 来自 https://github.com/devilesk/rl4d2l-plugins/blob/master/l4d2_practice.sp  
+l4d_stuckzombiemeleefix 近战砍僵尸修复 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_stuckzombiemeleefix.sp  
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
