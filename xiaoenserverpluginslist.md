@@ -74,7 +74,6 @@ l4d_votes_5 投票插件 自翻cvar介绍和文本 https://github.com/apples1949
 lerptracker 显示lerp 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/blob/main/lerptracker.sp  
 l4d_current_survivor_progress !cur显示目前路程百分比 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_current_survivor_progress  
 l4d_graves 生还者死亡后生成坟墓 自翻cvar介绍 https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves  
-l4d_tankAttackOnSpawn 战役模式中强制生成的坦克行动 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_tankAttackOnSpawn  
 l4d_rock_lagcomp 战役模式中给坦克石头提供滞后补偿 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp  
 sm_l4d_mapchanger 官图战役打完换图 自用 https://github.com/apples1949/l4dplugins/tree/main/sm_l4d_mapchanger 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/sm_l4d_mapchanger  
 l4d_rescue_vehicle_leave_timer 救援倒计时 自翻cvar https://github.com/apples1949/l4dplugins/tree/main/l4d_rescue_vehicle_leave_timer 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rescue_vehicle_leave_timer  
@@ -84,7 +83,7 @@ l4d_nightvision 夜视仪 翻译了下文本 https://github.com/apples1949/l4dpl
 self_help 自救插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/self_help 来自 https://forums.alliedmods.net/showthread.php?p=2766775#post2766775  
 l4d2_unreservelobby 动态大厅 群友推荐 找不到出处 还是备份吧 https://github.com/apples1949/l4dplugins/blob/main/l4d2_unreservelobby.sp  
 l4d2_blackscreen_fix/sm_stringtable_dumper 黑屏加载修复/转储所有字符串表的记录 https://github.com/apples1949/l4dplugins/tree/main/l4d2_blackscreen_fix 来自 https://forums.alliedmods.net/showthread.php?t=318739 / https://forums.alliedmods.net/showthread.php?p=2689943  
-L4D2_TankFK 群友の坦克防卡 https://github.com/apples1949/l4dplugins/blob/main/L4D2_TankFK.sp   
+l4d_TankStuckTeleport 坦克防卡 自翻cvar介绍和文本 删掉部分代码 https://github.com/apples1949/l4dplugins/blob/main/l4d_TankStuckTeleport.sp 来自 https://forums.alliedmods.net/showthread.php?t=314741   
 l4d2_ThirdpersonShoulderShotgunSoundFix  第三人称霰弹无声音修复 来自 https://forums.alliedmods.net/showthread.php?t=259986  
 l4d2_Survivor_Legs 显示双腿 来自 https://forums.alliedmods.net/showthread.php?t=299560  
 l4d2_spit_glow 口水酸液显示动态光 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_spit_glow.sp 来自 https://forums.alliedmods.net/showthread.php?t=330835  
