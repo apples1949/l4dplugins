@@ -101,6 +101,8 @@ l4d2_extendedsight 生还透视特感 翻译cvar说明 https://github.com/apples
 ghostfly 特感灵魂飞行 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/ghostfly.sp 来自 https://forums.alliedmods.net/showthread.php?p=1662857  
 l4d2_practice 灵魂状态下右键切换特感（注意数据文件） 来自 https://github.com/devilesk/rl4d2l-plugins/blob/master/l4d2_practice.sp  
 l4d_stuckzombiemeleefix 近战砍僵尸修复 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_stuckzombiemeleefix.sp  
+L4D_Elevator_Teleport 电梯传送 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/blob/main/L4D_Elevator_Teleport.sp 来自 https://forums.alliedmods.net/showthread.php?p=2785701  
+
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
