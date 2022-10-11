@@ -72,7 +72,6 @@ bequiet 过滤部分聊天输出 https://github.com/apples1949/l4dplugins/blob/m
 l4dinfectedbots 哈利dalao的多特插件 包括其他功能 https://github.com/apples1949/l4dplugins/tree/main/l4dinfectedbots 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dinfectedbots  
 l4d_votes_5 投票插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_votes_5 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_votes_5  
 lerptracker 显示lerp 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/blob/main/lerptracker.sp  
-l4d_current_survivor_progress !cur显示目前路程百分比 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_current_survivor_progress  
 l4d_graves 生还者死亡后生成坟墓 自翻cvar介绍 https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves  
 l4d_rock_lagcomp 战役模式中给坦克石头提供滞后补偿 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp  
 sm_l4d_mapchanger 官图战役打完换图 自用 https://github.com/apples1949/l4dplugins/tree/main/sm_l4d_mapchanger 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/sm_l4d_mapchanger  
@@ -102,7 +101,7 @@ ghostfly 特感灵魂飞行 翻译cvar说明 https://github.com/apples1949/l4dpl
 l4d2_practice 灵魂状态下右键切换特感（注意数据文件） 来自 https://github.com/devilesk/rl4d2l-plugins/blob/master/l4d2_practice.sp  
 l4d_stuckzombiemeleefix 近战砍僵尸修复 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_stuckzombiemeleefix.sp  
 L4D_Elevator_Teleport 电梯传送 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/blob/main/L4D_Elevator_Teleport.sp 来自 https://forums.alliedmods.net/showthread.php?p=2785701  
-boss_controller/boss_spawner 路程刷克 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/BossController  
+boss_controller/boss_spawner 路程刷克和妹子 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/BossController  
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
