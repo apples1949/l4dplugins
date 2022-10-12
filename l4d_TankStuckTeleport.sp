@@ -791,34 +791,7 @@ public Action Timer_CheckPos(Handle timer, int UserId)
 			
 			static bool bOnLadder;
 			bOnLadder = IsOnLadder(tank);
-			
-			if (g_fMaxNonAngryDist != 0.0 && (GetDistanceToNearestClient(tank) > g_fMaxNonAngryDist || g_iStuckTimes[tank] > 2)) {
-				// object selectable by ConVar => teleport only when tank looks like completely stuck
-				TeleportToObject(tank);
-				// apply velocity
-				TeleportPlayerSmoothByPreset(tank);
-			}
-			else if (g_iStuckTimes[tank] > 1 || bOnLadder) {
-				/*
-				SetEntityMoveType (tank, MOVETYPE_NOCLIP);
-				#if (DEBUG)
-					//PrintToChatAll("%N movetype: noclip", tank);
-				#endif
-				*/
-				
-				// teleport in direction of "bugger" player + apply velocity
-				MakeTeleport(tank);
-				
-				#if (DEBUG)
-					int anim = GetEntProp(tank, Prop_Send, "m_nSequence");
-					//PrintToChatAll("%N stucked => micro-teleport, dist: %f, anim: %i", tank, distance, anim);
-				#endif
-				
-				/*
-				SetEntProp(tank, Prop_Send, "m_nSequence", 12);
-				CreateTimer(0.5, Timer_SetWalk, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
-				*/
-			}
+
 			g_iStuckTimes[tank]++;
 			
 			#if (DEBUG)
@@ -835,7 +808,7 @@ public Action Timer_CheckPos(Handle timer, int UserId)
 	}
 	else
 		return Plugin_Stop;
-	
+
 	return Plugin_Continue;
 }
 

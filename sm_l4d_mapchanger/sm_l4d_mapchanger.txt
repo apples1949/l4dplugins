@@ -28,7 +28,7 @@
 	"c6m3_port"
 	{
 		"next mission map" "c7m1_docks"
-		"next mission name" "牺牲)"
+		"next mission name" "牺牲"
 	}
 	"c7m3_port"
 	{
