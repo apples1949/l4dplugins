@@ -89,7 +89,7 @@ l4d2_spit_glow 口水酸液显示动态光 翻译cvar说明 https://github.com/a
 l4d_fire_glow 燃烧瓶扔出及燃烧显示动态光 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_fire_glow.sp 来自 https://forums.alliedmods.net/showthread.php?t=186617  
 l4d2_DefibUsingBots 强制bot使用电击器 来自 https://github.com/apples1949/l4dplugins/blob/main/l4d2_DefibUsingBots.sp  
 l4d_grenade_throwing_bots 允许bot扔投抛 https://github.com/apples1949/l4dplugins/blob/main/l4d_grenade_throwing_bots.sp 来自 https://forums.alliedmods.net/showthread.php?t=296150&page=16  
-l4d_healing_field 坦克死亡留下治疗阵 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/blob/main/l4d_healing_field.sp 来自 https://forums.alliedmods.net/showthread.php?t=324501  
+l4d_healing_field 坦克死亡留下治疗阵 自翻cvar说明及文本 加血同步杀特回血上限225 https://github.com/apples1949/l4dplugins/blob/main/l4d_healing_field.sp 来自 https://forums.alliedmods.net/showthread.php?t=324501  
 lagpreventor 优化某些三方图炸ping问题 https://forums.alliedmods.net/showthread.php?p=2758895  
 l4d_lift_music 电梯放音乐 https://forums.alliedmods.net/showthread.php?t=157267  
 l4d2_block_pour_gascan 可以多人同时罐油和放可乐 https://forums.alliedmods.net/showthread.php?p=2739649  
