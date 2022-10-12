@@ -25,16 +25,6 @@ int iSurvivorClass, iUse, iBotChance, iHardHP, iMaxCount, iAttacker[MAXPLAYERS+1
 Handle hSHTime[MAXPLAYERS+1] = null, hSHGameData = null, hSHSetTempHP = null, hSHAdrenalineRush = null,
 	hSHOnRevived = null, hSHStagger = null;
 
-char sGameSounds[6][] =
-{
-	"music/terror/PuddleOfYou.wav",
-	"music/terror/ClingingToHellHit1.wav",
-	"music/terror/ClingingToHellHit2.wav",
-	"music/terror/ClingingToHellHit3.wav",
-	"music/terror/ClingingToHellHit4.wav",
-	"player/heartbeatloop.wav"
-};
-
 SelfHelpState shsBit[MAXPLAYERS+1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -736,11 +726,6 @@ public Action SHReviveCompletion(Handle timer, Handle dpSHRevive)
 			eReviveSuccess.Fire();
 			
 			DoSelfHelp(client, bAidCheck);
-			
-			for (int i = 0; i < 5; i++)
-			{
-				UnloopAnnoyingMusic(client, sGameSounds[i]);
-			}
 		}
 		
 		RemoveHindrance(client);
@@ -840,11 +825,6 @@ public Action SHReviveOtherCompletion(Handle timer, Handle dpSHReviveOther)
 		
 		DoSelfHelp(revived);
 		
-		for (int i = 0; i < 5; i++)
-		{
-			UnloopAnnoyingMusic(revived, sGameSounds[i]);
-		}
-		
 		fSelfHelpTime[reviver] = 0.0;
 		return Plugin_Stop;
 	}
@@ -875,11 +855,6 @@ public void OnReplaceEvents(Event event, const char[] name, bool dontBroadcast)
 			
 			iAttacker[bot] = iAttacker[player];
 			iAttacker[player] = 0;
-			
-			for (int i = 0; i < 6; i++)
-			{
-				UnloopAnnoyingMusic(player, sGameSounds[i]);
-			}
 		}
 		else
 		{
@@ -1002,7 +977,7 @@ public void OnReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 					{
 						if (GetEntProp(reviver, Prop_Send, "m_isIncapacitated", 1))
 						{
-							CPrintToChatAll("{%N在黑白状态下救了{olive}%N!", reviver, revived);
+							CPrintToChatAll("%N在黑白状态下救了{olive}%N!", reviver, revived);
 						}
 						
 						CPrintToChat(reviver, "你救了{olive}%N{default}! 倒地次数:[{green}%d{default}/{green}%i{default}]", revived, iReviveCount, iMaxIncapCount);
@@ -1085,8 +1060,6 @@ public void OnHealSuccess(Event event, const char[] name, bool dontBroadcast)
 		{
 			return;
 		}
-		
-		UnloopAnnoyingMusic(healed, sGameSounds[5]);
 		PrintHintTextToAll("[%N]被[%N]完全治愈!", healed, healer);
 		
 		if (bIsL4D && iSHCount[healed] != 0)
@@ -1604,20 +1577,6 @@ void DoSelfHelp(int client, bool bWasMedkitUsed = false)
 			SetEntPropFloat(client, Prop_Send, "m_healthBufferTime", GetGameTime());
 		}
 	}
-}
-
-void UnloopAnnoyingMusic(int client, const char[] sGivenSound)
-{
-	StopSound(client, SNDCHAN_REPLACE, sGivenSound);
-	StopSound(client, SNDCHAN_AUTO, sGivenSound);
-	StopSound(client, SNDCHAN_WEAPON, sGivenSound);
-	StopSound(client, SNDCHAN_VOICE, sGivenSound);
-	StopSound(client, SNDCHAN_ITEM, sGivenSound);
-	StopSound(client, SNDCHAN_BODY, sGivenSound);
-	StopSound(client, SNDCHAN_STREAM, sGivenSound);
-	StopSound(client, SNDCHAN_STATIC, sGivenSound);
-	StopSound(client, SNDCHAN_VOICE_BASE, sGivenSound);
-	StopSound(client, SNDCHAN_USER_BASE, sGivenSound);
 }
 
 void RemoveHindrance(int client)
