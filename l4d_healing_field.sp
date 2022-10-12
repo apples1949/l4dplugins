@@ -229,7 +229,7 @@ public void Event_PlayerDeath( Event hEvent, const char[] sName, bool bDontBroad
 	int client = GetClientOfUserId( hEvent.GetInt( "userid" ) );
 	
 	if( IsTank( client ) )
-		if( GetRandomInt( 1, 225 ) <= iCvar_HealingFieldChance)
+		if( GetRandomInt( 1, 100 ) <= iCvar_HealingFieldChance)
 			CreateHealingField( client );
 }
 
@@ -287,7 +287,7 @@ void CreateHealingField( int client )
 		
 		EntityEffects_Medic( entity );
 	
-		PrintToChatAll( "[ღ%sღ]坦克死亡留下了治疗阵");
+		PrintToChatAll("[ღ%sღ]坦克死亡留下了治疗阵",client);
 	}	
 }
 
@@ -424,17 +424,17 @@ public void Explode_Medic( int entity )
 			if( GetVectorDistance( vPos, vEnd ) <= fCvar_HealingFieldRange )
 			{
 				iHealth = GetClientHealth( i );
-				if( iHealth < 215 )
+				if( iHealth < 225 )
 				{
 //					iHealth += RoundFloat( 6.0 );
 					iHealth += iCvar_AmountHealth; // Add the extra amount wants to the current amount.
-					if( iHealth > 215 )
-						iHealth = 215;
+					if( iHealth > 225 )
+						iHealth = 225;
 
 					fHealth = GetTempHealth( i );
-					if( iHealth + fHealth > 215 )
+					if( iHealth + fHealth > 225 )
 					{
-						fHealth = 215.0 - iHealth;
+						fHealth = 225.0 - iHealth;
 						SetTempHealth( i, fHealth );
 					}
 

@@ -916,7 +916,7 @@ public void OnPluginStart()
 	// Add a sourcemod command so players can easily join infected in coop/realism/survival
 	RegConsoleCmd("sm_ji", JoinInfected);
 	RegConsoleCmd("sm_js", JoinSurvivors);
-	RegConsoleCmd("sm_infzs", ForceInfectedSuicide,"suicide myself (if infected get stuck or somthing)");
+	RegConsoleCmd("sm_zs", ForceInfectedSuicide,"suicide myself (if infected get stuck or somthing)");
 	RegAdminCmd("sm_zlimit", Console_ZLimit, ADMFLAG_SLAY,"control max special zombies limit");
 	RegAdminCmd("sm_timer", Console_Timer, ADMFLAG_SLAY,"control special zombies spawn timer");
 	#if DEBUG
@@ -932,70 +932,70 @@ public void OnPluginStart()
 	CreateConVar("l4d_infectedbots_version", PLUGIN_VERSION, "Version of L4D Infected Bots", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
 	// console variables
-	g_hCvarAllow =		CreateConVar(	"l4d_infectedbots_allow",			"1",			"0=关闭插件, 1=开启插件", FCVAR_NOTIFY );
-	g_hCvarModes =		CreateConVar(	"l4d_infectedbots_modes",			"",				"在这些模式中启用插件，逗号隔开不需要空格（全空=全模式启用插件）", FCVAR_NOTIFY );
-	g_hCvarModesOff =	CreateConVar(	"l4d_infectedbots_modes_off",		"",				"在这些模式中关闭插件，逗号隔开不需要空格（全空=无）.", FCVAR_NOTIFY );
-	g_hCvarModesTog =	CreateConVar(	"l4d_infectedbots_modes_tog",		"0",			"在这些模式中启用插件. 0=全模式, 1=战役/写实, 2=生还者, 4=对抗, 8=清道夫 多个模式吧数字加到一起", FCVAR_NOTIFY );
-	h_BoomerLimit = CreateConVar("l4d_infectedbots_boomer_limit", "2", "插件可生成胖子的最大数量", FCVAR_NOTIFY, true, 0.0);
-	h_SmokerLimit = CreateConVar("l4d_infectedbots_smoker_limit", "2", "插件可生成舌头的最大数量", FCVAR_NOTIFY, true, 0.0);
-	h_HunterLimit = CreateConVar("l4d_infectedbots_hunter_limit", "2", "插件可生成hunter的最大数量", FCVAR_NOTIFY, true, 0.0);
-	h_WitchLimit = CreateConVar("l4d_infectedbots_witch_max_limit", "6", "插件可生成女巫的最大数量 （不影响剧情女巫）", FCVAR_NOTIFY, true, 0.0);
+	g_hCvarAllow =		CreateConVar(	"l4d_infectedbots_allow",			"1",			"0=Plugin off, 1=Plugin on.", FCVAR_NOTIFY );
+	g_hCvarModes =		CreateConVar(	"l4d_infectedbots_modes",			"",				"Turn on the plugin in these game modes, separate by commas (no spaces). (Empty = all).", FCVAR_NOTIFY );
+	g_hCvarModesOff =	CreateConVar(	"l4d_infectedbots_modes_off",		"",				"Turn off the plugin in these game modes, separate by commas (no spaces). (Empty = none).", FCVAR_NOTIFY );
+	g_hCvarModesTog =	CreateConVar(	"l4d_infectedbots_modes_tog",		"0",			"Turn on the plugin in these game modes. 0=All, 1=Coop/Realism, 2=Survival, 4=Versus, 8=Scavenge. Add numbers together.", FCVAR_NOTIFY );
+	h_BoomerLimit = CreateConVar("l4d_infectedbots_boomer_limit", "2", "Sets the limit for boomers spawned by the plugin", FCVAR_NOTIFY, true, 0.0);
+	h_SmokerLimit = CreateConVar("l4d_infectedbots_smoker_limit", "2", "Sets the limit for smokers spawned by the plugin", FCVAR_NOTIFY, true, 0.0);
+	h_HunterLimit = CreateConVar("l4d_infectedbots_hunter_limit", "2", "Sets the limit for hunters spawned by the plugin", FCVAR_NOTIFY, true, 0.0);
+	h_WitchLimit = CreateConVar("l4d_infectedbots_witch_max_limit", "6", "Sets the limit for witches spawned by the plugin (does not affect director witches)", FCVAR_NOTIFY, true, 0.0);
 	if (g_bL4D2Version)
 	{
-		h_SpitterLimit = CreateConVar("l4d_infectedbots_spitter_limit", "2", "插件可生成口水的最大数量", FCVAR_NOTIFY, true, 0.0);
-		h_JockeyLimit = CreateConVar("l4d_infectedbots_jockey_limit", "2", "插件可生成猴子的最大数量", FCVAR_NOTIFY, true, 0.0);
-		h_ChargerLimit = CreateConVar("l4d_infectedbots_charger_limit", "2", "插件可生成charger的最大数量", FCVAR_NOTIFY, true, 0.0);
+		h_SpitterLimit = CreateConVar("l4d_infectedbots_spitter_limit", "2", "Sets the limit for spitters spawned by the plugin", FCVAR_NOTIFY, true, 0.0);
+		h_JockeyLimit = CreateConVar("l4d_infectedbots_jockey_limit", "2", "Sets the limit for jockeys spawned by the plugin", FCVAR_NOTIFY, true, 0.0);
+		h_ChargerLimit = CreateConVar("l4d_infectedbots_charger_limit", "2", "Sets the limit for chargers spawned by the plugin", FCVAR_NOTIFY, true, 0.0);
 	}
-	h_TankLimit = CreateConVar("l4d_infectedbots_tank_limit", "1", "插件可生成坦克的最大数量（不影响剧情生成的坦克）", FCVAR_NOTIFY, true, 0.0);
-	h_PlayerAddTankLimitScale = CreateConVar("l4d_infectedbots_add_tanklimit_scale", "3", "玩家数量超过5个时，Tank数量上限 = tank_limit + [(存活的生还者数量-4) ÷ 'add_tanklimit_scale'] × 'add_tanklimit'.[不影响剧情生成的坦克]", FCVAR_NOTIFY, true, 1.0);
-	h_PlayerAddTankLimit = CreateConVar("l4d_infectedbots_add_tanklimit", "1", "当生还者数量超过4个时，Tank数量上限 = tank_limit + [(存活的倖存者数量-4) ÷ 'add_tanklimit_scale'] × 'add_tanklimit'.", FCVAR_NOTIFY, true, 0.0);
-	h_TankSpawnFinal = CreateConVar("l4d_infectedbots_tank_spawn_final", "1", "如果为1，则救援开始后插件不会生成坦克（不影响剧情生成的坦克）", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_TankLimit = CreateConVar("l4d_infectedbots_tank_limit", "1", "Sets the limit for tanks spawned by the plugin (does not affect director tanks)", FCVAR_NOTIFY, true, 0.0);
+	h_PlayerAddTankLimitScale = CreateConVar("l4d_infectedbots_add_tanklimit_scale", "3", "If server has more than 4+ alive players, how many tanks on the field = 'tank_limit' + [(alive players - 4) ÷ 'add_tanklimit_scale' × 'add_tanklimit'].", FCVAR_NOTIFY, true, 1.0);
+	h_PlayerAddTankLimit = CreateConVar("l4d_infectedbots_add_tanklimit", "1", "If server has more than 4+ alive players, increase the certain value to 'l4d_infectedbots_tank_limit' each 'l4d_infectedbots_add_tanklimit_scale' players joins", FCVAR_NOTIFY, true, 0.0);
+	h_TankSpawnFinal = CreateConVar("l4d_infectedbots_tank_spawn_final", "1", "If 1, still spawn tank in final stage rescue (does not affect director tanks)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
-	h_MaxPlayerZombies = CreateConVar("l4d_infectedbots_max_specials", "2", "当生还者数量低于4个及以下时可生成的最大特感数量", FCVAR_NOTIFY, true, 0.0);
-	h_PlayerAddZombiesScale = CreateConVar("l4d_infectedbots_add_specials_scale", "2", "玩家数量超过4个时，最大特感数量上限 = max_specials + [(存活的生还者数量-4) ÷ 'add_specials_scale'] × 'add_specials'.", FCVAR_NOTIFY, true, 1.0);
-	h_PlayerAddZombies = CreateConVar("l4d_infectedbots_add_specials", "2", "当生还者数量超过4个时，最大特感数量上限 = max_specials + [(存活的生还者数量-4) ÷ 'add_specials_scale'] × 'add_specials'", FCVAR_NOTIFY, true, 0.0);
+	h_MaxPlayerZombies = CreateConVar("l4d_infectedbots_max_specials", "2", "Defines how many special infected can be on the map on all gamemodes(does not count witch on all gamemodes, count tank in all gamemode)", FCVAR_NOTIFY, true, 0.0);
+	h_PlayerAddZombiesScale = CreateConVar("l4d_infectedbots_add_specials_scale", "2", "If server has more than 4+ alive players, how many special infected = 'max_specials' + [(alive players - 4) ÷ 'add_specials_scale' × 'add_specials'].", FCVAR_NOTIFY, true, 1.0);
+	h_PlayerAddZombies = CreateConVar("l4d_infectedbots_add_specials", "2", "If server has more than 4+ alive players, increase the certain value to 'l4d_infectedbots_max_specials' each 'l4d_infectedbots_add_specials_scale' players joins", FCVAR_NOTIFY, true, 0.0);
 
-	h_TankHealthAdjust = CreateConVar("l4d_infectedbots_adjust_tankhealth_enable", "1", "如果为1，则根据生还者数量修改坦克血量上限", FCVAR_NOTIFY, true, 0.0,true, 1.0);
-	h_TankHealth = CreateConVar("l4d_infectedbots_default_tankhealth", "4000", "设置坦克默认血量上限, 坦克血量上限受到游戏难度或模式影响 （若坦克血量上限设置为4000，则简单难度3000血，普通难度4000血，对抗类型模式6000血，高级/专家难度血量8000血）", FCVAR_NOTIFY, true, 1.0);
-	h_PlayerAddTankHealthScale = CreateConVar("l4d_infectedbots_add_tankhealth_scale", "1", "当生还者数量超过4个时，坦克血量上限 = max_specials + [(存活的生还者数量-4) ÷ 'add_specials_scale'] × 'add_specials'].", FCVAR_NOTIFY, true, 1.0);
-	h_PlayerAddTankHealth = CreateConVar("l4d_infectedbots_add_tankhealth", "500", "当生还者数量超过4个时，最大特感数量上限 = max_specials + [(存活的生还者数量-4) ÷ 'add_specials_scale'] × 'add_specials'", FCVAR_NOTIFY, true, 0.0);
-	h_InfectedSpawnTimeMax = CreateConVar("l4d_infectedbots_spawn_time_max", "60", "设置插件生成的特感最大时间", FCVAR_NOTIFY, true, 1.0);
-	h_InfectedSpawnTimeMin = CreateConVar("l4d_infectedbots_spawn_time_min", "40", "设置插件生成的特感最小时间", FCVAR_NOTIFY, true, 1.0);
-	h_CoopPlayableTank = CreateConVar("l4d_infectedbots_coop_versus_tank_playable", "0", "如果为1，玩家可以在战役/写实/生还者模式中接管坦克", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_JoinableTeams = CreateConVar("l4d_infectedbots_coop_versus", "1", "如果为1，则玩家可以在战役/写实/生还者模式中加入感染者(!ji加入感染者 !js加入生还者)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_TankHealthAdjust = CreateConVar("l4d_infectedbots_adjust_tankhealth_enable", "1", "If 1, adjust and overrides tank health by this plugin.", FCVAR_NOTIFY, true, 0.0,true, 1.0);
+	h_TankHealth = CreateConVar("l4d_infectedbots_default_tankhealth", "4000", "Sets Default Health for Tank, Tank hp is affected by gamemode and difficulty (Example, Set Tank health 4000hp, but in Easy: 3000, Normal: 4000, Versus: 6000, Advanced/Expert: 8000)", FCVAR_NOTIFY, true, 1.0);
+	h_PlayerAddTankHealthScale = CreateConVar("l4d_infectedbots_add_tankhealth_scale", "1", "If server has more than 4+ alive players, how many Tank Health = 'default_tankhealth' + [(alive players - 4) ÷ 'add_tankhealth_scale' × 'add_tankhealth'].", FCVAR_NOTIFY, true, 1.0);
+	h_PlayerAddTankHealth = CreateConVar("l4d_infectedbots_add_tankhealth", "500", "If server has more than 4+ alive players, increase the certain value to 'l4d_infectedbots_default_tankhealth' each 'l4d_infectedbots_add_tankhealth_scale' players joins", FCVAR_NOTIFY, true, 0.0);
+	h_InfectedSpawnTimeMax = CreateConVar("l4d_infectedbots_spawn_time_max", "60", "Sets the max spawn time for special infected spawned by the plugin in seconds.", FCVAR_NOTIFY, true, 1.0);
+	h_InfectedSpawnTimeMin = CreateConVar("l4d_infectedbots_spawn_time_min", "40", "Sets the minimum spawn time for special infected spawned by the plugin in seconds.", FCVAR_NOTIFY, true, 1.0);
+	h_CoopPlayableTank = CreateConVar("l4d_infectedbots_coop_versus_tank_playable", "0", "If 1, tank will always be controlled by human player in coop/survival/realism.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_JoinableTeams = CreateConVar("l4d_infectedbots_coop_versus", "1", "If 1, players can join the infected team in coop/survival/realism (!ji in chat to join infected, !js to join survivors)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	if (!g_bL4D2Version)
 	{
-		h_StatsBoard = CreateConVar("l4d_infectedbots_stats_board", "0", "如果为1，则感染者玩家死亡后可开放统计界面（仅1代）", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+		h_StatsBoard = CreateConVar("l4d_infectedbots_stats_board", "0", "If 1, the stats board will show up after an infected player dies (L4D1 ONLY)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	}
-	h_JoinableTeamsAnnounce = CreateConVar("l4d_infectedbots_coop_versus_announce", "1", "如果为1，则通知玩家如何加入到生还者和感染者", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_Coordination = CreateConVar("l4d_infectedbots_coordination", "0", "如果为1，则感染者玩家需要全部复活才能一起攻击", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_InfHUD = CreateConVar("l4d_infectedbots_infhud_enable", "1", "感染者玩家是否开启HUD.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_Announce = CreateConVar("l4d_infectedbots_infhud_announce", "1", "是否提示感染者玩家如何开启HUD", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_Idletime_b4slay = CreateConVar("l4d_infectedbots_lifespan", "30", "AI特感生成多少秒后踢出（AI防卡）", FCVAR_NOTIFY, true, 1.0);
-	h_InitialSpawn = CreateConVar("l4d_infectedbots_initial_spawn_timer", "10", "离开安全区后多长时间开始刷特", FCVAR_NOTIFY, true, 0.0);
-	h_HumanCoopLimit = CreateConVar("l4d_infectedbots_coop_versus_human_limit", "2", "设置通过插件加入到感染者的玩家数量", FCVAR_NOTIFY, true, 0.0);
-	h_JoinInfectedAccess = CreateConVar("l4d_infectedbots_coop_versus_join_access", "z", " 有什么权限的玩家在战役/写实/生还者模式中可以加入到感染者 (无内容 = 所有人, -1: 无法加入)", FCVAR_NOTIFY);
-	h_DisableSpawnsTank = CreateConVar("l4d_infectedbots_spawns_disabled_tank", "0", "如果为1，则当坦克存活时禁止特感复活", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_VersusCoop = CreateConVar("l4d_infectedbots_versus_coop", "0", "如果为1，则在对抗/清道夫模式中，强迫所有玩家加入到感染者", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_AdjustSpawnTimes = CreateConVar("l4d_infectedbots_adjust_spawn_times", "1", "如果为1，则根据生还者数量调整特感复活时间", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_ReducedSpawnTimesOnPlayer = CreateConVar("l4d_infectedbots_adjust_reduced_spawn_times_on_player", "1", "每增加一位生还者，则减少复活时间（初始4位生还者也算在内）", FCVAR_NOTIFY, true, 0.0);
-	h_SafeSpawn = CreateConVar("l4d_infectedbots_safe_spawn", "0", "如果为1，则生还者离开安全区域才生成特感", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_SpawnDistanceMin = CreateConVar("l4d_infectedbots_spawn_range_min", "400", "生成特感的最小范围（默认550，仅战役/写实模式）", FCVAR_NOTIFY, true, 0.0);
-	h_WitchPeriodMax = CreateConVar("l4d_infectedbots_witch_spawn_time_max", "120.0", "插件生成女巫的最大时间", FCVAR_NOTIFY, true, 1.0);
-	h_WitchPeriodMin = CreateConVar("l4d_infectedbots_witch_spawn_time_min", "90.0", "插件生成女巫的最小时间", FCVAR_NOTIFY, true, 1.0);
-	h_WitchSpawnFinal = CreateConVar("l4d_infectedbots_witch_spawn_final", "0", "如果为1，则救援开始时会生成女巫", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_WitchKillTime = CreateConVar("l4d_infectedbots_witch_lifespan", "200", "女巫生成多少秒才会踢出（仅插件生成的女巫）", FCVAR_NOTIFY, true, 1.0);
-	h_SpawnTankProbability = CreateConVar("l4d_infectedbots_tank_spawn_probability", "5", "每次生成一个特感的时候多少概率会变成坦克", FCVAR_NOTIFY, true, 0.0, true, 100.0);
-	h_ZSDisableGamemode = CreateConVar("l4d_infectedbots_sm_zs_disable_gamemode", "0", "在哪些游戏模式中禁止感染者玩家使用/s/m/_infzs自杀(0: 无, 1: 战役/写实, 2: 对抗/清道夫, 4: 生还者, 多个模式添加数字输出)", FCVAR_NOTIFY, true, 0.0, true, 7.0);
-	h_CommonLimitAdjust = CreateConVar("l4d_infectedbots_adjust_commonlimit_enable", "1", "如果为1，则启用根据人数调整僵尸数量", FCVAR_NOTIFY, true, 0.0,true, 1.0);
-	h_CommonLimit = CreateConVar("l4d_infectedbots_default_commonlimit", "30", "当生还者数量不超过5人的僵尸数量", FCVAR_NOTIFY, true, 1.0);
-	h_PlayerAddCommonLimitScale = CreateConVar("l4d_infectedbots_add_commonlimit_scale", "1", "当生还者数量超过4个时，最大普通僵尸数量上限 = default_commonlimit + [(存活的生还者数量-4) ÷ 'add_commonlimit_scale'] × 'add_commonlimit'", FCVAR_NOTIFY, true, 1.0);
-	h_PlayerAddCommonLimit = CreateConVar("l4d_infectedbots_add_commonlimit", "2", "当生还者数量超过4个时，最大普通僵尸数量上限 = default_commonlimit + [(存活的生还者数量-4) ÷ 'add_commonlimit_scale'] × 'add_commonlimit'", FCVAR_NOTIFY, true, 0.0);
-	h_CoopInfectedPlayerFlashLight = CreateConVar("l4d_infectedbots_coop_versus_human_light", "1", "如果为1，则特感玩家将发出红色的光", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_StatusAnnouncementEnable = CreateConVar("l4d_infectedbots_announcement_enable", "1", "如果为1，则当生还者数量发生变化时宣布插件状态", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_CoopInfectedPlayerGhostState = CreateConVar("l4d_infectedbots_coop_versus_human_ghost_enable", "1", "如果为1，则在战役/写实/生还者模式中，感染者玩家将以灵魂状态复活", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_InfectedSpawnSameFrame = CreateConVar("l4d_infectedbots_spawn_on_same_frame", "0", "如果为1，则允许游戏同一时间生成特感没有误差(小心，这可能会造成服务器卡顿)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	
+	h_JoinableTeamsAnnounce = CreateConVar("l4d_infectedbots_coop_versus_announce", "1", "If 1, clients will be announced to on how to join the infected team", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_Coordination = CreateConVar("l4d_infectedbots_coordination", "0", "If 1, bots will only spawn when all other bot spawn timers are at zero.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_InfHUD = CreateConVar("l4d_infectedbots_infhud_enable", "1", "Toggle whether Infected HUD is active or not.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_Announce = CreateConVar("l4d_infectedbots_infhud_announce", "1", "Toggle whether Infected HUD announces itself to clients.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_Idletime_b4slay = CreateConVar("l4d_infectedbots_lifespan", "30", "Amount of seconds before a special infected bot is kicked", FCVAR_NOTIFY, true, 1.0);
+	h_InitialSpawn = CreateConVar("l4d_infectedbots_initial_spawn_timer", "10", "The spawn timer in seconds used when infected bots are spawned for the first time in a map", FCVAR_NOTIFY, true, 0.0);
+	h_HumanCoopLimit = CreateConVar("l4d_infectedbots_coop_versus_human_limit", "2", "Sets the limit for the amount of humans that can join the infected team in coop/survival/realism.", FCVAR_NOTIFY, true, 0.0);
+	h_JoinInfectedAccess = CreateConVar("l4d_infectedbots_coop_versus_join_access", "z", " Players with these flags have access to join infected team in coop/survival/realism. (Empty = Everyone, -1: Nobody)", FCVAR_NOTIFY);
+	h_DisableSpawnsTank = CreateConVar("l4d_infectedbots_spawns_disabled_tank", "0", "If 1, Plugin will disable spawning infected bot when a tank is on the field.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_VersusCoop = CreateConVar("l4d_infectedbots_versus_coop", "0", "If 1, The plugin will force all players to the infected side against the survivor AI for every round and map in versus/scavenge", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_AdjustSpawnTimes = CreateConVar("l4d_infectedbots_adjust_spawn_times", "1", "If 1, The plugin will adjust spawn timers depending on the gamemode", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_ReducedSpawnTimesOnPlayer = CreateConVar("l4d_infectedbots_adjust_reduced_spawn_times_on_player", "1", "Reduce certain value to maximum spawn timer based per alive player", FCVAR_NOTIFY, true, 0.0);
+	h_SafeSpawn = CreateConVar("l4d_infectedbots_safe_spawn", "0", "If 1, spawn special infected before survivors leave starting safe room area.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_SpawnDistanceMin = CreateConVar("l4d_infectedbots_spawn_range_min", "350", "The minimum of spawn range for infected. (default: 550, coop/realism only)\nThis cvar will also affect common zombie spawn range and ghost infected player spawn range", FCVAR_NOTIFY, true, 0.0, true, 550.0);
+	h_WitchPeriodMax = CreateConVar("l4d_infectedbots_witch_spawn_time_max", "120.0", "Sets the max spawn time for witch spawned by the plugin in seconds.", FCVAR_NOTIFY, true, 1.0);
+	h_WitchPeriodMin = CreateConVar("l4d_infectedbots_witch_spawn_time_min", "90.0", "Sets the mix spawn time for witch spawned by the plugin in seconds.", FCVAR_NOTIFY, true, 1.0);
+	h_WitchSpawnFinal = CreateConVar("l4d_infectedbots_witch_spawn_final", "0", "If 1, still spawn witch in final stage rescue", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_WitchKillTime = CreateConVar("l4d_infectedbots_witch_lifespan", "200", "Amount of seconds before a witch is kicked. (only remove witches spawned by this plugin)", FCVAR_NOTIFY, true, 1.0);
+	h_SpawnTankProbability = CreateConVar("l4d_infectedbots_tank_spawn_probability", "5", "When each time spawn S.I., how much percent of chance to spawn tank", FCVAR_NOTIFY, true, 0.0, true, 100.0);
+	h_ZSDisableGamemode = CreateConVar("l4d_infectedbots_sm_zs_disable_gamemode", "6", "Disable sm_zs in these gamemode (0: None, 1: coop/realism, 2: versus/scavenge, 4: survival, add numbers together)", FCVAR_NOTIFY, true, 0.0, true, 7.0);
+	h_CommonLimitAdjust = CreateConVar("l4d_infectedbots_adjust_commonlimit_enable", "1", "If 1, adjust and overrides zombie common limit by this plugin.", FCVAR_NOTIFY, true, 0.0,true, 1.0);
+	h_CommonLimit = CreateConVar("l4d_infectedbots_default_commonlimit", "30", "Sets Default zombie common limit.", FCVAR_NOTIFY, true, 1.0);
+	h_PlayerAddCommonLimitScale = CreateConVar("l4d_infectedbots_add_commonlimit_scale", "1", "If server has more than 4+ alive players, zombie common limit = 'default_commonlimit' + [(alive players - 4) ÷ 'add_commonlimit_scale' × 'add_commonlimit'].", FCVAR_NOTIFY, true, 1.0);
+	h_PlayerAddCommonLimit = CreateConVar("l4d_infectedbots_add_commonlimit", "2", "If server has more than 4+ alive players, increase the certain value to 'l4d_infectedbots_default_commonlimit' each 'l4d_infectedbots_add_commonlimit_scale' players joins", FCVAR_NOTIFY, true, 0.0);
+	h_CoopInfectedPlayerFlashLight = CreateConVar("l4d_infectedbots_coop_versus_human_light", "1", "If 1, attaches red flash light to human infected player in coop/survival. (Make it clear which infected bot is controlled by player)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_StatusAnnouncementEnable = CreateConVar("l4d_infectedbots_announcement_enable", "1", "If 1, announce current plugin status when the number of alive survivors changes.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_CoopInfectedPlayerGhostState = CreateConVar("l4d_infectedbots_coop_versus_human_ghost_enable", "1", "If 1, human infected player will spawn as ghost state in coop/survival/realism.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_InfectedSpawnSameFrame = CreateConVar("l4d_infectedbots_spawn_on_same_frame", "0", "If 1, infected bots can spawn on the same game frame (careful, this could cause sever laggy)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+
 	g_hCvarMPGameMode = FindConVar("mp_gamemode");
 	g_hCvarMPGameMode.AddChangeHook(ConVarGameMode);
 	g_hCvarAllow.AddChangeHook(ConVarChanged_Allow);
@@ -1580,7 +1580,7 @@ public Action Timer_PluginStart(Handle timer)
 	infHUDTimer = CreateTimer(1.0, showInfHUD, _, TIMER_REPEAT);
 
 	#if DEBUG
-		PrintToChatAll("PluginStart()!");
+		PrintToChatAll("[TS] PluginStart()!");
 	#endif
 	delete PlayerLeftStartTimer;
 	PlayerLeftStartTimer = CreateTimer(1.0, Timer_PlayerLeftStart, _, TIMER_REPEAT);
@@ -1616,7 +1616,7 @@ public void evtPlayerFirstSpawned(Event event, const char[] name, bool dontBroad
 		return;
 
 	#if DEBUG
-		PrintToChatAll("Player has spawned for the first time");
+		PrintToChatAll("[TS] Player has spawned for the first time");
 	#endif
 
 	// Versus Coop code, puts all players on infected at start, delay is added to prevent a weird glitch
@@ -1655,7 +1655,7 @@ public Action Timer_InfectedKillSelf(Handle Timer, int client)
 
 	if( client && IsClientInGame(client) && !IsFakeClient(client) )
 	{
-		PrintHintText(client,"%T","Not allowed to respawn",client);
+		PrintHintText(client,"[TS] %T","Not allowed to respawn",client);
 		ForcePlayerSuicide(client);
 	}
 	return Plugin_Continue;
@@ -1995,7 +1995,7 @@ public void evtUnlockVersusDoor(Event event, const char[] name, bool dontBroadca
 		return;
 
 	#if DEBUG
-		PrintToChatAll("Attempting to spawn tempbot");
+		PrintToChatAll("[TS] Attempting to spawn tempbot");
 	#endif
 	int bot = CreateFakeClient("tempbot");
 	if (bot != 0)
@@ -2106,7 +2106,7 @@ public Action CheckGameMode(int client, int args)
 {
 	if (client)
 	{
-		PrintToChat(client, "g_iCurrentMode = %i", g_iCurrentMode);
+		PrintToChat(client, "[TS] g_iCurrentMode = %i", g_iCurrentMode);
 	}
 
 	return Plugin_Handled;
@@ -2123,7 +2123,7 @@ public Action CheckQueue(int client, int args)
 		else
 			CountInfected_Coop();
 
-		CPrintToChat(client, "InfectedBotQueue = {green}%i{default}, InfectedBotCount = {green}%i{default}, InfectedRealCount = {green}%i{default}, InfectedRealQueue = {green}%i{default}", InfectedBotQueue, InfectedBotCount, InfectedRealCount, InfectedRealQueue);
+		CPrintToChat(client, "[TS] InfectedBotQueue = {green}%i{default}, InfectedBotCount = {green}%i{default}, InfectedRealCount = {green}%i{default}, InfectedRealQueue = {green}%i{default}", InfectedBotQueue, InfectedBotCount, InfectedRealCount, InfectedRealQueue);
 	}
 
 	return Plugin_Handled;
@@ -2143,11 +2143,11 @@ public Action JoinInfected(int client, int args)
 				iPlayerTeam[client] = TEAM_INFECTED;
 			}
 			else
-				PrintHintText(client, "The Infected Team is full.");
+				PrintHintText(client, "[TS] The Infected Team is full.");
 		}
 		else
 		{
-			PrintHintText(client, "%T", "Access", client);
+			PrintHintText(client, "[TS] %T", "Access", client);
 		}
 	}
 
@@ -2176,19 +2176,19 @@ public Action ForceInfectedSuicide(int client, int args)
 		if(bGameMode == 3) bGameMode = 4;
 		if(bGameMode & g_iZSDisableGamemode)
 		{
-			PrintHintText(client,"%T","Not allowed to suicide during current mode",client);
+			PrintHintText(client,"[TS] %T","Not allowed to suicide during current mode",client);
 			return Plugin_Handled;
 		}
 
 		if(GetEngineTime() - fPlayerSpawnEngineTime[client] < SUICIDE_TIME)
 		{
-			PrintHintText(client,"%T","Not allowed to suicide so quickly",client);
+			PrintHintText(client,"[TS] %T","Not allowed to suicide so quickly",client);
 			return Plugin_Handled;
 		}
 
 		if( L4D_GetSurvivorVictim(client) != -1 )
 		{
-			PrintHintText(client,"%T","Not allowed to suicide",client);
+			PrintHintText(client,"[TS] %T","Not allowed to suicide",client);
 			return Plugin_Handled;
 		}
 
@@ -2204,17 +2204,17 @@ public Action Console_ZLimit(int client, int args)
 
 	if (client == 0)
 	{
-		PrintToServer("sm_zlimit cannot be used by server.");
+		PrintToServer("[TS] sm_zlimit cannot be used by server.");
 		return Plugin_Handled;
 	}
 	if(args > 1)
 	{
-		ReplyToCommand(client, "%T","Usage: sm_zlimit",client);
+		ReplyToCommand(client, "[TS] %T","Usage: sm_zlimit",client);
 		return Plugin_Handled;
 	}
 	if(args < 1)
 	{
-		ReplyToCommand(client, "%T\n%T","Current Special Infected Limit",client, g_iMaxPlayerZombies,"Usage: sm_zlimit",client);
+		ReplyToCommand(client, "[TS] %T\n%T","Current Special Infected Limit",client, g_iMaxPlayerZombies,"Usage: sm_zlimit",client);
 		return Plugin_Handled;
 	}
 
@@ -2225,29 +2225,29 @@ public Action Console_ZLimit(int client, int args)
 		int newlimit = StringToInt(arg1);
 		if(newlimit>30)
 		{
-			ReplyToCommand(client, "%T","why you need so many special infected?",client);
+			ReplyToCommand(client, "[TS] %T","why you need so many special infected?",client);
 		}
 		else if (newlimit<0)
 		{
-			ReplyToCommand(client, "%T","Usage: sm_zlimit",client);
+			ReplyToCommand(client, "[TS] %T","Usage: sm_zlimit",client);
 		}
 		else if(newlimit!=g_iMaxPlayerZombies)
 		{
 			g_iMaxPlayerZombies = newlimit;
 			CreateTimer(0.1, MaxSpecialsSet);
-			C_PrintToChatAll("{lightgreen}%N{default}: %t", client, "Special Infected Limit has been changed",newlimit);
+			C_PrintToChatAll("[{olive}TS{default}] {lightgreen}%N{default}: %t", client, "Special Infected Limit has been changed",newlimit);
 			
 			CheckIfBotsNeeded2();
 		}
 		else
 		{
-			ReplyToCommand(client, "%T","Special Infected Limit is already",client, g_iMaxPlayerZombies);
+			ReplyToCommand(client, "[TS] %T","Special Infected Limit is already",client, g_iMaxPlayerZombies);
 		}
 		return Plugin_Handled;
 	}
 	else
 	{
-		ReplyToCommand(client, "%T","Usage: sm_zlimit",client);
+		ReplyToCommand(client, "[TS] %T","Usage: sm_zlimit",client);
 		return Plugin_Handled;
 	}
 }
@@ -2258,18 +2258,18 @@ public Action Console_Timer(int client, int args)
 
 	if (client == 0)
 	{
-		PrintToServer("sm_timer cannot be used by server.");
+		PrintToServer("[TS] sm_timer cannot be used by server.");
 		return Plugin_Handled;
 	}
 
 	if(args > 2)
 	{
-		ReplyToCommand(client, "%T","Usage: sm_timer",client);
+		ReplyToCommand(client, "[TS] %T","Usage: sm_timer",client);
 		return Plugin_Handled;
 	}
 	if(args < 1)
 	{
-		ReplyToCommand(client, "%T\n%T","Current Spawn Timer",client,g_iInfectedSpawnTimeMin,g_iInfectedSpawnTimeMax,"Usage: sm_timer",client );
+		ReplyToCommand(client, "[TS] %T\n%T","Current Spawn Timer",client,g_iInfectedSpawnTimeMin,g_iInfectedSpawnTimeMax,"Usage: sm_timer",client );
 		return Plugin_Handled;
 	}
 
@@ -2283,23 +2283,23 @@ public Action Console_Timer(int client, int args)
 
 			if(DD<=0)
 			{
-				ReplyToCommand(client, "%T","Failed to set timer!",client);
+				ReplyToCommand(client, "[TS] %T","Failed to set timer!",client);
 			}
 			else if (DD > 180)
 			{
-				ReplyToCommand(client, "%T","why so long?",client);
+				ReplyToCommand(client, "[TS] %T","why so long?",client);
 			}
 			else
 			{
 				h_InfectedSpawnTimeMin.SetInt(DD);
 				h_InfectedSpawnTimeMax.SetInt(DD);
-				C_PrintToChatAll("{lightgreen}%N{default}: %t",client,"Bot Spawn Timer has been changed",DD,DD);
+				C_PrintToChatAll("[{olive}TS{default}] {lightgreen}%N{default}: %t",client,"Bot Spawn Timer has been changed",DD,DD);
 			}
 			return Plugin_Handled;
 		}
 		else
 		{
-			ReplyToCommand(client, "%T","Usage: sm_timer",client);
+			ReplyToCommand(client, "[TS] %T","Usage: sm_timer",client);
 			return Plugin_Handled;
 		}
 	}
@@ -2322,19 +2322,19 @@ public Action Console_Timer(int client, int args)
 
 			if(Max>180)
 			{
-				ReplyToCommand(client, "%T","why so long?",client);
+				ReplyToCommand(client, "[TS] %T","why so long?",client);
 			}
 			else
 			{
 				h_InfectedSpawnTimeMin.SetInt(Min);
 				h_InfectedSpawnTimeMax.SetInt(Max);
-				C_PrintToChatAll("{lightgreen}%N{default}: %t",client,"Bot Spawn Timer has been changed",Min,Max);
+				C_PrintToChatAll("[{olive}TS{green}] {lightgreen}%N{default}: %t",client,"Bot Spawn Timer has been changed",Min,Max);
 			}
 			return Plugin_Handled;
 		}
 		else
 		{
-			ReplyToCommand(client, "%T","Usage: sm_timer",client);
+			ReplyToCommand(client, "[TS] %T","Usage: sm_timer",client);
 			return Plugin_Handled;
 		}
 	}
@@ -2360,7 +2360,7 @@ public Action AnnounceJoinInfected(Handle timer, int client)
 	{
 		if (g_bJoinableTeamsAnnounce && g_bJoinableTeams && g_iCurrentMode != 2)
 		{
-			C_PrintToChat(client,"%T","Join infected team in coop/survival/realism",client);
+			C_PrintToChat(client,"[{olive}TS{default}] %T","Join infected team in coop/survival/realism",client);
 			C_PrintToChat(client,"%T","Join survivor team",client);
 		}
 	}
@@ -2474,7 +2474,7 @@ public Action DisposeOfCowards(Handle timer, int coward)
 
 	if (coward && IsClientInGame(coward) && IsFakeClient(coward) && GetClientTeam(coward) == TEAM_INFECTED && !IsPlayerTank(coward) && IsPlayerAlive(coward))
 	{
-		// Check to see if the infected can be seen by the survivors. If so, kill the timer and make a int one.
+		// Check to see if the infected can be seen by the survivors. If so, kill the timer and make a new one.
 		if (CanBeSeenBySurvivors(coward) || IsTooClose(coward, h_SpawnDistanceMin.FloatValue) || L4D_GetSurvivorVictim(coward) > 0)
 		{
 			FightOrDieTimer[coward] = null;
@@ -2484,7 +2484,7 @@ public Action DisposeOfCowards(Handle timer, int coward)
 		else
 		{
 			CreateTimer(0.1, kickbot, GetClientUserId(coward), TIMER_FLAG_NO_MAPCHANGE);
-			//PrintToChatAll("Kicked bot %N for not attacking", coward);
+			//PrintToChatAll("[TS] Kicked bot %N for not attacking", coward);
 		}
 	}
 	FightOrDieTimer[coward] = null;
@@ -2530,7 +2530,7 @@ public void evtPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 			if(SpawnTime < 0)
 				SpawnTime = 1;
 			#if DEBUG
-				PrintToChatAll("playerdeath");
+				PrintToChatAll("[TS] playerdeath");
 			#endif
 			respawnDelay[client] = SpawnTime;
 			if(IsFakeClient(client)) InfectedBotQueue++;
@@ -2545,7 +2545,7 @@ public void evtPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 		}
 
 		#if DEBUG
-			PrintToChatAll("An infected bot has been added to the spawn queue...");
+			PrintToChatAll("[TS] An infected bot has been added to the spawn queue...");
 		#endif
 	}
 	// This spawns a bot in coop/survival regardless if the special that died was controlled by a player, MI 5
@@ -2578,7 +2578,7 @@ public void evtPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 		}
 
 		#if DEBUG
-			PrintToChatAll("An infected bot has been added to the spawn queue...");
+			PrintToChatAll("[TS] An infected bot has been added to the spawn queue...");
 		#endif
 	}
 
@@ -2786,11 +2786,11 @@ public Action Timer_CountSurvivor(Handle timer)
 			if(g_bCommonLimitAdjust)
 			{
 				SetConVarInt(h_common_limit_cvar, g_iCommonLimit + (h_PlayerAddCommonLimit.IntValue * (addition/h_PlayerAddCommonLimitScale.IntValue)));
-				if(g_bStatusAnnouncementEnable) C_PrintToChatAll("%t","Current status1",iAliveSurplayers,g_iMaxPlayerZombies,zombieHP[6],h_common_limit_cvar.IntValue);
+				if(g_bStatusAnnouncementEnable) C_PrintToChatAll("[{olive}TS{default}] %t","Current status1",iAliveSurplayers,g_iMaxPlayerZombies,zombieHP[6],h_common_limit_cvar.IntValue);
 			}
 			else
 			{
-				if(g_bStatusAnnouncementEnable) C_PrintToChatAll("%t","Current status3",iAliveSurplayers,g_iMaxPlayerZombies,zombieHP[6]);
+				if(g_bStatusAnnouncementEnable) C_PrintToChatAll("[{olive}TS{default}] %t","Current status3",iAliveSurplayers,g_iMaxPlayerZombies,zombieHP[6]);
 			}
 		}
 		else
@@ -2798,11 +2798,11 @@ public Action Timer_CountSurvivor(Handle timer)
 			if(g_bCommonLimitAdjust)
 			{
 				SetConVarInt(h_common_limit_cvar, g_iCommonLimit + h_PlayerAddCommonLimit.IntValue * (addition/h_PlayerAddCommonLimitScale.IntValue));
-				if(g_bStatusAnnouncementEnable) C_PrintToChatAll("%t","Current status2",iAliveSurplayers,g_iMaxPlayerZombies,h_common_limit_cvar.IntValue);
+				if(g_bStatusAnnouncementEnable) C_PrintToChatAll("[{olive}TS{default}] %t","Current status2",iAliveSurplayers,g_iMaxPlayerZombies,h_common_limit_cvar.IntValue);
 			}
 			else
 			{
-				if(g_bStatusAnnouncementEnable) C_PrintToChatAll("%t","Current status4",iAliveSurplayers,g_iMaxPlayerZombies);
+				if(g_bStatusAnnouncementEnable) C_PrintToChatAll("[{olive}TS{default}] %t","Current status4",iAliveSurplayers,g_iMaxPlayerZombies);
 			}
 		}
 		iPlayersInSurvivorTeam = iAliveSurplayers;
@@ -2869,7 +2869,7 @@ public void OnClientDisconnect(int client)
 			if(SpawnTime<=0)
 				SpawnTime = 1;
 			#if DEBUG
-				PrintToChatAll("OnClientDisconnect");
+				PrintToChatAll("[TS] OnClientDisconnect");
 			#endif
 			respawnDelay[client] = SpawnTime;
 			InfectedBotQueue++;
@@ -2908,7 +2908,7 @@ void CheckIfBotsNeeded(int spawn_type)
 	if (g_bHasRoundEnded || !g_bLeftSaveRoom ) return;
 
 	#if DEBUG
-		LogMessage("Checking bots");
+		LogMessage("[TS] Checking bots");
 	#endif
 
 	// First, we count the infected
@@ -2929,16 +2929,16 @@ void CheckIfBotsNeeded(int spawn_type)
 	if (spawn_type == 1)
 	{
 		#if DEBUG
-			LogMessage("spawn_immediately");
+			LogMessage("[TS] spawn_immediately");
 		#endif
 
 		InfectedBotQueue++;
-		CreateTimer(0.1, Timer_Spawn_InfectedBot, _, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(0.0, Timer_Spawn_InfectedBot, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else if (spawn_type == 2 && g_bInitialSpawn) //round start first spawn
 	{
 		#if DEBUG
-			LogMessage("initial_spawn %.1f", g_fInitialSpawn);
+			LogMessage("[TS] initial_spawn %.1f", g_fInitialSpawn);
 		#endif
 
 		if(g_bInfectedSpawnSameFrame)
@@ -2964,7 +2964,7 @@ void CheckIfBotsNeeded(int spawn_type)
 		int SpawnTime = 10;
 
 		#if DEBUG
-			LogMessage("InfectedBotQueue + 1, %d spawntime", SpawnTime);
+			LogMessage("[TS] InfectedBotQueue + 1, %d spawntime", SpawnTime);
 		#endif
 
 		InfectedBotQueue++;
@@ -2982,6 +2982,7 @@ void CheckIfBotsNeeded(int spawn_type)
 		int SpawnTime = GetRandomInt(g_iInfectedSpawnTimeMin, g_iInfectedSpawnTimeMax);
 		if (g_bAdjustSpawnTimes && g_iMaxPlayerZombies != HumansOnInfected()) SpawnTime = SpawnTime  - (TrueNumberOfAliveSurvivors() * g_iReducedSpawnTimesOnPlayer);
 		if(SpawnTime < 3) SpawnTime = 3;
+
 		InfectedBotQueue++;
 		for(int i = 0; i <= L4D_MAXPLAYERS; i++)
 		{
@@ -2993,9 +2994,11 @@ void CheckIfBotsNeeded(int spawn_type)
 		}
 	}
 }
+
 Action Timer_InitialSpawnReset(Handle timer)
 {
 	g_bInitialSpawn = false;
+
 	InitialSpawnResetTimer = null;
 	return Plugin_Continue;
 }
@@ -3231,7 +3234,7 @@ public Action TankSpawner(Handle timer, int tank)
 
 		Index[IndexCount++] = t; //save target to index
 		#if DEBUG
-			PrintToChatAll("Client %i found to be valid Tank Choice", Index[IndexCount]);
+			PrintToChatAll("[TS] Client %i found to be valid Tank Choice", Index[IndexCount]);
 		#endif
 	}
 
@@ -3280,7 +3283,7 @@ public Action TankBugFix(Handle timer, int client)
 			if (bot > 0 && IsValidClient(bot))
 			{
 				#if DEBUG
-					PrintToChatAll("Ghost BugFix");
+					PrintToChatAll("[TS] Ghost BugFix");
 				#endif
 				SetEntityModel(bot, MODEL_TANK);
 				ChangeClientTeam(bot, TEAM_INFECTED);
@@ -3365,7 +3368,7 @@ int BotTypeNeeded()
 	LogMessage("Determining Bot type now");
 	#endif
 	#if DEBUG
-		PrintToChatAll("Determining Bot type now");
+		PrintToChatAll("[TS] Determining Bot type now");
 	#endif
 
 	// current count ...
@@ -3559,7 +3562,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 		return Plugin_Continue;
 	}
 
-	//PrintToChatAll("Spawn_InfectedBot(Handle timer)");
+	//PrintToChatAll("[TS] Spawn_InfectedBot(Handle timer)");
 
 	if (g_bCoordination && !g_bInitialSpawn && g_bIsCoordination == false)
 	{
@@ -3684,7 +3687,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 	int anyclient = GetAheadSurvivor();
 	if(anyclient == 0)
 	{
-		PrintToServer("Couldn't find a valid alive survivor to spawn S.I. at this moment.",ZOMBIESPAWN_Attempts);
+		PrintToServer("[TS] Couldn't find a valid alive survivor to spawn S.I. at this moment.",ZOMBIESPAWN_Attempts);
 		CreateTimer(1.0, CheckIfBotsNeededLater, g_bInitialSpawn ? 2: g_bIsCoordination? 1: 0, TIMER_FLAG_NO_MAPCHANGE);
 
 		if(InfectedBotQueue > 0) InfectedBotQueue--;
@@ -3703,6 +3706,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 	{
 		// Determine the bot class needed ...
 		int bot_type = BotTypeNeeded();
+
 		if (binfectedfreeplayer)
 		{
 			// We spawn the bot ...
@@ -3821,7 +3825,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 					}
 					else
 					{
-						PrintToServer("Couldn't find a Smoker Spawn position in %d tries",ZOMBIESPAWN_Attempts);
+						PrintToServer("[TS] Couldn't find a Smoker Spawn position in %d tries",ZOMBIESPAWN_Attempts);
 					}
 				}
 				case 2: // Boomer
@@ -3837,7 +3841,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 					}
 					else
 					{
-						PrintToServer("Couldn't find a Boomer Spawn position in %d tries",ZOMBIESPAWN_Attempts);
+						PrintToServer("[TS] Couldn't find a Boomer Spawn position in %d tries",ZOMBIESPAWN_Attempts);
 					}
 				}
 				case 3: // Hunter
@@ -3853,7 +3857,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 					}
 					else
 					{
-						PrintToServer("Couldn't find a Hunter Spawn position in %d tries",ZOMBIESPAWN_Attempts);
+						PrintToServer("[TS] Couldn't find a Hunter Spawn position in %d tries",ZOMBIESPAWN_Attempts);
 					}
 				}
 				case 4: // Spitter
@@ -3869,7 +3873,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 					}
 					else
 					{
-						PrintToServer("Couldn't find a Spitter Spawn position in %d tries",ZOMBIESPAWN_Attempts);
+						PrintToServer("[TS] Couldn't find a Spitter Spawn position in %d tries",ZOMBIESPAWN_Attempts);
 					}
 				}
 				case 5: // Jockey
@@ -3885,7 +3889,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 					}
 					else
 					{
-						PrintToServer("Couldn't find a Jockey Spawn position in %d tries",ZOMBIESPAWN_Attempts);
+						PrintToServer("[TS] Couldn't find a Jockey Spawn position in %d tries",ZOMBIESPAWN_Attempts);
 					}
 				}
 				case 6: // Charger
@@ -3901,7 +3905,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 					}
 					else
 					{
-						PrintToServer("Couldn't find a Charger Spawn position in %d tries",ZOMBIESPAWN_Attempts);
+						PrintToServer("[TS] Couldn't find a Charger Spawn position in %d tries",ZOMBIESPAWN_Attempts);
 					}
 				}
 				case 7: // Tank
@@ -3917,7 +3921,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 					}
 					else
 					{
-						PrintToServer("Couldn't find a Tank Spawn position in %d tries",ZOMBIESPAWN_Attempts);
+						PrintToServer("[TS] Couldn't find a Tank Spawn position in %d tries",ZOMBIESPAWN_Attempts);
 					}
 				}
 			}
@@ -3958,7 +3962,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 
 		// Debug print
 		#if DEBUG
-			PrintToChatAll("Spawning an infected bot. Type = %i ", bot_type);
+			PrintToChatAll("[TS] Spawning an infected bot. Type = %i ", bot_type);
 		#endif
 
 		// We decrement the infected queue
@@ -4282,7 +4286,7 @@ public Action TimerAnnounce2(Handle timer, int client)
 	{
 		if (GetClientTeam(client) == TEAM_INFECTED && IsPlayerAlive(client) && !IsPlayerGhost(client))
 		{
-			C_PrintToChat(client, "%T","sm_infzs",client);
+			C_PrintToChat(client, "[{olive}TS{default}] %T","sm_zs",client);
 		}
 	}
 
@@ -4398,11 +4402,11 @@ public void ShowInfectedHUD(int src)
 					int fus = 100 - GetFrustration(i);
 					if(fus <= 60)
 					{
-						PrintHintText(i, "Tank Control: %d%%%%", fus);
+						PrintHintText(i, "[TS] Tank Control: %d%%%%", fus);
 					}
 					if(fus <= 5)
 					{
-						PrintHintText(i, "%T","You don't attack survivors",i);
+						PrintHintText(i, "[TS] %T","You don't attack survivors",i);
 						SetTankFrustration(i, 100);
 						ForcePlayerSuicide(i);
 						continue;
@@ -4853,7 +4857,7 @@ void SwitchToSurvivors(int client)
 
 	if (bot == 0)
 	{
-		PrintHintText(client, "No alive survivor bots to take over.");
+		PrintHintText(client, "[TS] No alive survivor bots to take over.");
 		return;
 	}
 	L4D_SetHumanSpec(bot, client);
@@ -4962,7 +4966,7 @@ public Action SpawnWitchAuto(Handle timer)
 	int witch;
 	if(anyclient == 0)
 	{
-		//PrintToServer("Couldn't find a valid alive survivor to spawn witch at this moment.",ZOMBIESPAWN_Attempts);
+		PrintToServer("[TS] Couldn't find a valid alive survivor to spawn witch at this moment.",ZOMBIESPAWN_Attempts);
 	}
 	else if (witches < h_WitchLimit.IntValue)
 	{
@@ -4981,7 +4985,7 @@ public Action SpawnWitchAuto(Handle timer)
 		}
 		else
 		{
-			//PrintToServer("Couldn't find a Witch Spawn position in %d tries", ZOMBIESPAWN_Attempts);
+			PrintToServer("[TS] Couldn't find a Witch Spawn position in %d tries", ZOMBIESPAWN_Attempts);
 		}
 	}
 
