@@ -1,4 +1,4 @@
-豆瓣包(2022-9-27a豆瓣酱な (v1.1.1)(6911-1148)战役整合包)：  
+豆瓣包(2022-10-14豆瓣酱な (v1.1.1)(6911-1148)战役整合包)：  
 1.1.1插件平台linux版(6911-1148)(必须先启用这个)  
 必选-功能类插件(left4dhooks)(v1.116)(SilverShot)  
 必选-功能类插件(WeaponHandling)(v1.0.6)(Lux)  
@@ -104,6 +104,7 @@ l4d2_practice 灵魂状态下右键切换特感（注意数据文件） 来自 h
 l4d_stuckzombiemeleefix 近战砍僵尸修复 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_stuckzombiemeleefix.sp  
 L4D_Elevator_Teleport 电梯传送 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/blob/main/L4D_Elevator_Teleport.sp 来自 https://forums.alliedmods.net/showthread.php?p=2785701  
 boss_controller/boss_spawner 路程刷克和妹子 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/BossController  
+L4D2_cs_ladders 爬梯开枪 来自 https://github.com/LuxLuma/L4D-small-plugins/tree/master/L4D2_cs_ladders   
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
