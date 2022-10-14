@@ -105,6 +105,7 @@ l4d_stuckzombiemeleefix 近战砍僵尸修复 来自 https://github.com/SirPleas
 L4D_Elevator_Teleport 电梯传送 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/blob/main/L4D_Elevator_Teleport.sp 来自 https://forums.alliedmods.net/showthread.php?p=2785701  
 boss_controller/boss_spawner 路程刷克和妹子 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/BossController  
 L4D2_cs_ladders 爬梯开枪 来自 https://github.com/LuxLuma/L4D-small-plugins/tree/master/L4D2_cs_ladders   
+noteam_nudging 防止某些三方图玩家碰撞被挤下去 来自 https://github.com/LuxLuma/L4D-small-plugins/blob/master/L4D1-2_noteam_nudging/scripting/noteam_nudging.sp  
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
