@@ -23,18 +23,21 @@
 自选-防止玩家一直挂机(可单独设置管理员的挂机时间)(豆瓣酱な)  
 自选-服务器里没人后自动炸服(建议linux系统使用)  
 自选-服务器中文名(v1.1.1)(指令!host立即刷新服名)(豆瓣酱な)  
-自选-管理员菜单更改难度(豆瓣酱な)  
-自选-管理员更改游戏模式(v1.0.0)(豆瓣酱な)  
+自选-管理员菜单更改难度(v1.0.2)(豆瓣酱な)  
+自选-管理员菜单更改游戏模式(v1.1.0)(豆瓣酱な)  
+自选-管理员菜单设置生还者免伤(v1.1.4)(豆瓣酱な)  
+自选-管理员菜单设置生还者颜色(v1.0.0)(豆瓣酱な)  
 自选-管理员娱乐菜单(v1.2.1)(Ryanx, sorallll)  
 自选-管理员暂停游戏(精简版)  
 自选-后备弹药插件(豆瓣酱な)  
 自选-击杀或爆头和黑枪提示和关闭队伤  
 自选-击杀特感坦克女巫奖励血量和前置弹药(可关闭击杀特感提示)  
 自选-禁用游戏自带的投票  
-自选-排行榜插件(v1.5.5)(豆瓣酱な)(HUD提供者→sorallll)  
+自选-排行榜插件(v1.6.8)(豆瓣酱な)(HUD提供者→sorallll)  
 自选-扔投掷物提示(v1.0.8)(注意-本地服务器慎用)(Mart)  
 自选-近战解锁(v1.6)(IA-NanaNana, sorallll)  
 自选-设置医疗物品倍数(根据人数或固定倍数)(修改-豆瓣酱な)(原作者-笨蛋海绵)  
+自选-生还者对坦克的伤害排名(v1.3.1)(豆瓣酱な)  
 自选-坦克特感女巫血量显示和坦克死亡提示(NiCo-op, Edited By Ernecio (Satanael))  
 自选-特感主动攻击幸存者(v1.2.0)(nosoop)(只限linux系统)  
 自选-显示谁在按C骂人(v1.5)(Accelerator)  
@@ -42,7 +45,7 @@
 自选-小手枪替换成马格南(脚本)  
 自选-幸存者倒地使用马格南(v1.0.2)(sorallll)  
 自选-幸存者黑白发光(v2.0.2)(Lux)  
-自选-幸存者死亡和被制服提示(v1.0.1)(豆瓣酱な-死亡提示嫖至sorallll)  
+自选-幸存者死亡和被制服提示(v1.0.3)(豆瓣酱な-死亡提示嫖至sorallll)  
 自选-幸存者闲置状态快速双击鼠标右键使用自由视角(v1.0.0)(豆瓣酱な)  
 自选-幸存者自杀指令  
 自选-战役模式设置没有倒地时阻止不正常的心跳声(修改-豆瓣酱な)(原作者Sir)(内有作者原版)  
@@ -65,7 +68,6 @@ l4d2_item_hint 标记插件 自翻cvar介绍和文本 https://github.com/apples1
 l4d_automatic_weapons 半自动武器全自动射击 来自 https://github.com/AldoDiaz01/Left4Dead2_Sourcemod_Plugins/blob/master/left4dead2/addons/sourcemod/scripting/l4d_automatic_weapons.sp
 l4d_bunnyhop 连跳插件 来自 https://forums.alliedmods.net/showthread.php?t=298555  
 l4d2_skill_detect/l4d2_stats 技能检测 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_skill_detect.sp / https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_stats.sp  
-l4d2_tda 对坦克输出结算 群友给的 只能1.10编译 https://github.com/apples1949/l4dplugins/blob/main/l4d2_tda.sp  
 witch_announce 对妹子输出结算 没保存源码 zm不支持多人 https://github.com/apples1949/l4dplugins/blob/main/witch_announce.smx  
 firebulletsfix 修复移动射击时子弹位移的问题 https://github.com/apples1949/l4dplugins/tree/main/firebulletsfix 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/firebulletsfix  
 bequiet 过滤部分聊天输出 https://github.com/apples1949/l4dplugins/blob/main/bequiet.sp 来自 https://github.com/fbef0102/L4D1_2-Plugins/blob/master/bequiet/scripting/bequiet.sp  
