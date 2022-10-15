@@ -75,14 +75,14 @@ public void Event_PlayerActivate(Event event, const char[] name, bool dontBroadc
 
 	// Print a helpful message if the difficulty was forcibly changed at the beginning of the map.
 	if (wasTooEasy)
-		PrintToChat(player, "[Too Easy] This is an advanced and expert-only server. The difficulty has been changed to advanced.");
+		PrintToChat(player, "[难度管理]服务器只允许高级和专家难度，已自动变更为高级难度");
 }
 
 public void OnDifficultyChange(ConVar convar, char[] oldValue, char[] newValue) {
 	// Check if any human players are on the server which suggests the difficulty was voted down.
 	if (AnyHumanPlayers() && IsTooEasy()) {
 		MakeItHard();
-		PrintToChatAll("[Too Easy] This is an advanced and expert-only server. The difficulty has been changed back to advanced.");
+		PrintToChatAll("[难度管理]服务器只允许高级和专家难度，已自动变更为高级难度");
 	}
 }
 
