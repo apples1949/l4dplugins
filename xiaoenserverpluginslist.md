@@ -106,6 +106,7 @@ L4D_Elevator_Teleport 电梯传送 自翻cvar说明及文本 https://github.com/
 boss_controller/boss_spawner 路程刷克和妹子 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/BossController  
 L4D2_cs_ladders 爬梯开枪 来自 https://github.com/LuxLuma/L4D-small-plugins/tree/master/L4D2_cs_ladders   
 noteam_nudging 防止某些三方图玩家碰撞被挤下去 来自 https://github.com/LuxLuma/L4D-small-plugins/blob/master/L4D1-2_noteam_nudging/scripting/noteam_nudging.sp  
+l4d2_tooeasy 禁简单普通难度 翻译文本 https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp 来自 https://github.com/nuviktor/sm-l4d2-tooeasy  
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
