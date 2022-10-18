@@ -1,0 +1,85 @@
+﻿
+"Phrases"
+{
+	"SYSTEM"
+	{
+		"zho"			"{lightgreen}[地圖]{default} "
+	}
+
+	"COMPLETED_FINALE"
+	{
+		"#format"		"{1:s},{2:.1f}"
+		"zho"			"將於{green}{2}{default}秒後更換至{green}{1}{default}。"
+	}
+
+	"c1m1_hotel"
+	{
+		"zho"			"死亡中心"
+	}
+
+	"c2m1_highway"
+	{
+		"zho"			"黑色狂歡節"
+	}
+
+	"c3m1_plankcountry"
+	{
+		"zho"			"沼澤瘧疾"
+	}
+
+	"c4m1_milltown_a"
+	{
+		"zho"			"大雨"
+	}
+
+	"c5m1_waterfront"
+	{
+		"zho"			"教區"
+	}
+
+	"c6m1_riverbank"
+	{
+		"zho"			"短暫之時"
+	}
+
+	"c7m1_docks"
+	{
+		"zho"			"犧牲"
+	}
+
+	"c8m1_apartment"
+	{
+		"zho"			"毫不留情"
+	}
+
+	"c9m1_alleys"
+	{
+		"zho"			"速成課程"
+	}
+
+	"c10m1_caves"
+	{
+		"zho"			"死亡喪鐘"
+	}
+
+	"c11m1_greenhouse"
+	{
+		"zho"			"死亡機場"
+	}
+
+	"c12m1_hilltop"
+	{
+		"zho"			"嗜血豐收"
+	}
+
+	"c13m1_alpinecreek"
+	{
+		"zho"			"冷澗溪流"
+	}
+
+	"c14m1_junkyard"
+	{
+		"zho"			"最後一刻"
+	}
+
+}

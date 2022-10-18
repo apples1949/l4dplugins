@@ -1,0 +1,84 @@
+﻿
+"Phrases"
+{
+	"SYSTEM"
+	{
+		"en"			"{lightgreen}[MAP]{default} "
+	}
+
+	"COMPLETED_FINALE"
+	{
+		"#format"		"{1:s},{2:.1f}"
+		"en"			"{green}{1}{default} will be changed after {green}{2}{default} seconds."
+	}
+
+	"c1m1_hotel"
+	{
+		"en"			"Dead Center"
+	}
+
+	"c2m1_highway"
+	{
+		"en"			"Dark Carnival"
+	}
+
+	"c3m1_plankcountry"
+	{
+		"en"			"Swamp Fever"
+	}
+
+	"c4m1_milltown_a"
+	{
+		"en"			"Hard Rain"
+	}
+
+	"c5m1_waterfront"
+	{
+		"en"			"The Parish"
+	}
+
+	"c6m1_riverbank"
+	{
+		"en"			"The Passing"
+	}
+
+	"c7m1_docks"
+	{
+		"en"			"The Sacrifice"
+	}
+
+	"c8m1_apartment"
+	{
+		"en"			"No Mercy"
+	}
+
+	"c9m1_alleys"
+	{
+		"en"			"Crash Course"
+	}
+
+	"c10m1_caves"
+	{
+		"en"			"Death Toll"
+	}
+
+	"c11m1_greenhouse"
+	{
+		"en"			"Dead Air"
+	}
+
+	"c12m1_hilltop"
+	{
+		"en"			"Blood Harvest"
+	}
+
+	"c13m1_alpinecreek"
+	{
+		"en"			"Cold Stream"
+	}
+
+	"c14m1_junkyard"
+	{
+		"en"			"The Junkyard"
+	}
+}

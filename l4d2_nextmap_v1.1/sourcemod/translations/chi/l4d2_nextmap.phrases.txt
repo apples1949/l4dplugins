@@ -1,0 +1,84 @@
+﻿
+"Phrases"
+{
+	"SYSTEM"
+	{
+		"chi"			"{lightgreen}[地图]{default} "
+	}
+
+	"COMPLETED_FINALE"
+	{
+		"#format"		"{1:s},{2:.1f}"
+		"chi"			"地图将于{green}{2}{default}秒后更换至{green}{1}{default}。"
+	}
+
+	"c1m1_hotel"
+	{
+		"chi"			"死亡中心"
+	}
+
+	"c2m1_highway"
+	{
+		"chi"			"黑色狂欢夜"
+	}
+
+	"c3m1_plankcountry"
+	{
+		"chi"			"沼泽激战"
+	}
+
+	"c4m1_milltown_a"
+	{
+		"chi"			"暴风骤雨"
+	}
+
+	"c5m1_waterfront"
+	{
+		"chi"			"教区"
+	}
+
+	"c6m1_riverbank"
+	{
+		"chi"			"消逝"
+	}
+
+	"c7m1_docks"
+	{
+		"chi"			"牺牲"
+	}
+
+	"c8m1_apartment"
+	{
+		"chi"			"毫不留情"
+	}
+
+	"c9m1_alleys"
+	{
+		"chi"			"速成课程"
+	}
+
+	"c10m1_caves"
+	{
+		"chi"			"死亡丧钟"
+	}
+
+	"c11m1_greenhouse"
+	{
+		"chi"			"死亡机场"
+	}
+
+	"c12m1_hilltop"
+	{
+		"chi"			"嗜血丰收"
+	}
+
+	"c13m1_alpinecreek"
+	{
+		"chi"			"冷涧溪流"
+	}
+
+	"c14m1_junkyard"
+	{
+		"chi"			"最后一刻"
+	}
+}
