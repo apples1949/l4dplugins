@@ -76,7 +76,7 @@ l4d_votes_5 投票插件 自翻cvar介绍和文本 https://github.com/apples1949
 lerptracker 显示lerp 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/blob/main/lerptracker.sp  
 l4d_graves 生还者死亡后生成坟墓 自翻cvar介绍 https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves  
 l4d_rock_lagcomp 战役模式中给坦克石头提供滞后补偿 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp  
-sm_l4d_mapchanger 官图战役打完换图 自用 https://github.com/apples1949/l4dplugins/tree/main/sm_l4d_mapchanger 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/sm_l4d_mapchanger  
+l4d2_nextmap_v1.1 官图打完随机换图 来自 https://forums.alliedmods.net/showthread.php?t=332291  
 l4d_rescue_vehicle_leave_timer 救援倒计时 自翻cvar https://github.com/apples1949/l4dplugins/tree/main/l4d_rescue_vehicle_leave_timer 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rescue_vehicle_leave_timer  
 l4d_death_soul 死去的幸存者的灵魂飞向来世 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_death_soul  
 l4d_votedifficulty 投票更改难度 自翻译文本 自用删掉了简单难度选项 https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty 来自 https://forums.alliedmods.net/showthread.php?t=317257  
