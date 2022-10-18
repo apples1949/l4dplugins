@@ -110,6 +110,7 @@ l4d2_tooeasy 禁简单普通难度 翻译文本 https://github.com/apples1949/l4
 dialogue_criteria_fix 修复两代人物对话 来自 https://forums.alliedmods.net/showthread.php?t=335875  
 l4d2_gift_rewards 杀特随机掉礼物 https://github.com/apples1949/l4dplugins/tree/main/l4d2_gift_rewards 来自 https://forums.alliedmods.net/showthread.php?t=320067  
 l4d_plane_crash 显示坠机动画 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_plane_crash 来自 https://github.com/apples1949/l4dplugins/tree/main/l4d_plane_crash  
+l4d2_wskin_rng 显示隐藏武器皮肤 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_wskin_rng.sp 来自 https://forums.alliedmods.net/showthread.php?t=327609  
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
