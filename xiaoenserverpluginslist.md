@@ -108,6 +108,7 @@ L4D2_cs_ladders 爬梯开枪 来自 https://github.com/LuxLuma/L4D-small-plugins
 noteam_nudging 防止某些三方图玩家碰撞被挤下去 来自 https://github.com/LuxLuma/L4D-small-plugins/blob/master/L4D1-2_noteam_nudging/scripting/noteam_nudging.sp  
 l4d2_tooeasy 禁简单普通难度 翻译文本 https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp 来自 https://github.com/nuviktor/sm-l4d2-tooeasy  
 dialogue_criteria_fix 修复两代人物对话 来自 https://forums.alliedmods.net/showthread.php?t=335875  
+l4d2_gift_rewards 杀特随机掉礼物 https://github.com/apples1949/l4dplugins/tree/main/l4d2_gift_rewards 来自 https://forums.alliedmods.net/showthread.php?t=320067  
 vpk功能包：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
