@@ -171,10 +171,10 @@ public void OnPluginStart() {
 	z_mob_spawn_max_size = FindConVar("z_mob_spawn_max_size");
 	z_mob_spawn_min_size = FindConVar("z_mob_spawn_min_size");
 	
-	always_force_bosses = CreateConVar("a4d_always_force_bosses", "0", "Whether or not bosses will be forced to spawn all the time.", FCVAR_NOTIFY);
-	notify_players = CreateConVar("a4d_notify_players", "1", "Whether or not we announce changes in game.", FCVAR_NOTIFY);	
-	zombies_increment = CreateConVar("a4d_zombies_to_add", "10", "The amount of zombies to add when an admin requests more zombies.", FCVAR_NOTIFY, true, 10.0, true, 100.0);
-	refresh_zombie_location = CreateConVar("a4d_refresh_zombie_location", "20.0", "The amount of time in seconds between location refreshes. Used only for placing uncommon infected automatically.", FCVAR_NOTIFY, true, 5.0, true, 30.0);
+	always_force_bosses = CreateConVar("a4d_always_force_bosses", "0", "是否一直生成boss", FCVAR_NOTIFY);
+	notify_players = CreateConVar("a4d_notify_players", "0", "是否向玩家宣布插件使用情况", FCVAR_NOTIFY);	
+	zombies_increment = CreateConVar("a4d_zombies_to_add", "10", "一次向僵尸总数量添加多少数量的僵尸", FCVAR_NOTIFY, true, 10.0, true, 100.0);
+	refresh_zombie_location = CreateConVar("a4d_refresh_zombie_location", "20.0", "位置刷新之间的时间，以秒计。仅用于自动放置不常见的感染者", FCVAR_NOTIFY, true, 5.0, true, 30.0);
 	// Register all spawning commands
 	RegAdminCmd("a4d_spawn_infected", Command_SpawnInfected, ADMFLAG_CHEATS);
 	RegAdminCmd("a4d_spawn_uinfected", Command_SpawnUInfected, ADMFLAG_CHEATS);
