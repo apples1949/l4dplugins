@@ -1,6 +1,6 @@
-豆瓣包(2022-10-14豆瓣酱な (v1.1.1)(6911-1148)战役整合包)：  
+豆瓣包(2022-10-18豆瓣酱な (v1.1.1)(6911-1148)战役整合包)：  
 1.1.1插件平台linux版(6911-1148)(必须先启用这个)  
-必选-功能类插件(left4dhooks)(v1.116)(SilverShot)  
+必选-功能类插件(left4dhooks)(v1.119)(SilverShot)  
 必选-功能类插件(WeaponHandling)(v1.0.6)(Lux)  
 必选-功能类扩展(sourcescramble.ext)(v0.7.0)  
 必选-功能类扩展(voicehook.ext)  
@@ -11,8 +11,10 @@
 必选-修复类(v2.0.1)(修复电击器救起存活的幸存者)(Lux)  
 必选-修复类(v2.8)(解决linux系统CFG不加载)(SilverShot and Peace-Maker)  
 必选-修复类(v2)(修复SG552开镜换弹鬼畜)(bullet28)  
-可选-修复类(v1.0)(修复出现多次换弹动作)(HarryPotter)  
+可选-修复类(v1.0)(修复出现多次换弹动作)(HarryPotter)
+可选-修复类(v1.1)(修复特定情况下角色语音跟当前人物模型不一致)(TBK Duy, Harry)  
 可选-修复类(v1.2.2)(修复玩家过关后装备和属性混乱)(sorallll)  
+可选-修复类(v2.0)(修复有相同的幸存者角色时牛撞不动的问题)(Lux)  
 自选-8角色共存(修复c6m1和c6m3地图中的传送bug)  
 自选-8角色共存(v1.7.2)(DeatChaos25, Mi123456 & Merudo, Lux, SilverShot)  
 自选-保存玩家的STEAM用户名,数字ID跟聊天记录到logs目录(citkabuto)  
