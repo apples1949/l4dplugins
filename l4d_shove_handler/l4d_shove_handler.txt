@@ -1,0 +1,98 @@
+"Games"
+{
+	"#default"
+	{
+		"Functions"
+		{
+			"CTerrorWeapon::OnSwingEnd"
+			{
+				"signature"		"CTerrorWeapon::OnSwingEnd"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"		"bool"
+					}
+				}
+			}
+
+			"Infected::OnAmbushed"
+			{
+				"signature"		"Infected::OnAmbushed"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+				"arguments"
+				{
+					"player"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+		}
+	}
+
+	"left4dead"
+	{
+		"Signatures"
+		{
+			/*
+			* CTerrorWeapon::OnSwingEnd(CTerrorWeapon *this, bool)
+			*/
+			"CTerrorWeapon::OnSwingEnd"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorWeapon10OnSwingEndEb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x56\x8B"
+				/* ? ? ? ? ? ? ? ? ? ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 83 ? ? 0F 84 ? ? ? ? 8B ? 81 ? ? ? ? ? 56 8B */
+				/* Search "melee_kill" - target function is one that's using this, compare with Linux */
+			}
+
+			/*
+			* Infected::OnAmbushed(Infected *this, CTerrorPlayer *)
+			*/
+			"Infected::OnAmbushed"
+			{
+				"library"	"server"
+				"linux"		"@_ZN8Infected10OnAmbushedEP13CTerrorPlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x57\x8B\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8D"
+				/* ? ? ? ? ? ? ? ? 85 ? 57 8B ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 8B ? ? ? ? ? 8D */
+				/* Search "melee_kill" - target function is one that's using this, compare with Linux */
+			}
+		}
+	}
+
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			/*
+			* CTerrorWeapon::OnSwingEnd(CTerrorWeapon *this, bool)
+			*/
+			"CTerrorWeapon::OnSwingEnd"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorWeapon10OnSwingEndEb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x80\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x56"
+				/* ? ? ? ? ? ? 80 ? ? ? ? ? ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 83 ? ? 0F 84 ? ? ? ? 8B ? 81 ? ? ? ? ? 56 */
+				/* Search "melee_kill" - target function is one that's using this, compare with Linux */
+			}
+
+			/*
+			* Infected::OnAmbushed(Infected *this, CTerrorPlayer *)
+			*/
+			"Infected::OnAmbushed"
+			{
+				"library"	"server"
+				"linux"		"@_ZN8Infected10OnAmbushedEP13CTerrorPlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x2A\x2A\x57\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xA9\x2A\x2A\x2A\x2A\x0F\x85"
+				/* ? ? ? ? ? ? 53 8B ? ? 57 8B ? 85 ? 0F 84 ? ? ? ? 8B ? ? ? ? ? A9 ? ? ? ? 0F 85 */
+				/* Search "melee_kill" - target function is one that's using this, compare with Linux */
+			}
+		}
+	}
+}
