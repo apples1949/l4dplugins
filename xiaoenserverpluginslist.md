@@ -118,7 +118,7 @@ l4d_penetration_pistol 调整小手枪对小僵尸的伤害 翻译cvar说明 htt
 l4d_medicines_unlimited 设置血量上限及处理溢出的虚血 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_medicines_unlimited.sp 来自 https://forums.alliedmods.net/showthread.php?t=336226  
 l4d2_unlimited_upgrade_pack 弹药升级包部署后可无限拿取 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_unlimited_upgrade_pack 来自 https://forums.alliedmods.net/showthread.php?t=335601  
 l4d2_deathcheck 全部生还者死亡后游戏才失败 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_deathcheck.sp 来自 https://forums.alliedmods.net/showpost.php?p=2727648&postcount=10  
-
+l4d_bot_healing bot什么血量才能打包吃药 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_bot_healing 来自 https://forums.alliedmods.net/showthread.php?p=2785360  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
