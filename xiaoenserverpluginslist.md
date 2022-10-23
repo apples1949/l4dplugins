@@ -116,6 +116,7 @@ l4d2_wskin_rng 显示隐藏武器皮肤 翻译cvar说明 https://github.com/appl
 killsound 爆头提示音 自改仅特感爆头提示音 https://github.com/apples1949/l4dplugins/blob/main/killsound.sp 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/blob/main/KillSound/killsound.sp  
 l4d_penetration_pistol 调整小手枪对小僵尸的伤害 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_penetration_pistol.sp 来自 https://forums.alliedmods.net/showthread.php?t=337509  
 l4d_medicines_unlimited 设置血量上限及处理溢出的虚血 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_medicines_unlimited.sp 来自 https://forums.alliedmods.net/showthread.php?t=336226  
+l4d2_unlimited_upgrade_pack 弹药升级包部署后可无限拿取 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_unlimited_upgrade_pack 来自 https://forums.alliedmods.net/showthread.php?t=335601  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
