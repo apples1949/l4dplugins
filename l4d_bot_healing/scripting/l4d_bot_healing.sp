@@ -210,8 +210,8 @@ public void OnPluginStart()
 
 	g_hCvarDieFirst = CreateConVar("l4d_bot_healing_die_first", "0", "0=游戏默认 1=只允许自己或目标是黑白状态时打包(需要'Actions'扩展)", CVAR_FLAGS);
 	g_hCvarDiePills = CreateConVar("l4d_bot_healing_die_pills", "0", "0=游戏默认 1=只允许自己或目标是黑白状态时打包或给药(需要'Actions'扩展)", CVAR_FLAGS);
-	g_hCvarFirst = CreateConVar("l4d_bot_healing_first", g_bLeft4Dead2 ? "15.0" : "15.0", "当bot血量低于此值时，允许其打包", CVAR_FLAGS);
-	g_hCvarPills = CreateConVar("l4d_bot_healing_pills", g_bLeft4Dead2 ? "39.0" : "39.0", "当bot血量低于此值时，允许其吃药", CVAR_FLAGS);
+	g_hCvarFirst = CreateConVar("l4d_bot_healing_first", g_bLeft4Dead2 ? "15.0" : "15.0", "当bot血量低于此值时，允许其打包(求生2设置值:求生1设置值)", CVAR_FLAGS);
+	g_hCvarPills = CreateConVar("l4d_bot_healing_pills", g_bLeft4Dead2 ? "39.0" : "39.0", "当bot血量低于此值时，允许其吃药(求生2设置值:求生1设置值)", CVAR_FLAGS);
 	CreateConVar("l4d_bot_healing_version", PLUGIN_VERSION, "Bot Healing Values plugin version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	AutoExecConfig(true, "l4d_bot_healing");
 
