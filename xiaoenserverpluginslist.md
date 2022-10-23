@@ -11,7 +11,7 @@
 必选-修复类(v2.0.1)(修复电击器救起存活的幸存者)(Lux)  
 必选-修复类(v2.8)(解决linux系统CFG不加载)(SilverShot and Peace-Maker)  
 必选-修复类(v2)(修复SG552开镜换弹鬼畜)(bullet28)  
-可选-修复类(v1.0)(修复出现多次换弹动作)(HarryPotter)
+可选-修复类(v1.0)(修复出现多次换弹动作)(HarryPotter)  
 可选-修复类(v1.1)(修复特定情况下角色语音跟当前人物模型不一致)(TBK Duy, Harry)  
 可选-修复类(v1.2.2)(修复玩家过关后装备和属性混乱)(sorallll)  
 可选-修复类(v2.0)(修复有相同的幸存者角色时牛撞不动的问题)(Lux)  
@@ -115,6 +115,7 @@ l4d_plane_crash 显示坠机动画 自翻cvar说明及文本 https://github.com/
 l4d2_wskin_rng 显示隐藏武器皮肤 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_wskin_rng.sp 来自 https://forums.alliedmods.net/showthread.php?t=327609  
 killsound 爆头提示音 自改仅特感爆头提示音 https://github.com/apples1949/l4dplugins/blob/main/killsound.sp 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/blob/main/KillSound/killsound.sp  
 l4d_penetration_pistol 调整小手枪对小僵尸的伤害 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_penetration_pistol.sp 来自 https://forums.alliedmods.net/showthread.php?t=337509  
+l4d_medicines_unlimited 设置血量上限及处理溢出的虚血 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_medicines_unlimited.sp 来自 https://forums.alliedmods.net/showthread.php?t=336226  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
