@@ -120,7 +120,7 @@ l4d2_unlimited_upgrade_pack 弹药升级包部署后可无限拿取 翻译cvar�
 l4d2_deathcheck 全部生还者死亡后游戏才失败 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_deathcheck.sp 来自 https://forums.alliedmods.net/showpost.php?p=2727648&postcount=10  
 l4d_bot_healing bot什么血量才能打包吃药 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_bot_healing 来自 https://forums.alliedmods.net/showthread.php?p=2785360  
 l4d_shove_handler 设置推感染者的伤害 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_shove_handler 来自 https://forums.alliedmods.net/showthread.php?p=2779571  
-l4d_skip_intro/FollowTarget_Detour 跳过开场动画 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_skip_intro 来自 https://forums.alliedmods.net/showthread.php?p=2686527 / https://forums.alliedmods.net/showthread.php?p=2725811  
+l4d_skip_intro/FollowTarget_Detour 跳过开场动画/修复播放动画补丁 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_skip_intro 来自 https://forums.alliedmods.net/showthread.php?p=2686527 / https://forums.alliedmods.net/showthread.php?p=2725811  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
