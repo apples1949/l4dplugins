@@ -49,6 +49,7 @@
 自选-幸存者死亡和被制服提示(v1.0.3)(豆瓣酱な-死亡提示嫖至sorallll)  
 自选-幸存者闲置状态快速双击鼠标右键使用自由视角(v1.0.0)(豆瓣酱な)  
 自选-幸存者自杀指令  
+自选-修改近战对坦克和女巫的比例伤害或固定伤害(v1.0)(Visor)  
 自选-战役模式设置没有倒地时阻止不正常的心跳声(修改-豆瓣酱な)(原作者Sir)(内有作者原版)  
 自选-CFG类(开服专用配置文件)  
 自选-M60正常化(可更换弹夹)+可拾取弹药(包括榴弹发射器)(Lux)  
@@ -112,7 +113,7 @@ dialogue_criteria_fix 修复两代人物对话 来自 https://forums.alliedmods.
 l4d2_gift_rewards 杀特随机掉礼物 https://github.com/apples1949/l4dplugins/tree/main/l4d2_gift_rewards 来自 https://forums.alliedmods.net/showthread.php?t=320067  
 l4d_plane_crash 显示坠机动画 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_plane_crash 来自 https://github.com/apples1949/l4dplugins/tree/main/l4d_plane_crash  
 l4d2_wskin_rng 显示隐藏武器皮肤 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_wskin_rng.sp 来自 https://forums.alliedmods.net/showthread.php?t=327609  
-killregain 杀僵尸回子弹 https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/KillRegain  
+killsound 爆头击杀特感提示音 自改仅特感爆头提示音 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/blob/main/KillSound/killsound.sp  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
