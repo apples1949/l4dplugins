@@ -123,7 +123,8 @@ l4d_skip_intro/FollowTarget_Detour 跳过开场动画/修复播放动画补丁 �
 l4d_pause_message 阻止玩家控制台输出暂停消息 来自 https://forums.alliedmods.net/showthread.php?p=2682882  
 l4d2_bacteria 恢复特感钢琴音提示 来自 https://forums.alliedmods.net/showthread.php?p=2675275  
 l4d_christmas_tree 地图生成圣诞树及礼物补给 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_christmas_tree 来自 https://forums.alliedmods.net/showthread.php?p=2672241  
-l4d2_spitter_acid_damage 口水酸液可对感染者和爆炸物照成伤害 https://github.com/apples1949/l4dplugins/tree/main/l4d2_spitter_acid_damage 来自 https://forums.alliedmods.net/showthread.php?p=2672091  
+l4d2_spitter_acid_damage 口水酸液可对感染者和爆炸物照成伤害 自翻cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_spitter_acid_damage 来自 https://forums.alliedmods.net/showthread.php?p=2672091  
+l4d2_car_alarm_bots bot或者特感可以打警报车 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_car_alarm_bots 来自 https://forums.alliedmods.net/showthread.php?p=2671546  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
