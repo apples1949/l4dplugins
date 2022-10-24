@@ -1,0 +1,41 @@
+"Games"
+{
+	"#default"
+	{
+		"Functions"
+		{
+			"CInsectSwarm::CanHarm"
+			{
+				"signature"		"CInsectSwarm::CanHarm"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"CBaseEntity"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+		}
+	}
+
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			/*
+			 * CInsectSwarm::CanHarm(CInsectSwarm *this, CBaseEntity *)
+			 */
+			"CInsectSwarm::CanHarm"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK12CInsectSwarm7CanHarmEP11CBaseEntity"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x5E\x5D"
+				/* ? ? ? ? ? ? ? 8B ? 8B ? ? ? ? ? 8B ? FF ? 84 ? 74 ? 8B ? E8 ? ? ? ? 50 E8 ? ? ? ? 83 ? ? 5E 5D */
+				/* Search: "spitter_areaofdenial". Few entries down in vtable. */
+			}
+		}
+	}
+}
