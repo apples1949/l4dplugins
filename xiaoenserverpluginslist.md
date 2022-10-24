@@ -121,6 +121,7 @@ l4d_bot_healing bot什么血量才能打包吃药 翻译cvar说明 https://githu
 l4d_shove_handler 设置推感染者的伤害 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_shove_handler 来自 https://forums.alliedmods.net/showthread.php?p=2779571  
 l4d_skip_intro/FollowTarget_Detour 跳过开场动画/修复播放动画补丁 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_skip_intro 来自 https://forums.alliedmods.net/showthread.php?p=2686527 / https://forums.alliedmods.net/showthread.php?p=2725811  
 l4d_pause_message 阻止玩家控制台输出暂停消息 来自 https://forums.alliedmods.net/showthread.php?p=2682882  
+l4d2_bacteria 恢复特感钢琴音提示 来自 https://forums.alliedmods.net/showthread.php?p=2675275  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
