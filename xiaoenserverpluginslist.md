@@ -67,7 +67,7 @@ show_mic/ThirdPersonShoulder_Detect 屏幕中心显示谁在说话/第三人称�
 superversus1.8.15.5改(多人插件)-v1.11.1  来自 https://github.com/umlka/l4d2/tree/main/superversus1.8.15.5-modify  
 TankOnSpawn 每次生成多个坦克 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/TankOnSpawn 来自 https://forums.alliedmods.net/showthread.php?t=323813  
 l4d2_item_hint 标记插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush 来自https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_item_hint  
-l4d_automatic_weapons 半自动武器全自动射击 来自 https://github.com/AldoDiaz01/Left4Dead2_Sourcemod_Plugins/blob/master/left4dead2/addons/sourcemod/scripting/l4d_automatic_weapons.sp
+l4d_automatic_weapons 半自动武器全自动射击 来自 https://github.com/AldoDiaz01/Left4Dead2_Sourcemod_Plugins/blob/master/left4dead2/addons/sourcemod/scripting/l4d_automatic_weapons.sp  
 l4d_bunnyhop 连跳插件 来自 https://forums.alliedmods.net/showthread.php?t=298555  
 l4d2_skill_detect/l4d2_stats 技能检测 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_skill_detect.sp / https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_stats.sp  
 witch_announce 对妹子输出结算 没保存源码 zm不支持多人 https://github.com/apples1949/l4dplugins/blob/main/witch_announce.smx  
@@ -96,7 +96,6 @@ l4d_grenade_throwing_bots 允许bot扔投抛 https://github.com/apples1949/l4dpl
 l4d_healing_field 坦克死亡留下治疗阵 自翻cvar说明及文本 加血同步杀特回血上限225 https://github.com/apples1949/l4dplugins/blob/main/l4d_healing_field.sp 来自 https://forums.alliedmods.net/showthread.php?t=324501  
 lagpreventor 优化某些三方图炸ping问题 https://forums.alliedmods.net/showthread.php?p=2758895  
 l4d_lift_music 电梯放音乐 https://forums.alliedmods.net/showthread.php?t=157267  
-l4d2_block_pour_gascan 可以多人同时罐油和放可乐 https://forums.alliedmods.net/showthread.php?p=2739649  
 l4d2_biletheworld 胖子死亡可糊其他感染者\胆汁砸中生还者被糊脸扣血 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_biletheworld.sp 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_biletheworld  
 l4dhots 缓慢回血 更改默认设置以及增加自动生成cfg https://github.com/apples1949/l4dplugins/blob/main/l4dhots.sp 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4dhots.sp  
 l4d_incapped_weapons 倒地允许使用任何武器 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_incapped_weapons 来自 https://forums.alliedmods.net/showthread.php?t=322859  
