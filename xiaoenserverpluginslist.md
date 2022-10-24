@@ -126,6 +126,7 @@ l4d_christmas_tree 地图生成圣诞树及礼物补给 自翻cvar说明及文�
 l4d2_spitter_acid_damage 口水酸液可对感染者和爆炸物照成伤害 自翻cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_spitter_acid_damage 来自 https://forums.alliedmods.net/showthread.php?p=2672091  
 l4d2_car_alarm_bots bot或者特感可以打警报车 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_car_alarm_bots 来自 https://forums.alliedmods.net/showthread.php?p=2671546  
 l4d_tongue_damage 战役下舌头拖拽伤害 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_tongue_damage.sp 来自 https://forums.alliedmods.net/showthread.php?p=2668589  
+l4d_witch_damage 设置女巫不同难度伤害 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_witch_damage.sp 来自 https://forums.alliedmods.net/showthread.php?p=2667165  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
