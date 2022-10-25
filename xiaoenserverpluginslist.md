@@ -130,6 +130,7 @@ l4d_witch_damage 设置女巫不同难度伤害 翻译cvar说明 https://github.
 l4d_survivor_shove 可把生还者推的后退 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_shove_handler 来自 https://forums.alliedmods.net/showthread.php?p=2667050  
 l4d_infected_glow 感染者燃烧发光 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_infected_glow.sp 来自 https://forums.alliedmods.net/showthread.php?t=187933  
 l4d2_dead_air_barricade 移除寂静时分救援火焰屏障 来自 https://forums.alliedmods.net/showthread.php?t=187933  
+l4d2_fireworks 打燃烧爆炸物生成空中烟花 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_fireworks.sp 来自 https://forums.alliedmods.net/showthread.php?p=1441088  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
