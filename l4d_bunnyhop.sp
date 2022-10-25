@@ -31,22 +31,22 @@ public OnPluginStart()
 
 	hMode = CreateConVar("l4d_bunnyhop_mode",
 		"1.0",
-		"Plugin mode: (0)disabled (1)auto-bunnyhop (2)manual bunnyhop training",
+		"Plugin mode: (0)禁用插件 (1)自动连跳 (2)连跳训练",
 		FCVAR_PLUGIN,true,0.0,true,2.0);
 
 	hMultiplier = CreateConVar("l4d_bunnyhop_multiplier",
 		"22.0",
-		"Multiplier: set the value multiplied to the lateral velocity gain for each successful bunnyhop.",
+		"设置每次成功连跳时乘以横向速度增益的数值",
 		FCVAR_PLUGIN,true,0.0,true,200.0);
 
 	hLimit = CreateConVar("l4d_bunnyhop_limit",
-		"1000.0",
-		"Limit: set player speed value at which lateral velocity no longer multiplies lateral velocity.",
+		"500.0",
+		"设定玩家的速度值，在这个速度值上，横向速度不再乘以横向速度",
 		FCVAR_PLUGIN,true,0.0,true,500.0);
 
 	hOffset = CreateConVar("l4d_bunnyhop_delay",
 		"0",
-		"Cue offset: for manual mode, set integer value for how early the cue is to be heard. Higher values mean earlier cues.",
+		"提示音偏移：对于连跳训练模式，设置整数值以确定多早听到提示音。更高的值意味着更早的提示。",
 		FCVAR_PLUGIN,true,0.0,true,5.0);
 
 
@@ -82,12 +82,12 @@ public Action:Command_Autobhop(client, args)
 		if (bBunnyhopOff[client] == true)
 		{
 			bBunnyhopOff[client] = false;
-			PrintHintText(client, "bunnyhop+\nenabled");
+			PrintHintText(client, "连跳插件\n已启用");
 		}
 		else
 		{
 			bBunnyhopOff[client] = true;
-			PrintHintText(client, "bunnyhop+\ndisabled");
+			PrintHintText(client, "连跳插件\n已禁用");
 		}
 	}
 	return Plugin_Handled;
