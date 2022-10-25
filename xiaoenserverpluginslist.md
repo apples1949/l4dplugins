@@ -1,4 +1,4 @@
-豆瓣包(2022-10-18豆瓣酱な (v1.1.1)(6911-1148)战役整合包)：  
+豆瓣包([2022-10-18豆瓣酱な (v1.1.1)(6911-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))：  
 1.1.1插件平台linux版(6911-1148)(必须先启用这个)  
 必选-功能类插件(left4dhooks)(v1.119)(SilverShot)  
 必选-功能类插件(WeaponHandling)(v1.0.6)(Lux)  
@@ -58,93 +58,93 @@
 自选-指令!un关闭匹配和指令!sn崩溃服务端(v1.1.1)(豆瓣酱な)  
 
 自找插件：  
-all4dead2 物品特感生成 自改自翻译 https://github.com/apples1949/l4dplugins/tree/main/all4dead2 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2  
-l4d_anti_rush 反跑图 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush/sourcemod 来自 https://forums.alliedmods.net/showthread.php?t=322392  
-l4d_coop_markers 路程进度主动显示 https://github.com/apples1949/l4dplugins/tree/main/l4d_coop_markers 来自https://forums.alliedmods.net/showthread.php?t=321288  
-l4d_dissolve_infected 僵尸溶解 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_dissolve_infected 来自 https://forums.alliedmods.net/showthread.php?t=306789  
-l4d_gear_transfer 按键给予物品 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_gear_transfer 来自 https://forums.alliedmods.net/showthread.php?t=137616&  
-show_mic/ThirdPersonShoulder_Detect 屏幕中心显示谁在说话/第三人称指令查询简化 https://github.com/apples1949/l4dplugins/tree/main/show_mic 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic/https://forums.alliedmods.net/showthread.php?p=2529779  
-superversus1.8.15.5改(多人插件)-v1.11.1  来自 https://github.com/umlka/l4d2/tree/main/superversus1.8.15.5-modify  
-TankOnSpawn 每次生成多个坦克 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/TankOnSpawn 来自 https://forums.alliedmods.net/showthread.php?t=323813  
-l4d2_item_hint 标记插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush 来自https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_item_hint  
-l4d_automatic_weapons 半自动武器全自动射击 来自 https://github.com/AldoDiaz01/Left4Dead2_Sourcemod_Plugins/blob/master/left4dead2/addons/sourcemod/scripting/l4d_automatic_weapons.sp  
-l4d_bunnyhop 连跳插件 来自 https://forums.alliedmods.net/showthread.php?t=298555  
-l4d2_skill_detect/l4d2_stats 技能检测 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_skill_detect.sp / https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_stats.sp  
-witch_announce 对妹子输出结算 没保存源码 zm不支持多人 https://github.com/apples1949/l4dplugins/blob/main/witch_announce.smx  
-firebulletsfix 修复移动射击时子弹位移的问题 https://github.com/apples1949/l4dplugins/tree/main/firebulletsfix 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/firebulletsfix  
-bequiet 过滤部分聊天输出 https://github.com/apples1949/l4dplugins/blob/main/bequiet.sp 来自 https://github.com/fbef0102/L4D1_2-Plugins/blob/master/bequiet/scripting/bequiet.sp  
-l4dinfectedbots 哈利dalao的多特插件 包括其他功能 https://github.com/apples1949/l4dplugins/tree/main/l4dinfectedbots 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dinfectedbots  
-l4d_votes_5 投票插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_votes_5 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_votes_5  
-lerptracker 显示lerp 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/blob/main/lerptracker.sp  
-l4d_graves 生还者死亡后生成坟墓 自翻cvar介绍 https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves  
-l4d_rock_lagcomp 战役模式中给坦克石头提供滞后补偿 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp  
-l4d2_nextmap_v1.1 官图打完随机换图 来自 https://forums.alliedmods.net/showthread.php?t=332291  
-l4d_rescue_vehicle_leave_timer 救援倒计时 自翻cvar https://github.com/apples1949/l4dplugins/tree/main/l4d_rescue_vehicle_leave_timer 来自 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rescue_vehicle_leave_timer  
-l4d_death_soul 死去的幸存者的灵魂飞向来世 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_death_soul  
-l4d_votedifficulty 投票更改难度 自翻译文本 自用删掉了简单难度选项 https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty 来自 https://forums.alliedmods.net/showthread.php?t=317257  
-l4d_nightvision 夜视仪 翻译了下文本 https://github.com/apples1949/l4dplugins/blob/main/l4d_nightvision.sp 来自 https://forums.alliedmods.net/showthread.php?p=2666575#post2666575  
-self_help 自救插件 自翻cvar介绍和文本 https://github.com/apples1949/l4dplugins/tree/main/self_help 来自 https://forums.alliedmods.net/showthread.php?p=2766775#post2766775  
-l4d2_unreservelobby 动态大厅 https://github.com/apples1949/l4dplugins/blob/main/l4d2_unreservelobby.sp  取自 https://github.com/umlka/l4d2/blob/main/l4d2_unreservelobby/l4d2_unreservelobby.sp  
-l4d2_blackscreen_fix/sm_stringtable_dumper 黑屏加载修复/转储所有字符串表的记录 https://github.com/apples1949/l4dplugins/tree/main/l4d2_blackscreen_fix 来自 https://forums.alliedmods.net/showthread.php?t=318739 / https://forums.alliedmods.net/showthread.php?p=2689943  
-l4d_TankStuckTeleport 坦克防卡 自翻cvar介绍和文本 删掉部分代码 https://github.com/apples1949/l4dplugins/blob/main/l4d_TankStuckTeleport.sp 来自 https://forums.alliedmods.net/showthread.php?t=314741   
-l4d2_ThirdpersonShoulderShotgunSoundFix  第三人称霰弹无声音修复 来自 https://forums.alliedmods.net/showthread.php?t=259986  
-l4d2_Survivor_Legs 显示双腿 来自 https://forums.alliedmods.net/showthread.php?t=299560  
-l4d2_spit_glow 口水酸液显示动态光 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_spit_glow.sp 来自 https://forums.alliedmods.net/showthread.php?t=330835  
-l4d_fire_glow 燃烧瓶扔出及燃烧显示动态光 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_fire_glow.sp 来自 https://forums.alliedmods.net/showthread.php?t=186617  
-l4d2_DefibUsingBots 强制bot使用电击器 来自 https://github.com/apples1949/l4dplugins/blob/main/l4d2_DefibUsingBots.sp  
-l4d_grenade_throwing_bots 允许bot扔投抛 https://github.com/apples1949/l4dplugins/blob/main/l4d_grenade_throwing_bots.sp 来自 https://forums.alliedmods.net/showthread.php?t=296150&page=16  
-l4d_healing_field 坦克死亡留下治疗阵 自翻cvar说明及文本 加血同步杀特回血上限225 https://github.com/apples1949/l4dplugins/blob/main/l4d_healing_field.sp 来自 https://forums.alliedmods.net/showthread.php?t=324501  
-lagpreventor 优化某些三方图炸ping问题 https://forums.alliedmods.net/showthread.php?p=2758895  
-l4d_lift_music 电梯放音乐 https://forums.alliedmods.net/showthread.php?t=157267  
-l4d2_biletheworld 胖子死亡可糊其他感染者\胆汁砸中生还者被糊脸扣血 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_biletheworld.sp 来自 https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_biletheworld  
-l4dhots 缓慢回血 更改默认设置以及增加自动生成cfg https://github.com/apples1949/l4dplugins/blob/main/l4dhots.sp 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4dhots.sp  
-l4d_incapped_weapons 倒地允许使用任何武器 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_incapped_weapons 来自 https://forums.alliedmods.net/showthread.php?t=322859  
-l4d2_extendedsight 生还透视特感 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_extendedsight 来自 https://forums.alliedmods.net/showthread.php?p=2666299  
-ghostfly 特感灵魂飞行 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/ghostfly.sp 来自 https://forums.alliedmods.net/showthread.php?p=1662857  
-l4d2_practice 灵魂状态下右键切换特感（注意数据文件） 来自 https://github.com/devilesk/rl4d2l-plugins/blob/master/l4d2_practice.sp  
-l4d_stuckzombiemeleefix 近战砍僵尸修复 来自 https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_stuckzombiemeleefix.sp  
-L4D_Elevator_Teleport 电梯传送 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/blob/main/L4D_Elevator_Teleport.sp 来自 https://forums.alliedmods.net/showthread.php?p=2785701  
-boss_controller/boss_spawner 路程刷克和妹子 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/BossController  
-L4D2_cs_ladders 爬梯开枪 来自 https://github.com/LuxLuma/L4D-small-plugins/tree/master/L4D2_cs_ladders   
-noteam_nudging 防止某些三方图玩家碰撞被挤下去 来自 https://github.com/LuxLuma/L4D-small-plugins/blob/master/L4D1-2_noteam_nudging/scripting/noteam_nudging.sp  
-l4d2_tooeasy 禁简单普通难度 翻译文本 https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp 来自 https://github.com/nuviktor/sm-l4d2-tooeasy  
-dialogue_criteria_fix 修复两代人物对话 来自 https://forums.alliedmods.net/showthread.php?t=335875  
-l4d2_gift_rewards 杀特随机掉礼物 https://github.com/apples1949/l4dplugins/tree/main/l4d2_gift_rewards 来自 https://forums.alliedmods.net/showthread.php?t=320067  
-l4d_plane_crash 显示坠机动画 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_plane_crash 来自 https://github.com/apples1949/l4dplugins/tree/main/l4d_plane_crash  
-l4d2_wskin_rng 显示隐藏武器皮肤 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_wskin_rng.sp 来自 https://forums.alliedmods.net/showthread.php?t=327609  
-killsound 爆头提示音 自改仅特感爆头提示音 https://github.com/apples1949/l4dplugins/blob/main/killsound.sp 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/blob/main/KillSound/killsound.sp  
-l4d_penetration_pistol 调整小手枪对小僵尸的伤害 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_penetration_pistol.sp 来自 https://forums.alliedmods.net/showthread.php?t=337509  
-l4d_medicines_unlimited 设置血量上限及处理溢出的虚血 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_medicines_unlimited.sp 来自 https://forums.alliedmods.net/showthread.php?t=336226  
-l4d2_unlimited_upgrade_pack 弹药升级包部署后可无限拿取 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_unlimited_upgrade_pack 来自 https://forums.alliedmods.net/showthread.php?t=335601  
-l4d2_deathcheck 全部生还者死亡后游戏才失败 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_deathcheck.sp 来自 https://forums.alliedmods.net/showpost.php?p=2727648&postcount=10  
-l4d_bot_healing bot什么血量才能打包吃药 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_bot_healing 来自 https://forums.alliedmods.net/showthread.php?p=2785360  
-l4d_shove_handler 设置推感染者的伤害 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_shove_handler 来自 https://forums.alliedmods.net/showthread.php?p=2779571  
-l4d_skip_intro/FollowTarget_Detour 跳过开场动画/修复播放动画补丁 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_skip_intro 来自 https://forums.alliedmods.net/showthread.php?p=2686527 / https://forums.alliedmods.net/showthread.php?p=2725811  
-l4d_pause_message 阻止玩家控制台输出暂停消息 来自 https://forums.alliedmods.net/showthread.php?p=2682882  
-l4d2_bacteria 恢复特感钢琴音提示 来自 https://forums.alliedmods.net/showthread.php?p=2675275  
-l4d_christmas_tree 地图生成圣诞树及礼物补给 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/tree/main/l4d_christmas_tree 来自 https://forums.alliedmods.net/showthread.php?p=2672241  
-l4d2_spitter_acid_damage 口水酸液可对感染者和爆炸物照成伤害 自翻cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_spitter_acid_damage 来自 https://forums.alliedmods.net/showthread.php?p=2672091  
-l4d2_car_alarm_bots bot或者特感可以打警报车 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_car_alarm_bots 来自 https://forums.alliedmods.net/showthread.php?p=2671546  
-l4d_tongue_damage 战役下舌头拖拽伤害 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_tongue_damage.sp 来自 https://forums.alliedmods.net/showthread.php?p=2668589  
-l4d_witch_damage 设置女巫不同难度伤害 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_witch_damage.sp 来自 https://forums.alliedmods.net/showthread.php?p=2667165  
-l4d_survivor_shove 可把生还者推的后退 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_shove_handler 来自 https://forums.alliedmods.net/showthread.php?p=2667050  
-l4d_infected_glow 感染者燃烧发光 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_infected_glow.sp 来自 https://forums.alliedmods.net/showthread.php?t=187933  
-l4d2_dead_air_barricade 移除寂静时分救援火焰屏障 来自 https://forums.alliedmods.net/showthread.php?t=187933  
-l4d2_jukebox_spawner 安全区域生成点唱机 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/tree/main/l4d2_jukebox_spawner 来自 https://forums.alliedmods.net/showthread.php?p=1405042  
-l4d2_global_shadow_fix 修复部分官图缺失阴影 来自 https://forums.alliedmods.net/showthread.php?p=1404537  
-l4d2_incapped_crawling 倒地可爬行及爬行第三人称 https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_crawling 来自 https://forums.alliedmods.net/showthread.php?p=1291588  
-l4d_achievement_trophy 玩家达成steam成就时头上展示奖杯 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/blob/main/l4d_achievement_trophy.sp 来自 https://forums.alliedmods.net/showthread.php?p=1279984  
-l4d_gascan_invul 设置油桶免疫什么伤害 自翻cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_gascan_invul.sp 来自 https://forums.alliedmods.net/showthread.php?t=328100  
-l4d2_multiple_gascan_fill 可同时罐油或者倒可乐 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_multiple_gascan_fill.sp 来自 https://forums.alliedmods.net/showthread.php?t=330351  
-l4d2_gascan_guard 射击不会打破正飞在空中的油桶 来自 https://forums.alliedmods.net/showthread.php?p=2762850  
-l4d2_incapped_pickup 倒地可拾取物品 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_pickup 来自 https://forums.alliedmods.net/showthread.php?t=320828  
-killregain 杀僵尸回子弹 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/KillRegain  
-l4d_pipebomb_shove 设置引诱手雷伤害及手雷可吸附感染者头部 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_pipebomb_shove 来自 https://forums.alliedmods.net/showthread.php?p=1733534  
-l4d_pipebomb_damage 设置手雷伤害对所有生物的倍数 可通过l4d_pipebomb_shove设置的伤害进行更改 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_pipebomb_damage.sp 来自 https://forums.alliedmods.net/showthread.php?p=2680272  
-l4d2_tank_announce 坦克出现播放提示音及聊天框提示 来自 https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_tank_announce  
-vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
+[all4dead2](https://github.com/apples1949/l4dplugins/tree/main/all4dead2) 物品特感生成 [自改自翻译](https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2)   
+[l4d_anti_rush](https://forums.alliedmods.net/showthread.php?t=322392) 反跑图 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush/sourcemod)   
+[l4d_coop_markers](https://forums.alliedmods.net/showthread.php?t=321288) 路程进度主动显示  
+[l4d_dissolve_infected](https://forums.alliedmods.net/showthread.php?t=306789) 僵尸溶解 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_dissolve_infected)   
+[l4d_gear_transfer](https://forums.alliedmods.net/showthread.php?t=137616) 按键给予物品 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_gear_transfer)  
+ https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic / [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?p=2529779) 屏幕中心显示谁在说话/第三人称指令查询简化  
+[superversus1.8.15.5改(多人插件)-v1.11.1](https://github.com/umlka/l4d2/tree/main/superversus1.8.15.5-modify)   
+[TankOnSpawn](https://forums.alliedmods.net/showthread.php?t=323813) 每次生成多个坦克 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/TankOnSpawn)   
+[l4d2_item_hint](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_item_hint) 标记插件 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush)  
+[l4d_automatic_weapons](https://github.com/AldoDiaz01/Left4Dead2_Sourcemod_Plugins/blob/master/left4dead2/addons/sourcemod/scripting/l4d_automatic_weapons.sp) 半自动武器全自动射击 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_automatic_weapons.sp)  
+[l4d_bunnyhop](https://forums.alliedmods.net/showthread.php?t=298555) 连跳插件 [自翻cvar介绍](https://github.com/apples1949/l4dplugins/blob/main/l4d_bunnyhop.sp)  
+[l4d2_skill_detect](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_skill_detect.sp) / [l4d2_stats](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_stats.sp) 技能检测（正在找适合战役的）  
+witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples1949/l4dplugins/blob/main/witch_announce.smx) zm不支持多人   
+[firebulletsfix](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/firebulletsfix) 修复移动射击时子弹位移的问题   
+[bequiet](https://github.com/fbef0102/L4D1_2-Plugins/blob/master/bequiet/scripting/bequiet.sp) 过滤部分聊天输出   
+[l4dinfectedbots](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dinfectedbots) 哈利dalao的多特插件包括其他功能 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4dinfectedbots)   
+[l4d_votes_5](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_votes_5) 投票插件 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_votes_5)   
+[lerptracker](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/lerptracker) 显示lerp [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/blob/main/lerptracker.sp)   
+[l4d_graves](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves) 生还者死亡后生成坟墓 [自翻cvar介绍](https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp)   
+[l4d_rock_lagcomp](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp) 战役模式中给坦克石头提供滞后补偿 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp  
+[l4d2_nextmap_v1.1](https://forums.alliedmods.net/showthread.php?t=332291) 官图打完随机换图 [注释三方换图](https://github.com/apples1949/l4dplugins/tree/main/l4d2_nextmap_v1.1/sourcemod)  
+[l4d_rescue_vehicle_leave_timer](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rescue_vehicle_leave_timer) 官图救援倒计时 [自翻cvar](https://github.com/apples1949/l4dplugins/tree/main/l4d_rescue_vehicle_leave_timer)   
+[l4d_death_soul](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_death_soul) 死去的幸存者的灵魂飞向来世   
+[l4d_votedifficulty](https://forums.alliedmods.net/showthread.php?t=317257) 投票更改难度 [自翻译文本 自用删掉了简单难度选项](https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty)   
+[l4d_nightvision](https://forums.alliedmods.net/showthread.php?p=2666575#post2666575) 夜视仪 [翻译了下文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_nightvision.sp)   
+[self_help](https://forums.alliedmods.net/showthread.php?p=2766775#post2766775) 自救插件 [自翻cvar介绍和文本和其他更改](https://github.com/apples1949/l4dplugins/tree/main/self_help)   
+[l4d2_unreservelobby](https://github.com/umlka/l4d2/blob/main/l4d2_unreservelobby/l4d2_unreservelobby.sp)动态大厅   
+[l4d2_blackscreen_fix](https://forums.alliedmods.net/showthread.php?t=318739)/[sm_stringtable_dumper](https://forums.alliedmods.net/showthread.php?p=2689943) 黑屏加载修复/转储所有字符串表的记录    
+[l4d_TankStuckTeleport](https://forums.alliedmods.net/showthread.php?t=314741) 坦克防卡 [自翻cvar介绍和文本 自用删掉部分代码](https://github.com/apples1949/l4dplugins/blob/main/l4d_TankStuckTeleport.sp)    
+[l4d2_ThirdpersonShoulderShotgunSoundFix](https://forums.alliedmods.net/showthread.php?t=259986)  第三人称霰弹无声音修复   
+[l4d2_Survivor_Legs](https://forums.alliedmods.net/showthread.php?t=299560) 显示双腿   
+[l4d2_spit_glow](https://forums.alliedmods.net/showthread.php?t=330835) 口水酸液显示动态光 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_spit_glow.sp)   
+[l4d_fire_glow](https://forums.alliedmods.net/showthread.php?t=186617) 燃烧瓶扔出及燃烧显示动态光 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_fire_glow.sp)   
+[l4d2_DefibUsingBots](https://github.com/apples1949/l4dplugins/blob/main/l4d2_DefibUsingBots.sp) 强制bot使用电击器   
+[l4d_grenade_throwing_bots](https://forums.alliedmods.net/showthread.php?t=296150&page=16) 允许bot扔投抛   
+[l4d_healing_field](https://forums.alliedmods.net/showthread.php?t=324501) 坦克死亡留下治疗阵 [自翻cvar说明及文本 加血同步杀特回血上限225](https://github.com/apples1949/l4dplugins/blob/main/l4d_healing_field.sp)    
+[lagpreventor](https://forums.alliedmods.net/showthread.php?p=2758895) 优化某些三方图炸ping问题   
+[l4d_lift_music](https://forums.alliedmods.net/showthread.php?t=157267) 电梯放音乐   
+[l4d2_biletheworld](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_biletheworld) 胖子死亡可糊其他感染者\胆汁砸中生还者被糊脸扣血 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_biletheworld.sp)   
+[l4dhots](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4dhots.sp) 缓慢回血 [更改默认设置以及增加自动生成cfg](https://github.com/apples1949/l4dplugins/blob/main/l4dhots.sp)   
+[l4d_incapped_weapons](https://forums.alliedmods.net/showthread.php?t=322859) 倒地允许使用任何武器 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_incapped_weapons)   
+[l4d2_extendedsight](https://forums.alliedmods.net/showthread.php?p=2666299) 生还透视特感 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_extendedsight)   
+[ghostfly](https://forums.alliedmods.net/showthread.php?p=1662857) 特感灵魂飞行 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/ghostfly.sp)   
+[l4d2_practice](https://github.com/devilesk/rl4d2l-plugins/blob/master/l4d2_practice.sp) 灵魂状态下右键切换特感（注意数据文件）[翻译文本](https://github.com/apples1949/l4dplugins/blob/main/l4d2_practice/l4d2_practice.sp)  
+[l4d_stuckzombiemeleefix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_stuckzombiemeleefix.sp) 近战砍僵尸修复   
+[L4D_Elevator_Teleport](https://forums.alliedmods.net/showthread.php?p=2785701) 官图电梯倒计时 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/blob/main/L4D_Elevator_Teleport.sp   
+[boss_controller](https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/BossController) 战役路程刷克和妹子   
+[L4D2_cs_ladders](https://github.com/LuxLuma/L4D-small-plugins/tree/master/L4D2_cs_ladders) 爬梯开枪    
+[noteam_nudging](https://github.com/LuxLuma/L4D-small-plugins/blob/master/L4D1-2_noteam_nudging/scripting/noteam_nudging.sp) 防止某些三方图玩家碰撞被挤下去   
+[l4d2_tooeasy](https://github.com/nuviktor/sm-l4d2-tooeasy) 禁简单普通难度 [翻译文本](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp)   
+[dialogue_criteria_fix](https://forums.alliedmods.net/showthread.php?t=335875) 修复两代人物对话   
+[l4d2_gift_rewards](https://forums.alliedmods.net/showthread.php?t=320067) 杀特随机掉礼物 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/tree/main/l4d2_gift_rewards)   
+[l4d_plane](https://github.com/apples1949/l4dplugins/tree/main/l4d_plane_crash_crash) 显示坠机动画 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_plane_crash)  
+[l4d2_wskin_rng](https://forums.alliedmods.net/showthread.php?t=327609) 显示武器隐藏皮肤 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_wskin_rng.sp)   
+[killsound](https://github.com/GlowingTree880/L4D2_LittlePlugins/blob/main/KillSound/killsound.sp) 爆头提示音 [自改仅特感爆头提示音](https://github.com/apples1949/l4dplugins/blob/main/killsound.sp)   
+[l4d_penetration_pistol](https://forums.alliedmods.net/showthread.php?t=337509) 调整小手枪对小僵尸的伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_penetration_pistol.sp)   
+[l4d_medicines_unlimited](https://forums.alliedmods.net/showthread.php?t=336226) 设置血量上限及处理溢出的虚血 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_medicines_unlimited.sp)   
+[l4d2_unlimited_upgrade_pack](https://forums.alliedmods.net/showthread.php?t=335601) 弹药升级包部署后可无限拿取 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_unlimited_upgrade_pack)   
+[l4d2_deathcheck](https://forums.alliedmods.net/showpost.php?p=2727648&postcount=10) 全部生还者死亡后游戏才失败 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_deathcheck.sp)   
+[l4d_bot_healing](https://forums.alliedmods.net/showthread.php?p=2785360) bot什么血量才能打包吃药 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_bot_healing)   
+[l4d_shove_handler](https://forums.alliedmods.net/showthread.php?p=2779571) 设置推感染者的伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_shove_handler)   
+[l4d_skip_intro](https://forums.alliedmods.net/showthread.php?p=2686527)/[FollowTarget_Detour](https://forums.alliedmods.net/showthread.php?p=2725811) 跳过开场动画/修复播放动画补丁 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_skip_intro)   
+[l4d_pause_message](https://forums.alliedmods.net/showthread.php?p=2682882) 阻止玩家控制台输出暂停消息   
+[l4d2_bacteria](https://forums.alliedmods.net/showthread.php?p=2675275) 恢复特感钢琴音提示   
+[l4d_christmas_tree](https://forums.alliedmods.net/showthread.php?p=2672241) 地图生成圣诞树及礼物补给 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_christmas_tree)   
+[l4d2_spitter_acid_damage](https://forums.alliedmods.net/showthread.php?p=2672091) 口水酸液可对感染者和爆炸物造成伤害 [自翻cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_spitter_acid_damage)   
+[l4d2_car_alarm_bots](https://forums.alliedmods.net/showthread.php?p=2671546) bot或者特感可以打警报车 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_car_alarm_bots)   
+[l4d_tongue_damage](https://forums.alliedmods.net/showthread.php?p=2668589) 战役下舌头拖拽伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_tongue_damage.sp)   
+[l4d_witch_damage](https://forums.alliedmods.net/showthread.php?p=2667165) 设置女巫不同难度伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_witch_damage.sp)   
+[l4d_survivor_shove](https://forums.alliedmods.net/showthread.php?p=2667050) 可把生还者推的后退 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_shove_handler)   
+[l4d_infected_glow](https://forums.alliedmods.net/showthread.php?t=187933) 感染者燃烧发光 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_infected_glow.sp)   
+[l4d2_dead_air_barricade](https://forums.alliedmods.net/showthread.php?t=187933) 移除寂静时分救援火焰屏障   
+[l4d2_jukebox_spawner](https://forums.alliedmods.net/showthread.php?p=1405042) 安全区域生成点唱机 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/tree/main/l4d2_jukebox_spawner)   
+[l4d2_global_shadow_fix](https://forums.alliedmods.net/showthread.php?p=1404537) 修复部分官图缺失阴影   
+[l4d2_incapped_crawling](https://forums.alliedmods.net/showthread.php?p=1291588) 倒地可爬行及爬行第三人称 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_crawling)   
+[l4d_achievement_trophy](https://forums.alliedmods.net/showthread.php?p=1279984) 玩家达成steam成就时头上展示奖杯 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_achievement_trophy.sp)   
+[l4d_gascan_invul](https://forums.alliedmods.net/showthread.php?t=328100) 设置油桶免疫什么伤害 [自翻cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_gascan_invul.sp)   
+[l4d2_multiple_gascan_fill](https://forums.alliedmods.net/showthread.php?t=330351) [可同时罐油或者倒可乐](https://github.com/apples1949/l4dplugins/blob/main/l4d2_multiple_gascan_fill.sp) 翻译cvar说明   
+[l4d2_gascan_guard](https://forums.alliedmods.net/showthread.php?p=2762850) 射击不会打破正飞在空中的油桶   
+[l4d2_incapped_pickup](https://forums.alliedmods.net/showthread.php?t=320828) 倒地可拾取物品 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_pickup)   
+[killregain](https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/KillRegain) 杀僵尸回子弹   
+[l4d_pipebomb_shove](https://forums.alliedmods.net/showthread.php?p=1733534) 设置引诱手雷伤害及手雷可吸附感染者头部 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_pipebomb_shove)   
+[l4d_pipebomb_damage](https://forums.alliedmods.net/showthread.php?p=2680272) 设置手雷伤害对所有生物的倍数 可通过l4d_pipebomb_shove设置的伤害进行更改 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_pipebomb_damage.sp)   
+[l4d2_tank_announce](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_tank_announce) 坦克出现播放提示音及聊天框提示   
+[vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)：    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
 [mod]zmweapon.vpk zm参数小枪 
-[mod]knife.vpk 恢复小刀 来自anne https://github.com/Caibiii/AnneServer/blob/main/left4dead2/addons/knife.vpk  
+[mod]knife.vpk 恢复小刀 [来自anne](https://github.com/Caibiii/AnneServer/blob/main/left4dead2/addons/knife.vpk)   
 [mod]grenade3clip.vpk 自制榴弹发射器三发前置弹药
