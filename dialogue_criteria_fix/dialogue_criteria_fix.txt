@@ -1,0 +1,266 @@
+"Games"
+{
+	"#default"
+	{
+		"Functions"
+		{
+			"UTIL_PlayerByIndex"
+			{
+				"signature"			"UTIL_PlayerByIndex"
+				"callconv"			"cdecl"
+				"return"			"cbaseentity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"		"int"
+					}
+				}
+			}
+			"AI_CriteriaSet::AppendCriteria"
+			{
+				"signature"			"AI_CriteriaSet::AppendCriteria"
+				"callconv"			"thiscall"
+				"return"			"int"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"		"charptr"
+					}
+					"a2"
+					{
+						"type"		"charptr"
+					}
+					"a3"
+					{
+						"type"		"float"
+					}
+				}
+			}
+			"CTerrorPlayer::ModifyOrAppendCriteria"
+			{
+				"signature"			"CTerrorPlayer::ModifyOrAppendCriteria"
+				"callconv"			"thiscall"
+				"return"			"int"
+				"this"				"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"		"int"
+					}
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"UTIL_PlayerByIndex"
+			{
+				"library"	"server"
+				"linux"		"@_Z18UTIL_PlayerByIndexi"
+			}
+			"AI_CriteriaSet::AppendCriteria"
+			{
+				"library"	"server"
+				"linux"		"@_ZN14AI_CriteriaSet14AppendCriteriaEPKcS1_f"
+			}
+			"CTerrorPlayer::ModifyOrAppendCriteria"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer22ModifyOrAppendCriteriaER14AI_CriteriaSet"
+			}
+		}
+	}
+	"left4dead"
+	{
+		"Functions"
+		{
+			"ForEachSurvivor<SurvivorAliveCritFunctor>"
+			{
+				"signature"			"ForEachSurvivor<SurvivorAliveCritFunctor>"
+				"callconv"			"cdecl"
+				"return"			"bool"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"		"int"
+					}
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"UTIL_PlayerByIndex"
+			{
+				"library"	"server"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x7E\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x3B\x2A\x2A\x7F\x2A\x3D"
+				/* ? ? ? ? ? ? ? 85 ? 7E ? 8B ? ? ? ? ? 3B ? ? 7F ? 3D */
+			}
+			"AI_CriteriaSet::AppendCriteria"
+			{
+				"library"	"server"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x50\x8D\x2A\x2A\x2A\x51\xB9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x2A\x8B"
+				/* ? ? ? ? ? ? ? 50 8D ? ? ? 51 B9 ? ? ? ? E8 ? ? ? ? D9 ? ? ? 8B */
+			}
+			"ForEachSurvivor<SurvivorAliveCritFunctor>"
+			{
+				"library"	"server"
+				"linux"		"@_Z15ForEachSurvivorIN12_GLOBAL__N_124SurvivorAliveCritFunctorEEbRT__constprop_79"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\xBF\x2A\x2A\x2A\x2A\x39\x2A\x2A\x7C\x2A\x8B\x2A\x2A\x2A\x57\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2B\x2A\x2A\xC1\x2A\x2A\x74\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x74\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x75\x2A\x56\x8B\x2A\xE8\x18\xFD"
+				/* ? ? ? ? ? ? 53 56 57 BF ? ? ? ? 39 ? ? 7C ? 8B ? ? ? 57 E8 ? ? ? ? 8B ? 83 ? ? 85 ? 74 ? 8B ? ? 85 ? 74 ? 8B ? ? ? ? ? 2B ? ? C1 ? ? 74 ? 8B ? 8B ? ? ? ? ? 8B ? FF ? 84 ? 74 ? 83 ? ? ? ? ? ? 74 ? 8B ? E8 ? ? ? ? 83 ? ? 75 ? 56 8B ? E8 18 FD */
+			}
+			"CTerrorPlayer::ModifyOrAppendCriteria"
+			{
+				"library"	"server"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x55\x56\x57\xBE\x2A\x2A\x2A\x2A\x33"
+				/* ? ? ? ? ? ? 55 56 57 BE ? ? ? ? 33 */
+			}
+		}
+	}
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"ModifyOrAppendGlobalCriteria"
+			{
+				"signature"		"ModifyOrAppendGlobalCriteria"
+			}
+			"ForEachSurvivorSACF"
+			{
+				"windows"
+				{
+					"signature"	"ForEachSurvivor<SurvivorAliveCritFunctor>"
+				}
+			}
+			"ModifyOrAppendGlobalCriteriaInternal"
+			{
+				"windows"
+				{
+					"signature"	"ModifyOrAppendGlobalCriteriaInternal"
+				}
+			}
+			"ModifyOrAppendCriteria_CTP"
+			{
+				"signature"		"CTerrorPlayer::ModifyOrAppendCriteria"
+			}
+		}
+		
+		"Functions"
+		{
+			"ModifyOrAppendGlobalCriteria"
+			{
+				"windows"
+				{
+					"signature"		"ForEachSurvivor<SurvivorAliveCritFunctor>"
+					"return"		"bool"
+				}
+				"linux"
+				{
+					"signature"		"ModifyOrAppendGlobalCriteria"
+					"return"		"int"
+				}
+				"callconv"			"cdecl"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"		"int"
+					}
+				}
+			}
+			"SurvivorResponseCachedInfo::GetClosestSurvivorTo"
+			{
+				"signature"			"SurvivorResponseCachedInfo::GetClosestSurvivorTo"
+				"callconv"			"thiscall"
+				"return"			"int"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"		"int"
+					}
+				}
+			}
+		}
+		
+		"Offsets"
+		{
+			"ModifyOrAppendGlobalCriteria_TeamNumberCondition"
+			{
+				"linux"		"274"
+			}
+			"ModifyOrAppendGlobalCriteria_CharacterCondition"
+			{
+				"linux"		"986"
+			}
+			"ForEachSurvivorSACF_TeamNumberCondition"
+			{
+				"windows"	"96"
+			}
+			"ModifyOrAppendGlobalCriteriaInternal_CharacterCondition"
+			{
+				"windows"	"18"
+			}
+			"CTPModifyOrAppendCriteria_TeamNumberCall"
+			{
+				"windows"	"2281"
+				"linux"		"3517"
+			}
+			"CTPModifyOrAppendCriteria_SurvivorSetCall"
+			{
+				"windows"	"2839"
+				"linux"		"5844"
+			}
+		}
+		
+		"Signatures"
+		{
+			"ModifyOrAppendGlobalCriteria"
+			{
+				"library"	"server"
+				"linux"		"@_ZL28ModifyOrAppendGlobalCriteriaP14AI_CriteriaSet"
+			}
+			"ForEachSurvivor<SurvivorAliveCritFunctor>"
+			{
+				"library"	"server"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\xBF\x2A\x2A\x2A\x2A\x39\x2A\x2A\x7C\x2A\x8B\x2A\x2A\x57\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2B\x2A\x2A\xC1\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x74\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x2A\x56\x8B\x2A\xE8\x05\xFB"
+				/* ? ? ? ? ? ? ? ? 53 56 57 BF ? ? ? ? 39 ? ? 7C ? 8B ? ? 57 E8 ? ? ? ? 8B ? 83 ? ? 85 ? 74 ? 8B ? ? 85 ? 74 ? 8B ? ? ? ? ? 2B ? ? C1 ? ? 85 ? 74 ? 8B ? 8B ? ? ? ? ? 8B ? FF ? 84 ? 74 ? 83 ? ? ? ? ? ? 74 ? 8B ? E8 ? ? ? ? 83 ? ? ? ? 56 8B ? E8 05 FB */
+			}
+			"ModifyOrAppendGlobalCriteriaInternal"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\x2A\x56\x57\x8B\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83"
+				/* 55 8B ? 56 57 8B ? 8B ? ? 8B ? ? ? ? ? 83 */
+			}
+			"CTerrorPlayer::ModifyOrAppendCriteria"
+			{
+				"library"	"server"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x2A\x33"
+				/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 8B ? ? 33 */
+			}
+			"UTIL_PlayerByIndex"
+			{
+				"library"	"server"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\x33\x2A\x85\x2A\x7E\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x3B"
+				/* ? ? ? ? ? ? 57 33 ? 85 ? 7E ? 8B ? ? ? ? ? 3B */
+			}
+			"AI_CriteriaSet::AppendCriteria"
+			{
+				"library"	"server"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x50\x8D\x2A\x2A\x51\xB9"
+				/* ? ? ? ? ? ? 56 8B ? 50 8D ? ? 51 B9 */
+			}
+			"SurvivorResponseCachedInfo::GetClosestSurvivorTo"
+			{
+				"library"	"server"
+				"linux"		"@_ZN26SurvivorResponseCachedInfo20GetClosestSurvivorToE21SurvivorCharacterType"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xC1\x2A\x2A\x03\x2A\x57\xB9"
+				/* ? ? ? ? ? ? ? ? 8B ? C1 ? ? 03 ? 57 B9 */
+			}
+		}
+	}
+}

@@ -233,38 +233,38 @@ public void OnPluginStart()
 	g_hCvarModes = CreateConVar(		"l4d_shove_handler_modes",				"",				"在这些游戏模式中启用插件, 用英文逗号隔开(无空格). (无内容=全部游戏模式)", CVAR_FLAGS );
 	g_hCvarModesOff = CreateConVar(		"l4d_shove_handler_modes_off",			"",				"在这些游戏模式中关闭插件, 用英文逗号隔开(无空格). (无内容=无)", CVAR_FLAGS );
 	g_hCvarModesTog = CreateConVar(		"l4d_shove_handler_modes_tog",			"0",			"在这些游戏模式中启用插件. 0=全部游戏模式, 1=战役, 2=生还者, 4=对抗, 8=清道夫. 将这些数字叠加在一起", CVAR_FLAGS );
-	g_hCvarBack = CreateConVar(			"l4d_shove_handler_common_back",		"0",			" 0=关闭  1=允许(游戏默认) 在没有惊动小僵尸的情况下推其背部即可立刻击杀", CVAR_FLAGS );
+	g_hCvarBack = CreateConVar(			"l4d_shove_handler_common_back",		"1",			" 0=关闭  1=允许(游戏默认) 在没有惊动小僵尸的情况下推其背部即可立刻击杀", CVAR_FLAGS );
 
 	// Counts
-	g_hCvarCount[0] = CreateConVar(		"l4d_shove_handler_count_common",		"0",			"0=无法用推造成伤害  杀死一个小僵尸需要多少次推几次(游戏默认为4)", CVAR_FLAGS );
-	g_hCvarCount[1] = CreateConVar(		"l4d_shove_handler_count_smoker",		"0",			"0=无法用推造成伤害  杀死一个smoker需要多少次推几次", CVAR_FLAGS );
-	g_hCvarCount[2] = CreateConVar(		"l4d_shove_handler_count_boomer",		"0",			"0=无法用推造成伤害  杀死一个boomer需要多少次推几次", CVAR_FLAGS );
-	g_hCvarCount[3] = CreateConVar(		"l4d_shove_handler_count_hunter",		"0",			"0=无法用推造成伤害  杀死一个hunter需要多少次推几次", CVAR_FLAGS );
+	g_hCvarCount[0] = CreateConVar(		"l4d_shove_handler_count_common",		"2",			"0=无法用推造成伤害  杀死一个小僵尸需要多少次推几次(游戏默认为4)", CVAR_FLAGS );
+	g_hCvarCount[1] = CreateConVar(		"l4d_shove_handler_count_smoker",		"4",			"0=无法用推造成伤害  杀死一个smoker需要多少次推几次", CVAR_FLAGS );
+	g_hCvarCount[2] = CreateConVar(		"l4d_shove_handler_count_boomer",		"3",			"0=无法用推造成伤害  杀死一个boomer需要多少次推几次", CVAR_FLAGS );
+	g_hCvarCount[3] = CreateConVar(		"l4d_shove_handler_count_hunter",		"4",			"0=无法用推造成伤害  杀死一个hunter需要多少次推几次", CVAR_FLAGS );
 	if( g_bLeft4Dead2 )
 	{
-	g_hCvarCount[4] = CreateConVar(		"l4d_shove_handler_count_spitter",		"0",			"0=无法用推造成伤害  杀死一个stripper需要多少次推几次", CVAR_FLAGS );
-	g_hCvarCount[5] = CreateConVar(		"l4d_shove_handler_count_jockey",		"0",			"0=无法用推造成伤害  杀死一个jockey需要多少次推几次", CVAR_FLAGS );
-	g_hCvarCount[6] = CreateConVar(		"l4d_shove_handler_count_charger",		"0",			"0=无法用推造成伤害  杀死一个charger需要多少次推几次", CVAR_FLAGS );
+	g_hCvarCount[4] = CreateConVar(		"l4d_shove_handler_count_spitter",		"3",			"0=无法用推造成伤害  杀死一个spitter需要多少次推几次", CVAR_FLAGS );
+	g_hCvarCount[5] = CreateConVar(		"l4d_shove_handler_count_jockey",		"4",			"0=无法用推造成伤害  杀死一个jockey需要多少次推几次", CVAR_FLAGS );
+	g_hCvarCount[6] = CreateConVar(		"l4d_shove_handler_count_charger",		"6",			"0=无法用推造成伤害  杀死一个charger需要多少次推几次", CVAR_FLAGS );
 	}
 	g_hCvarCount[7] = CreateConVar(		"l4d_shove_handler_count_tank",			"0",			"0=无法用推造成伤害  杀死一个tank需要多少次推几次", CVAR_FLAGS );
-	g_hCvarCount[8] = CreateConVar(		"l4d_shove_handler_count_witch",		"0",			"0=无法用推造成伤害  杀死一个witch需要多少次推几次", CVAR_FLAGS );
+	g_hCvarCount[8] = CreateConVar(		"l4d_shove_handler_count_witch",		"10",			"0=无法用推造成伤害  杀死一个witch需要多少次推几次", CVAR_FLAGS );
 
 	// Types
-	g_hCvarTypes = CreateConVar(		"l4d_shove_handler_damaged",			"511",			"什么感染者通过生还者推击受到伤害  0=无，1=小僵尸，2=smoker，4=boomer，8=hunter，16=spitter，32=jockey，64=charger，128=tank(默认关闭)，256=witch(默认关闭)，511=全部 需要的数字相加", CVAR_FLAGS );
+	g_hCvarTypes = CreateConVar(		"l4d_shove_handler_damaged",			"383",			"什么感染者通过生还者推击受到伤害  0=无，1=小僵尸，2=smoker，4=boomer，8=hunter，16=spitter，32=jockey，64=charger，128=tank(默认关闭)，256=witch(默认关闭)，511=全部 需要的数字相加", CVAR_FLAGS );
 
 	// Damage
-	g_hCvarDamage[0] = CreateConVar(	"l4d_shove_handler_damage_common",		"10.0",			"0.0=无(游戏默认)每次推小僵尸造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
-	g_hCvarDamage[1] = CreateConVar(	"l4d_shove_handler_damage_smoker",		"10.0",			"0.0=无(游戏默认)每次推smoker造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
-	g_hCvarDamage[2] = CreateConVar(	"l4d_shove_handler_damage_boomer",		"10.0",			"0.0=无(游戏默认)每次推boomer造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
-	g_hCvarDamage[3] = CreateConVar(	"l4d_shove_handler_damage_hunter",		"10.0",			"0.0=无(游戏默认)每次推hunter造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
+	g_hCvarDamage[0] = CreateConVar(	"l4d_shove_handler_damage_common",		"25.0",			"0.0=无(游戏默认)每次推小僵尸造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
+	g_hCvarDamage[1] = CreateConVar(	"l4d_shove_handler_damage_smoker",		"75.0",			"0.0=无(游戏默认)每次推smoker造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
+	g_hCvarDamage[2] = CreateConVar(	"l4d_shove_handler_damage_boomer",		"16.0",			"0.0=无(游戏默认)每次推boomer造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
+	g_hCvarDamage[3] = CreateConVar(	"l4d_shove_handler_damage_hunter",		"75.0",			"0.0=无(游戏默认)每次推hunter造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
 	if( g_bLeft4Dead2 )
 	{
-	g_hCvarDamage[4] = CreateConVar(	"l4d_shove_handler_damage_spitter",		"10.0",			"0.0=无(游戏默认)每次推spitter造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
-	g_hCvarDamage[5] = CreateConVar(	"l4d_shove_handler_damage_jockey",		"10.0",			"0.0=无(游戏默认)每次推jockey造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
-	g_hCvarDamage[6] = CreateConVar(	"l4d_shove_handler_damage_charger",		"10.0",			"0.0=无(游戏默认)每次推charger造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
+	g_hCvarDamage[4] = CreateConVar(	"l4d_shove_handler_damage_spitter",		"33.3",			"0.0=无(游戏默认)每次推spitter造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
+	g_hCvarDamage[5] = CreateConVar(	"l4d_shove_handler_damage_jockey",		"69.0",			"0.0=无(游戏默认)每次推jockey造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
+	g_hCvarDamage[6] = CreateConVar(	"l4d_shove_handler_damage_charger",		"100.0",			"0.0=无(游戏默认)每次推charger造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
 	}
-	g_hCvarDamage[7] = CreateConVar(	"l4d_shove_handler_damage_tank",		"10.0",			"0.0=无(游戏默认)每次推tank造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
-	g_hCvarDamage[8] = CreateConVar(	"l4d_shove_handler_damage_witch",		"10.0",			"0.0=无(游戏默认)每次推witch造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
+	g_hCvarDamage[7] = CreateConVar(	"l4d_shove_handler_damage_tank",		"0.0",			"0.0=无(游戏默认)每次推tank造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
+	g_hCvarDamage[8] = CreateConVar(	"l4d_shove_handler_damage_witch",		"100.0",			"0.0=无(游戏默认)每次推witch造成的伤害,如果使用百分比类型,100.0=推一下就死", CVAR_FLAGS );
 
 	// Hunter skeet
 	g_hCvarSkeet = CreateConVar(		"l4d_shove_handler_hunter",				"1",			"0=关 1=开 是否允许生还者推飞行中的hunter", CVAR_FLAGS );
