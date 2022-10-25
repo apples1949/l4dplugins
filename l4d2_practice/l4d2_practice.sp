@@ -78,25 +78,25 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		int class = GetEntProp(client, Prop_Send, "m_zombieClass");
 		if (class == ZC_SMOKER) {
 			Sub_DetermineClass(client, ZC_BOOMER);
-			PrintHintText(client, "Press <Mouse2> to change to hunter.");
+			PrintHintText(client, "请按右键切换到hunter.");
 		} else if (class == ZC_BOOMER) {
 			Sub_DetermineClass(client, ZC_HUNTER);
-			PrintHintText(client, "Press <Mouse2> to change spitter.");
+			PrintHintText(client, "请按右键切换到spitter.");
 		} else if (class == ZC_HUNTER) {
 			Sub_DetermineClass(client, ZC_SPITTER);
-			PrintHintText(client, "Press <Mouse2> to change jockey.");
+			PrintHintText(client, "请按右键切换到jockey.");
 		} else if (class == ZC_SPITTER) {
 			Sub_DetermineClass(client, ZC_JOCKEY);
-			PrintHintText(client, "Press <Mouse2> to change charger.");
+			PrintHintText(client, "请按右键切换到charger.");
 		} else if (class == ZC_JOCKEY) {
 			Sub_DetermineClass(client, ZC_CHARGER);
-			PrintHintText(client, "Press <Mouse2> to change tank.");
+			PrintHintText(client, "请按右键切换到tank.");
 		} else if (class == ZC_CHARGER) {
 			Sub_DetermineClass(client, ZC_TANK);
-			PrintHintText(client, "Press <Mouse2> to change smoker.");
+			PrintHintText(client, "请按右键切换到smoker.");
 		} else if (class == ZC_TANK) {
 			Sub_DetermineClass(client, ZC_SMOKER);
-			PrintHintText(client, "Press <Mouse2> to change boomer.");
+			PrintHintText(client, "请按右键切换到boomer.");
 		}
 	}
 }
