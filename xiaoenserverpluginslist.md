@@ -63,7 +63,7 @@
 [l4d_coop_markers](https://forums.alliedmods.net/showthread.php?t=321288) 路程进度主动显示  
 [l4d_dissolve_infected](https://forums.alliedmods.net/showthread.php?t=306789) 僵尸溶解 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_dissolve_infected)   
 [l4d_gear_transfer](https://forums.alliedmods.net/showthread.php?t=137616) 按键给予物品 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_gear_transfer)  
- https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic / [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?p=2529779) 屏幕中心显示谁在说话/第三人称指令查询简化  
+[show_mic](https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic) / [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?p=2529779) 屏幕中心显示谁在说话/第三人称指令查询简化  
 [superversus1.8.15.5改(多人插件)-v1.11.1](https://github.com/umlka/l4d2/tree/main/superversus1.8.15.5-modify)   
 [TankOnSpawn](https://forums.alliedmods.net/showthread.php?t=323813) 每次生成多个坦克 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/TankOnSpawn)   
 [l4d2_item_hint](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_item_hint) 标记插件 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush)  
