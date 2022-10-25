@@ -133,6 +133,7 @@ l4d2_dead_air_barricade 移除寂静时分救援火焰屏障 来自 https://foru
 l4d2_jukebox_spawner 安全区域生成点唱机 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/tree/main/l4d2_jukebox_spawner 来自 https://forums.alliedmods.net/showthread.php?p=1405042  
 l4d2_global_shadow_fix 修复部分官图缺失阴影 来自 https://forums.alliedmods.net/showthread.php?p=1404537  
 l4d2_incapped_crawling 倒地可爬行及爬行第三人称 https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_crawling 来自 https://forums.alliedmods.net/showthread.php?p=1291588  
+l4d_achievement_trophy 玩家达成steam成就时头上展示奖杯 自翻cvar说明及文本 https://github.com/apples1949/l4dplugins/blob/main/l4d_achievement_trophy.sp 来自 https://forums.alliedmods.net/showthread.php?p=1279984  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
