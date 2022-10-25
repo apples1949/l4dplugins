@@ -137,6 +137,7 @@ l4d_achievement_trophy 玩家达成steam成就时头上展示奖杯 自翻cvar�
 l4d_gascan_invul 设置油桶免疫什么伤害 自翻cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_gascan_invul.sp 来自 https://forums.alliedmods.net/showthread.php?t=328100  
 l4d2_multiple_gascan_fill 可同时罐油或者倒可乐 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d2_multiple_gascan_fill.sp 来自 https://forums.alliedmods.net/showthread.php?t=330351  
 l4d2_gascan_guard 射击不会打破正飞在空中的油桶 来自 https://forums.alliedmods.net/showthread.php?p=2762850  
+l4d2_incapped_pickup 倒地可拾取物品 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_pickup 来自 https://forums.alliedmods.net/showthread.php?t=320828  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
