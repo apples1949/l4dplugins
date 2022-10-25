@@ -139,7 +139,8 @@ l4d2_multiple_gascan_fill 可同时罐油或者倒可乐 翻译cvar说明 https:
 l4d2_gascan_guard 射击不会打破正飞在空中的油桶 来自 https://forums.alliedmods.net/showthread.php?p=2762850  
 l4d2_incapped_pickup 倒地可拾取物品 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_pickup 来自 https://forums.alliedmods.net/showthread.php?t=320828  
 killregain 杀僵尸回子弹 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/KillRegain  
-l4d_pipebomb_shove 设置引诱手雷伤害及手雷可吸附感染者头部  翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_pipebomb_shove 来自 https://forums.alliedmods.net/showthread.php?p=1733534  
+l4d_pipebomb_shove 设置引诱手雷伤害及手雷可吸附感染者头部 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_pipebomb_shove 来自 https://forums.alliedmods.net/showthread.php?p=1733534  
+l4d_pipebomb_damage 设置手雷伤害对所有生物的倍数 可通过l4d_pipebomb_shove设置的伤害进行更改 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_pipebomb_damage.sp 来自 https://forums.alliedmods.net/showthread.php?p=2680272  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
