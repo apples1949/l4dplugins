@@ -489,7 +489,7 @@ public Action AnalyzePlayerState(Handle timer, any userid)
 					
 					if (!bIsL4D)
 					{
-						PrintHintText(client, "请你自救!");
+						PrintHintText(client, "按住下蹲键自救");
 					}
 				}
 				
