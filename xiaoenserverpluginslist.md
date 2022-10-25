@@ -141,6 +141,7 @@ l4d2_incapped_pickup 倒地可拾取物品 翻译cvar说明 https://github.com/a
 killregain 杀僵尸回子弹 来自 https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/KillRegain  
 l4d_pipebomb_shove 设置引诱手雷伤害及手雷可吸附感染者头部 翻译cvar说明 https://github.com/apples1949/l4dplugins/tree/main/l4d_pipebomb_shove 来自 https://forums.alliedmods.net/showthread.php?p=1733534  
 l4d_pipebomb_damage 设置手雷伤害对所有生物的倍数 可通过l4d_pipebomb_shove设置的伤害进行更改 翻译cvar说明 https://github.com/apples1949/l4dplugins/blob/main/l4d_pipebomb_damage.sp 来自 https://forums.alliedmods.net/showthread.php?p=2680272  
+l4d2_tank_announce 坦克出现播放提示音及聊天框提示 来自 https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_tank_announce  
 vpk功能包：https://github.com/apples1949/l4dplugins/tree/main/vpk    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
