@@ -1,0 +1,15 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			/* CTerrorPlayer::FindUseEntity(float, float, float, bool*, bool) */
+			"CTerrorPlayer::FindUseEntity"
+			{
+				"windows"	"439"
+				"linux"		"440"
+			}
+		}
+	}
+}
