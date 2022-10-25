@@ -26,7 +26,7 @@ public Plugin:myinfo =
 public OnPluginStart()
 {
 
-	hConVar_Enabled = CreateConVar("l4d_autopistols_enabled", "1", "[1/0 PLUGIN ENABLED/DISABLED]", FCVAR_PLUGIN | FCVAR_REPLICATED | FCVAR_NOTIFY );
+	hConVar_Enabled = CreateConVar("l4d_autopistols_enabled", "1", "是否启用插件 1=启用 0=禁用", FCVAR_PLUGIN | FCVAR_REPLICATED | FCVAR_NOTIFY );
 	hConVar_Weapons = CreateConVar("l4d_autopistols_weapons", "weapon_pistol;weapon_pistol_magnum;weapon_sniper_scout;weapon_sniper_awp", "[ALLOWED WEAPONS] Use ';' to add more then one like: 'weapon_pistol;weapon_pistol_magnum;weapon_sniper_scout;weapon_sniper_awp'", FCVAR_PLUGIN | FCVAR_REPLICATED | FCVAR_NOTIFY );
 	
 	HookConVarChange(hConVar_Enabled, ConVarChanged);
