@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Crawl"
+	{
+		"en"		"Press FORWARD to crawl while incapped!"
+	}
+}

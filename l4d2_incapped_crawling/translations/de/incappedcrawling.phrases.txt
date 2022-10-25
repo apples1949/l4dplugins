@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Crawl"
+	{
+		"de"		"Drücke VORWÄRTS (W) zum Kriechen während du außer Gefecht gesetzt bist!"
+	}
+}

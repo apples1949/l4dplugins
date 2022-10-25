@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Crawl"
+	{
+		"hu"		"Nyomd meg az ELÕRE gombot a kúszáshoz miközben mozgásképtelen vagy!"
+	}
+}
