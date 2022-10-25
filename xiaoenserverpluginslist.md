@@ -77,7 +77,7 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [l4d_votes_5](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_votes_5) 投票插件 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_votes_5)   
 [lerptracker](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/lerptracker) 显示lerp [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/blob/main/lerptracker.sp)   
 [l4d_graves](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves) 生还者死亡后生成坟墓 [自翻cvar介绍](https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp)   
-[l4d_rock_lagcomp](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp) 战役模式中给坦克石头提供滞后补偿 https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp  
+[l4d_rock_lagcomp](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp) 战役模式中给坦克石头提供滞后补偿  
 [l4d2_nextmap_v1.1](https://forums.alliedmods.net/showthread.php?t=332291) 官图打完随机换图 [注释三方换图](https://github.com/apples1949/l4dplugins/tree/main/l4d2_nextmap_v1.1/sourcemod)  
 [l4d_rescue_vehicle_leave_timer](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rescue_vehicle_leave_timer) 官图救援倒计时 [自翻cvar](https://github.com/apples1949/l4dplugins/tree/main/l4d_rescue_vehicle_leave_timer)   
 [l4d_death_soul](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_death_soul) 死去的幸存者的灵魂飞向来世   
@@ -103,7 +103,7 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [ghostfly](https://forums.alliedmods.net/showthread.php?p=1662857) 特感灵魂飞行 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/ghostfly.sp)   
 [l4d2_practice](https://github.com/devilesk/rl4d2l-plugins/blob/master/l4d2_practice.sp) 灵魂状态下右键切换特感（注意数据文件）[翻译文本](https://github.com/apples1949/l4dplugins/blob/main/l4d2_practice/l4d2_practice.sp)  
 [l4d_stuckzombiemeleefix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_stuckzombiemeleefix.sp) 近战砍僵尸修复   
-[L4D_Elevator_Teleport](https://forums.alliedmods.net/showthread.php?p=2785701) 官图电梯倒计时 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/blob/main/L4D_Elevator_Teleport.sp   
+[L4D_Elevator_Teleport](https://forums.alliedmods.net/showthread.php?p=2785701) 官图电梯倒计时 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/blob/main/L4D_Elevator_Teleport.sp)   
 [boss_controller](https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/BossController) 战役路程刷克和妹子   
 [L4D2_cs_ladders](https://github.com/LuxLuma/L4D-small-plugins/tree/master/L4D2_cs_ladders) 爬梯开枪    
 [noteam_nudging](https://github.com/LuxLuma/L4D-small-plugins/blob/master/L4D1-2_noteam_nudging/scripting/noteam_nudging.sp) 防止某些三方图玩家碰撞被挤下去   
