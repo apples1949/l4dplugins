@@ -113,7 +113,7 @@ public void PlayerGhostTimer(Handle event, const char[] name, bool dontBroadcast
 	CreateTimer(spawntime, PlayerBecameGhost, client);
 }
 public Action PlayerBecameGhost(Handle timer, any client) {
-	PrintHintText(client, "Press <Mouse2> to change SI class.");
+	PrintHintText(client, "请按右键切换到SI class.");
 }
 
 // Loads gamedata, preps SDK calls.

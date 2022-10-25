@@ -642,7 +642,7 @@ void GiveAward(int client)
 				case 3:		g_fRewarded[client] = GetGameTime() + g_fCvarSpeed;
 			}
 
-			PrintToChatAll("\x04[\x05礼物\x04]\x04%N\x01得到了\x05%s\x01奖励", random == 1 ? "弹药" : random == 2 ? "血量" : "速度", client);
+			PrintToChatAll("\x04[\x05礼物\x04]\x04%N\x01得到了\x05%s\x01奖励", client , random == 1 ? "弹药" : random == 2 ? "血量" : "速度");
 		}
 	}
 }

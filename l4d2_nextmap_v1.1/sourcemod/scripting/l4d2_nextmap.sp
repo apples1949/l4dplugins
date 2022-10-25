@@ -70,12 +70,12 @@ public void OnPluginStart()
     RegAdminCmd("sm_nm", HandleCmdNm, ADMFLAG_KICK);
 
     CreateConVar("l4d2_maps_version", VERSION, "L4D2 auto change next map version", CVAR_FLAGS);
-    cvar_delay = CreateConVar("l4d2_maps_delay", "5.0", "How many seconds does it wait for the changing map after finale win?", CVAR_FLAGS, true, 0.0);
+    cvar_delay = CreateConVar("l4d2_maps_delay", "5.0", "过关后多少秒换图?", CVAR_FLAGS, true, 0.0);
 
-    cvar_random_on = CreateConVar("l4d2_maps_random_on", "1", "Next map is random?\n0=Off, 1=On", CVAR_FLAGS, true, 0.0, true, 1.0);
-    cvar_random_official_on = CreateConVar("14d2_random_official_on", "1", "Random map including official maps?\n0=Off, 1=On", CVAR_FLAGS, true, 0.0, true, 1.0);
-    cvar_random_custom_on = CreateConVar("l4d2_random_custom_on", "1", "Random map including custom maps?\n0=Off, 1=On", CVAR_FLAGS, true, 0.0, true, 1.0);
-    cvar_random_repeat_num = CreateConVar("l4d2_custom_random_repeat_num", "0", "How many random maps changed, then allow repeating changed maps?\n0=Never until all map changed once", CVAR_FLAGS, true, 0.0);
+    cvar_random_on = CreateConVar("l4d2_maps_random_on", "1", "是否随机换图?\n0=否, 1=是", CVAR_FLAGS, true, 0.0, true, 1.0);
+    cvar_random_official_on = CreateConVar("14d2_random_official_on", "1", "是否包括官方地图的随机地图?\n0=否, 1=是", CVAR_FLAGS, true, 0.0, true, 1.0);
+    cvar_random_custom_on = CreateConVar("l4d2_random_custom_on", "1", "是否包括三方地图的随机地图?\n0=否, 1=是", CVAR_FLAGS, true, 0.0, true, 1.0);
+    cvar_random_repeat_num = CreateConVar("l4d2_custom_random_repeat_num", "0", "随机切换多少次地图后才允许切换重复的地图?\n0=从不，直到所有的地图都切换过", CVAR_FLAGS, true, 0.0);
 
 
     HookEvent("finale_win", Event_FinaleWin);

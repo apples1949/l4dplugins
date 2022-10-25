@@ -1,0 +1,51 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"Music::OnPZAlert"
+			{
+				"windows"
+				{
+					"signature"	"Music::OnPZAlert"			
+				}
+				"linux"
+				{
+					"signature"	"Music::OnPZAlert"
+				}
+			}
+		}
+
+		"Offsets"
+		{
+			"OnPZAlert_Offset"
+			{
+				"windows"		"26"
+				"linux"			"6"
+			}
+			"OnPZAlert_Byte"
+			{
+				"windows"		"232" // 0xE8
+				"linux"			"232" // 0xE8
+			}
+			"OnPZAlert_Count"
+			{
+				"windows"		"13"
+				"linux"			"13"
+			}
+		}
+
+		"Signatures"
+		{
+			"Music::OnPZAlert"
+			{
+				"library"		"server"
+				"windows"		"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x2A\x2A\x57\x8B\x2A\xE8"
+				"linux"			"@_ZN5Music9OnPZAlertEifPKcf"
+				/* 55 8B EC 81 EC ? ? ? ? ? ? ? ? ? 33 C5 89 45 FC 53 8B ? ? 57 8B ? E8 */
+				/* Search: "Music::On%sAlertFAR" */
+			}
+		}
+	}
+}
