@@ -497,7 +497,7 @@ public APLRes
 
 public void OnPluginStart()
 {
-
+	LoadTranslations("l4d2_skill_detect.phrases");
 
 	// hooks
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
@@ -538,23 +538,23 @@ public void OnPluginStart()
 	CreateConVar("sm_skill_detect_version", PLUGIN_VERSION, "Skill detect plugin version.", FCVAR_NONE | FCVAR_NOTIFY | FCVAR_REPLICATED | FCVAR_DONTRECORD);
 
 	// cvars: config
-	g_hCvarReport 		= CreateConVar("sm_skill_report_enable", "1", "是否在聊天显示全部的技能报告", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hCvarReportOld 	= CreateConVar("sm_skill_report_old", "0", "是否是聊天中显示部分技能报告", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hCvarRockName		= CreateConVar("sm_skill_report_rockname", "0", "是否在坦克石头报告中显示坦克名称", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hCvarReport 		= CreateConVar("sm_skill_report_enable", "0", "Whether to report in chat (see sm_skill_report_flags).", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hCvarReportOld 	= CreateConVar("sm_skill_report_old", "0", "Activate discontinued reports.", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hCvarRockName		= CreateConVar("sm_skill_report_rockname", "0", "Display name of the tank in rockskeet.", FCVAR_NONE, true, 0.0, true, 1.0);
 
-	g_hCvarAllowMelee        = CreateConVar("sm_skill_skeet_allowmelee",    "0", "是否检测近战击杀飞扑 Hunter(此功能已经由l4d2_stats替代在此CFG开启无效)", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hCvarAllowSniper = CreateConVar(      "sm_skill_skeet_allowsniper",   "0", "是否检测狙击爆头击杀飞扑 Hunter(此功能已经由l4d2_stats替代在此CFG开启无效)", FCVAR_NOTIFY, true, 0.0, true, 1.0 );
-	g_hCvarAllowGLSkeet = CreateConVar(     "sm_skill_skeet_allowgl",       "1", "是否检测榴弹击杀飞扑 Hunter 原插件废弃功能开启无效", FCVAR_NOTIFY, true, 0.0, true, 1.0 );
-	//g_hCvarDrawCrownThresh = CreateConVar(  "sm_skill_drawcrown_damage",  "500", "需要造成多少伤害才视为引秒 Witch. 原插件废弃功能开启无效", FCVAR_NOTIFY, true, 0.0, false );
-	g_hCvarSelfClearThresh = CreateConVar(  "sm_skill_selfclear_damage",  "200", "需要造成多少伤害才视为被拉自救 (Smoker 舌头自救)", FCVAR_NOTIFY, true, 0.0, false );
-	g_hCvarHunterDPThresh = CreateConVar(   "sm_skill_hunterdp_height",   "400", "需要多高才算是 Hunter 高扑.", FCVAR_NOTIFY, true, 0.0, false );
-	g_hCvarJockeyDPThresh = CreateConVar(   "sm_skill_jockeydp_height",   "300", "需要多高才算是 Jockey 空降.", FCVAR_NOTIFY, true, 0.0, false );
-	g_hCvarHideFakeDamage = CreateConVar(   "sm_skill_hidefakedamage",      "0", "是否隐藏溢出伤害", FCVAR_NOTIFY, true, 0.0, true, 1.0 );
-	g_hCvarDeathChargeHeight = CreateConVar("sm_skill_deathcharge_height","400", "需要多高才算是 Charger 冲锋秒杀.", FCVAR_NOTIFY, true, 0.0, false );
-	g_hCvarInstaTime = CreateConVar(        "sm_skill_instaclear_time",     "0.75", "在多少秒内救出被控队友才显示.", FCVAR_NOTIFY, true, 0.0, false );
-	g_hCvarBHopMinStreak = CreateConVar(    "sm_skill_bhopstreak",          "3", "连跳需要跳多少下才进行检测", FCVAR_NOTIFY, true, 0.0, false );
-	g_hCvarBHopMinInitSpeed = CreateConVar( "sm_skill_bhopinitspeed",     "150", "连跳第一下需要达到多少速度才视为有效连跳.", FCVAR_NOTIFY, true, 0.0, false );
-	g_hCvarBHopContSpeed = CreateConVar(    "sm_skill_bhopkeepspeed",     "220", "连跳最小速度，小于这个不会视为连跳.", FCVAR_NOTIFY, true, 0.0, false );
+	g_hCvarAllowMelee        = CreateConVar("sm_skill_skeet_allowmelee", "1", "Whether to count/forward melee skeets.", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hCvarAllowSniper       = CreateConVar("sm_skill_skeet_allowsniper", "1", "Whether to count/forward sniper/magnum headshots as skeets.", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hCvarAllowGLSkeet      = CreateConVar("sm_skill_skeet_allowgl", "1", "Whether to count/forward direct GL hits as skeets.", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hCvarReportOldThresh   = CreateConVar("sm_skill_drawcrown_damage", "500", "How much damage a survivor must at least do in the final shot for it to count as a drawcrown.", FCVAR_NONE, true, 0.0, false);
+	g_hCvarSelfClearThresh   = CreateConVar("sm_skill_selfclear_damage", "200", "How much damage a survivor must at least do to a smoker for him to count as self-clearing.", FCVAR_NONE, true, 0.0, false);
+	g_hCvarHunterDPThresh    = CreateConVar("sm_skill_hunterdp_height", "400", "Minimum height of hunter pounce for it to count as a DP.", FCVAR_NONE, true, 0.0, false);
+	g_hCvarJockeyDPThresh    = CreateConVar("sm_skill_jockeydp_height", "300", "How much height distance a jockey must make for his 'DP' to count as a reportable highpounce.", FCVAR_NONE, true, 0.0, false);
+	g_hCvarHideFakeDamage    = CreateConVar("sm_skill_hidefakedamage", "0", "If set, any damage done that exceeds the health of a victim is hidden in reports.", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hCvarDeathChargeHeight = CreateConVar("sm_skill_deathcharge_height", "400", "How much height distance a charger must take its victim for a deathcharge to be reported.", FCVAR_NONE, true, 0.0, false);
+	g_hCvarInstaTime         = CreateConVar("sm_skill_instaclear_time", "0.75", "A clear within this time (in seconds) counts as an insta-clear.", FCVAR_NONE, true, 0.0, false);
+	g_hCvarBHopMinStreak     = CreateConVar("sm_skill_bhopstreak", "3", "The lowest bunnyhop streak that will be reported.", FCVAR_NONE, true, 0.0, false);
+	g_hCvarBHopMinInitSpeed  = CreateConVar("sm_skill_bhopinitspeed", "150", "The minimal speed of the first jump of a bunnyhopstreak (0 to allow 'hops' from standstill).", FCVAR_NONE, true, 0.0, false);
+	g_hCvarBHopContSpeed     = CreateConVar("sm_skill_bhopkeepspeed", "300", "The minimal speed at which hops are considered succesful even if not speed increase is made.", FCVAR_NONE, true, 0.0, false);
 
 	// cvars: built in
 	g_hCvarPounceInterrupt = FindConVar("z_pounce_damage_interrupt");
@@ -1968,7 +1968,7 @@ public Action Event_WitchKilled(Handle event, const char[] name, bool dontBroadc
 	WritePackCell(pack, attacker);
 	WritePackCell(pack, witch);
 	WritePackCell(pack, (bOneShot) ? 1 : 0);
-	//CreateTimer(WITCH_CHECK_TIME, Timer_CheckWitchCrown, pack);
+	CreateTimer(WITCH_CHECK_TIME, Timer_CheckWitchCrown, pack);
 
 	return Plugin_Continue;
 }
@@ -2078,7 +2078,7 @@ public void OnTakeDamagePost_Witch(int victim, int attacker, int inflictor, floa
 		SetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, true);
 	}
 }
-/*
+
 public Action Timer_CheckWitchCrown(Handle timer, Handle pack)
 {
 	ResetPack(pack);
@@ -2087,10 +2087,10 @@ public Action Timer_CheckWitchCrown(Handle timer, Handle pack)
 	bool bOneShot = view_as<bool>(ReadPackCell(pack));
 	CloseHandle(pack);
 
-//CheckWitchCrown(witch, attacker, bOneShot);
+	CheckWitchCrown(witch, attacker, bOneShot);
 	return Plugin_Continue;
 }
-*/
+
 stock void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
 {
 	char witch_key[10];
@@ -2106,11 +2106,11 @@ stock void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
 		chipDamage   = 0,
 		iWitchHealth = GetConVarInt(g_hCvarWitchHealth);
 
-
-	//the attacker is the last one that did damage to witch
-	//if their damage is full damage on an unharrassed witch, it's a full crown
-	//if their damage is full or > drawcrown_threshhold, it's a drawcrown
-
+	/*
+	    the attacker is the last one that did damage to witch
+	        if their damage is full damage on an unharrassed witch, it's a full crown
+	        if their damage is full or > drawcrown_threshhold, it's a drawcrown
+	*/
 
 	// not a crown at all if anyone was hit, or if the killing damage wasn't a shotgun blast
 
@@ -2141,8 +2141,8 @@ stock void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
 	           iWitchHealth,
 	           GetConVarInt(g_hCvarReportOldThresh),
 	           bOneShot);
+
 	// full crown? unharrassed
-	
 	if (!witch_dmg_array[MAXPLAYERS + WTCH_STARTLED] && (bOneShot || witch_dmg_array[MAXPLAYERS + WTCH_CROWNSHOT] >= iWitchHealth))
 	{
 		// make sure that we don't count any type of chip
@@ -2177,6 +2177,7 @@ stock void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
 				chipDamage += witch_dmg_array[i];
 			}
 		}
+
 		// make sure that we don't count any type of chip
 		if (GetConVarBool(g_hCvarHideFakeDamage))
 		{
@@ -2203,6 +2204,7 @@ stock void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
 
 	// remove trie
 }
+
 // tank rock
 // Credit to 'Marttt'
 // Original plugin -> https://forums.alliedmods.net/showthread.php?p=2648989
@@ -2580,18 +2582,18 @@ public Action L4D_OnCThrowActivate ( ability )
 // boomer pop
 stock void HandlePop(int attacker, int victim, int shoveCount, float timeAlive)
 {
-    //report?
+	// report?
 	if (GetConVarBool(g_hCvarReport) && GetConVarBool(g_hCvarReportOld))
 	{
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim))
 		{
-            //PrintToChatAll( "\x04%N\x01 popped \x05%N\x01.", attacker, victim );
+			CPrintToChatAll("%t %t", "Tag+", "Popped", attacker, victim);
 		}
 		else if (IS_VALID_INGAME(attacker))
 		{
-            //PrintToChatAll( "\x04%N\x01 popped a boomer.", attacker );
+			CPrintToChatAll("%t %t", "Tag+", "PoppedBot", attacker);
 		}
-    }
+	}
 
 	Call_StartForward(g_hForwardBoomerPop);
 	Call_PushCell(attacker);
@@ -2609,11 +2611,11 @@ stock void HandleLevel(int attacker, int victim)
 	{
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim))
 		{
-            CPrintToChatAll( "{green}★★★ {olive}%N {default}使用{blue}近战砍死了{default}正在冲锋的{olive}%N", attacker, victim );
+			CPrintToChatAll("%t %t", "Tag+++", "Leveled", attacker, victim);
 		}
 		else if (IS_VALID_INGAME(attacker))
 		{
-            CPrintToChatAll( "{green}★★★ {olive}%N {blue}{default}使用{blue}近战砍死了{default}正在冲锋的{olive}Charger", attacker );
+			CPrintToChatAll("%t %t", "Tag+++", "LeveledBot", attacker);
 		}
 	}
 
@@ -2631,11 +2633,11 @@ stock void HandleLevelHurt(int attacker, int victim, int damage)
 	{
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim))
 		{
-            CPrintToChatAll( "{green}★ {olive}%N {default}使用{blue}近战砍死了{default}冲锋的 {olive}%N {default}(伤害{blue}%i {default})", attacker, victim, damage );
+			CPrintToChatAll("%t %t", "Tag+", "LeveledHurt", attacker, victim, damage);
 		}
 		else if (IS_VALID_INGAME(attacker))
 		{
-            CPrintToChatAll( "{green}★ {olive}%N {default}使用{blue}近战砍死了{default}冲锋的{olive}Charger{default}(伤害{blue}%i {default})", attacker, damage );
+			CPrintToChatAll("%t %t", "Tag+", "LeveledHurtBot", attacker, damage);
 		}
 	}
 
@@ -2650,17 +2652,16 @@ stock void HandleLevelHurt(int attacker, int victim, int damage)
 // deadstops
 stock void HandleDeadstop(int attacker, int victim)
 {
-
 	// report?
 	if (GetConVarBool(g_hCvarReport) && GetConVarBool(g_hCvarReportOld))
 	{
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim))
 		{
-            //CPrintToChatAll( "{green}★ {olive}%N {blue}推停了{olive}飞扑的{default}%N", attacker, victim );
+			CPrintToChatAll("%t %t", "Tag+", "Deadstopped", attacker, victim);
 		}
 		else if (IS_VALID_INGAME(attacker))
 		{
-            //CPrintToChatAll( "{green}★ {olive}%N {blue}推停了{olive}飞扑的{default}Hunter", attacker );
+			CPrintToChatAll("%t %t", "Tag+", "DeadstoppedBot", attacker);
 		}
 	}
 
@@ -2669,29 +2670,27 @@ stock void HandleDeadstop(int attacker, int victim)
 	Call_PushCell(victim);
 	Call_Finish();
 }
-
 // shove
 stock void HandleShove(int attacker, int victim, int zombieClass)
 {
-     //report?
+	// report?
 	if (GetConVarBool(g_hCvarReport) && GetConVarBool(g_hCvarReportOld))
 	{
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim))
 		{
-            //PrintToChatAll( "\x04%N\x01 shoved \x05%N\x01.", attacker, victim );
+			CPrintToChatAll("%t %t", "Tag+", "Shoved", attacker, victim);
 		}
 		else if (IS_VALID_INGAME(attacker))
 		{
-            //PrintToChatAll( "\x04%N\x01 shoved an SI.", attacker );
+			CPrintToChatAll("%t %t", "Tag+", "ShovedBot", attacker);
 		}
-    }
+	}
 
 	Call_StartForward(g_hForwardSIShove);
 	Call_PushCell(attacker);
 	Call_PushCell(victim);
 	Call_PushCell(zombieClass);
 	Call_Finish();
-	
 }
 
 // real skeet
@@ -2705,22 +2704,21 @@ stock void HandleSkeet(int attacker, int victim, bool bMelee = false, bool bSnip
 			// team skeet sets to -2
 			if (IS_VALID_INGAME(victim) && !IsFakeClient(victim))
 			{
-				//CPrintToChatAll("%t %t", "Tag+", "TeamSkeeted", victim);
+				CPrintToChatAll("%t %t", "Tag+", "TeamSkeeted", victim);
 			}
 			else {
-				//CPrintToChatAll("%t %t", "Tag+", "TeamSkeetedBot");
+				CPrintToChatAll("%t %t", "Tag+", "TeamSkeetedBot");
 			}
 		}
 		else if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim))
 		{
-			//CPrintToChatAll("%t %t", "Tag++", "Skeeted", attacker, (bMelee) ? "melee-" : ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "")), victim);
+			CPrintToChatAll("%t %t", "Tag++", "Skeeted", attacker, (bMelee) ? "melee-" : ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "")), victim);
 		}
 		else if (IS_VALID_INGAME(attacker))
 		{
-			//CPrintToChatAll("%t %t", "Tag+", "SkeetedBot", attacker, (bMelee) ? "melee-" : ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "")));
+			CPrintToChatAll("%t %t", "Tag+", "SkeetedBot", attacker, (bMelee) ? "melee-" : ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "")));
 		}
-    }
-
+	}
 
 	// call forward
 	if (bSniper)
@@ -2752,6 +2750,7 @@ stock void HandleSkeet(int attacker, int victim, bool bMelee = false, bool bSnip
 		Call_Finish();
 	}
 }
+
 // hurt skeet / non-skeet
 //  NOTE: bSniper not set yet, do this
 stock void HandleNonSkeet(int attacker, int victim, int damage, bool bOverKill = false, bool bMelee = false, bool bSniper = false)
@@ -2763,13 +2762,13 @@ stock void HandleNonSkeet(int attacker, int victim, int damage, bool bOverKill =
 		Format(buffer, sizeof(buffer), "%t", "Unchipped");
 		if (IS_VALID_INGAME(victim))
 		{
-			//CPrintToChatAll("%t %t", "Tag+", "HurtSkeet", victim, damage, (bOverKill) ? buffer : "");
+			CPrintToChatAll("%t %t", "Tag+", "HurtSkeet", victim, damage, (bOverKill) ? buffer : "");
 		}
 		else
 		{
-			//CPrintToChatAll("%t %t", "Tag+", "HurtSkeetBot", damage, (bOverKill) ? buffer : "");
+			CPrintToChatAll("%t %t", "Tag+", "HurtSkeetBot", damage, (bOverKill) ? buffer : "");
 		}
-    }
+	}
 
 	// call forward
 	if (bSniper)
@@ -2800,6 +2799,7 @@ stock void HandleNonSkeet(int attacker, int victim, int damage, bool bOverKill =
 		Call_Finish();
 	}
 }
+
 // crown
 void HandleCrown(int attacker, int damage)
 {
@@ -2808,10 +2808,10 @@ void HandleCrown(int attacker, int damage)
 	{
 		if (IS_VALID_INGAME(attacker))
 		{
-            //CPrintToChatAll( "{green}★★★ {olive}%N{blue}砍断了{olive}%N{default}的{blue}舌头", attacker, victim );
+			CPrintToChatAll("%t %t", "Tag++", "CrownedWitch", attacker, damage);
 		}
 		else {
-			CPrintToChatAll( "{green}★★ {olive}%N{blue}砍断了{default}Smoker的{blue}舌头", attacker );
+			CPrintToChatAll("%t", "CrownedWitch2");
 		}
 	}
 
@@ -2825,18 +2825,17 @@ void HandleCrown(int attacker, int damage)
 // drawcrown
 void HandleDrawCrown(int attacker, int damage, int chipdamage)
 {
-    
-    //report?
+	// report?
 	if (GetConVarBool(g_hCvarReport) && GetConVarBool(g_hCvarReportOld))
 	{
 		if (IS_VALID_INGAME(attacker))
 		{
-			//CPrintToChatAll("%t %t", "Tag++", "DrawCrowned", attacker, damage, chipdamage);
+			CPrintToChatAll("%t %t", "Tag++", "DrawCrowned", attacker, damage, chipdamage);
 		}
 		else {
-			//CPrintToChatAll("%t %t", "DrawCrowned2", damage, chipdamage);
+			CPrintToChatAll("%t %t", "DrawCrowned2", damage, chipdamage);
 		}
-    }
+	}
 
 	// call forward
 	Call_StartForward(g_hForwardDrawCrown);
@@ -2849,19 +2848,18 @@ void HandleDrawCrown(int attacker, int damage, int chipdamage)
 // smoker clears
 void HandleTongueCut(int attacker, int victim)
 {
-
 	// report?
 	if (GetConVarBool(g_hCvarReport))
 	{
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim))
 		{
-			//CPrintToChatAll("%t %t", "Tag+++", "CutTongue", attacker, victim);
+			CPrintToChatAll("%t %t", "Tag+++", "CutTongue", attacker, victim);
 		}
 		else if (IS_VALID_INGAME(attacker))
 		{
-			//CPrintToChatAll("%t %t", "Tag+++", "CutTongueBot", attacker);
+			CPrintToChatAll("%t %t", "Tag+++", "CutTongueBot", attacker);
 		}
-    }
+	}
 
 	// call forward
 	Call_StartForward(g_hForwardTongueCut);
@@ -2875,15 +2873,19 @@ void HandleSmokerSelfClear(int attacker, int victim, bool withShove = false)
 	// report?
 	if (GetConVarBool(g_hCvarReport))
 	{
+		char Buffer[64];
+		Format(Buffer, sizeof(Buffer), "%t", "Shoving");
+
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim))
 		{
-            CPrintToChatAll( "{green}★★ {olive}%N{default}被{olive}%N{default}的舌头拉后自救{blue}%s", attacker, victim, (withShove) ? "推停" : "" );
+			CPrintToChatAll("%t %t", "Tag++", "SelfClearedTongue", attacker, victim, (withShove) ? Buffer : "");
 		}
 		else if (IS_VALID_INGAME(attacker))
 		{
-            CPrintToChatAll( "{green}★★ {olive}%N{default}被{olive}Smoker{default}的舌头拉后自救 {blue}%s", attacker, (withShove) ? "推停" : "" );
+			CPrintToChatAll("%t %t", "Tag++", "SelfClearedTongueBot", attacker, (withShove) ? Buffer : "");
 		}
 	}
+
 	// call forward
 	Call_StartForward(g_hForwardSmokerSelfClear);
 	Call_PushCell(attacker);
@@ -2908,11 +2910,11 @@ void HandleRockSkeeted(int attacker, int victim)
 		// report? test-report
 		if (GetConVarBool(g_hCvarRockName) && IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim))
 		{
-			CPrintToChatAll( "{green}★{olive}%N{blue}打碎了坦克扔出的石头", attacker );
+			CPrintToChatAll("%t %t", "Tag+", "SkeetedRock", attacker, victim);
 		}
 		else
 		{
-			CPrintToChatAll( "{green}★{olive}%N{blue}打碎了坦克扔出的石头", attacker );
+			CPrintToChatAll("%t %t", "Tag+", "SkeetedRockBot", attacker);
 		}
 	}
 
@@ -2932,11 +2934,11 @@ stock void HandleHunterDP(int attacker, int victim, int actualDamage, float calc
 	{
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(attacker))
 		{
-			//CPrintToChatAll("%t %t", "Tag++", "HunterHP", attacker, victim, RoundFloat(calculatedDamage), RoundFloat(height));
+			CPrintToChatAll("%t %t", "Tag++", "HunterHP", attacker, victim, RoundFloat(calculatedDamage), RoundFloat(height));
 		}
 		else if (IS_VALID_INGAME(victim))
 		{
-			//CPrintToChatAll("%t %t", "Tag++", "HunterHPBot", victim, RoundFloat(calculatedDamage), RoundFloat(height));
+			CPrintToChatAll("%t %t", "Tag++", "HunterHPBot", victim, RoundFloat(calculatedDamage), RoundFloat(height));
 		}
 	}
 
@@ -2959,11 +2961,11 @@ stock void HandleJockeyDP(int attacker, int victim, float height)
 	{
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(attacker))
 		{
-			//CPrintToChatAll("%t %t", "Tag+++", "JockeyHP", attacker, victim, RoundFloat(height));
+			CPrintToChatAll("%t %t", "Tag+++", "JockeyHP", attacker, victim, RoundFloat(height));
 		}
 		else if (IS_VALID_INGAME(victim))
 		{
-            CPrintToChatAll( "{green}★★★ {olive}%N{default}被高度为{red}%i{default}的jockey控到了", victim, RoundFloat(height) );
+			CPrintToChatAll("%t %t", "Tag+++", "JockeyHPBot", victim, RoundFloat(height));
 		}
 	}
 
@@ -2986,20 +2988,11 @@ stock void HandleDeathCharge(int attacker, int victim, float height, float dista
 
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(attacker))
 		{
-            /*CPrintToChatAll( "{green}★★★★ {olive}%N {red}冲锋秒杀了 {olive}%N{default} %s({red}高度{default}: {red}%i{default})",
-                    attacker,
-                    victim,
-                    (bCarried) ? "" : "撞飞 ",
-                    RoundFloat(height)
-                );
-		*/
+			CPrintToChatAll("%t %t", "Tag++++", "DeathCharged", attacker, victim, (bCarried) ? "" : Buffer, RoundFloat(height));
 		}
 		else if (IS_VALID_INGAME(victim))
 		{
-            CPrintToChatAll( "{green}★★★★ {olive}%N{default}被{olive}charger{default}的{red}冲锋秒杀.({red}高度{default}: {red}%i{default})",
-                    victim,
-                    RoundFloat(height) 
-                );
+			CPrintToChatAll("%t %t", "Tag++++", "DeathChargedBot", victim, (bCarried) ? "" : Buffer, RoundFloat(height));
 		}
 	}
 
@@ -3042,22 +3035,22 @@ stock void HandleClear(int attacker, int victim, int pinVictim, int zombieClass,
 			{
 				if (IS_VALID_INGAME(pinVictim))
 				{
-					CPrintToChatAll( "{green}★ {olive}%N{default}在{blue}%.2f{default}秒内从{olive}特感%s({green}%N{default})手里救出了被控的{olive}%N",attacker, fClearTime, g_csSIClassName[zombieClass],victim,pinVictim);
-				} 
+					CPrintToChatAll("%t %t", "Tag+", "SIClear", attacker, pinVictim, victim, g_csSIClassName[zombieClass], fClearTime);
+				}
 				else
 				{
-				CPrintToChatAll( "{green}★ {olive}%N{default}在{blue}%.2f {default}秒内从{olive}特感%s({green}%N{default})手里救出了被控的{olive}队友",attacker, fClearTime,g_csSIClassName[zombieClass],victim);
+					CPrintToChatAll("%t %t", "Tag+", "SIClearTeammate", attacker, victim, g_csSIClassName[zombieClass], fClearTime);
 				}
 			}
 			else if (IS_VALID_INGAME(attacker))
 			{
 				if (IS_VALID_INGAME(pinVictim))
 				{
-					CPrintToChatAll( "{green}★ {olive}%N{default}在{blue}%.2f {default}秒内从{olive}特感{blue}%s{default}手里救出了被控的{olive}%N",attacker, fClearTime,g_csSIClassName[zombieClass],pinVictim);
-				} 
-				else 
+					CPrintToChatAll("%t %t", "Tag+", "SIClearBot", attacker, pinVictim, g_csSIClassName[zombieClass], fClearTime);
+				}
+				else
 				{
-				CPrintToChatAll( "{green}★ {olive}%N{default}在{blue}%.2f {default}秒内从{olive}特感{blue}%s{default}手里救出了被控的{olive}队友",attacker, fClearTime,victim,g_csSIClassName[zombieClass]);
+					CPrintToChatAll("%t %t", "Tag+", "SIClearTeammateBot", attacker, g_csSIClassName[zombieClass], fClearTime);
 				}
 			}
 		}
@@ -3088,11 +3081,7 @@ stock void HandleBHopStreak(int survivor, int streak, float maxVelocity)
 {
 	if (GetConVarBool(g_hCvarReport) && IS_VALID_INGAME(survivor) && !IsFakeClient(survivor) && streak >= GetConVarInt(g_hCvarBHopMinStreak))
 	{
-        CPrintToChat(survivor, "{green}★ {olive}你{default}连跳了{blue}%i次{default} %s({blue}最高速度: {default}%.1f)",
-                streak,
-                ( streak > 1 ) ? " " : "",
-                maxVelocity
-            );
+		CPrintToChat(survivor, "%t %t", "Tag+", "BunnyHop", streak, (streak > 1) ? "s" : "", maxVelocity);
 	}
 
 	Call_StartForward(g_hForwardBHopStreak);
@@ -3105,12 +3094,11 @@ stock void HandleBHopStreak(int survivor, int streak, float maxVelocity)
 stock void HandleCarAlarmTriggered(int survivor, int infected, int reason)
 {
 	// report?
-	
 	if (GetConVarBool(g_hCvarReport) && GetConVarBool(g_hCvarReportOld) && IS_VALID_INGAME(survivor) && !IsFakeClient(survivor))
 	{
 		if (reason == CALARM_HIT)
 		{
-			//CPrintToChatAll("%t %t", "Tag+", "CalarmHit", survivor);
+			CPrintToChatAll("%t %t", "Tag+", "CalarmHit", survivor);
 		}
 		else if (reason == CALARM_TOUCHED)
 		{
@@ -3119,52 +3107,52 @@ stock void HandleCarAlarmTriggered(int survivor, int infected, int reason)
 			{
 				if (!IsFakeClient(infected))
 				{
-					PrintToChatAll( "因特感\x04%N\x01控到生还者\x05%N\x01导致触发警报车警报", infected, survivor );
+					CPrintToChatAll("%t %t", "Tag+", "CalarmTouched", infected, survivor);
 				}
 				else {
 					switch (GetEntProp(infected, Prop_Send, "m_zombieClass"))
 					{
 						case ZC_SMOKER:
 						{
-							PrintToChatAll( "\x05%N\x01因为被\x01Smoker拉到警报车上而触发警报", survivor );
+							CPrintToChatAll("%t %t", "Tag+", "CalarmTouchedHunter", survivor);
 						}
 						case ZC_JOCKEY:
 						{
-							CPrintToChatAll("\x05%N\x01因为被\x01Jockey碰到警报车而触发警报", survivor);
+							CPrintToChatAll("%t %t", "Tag+", "CalarmTouchedJockey", survivor);
 						}
 						case ZC_CHARGER:
 						{
-							CPrintToChatAll("\x05%N\x01因为被\x01Charger撞到警报车而触发警报", survivor);
+							CPrintToChatAll("%t %t", "Tag+", survivor);
 						}
 						default:
 						{
-							CPrintToChatAll("\x05%N\x01因为被\x01AI特感控到而触发警报车警报", survivor);
+							CPrintToChatAll("%t %t", "Tag+", "CalarmTouchedInfected", survivor);
 						}
 					}
 				}
 			}
 			else
 			{
-				CPrintToChatAll("\x05%N\x01因碰到了警报车而触发警报", survivor);
+				CPrintToChatAll("%t %t", "Tag+", "CalarmTouchedBot", survivor);
 			}
 		}
 		else if (reason == CALARM_EXPLOSION)
 		{
-            PrintToChatAll( "\x05%N\x01因在警报车附近引发了爆炸而触发警报", survivor );
+			CPrintToChatAll("%t %t", "Tag+", "CalarmExplosion", survivor);
 		}
 		else if (reason == CALARM_BOOMER)
 		{
 			if (IsValidInfected(infected) && !IsFakeClient(infected))
 			{
-				//CPrintToChatAll("%t %t", "Tag+", "CalarmBoomer", survivor, infected);
+				CPrintToChatAll("%t %t", "Tag+", "CalarmBoomer", survivor, infected);
 			}
 			else
 			{
-                PrintToChatAll( "\x05%N\x01因在警报车附近打爆了Boomer而触发了警报车警报", survivor );
+				CPrintToChatAll("%t %t", "Tag+", "CalarmBoomerBot", survivor);
 			}
 		}
 		else {
-            PrintToChatAll( "\x05%N\x01触发了警报车警报", survivor );
+			CPrintToChatAll("%t %t", "Tag+", "Calarm", survivor);
 		}
 	}
 
