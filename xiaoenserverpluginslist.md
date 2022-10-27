@@ -69,7 +69,7 @@
 [l4d2_item_hint](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_item_hint) 标记插件 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush)  
 [l4d_automatic_weapons](https://github.com/AldoDiaz01/Left4Dead2_Sourcemod_Plugins/blob/master/left4dead2/addons/sourcemod/scripting/l4d_automatic_weapons.sp) 半自动武器全自动射击 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_automatic_weapons.sp)  
 [l4d_bunnyhop](https://forums.alliedmods.net/showthread.php?t=298555) 连跳插件 [自翻cvar介绍](https://github.com/apples1949/l4dplugins/blob/main/l4d_bunnyhop.sp)  
-[l4d2_skill_detect](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_skill_detect.sp) / [l4d2_stats](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_stats.sp) 技能检测（正在找适合战役的）  
+[l4d2_skill_detect](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_skill_detect.sp) / [l4d2_stats](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_stats.sp) 技能检测 自改适合战役 只支持中文 若要用于对抗请重新检查:[l4d2_skill_detect](https://github.com/apples1949/l4dplugins/blob/main/l4d2_skill_detect.sp)/[l4d2_stats](https://github.com/apples1949/l4dplugins/blob/main/l4d2_stats.sp)    
 witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples1949/l4dplugins/blob/main/witch_announce.smx) zm不支持多人   
 [firebulletsfix](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/firebulletsfix) 修复移动射击时子弹位移的问题   
 [bequiet](https://github.com/fbef0102/L4D1_2-Plugins/blob/master/bequiet/scripting/bequiet.sp) 过滤部分聊天输出   
