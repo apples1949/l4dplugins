@@ -3684,7 +3684,7 @@ public Action Timer_Spawn_InfectedBot(Handle timer, int index)
 	int anyclient = GetAheadSurvivor();
 	if(anyclient == 0)
 	{
-		PrintToServer("Couldn't find a valid alive survivor to spawn S.I. at this moment.",ZOMBIESPAWN_Attempts);
+		//PrintToServer("Couldn't find a valid alive survivor to spawn S.I. at this moment.",ZOMBIESPAWN_Attempts);
 		CreateTimer(1.0, CheckIfBotsNeededLater, g_bInitialSpawn ? 2: g_bIsCoordination? 1: 0, TIMER_FLAG_NO_MAPCHANGE);
 
 		if(InfectedBotQueue > 0) InfectedBotQueue--;
