@@ -456,7 +456,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 				                                            attacker, victim, damage, shots, plural, assister_string);
 				    }
 				}*/
-				CPrintToChatAll("{green}★ {olive}%N{blue} %d{default}枪空爆了{olive}%N{default}.伤害：{blue}%d{default}. 助攻: {olive}%s ",attacker, shots, victim, damage, assister_string);
+				CPrintToChatAll("{green}★ {olive}%N{blue} %d {default}枪空爆了{olive}%N{default}  伤害：{blue}%d{default}  助攻: {olive}%s ",attacker, shots, victim, damage, assister_string);
 			}
 			else {
 				/*CPrintToChat(victim, "{green}★ {default}You were skeeted by {olive}%N {default}in {blue}%d shot%c", attacker, shots, plural);
@@ -466,11 +466,11 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 				for (int b = 1; b <= MaxClients; b++) {
 				    //Print to Everyone Else!
 				    if (IsClientInGame(b) && (victim != b) && attacker != b) {
-						CPrintToChat(b, "{green}★ {olive}%N{blue} %d{default}枪空爆了{olive}%N", attacker, shots, victim);
+						CPrintToChat(b, "{green}★ {olive}%N{blue} %d {default}枪空爆了{olive}%N", attacker, shots, victim);
 				    }
 				}*/
 
-				CPrintToChatAll("{green}★ {olive}%N{blue} %d{default}枪{default}空爆了{olive}%N", attacker, shots, victim);
+				CPrintToChatAll("{green}★ {olive}%N{blue} %d {default}枪{default}空爆了{olive}%N", attacker, shots, victim);
 			}
 		}
 	}
@@ -521,15 +521,15 @@ public Action Timer_BoomerKilledCheck(Handle hTimer)
 		{
 			if (BoomerKillTime <= 0.5)
 			{
-				CPrintToChatAll("{green}★★★ {olive}%N 在%0.1fs秒内{default}打爆了 {olive}%s{default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
+				CPrintToChatAll("{green}★★★ {olive}%N 在%0.1fs秒内{default}打爆了 {olive}%s {default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
 			}
 			else if (BoomerKillTime > 0.5 && BoomerKillTime <= 1.4)
 			{
-				CPrintToChatAll("{green}★★ {olive}%N 在%0.1fs秒内{default}打爆了 {olive}%s{default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
+				CPrintToChatAll("{green}★★ {olive}%N 在%0.1fs秒内{default}打爆了 {olive}%s {default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
 			}
 			else
 			{
-				CPrintToChatAll("{green}★ {olive}%N 在%0.1fs秒内{default}打爆了 {olive}%s{default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
+				CPrintToChatAll("{green}★ {olive}%N 在%0.1fs秒内{default}打爆了 {olive}%s {default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
 			}
 		}
 	}
