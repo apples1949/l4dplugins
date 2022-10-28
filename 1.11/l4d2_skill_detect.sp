@@ -2981,9 +2981,6 @@ stock void HandleDeathCharge(int attacker, int victim, float height, float dista
 	// report?
 	if (GetConVarBool(g_hCvarReport) && height >= GetConVarFloat(g_hCvarDeathChargeHeight))
 	{
-		char Buffer[64];
-		Format(Buffer, sizeof(Buffer), "%t", "Bowling");
-
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(attacker))
 		{
             /*CPrintToChatAll( "{green}★★★★ {olive}%N {red}冲锋秒杀了 {olive}%N{default} %s({red}高度{default}: {red}%i{default})",
@@ -3042,7 +3039,7 @@ stock void HandleClear(int attacker, int victim, int pinVictim, int zombieClass,
 			{
 				if (IS_VALID_INGAME(pinVictim))
 				{
-					CPrintToChatAll( "{green}★ {olive}%N{default}在{blue}%.2f{default}秒内从{olive}特感%s({green}%N{default})手里救出了被控的{olive}%N",attacker, fClearTime, g_csSIClassName[zombieClass],victim,pinVictim);
+					CPrintToChatAll( "{green}★ {olive}%N{default}在{blue}%.2f{default}秒内从{olive}%s({green}%N{default})手里救出了被控的{olive}%N",attacker, fClearTime, g_csSIClassName[zombieClass],victim,pinVictim);
 				} 
 				else
 				{
@@ -3053,11 +3050,11 @@ stock void HandleClear(int attacker, int victim, int pinVictim, int zombieClass,
 			{
 				if (IS_VALID_INGAME(pinVictim))
 				{
-					CPrintToChatAll( "{green}★ {olive}%N{default}在{blue}%.2f {default}秒内从{olive}特感{blue}%s{default}手里救出了被控的{olive}%N",attacker, fClearTime,g_csSIClassName[zombieClass],pinVictim);
+					CPrintToChatAll( "{green}★ {olive}%N{default}在{blue}%.2f {default}秒内从{blue}%s{default}手里救出了被控的{olive}%N",attacker, fClearTime,g_csSIClassName[zombieClass],pinVictim);
 				} 
 				else 
 				{
-				CPrintToChatAll( "{green}★ {olive}%N{default}在{blue}%.2f {default}秒内从{olive}特感{blue}%s{default}手里救出了被控的{olive}队友",attacker, fClearTime,victim,g_csSIClassName[zombieClass]);
+				CPrintToChatAll( "{green}★ {olive}%N{default}在{blue}%.2f {default}秒内从{blue}%s{default}手里救出了被控的{olive}队友",attacker, fClearTime,victim,g_csSIClassName[zombieClass]);
 				}
 			}
 		}
@@ -3105,7 +3102,7 @@ stock void HandleBHopStreak(int survivor, int streak, float maxVelocity)
 stock void HandleCarAlarmTriggered(int survivor, int infected, int reason)
 {
 	// report?
-	
+	//无效代码
 	if (GetConVarBool(g_hCvarReport) && GetConVarBool(g_hCvarReportOld) && IS_VALID_INGAME(survivor) && !IsFakeClient(survivor))
 	{
 		if (reason == CALARM_HIT)
@@ -3119,38 +3116,38 @@ stock void HandleCarAlarmTriggered(int survivor, int infected, int reason)
 			{
 				if (!IsFakeClient(infected))
 				{
-					PrintToChatAll( "因特感\x04%N\x01控到生还者\x05%N\x01导致触发警报车警报", infected, survivor );
+					//PrintToChatAll( "因特感\x04%N\x01控到生还者\x05%N\x01导致触发警报车警报", infected, survivor );
 				}
 				else {
 					switch (GetEntProp(infected, Prop_Send, "m_zombieClass"))
 					{
 						case ZC_SMOKER:
 						{
-							PrintToChatAll( "\x05%N\x01因为被\x01Smoker拉到警报车上而触发警报", survivor );
+							//PrintToChatAll( "\x05%N\x01因为被\x01Smoker拉到警报车上而触发警报", survivor );
 						}
 						case ZC_JOCKEY:
 						{
-							CPrintToChatAll("\x05%N\x01因为被\x01Jockey碰到警报车而触发警报", survivor);
+							//CPrintToChatAll("\x05%N\x01因为被\x01Jockey碰到警报车而触发警报", survivor);
 						}
 						case ZC_CHARGER:
 						{
-							CPrintToChatAll("\x05%N\x01因为被\x01Charger撞到警报车而触发警报", survivor);
+							//CPrintToChatAll("\x05%N\x01因为被\x01Charger撞到警报车而触发警报", survivor);
 						}
 						default:
 						{
-							CPrintToChatAll("\x05%N\x01因为被\x01AI特感控到而触发警报车警报", survivor);
+							//CPrintToChatAll("\x05%N\x01因为被\x01AI特感控到而触发警报车警报", survivor);
 						}
 					}
 				}
 			}
 			else
 			{
-				CPrintToChatAll("\x05%N\x01因碰到了警报车而触发警报", survivor);
+				//CPrintToChatAll("\x05%N\x01因碰到了警报车而触发警报", survivor);
 			}
 		}
 		else if (reason == CALARM_EXPLOSION)
 		{
-            PrintToChatAll( "\x05%N\x01因在警报车附近引发了爆炸而触发警报", survivor );
+            //PrintToChatAll( "\x05%N\x01因在警报车附近引发了爆炸而触发警报", survivor );
 		}
 		else if (reason == CALARM_BOOMER)
 		{
@@ -3160,11 +3157,11 @@ stock void HandleCarAlarmTriggered(int survivor, int infected, int reason)
 			}
 			else
 			{
-                PrintToChatAll( "\x05%N\x01因在警报车附近打爆了Boomer而触发了警报车警报", survivor );
+                //PrintToChatAll( "\x05%N\x01因在警报车附近打爆了Boomer而触发了警报车警报", survivor );
 			}
 		}
 		else {
-            PrintToChatAll( "\x05%N\x01触发了警报车警报", survivor );
+            //PrintToChatAll( "\x05%N\x01触发了警报车警报", survivor );
 		}
 	}
 

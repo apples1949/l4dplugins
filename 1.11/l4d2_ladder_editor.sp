@@ -1,46 +1,56 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
+#include <colors>
 
 #define MAX_STR_LEN             100
 #define DEFAULT_STEP_SIZE       1.0
 #define TEAM_INFECTED           3
 #define HUD_DRAW_INTERVAL       0.5
 
-static selectedLadder[MAXPLAYERS + 1];
-static bEditMode[MAXPLAYERS + 1];
-static Float:stepSize[MAXPLAYERS + 1];
-new Handle:hLadders;
-new bool:in_attack[MAXPLAYERS + 1];
-new bool:in_attack2[MAXPLAYERS + 1];
-new bool:in_score[MAXPLAYERS + 1];
-new bool:in_speed[MAXPLAYERS + 1];
-new bool:bHudActive[MAXPLAYERS + 1];
-new bool:bHudHintShown[MAXPLAYERS + 1];
+static int selectedLadder[MAXPLAYERS + 1];
+static bool bEditMode[MAXPLAYERS + 1];
+static float stepSize[MAXPLAYERS + 1];
+StringMap hLadders;
+bool in_attack[MAXPLAYERS + 1];
+bool in_attack2[MAXPLAYERS + 1];
+bool in_score[MAXPLAYERS + 1];
+bool in_speed[MAXPLAYERS + 1];
+bool bHudActive[MAXPLAYERS + 1];
+bool bHudHintShown[MAXPLAYERS + 1];
 
-public Plugin:myinfo = {
+public Plugin myinfo = {
     name = "L4D2 Ladder Editor",
     author = "devilesk",
-    version = "0.5.0",
+    version = "0.5.0.1",
     description = "Clone and move special infected ladders.",
     url = "https://github.com/devilesk/rl4d2l-plugins"
 };
 
-public OnPluginStart() {
-    RegConsoleCmd("sm_edit", Command_Edit);
-    RegConsoleCmd("sm_step", Command_Step);
-    RegConsoleCmd("sm_select", Command_Select);
-    RegConsoleCmd("sm_clone", Command_Clone);
-    RegConsoleCmd("sm_move", Command_Move);
-    RegConsoleCmd("sm_nudge", Command_Nudge);
-    RegConsoleCmd("sm_rotate", Command_Rotate);
-    RegConsoleCmd("sm_kill", Command_Kill);
-    RegConsoleCmd("sm_info", Command_Info);
-    RegConsoleCmd("sm_togglehud", Command_ToggleHud);
+public void OnPluginStart() {
+    /*
+        - While in edit mode, ladders you are aiming at can be selected using MOUSE1 and moved using MOUSE2 or WASD, USE, and RELOAD.
+        - TAB to toggle edit mode. SHIFT to rotate ladders in 90 degree increments.
+    */
+
+    RegConsoleCmd("sm_edit", Command_Edit, "开启或关闭编辑模式");
+    RegConsoleCmd("sm_step", Command_Step, "sm_step <size> - 在编辑模式下移动梯子实体时要移动的单位数量");
+    RegConsoleCmd("sm_select", Command_Select, "选择你所瞄准的梯子实体");
+    RegConsoleCmd("sm_clone", Command_Clone, "克隆所选梯子实体实体");
+    RegConsoleCmd("sm_move", Command_Move, "sm_move <x> <y> <z> - 将选定的梯子实体移动到地图上的给定坐标");
+    RegConsoleCmd("sm_nudge", Command_Nudge, "sm_nudge <x> <y> <z> - 将选定的梯子实体相对于其当前位置移动");
+    RegConsoleCmd("sm_rotate", Command_Rotate, "sm_rotate <x> <y> <z> - 旋转选定的梯子实体");
+    RegConsoleCmd("sm_kill", Command_Kill, "删除选定的梯子实体");
+    RegConsoleCmd("sm_info", Command_Info, "将梯子实体信息输出在控制台以便手动复制到stripper保存");
+    RegConsoleCmd("sm_togglehud", Command_ToggleHud, "切换选定的梯子信息HUD的开启或关闭");
+    RegConsoleCmd("sm_team", Command_Team, "sm_team <team> - 改变团队所能使用的阶梯");
+    //RegConsoleCmd("sm_create", Command_Create, "创建一个梯子(原插件禁用，请谨慎使用)"); // TODO
+    
     HookEvent("player_team", PlayerTeam_Event);
-    hLadders = CreateTrie();
-    for (new i = 1; i <= MaxClients; i++) {
+    hLadders = new StringMap();
+    for (int i = 1; i <= MaxClients; i++) {
         selectedLadder[i] = -1;
         bEditMode[i] = false;
         in_attack[i] = false;
@@ -53,8 +63,67 @@ public OnPluginStart() {
     CreateTimer(HUD_DRAW_INTERVAL, HudDrawTimer, _, TIMER_REPEAT);
 }
 
-public OnMapStart() {
-    for (new i = 1; i <= MaxClients; i++) {
+public Action Command_Create(int client, int args)
+{
+    float pos[3];
+    GetClientAbsOrigin(client, pos);
+    int entity = CreateEntityByName("func_simpleladder");
+    if (entity == -1)
+    {
+        PrintToChat(client, "创建梯子实体失败");
+        return Plugin_Handled;
+    }
+    DispatchKeyValue(entity, "model", "*25"); // TODO. Replace by correct model
+    DispatchKeyValue(entity, "normal.z", "0.00");
+    DispatchKeyValue(entity, "normal.y", "1.00");
+    DispatchKeyValue(entity, "normal.x", "0.00");
+    DispatchKeyValue(entity, "team", "0");
+    DispatchKeyValue(entity, "angles", "0 0 0");
+    DispatchKeyValueVector(entity, "origin", pos);
+    DispatchSpawn(entity);
+    
+    PrintToChat(client, "已创建梯子实体. 索引: %i", entity);    
+    return Plugin_Handled;
+}
+
+public Action Command_Team(int client, int args)
+{
+    if (args < 1)
+    {
+        PrintToChat(client, "Using: sm_team <team num> - 0: 任何队伍, 1 - 生还者, 2 - 感染者");
+        return Plugin_Handled;
+    }
+    char buf[4];
+    GetCmdArg(1, buf, sizeof buf);
+    int newteam = StringToInt(buf);
+    
+    char classname[MAX_STR_LEN];
+    int entity = GetClientAimTarget(client, false);
+    if (IsValidEntity(entity)) {
+        GetEntityClassname(entity, classname, MAX_STR_LEN);
+        if (StrEqual(classname, "func_simpleladder", false)) {
+            int team;
+            char modelname[128];
+            float origin[3], position[3], normal[3], angles[3];
+            GetLadderEntityInfo(entity, modelname, sizeof(modelname), origin, position, normal, angles, team);
+            SetEntProp(entity, Prop_Send, "m_iTeamNum", newteam);
+            PrintToChat(client, "梯子实体%i, %s在(%.2f,%.2f,%.2f). 团队变更: %i => %i", entity, modelname, position[0], position[1], position[2], team, newteam);
+            
+        }
+        else {
+            selectedLadder[client] = -1;
+            PrintToChat(client, "准心处没有发现梯子实体. 实体: %i, 类名: %s", entity, classname);
+        }
+    }
+    else {
+        selectedLadder[client] = -1;
+        PrintToChat(client, "发现无效实体%i", entity);
+    }
+    return Plugin_Handled;
+}
+
+public void OnMapStart() {
+    for (int i = 1; i <= MaxClients; i++) {
         selectedLadder[i] = -1;
         bEditMode[i] = false;
         in_attack[i] = false;
@@ -64,15 +133,15 @@ public OnMapStart() {
         bHudActive[i] = false;
         stepSize[i] = DEFAULT_STEP_SIZE;
     }
-    ClearTrie(hLadders);
+    hLadders.Clear();
 }
-
-public OnClientAuthorized(client, const String:auth[])
+    
+public void OnClientAuthorized(int client, const char[] auth)
 {
     bHudHintShown[client] = false;
 }
 
-public OnClientDisconnect_Post(client)
+public void OnClientDisconnect_Post(int client)
 {
     bEditMode[client] = false;
     in_attack[client] = false;
@@ -83,74 +152,78 @@ public OnClientDisconnect_Post(client)
     stepSize[client] = DEFAULT_STEP_SIZE;
 }
 
-stock SetClientFrozen(client, freeze)
+stock void SetClientFrozen(int client, bool freeze)
 {
     SetEntityMoveType(client, freeze ? MOVETYPE_NONE : MOVETYPE_WALK);
 }
 
-public Action:Command_ToggleHud(client, args) 
+public Action Command_ToggleHud(int client, int args) 
 {
     bHudActive[client] = !bHudActive[client];
-    PrintToChat(client, "<HUD>梯子实体编辑HUD", (bHudActive[client] ? "开启" : "关闭"));
+    CPrintToChat(client, "<{olive}HUD{default}>梯子实体编辑%s.", (bHudActive[client] ? "{blue}开启{default}" : "{red}关闭{default}"));
+    return Plugin_Handled;
 }
 
-public Action:HudDrawTimer(Handle:hTimer) 
+public Action HudDrawTimer(Handle hTimer) 
 {
-    
-
-    for (new i = 1; i <= MaxClients; i++) 
+    for (int i = 1; i <= MaxClients; i++) 
     {
         if (!bHudActive[i] || IsFakeClient(i))
             continue;
-        new Handle:hud = CreatePanel();
+        Panel hud = new Panel();
         FillHudInfo(i, hud);
-        SendPanelToClient(hud, i, DummyHudHandler, 3);
-        CloseHandle(hud);
+        hud.Send(i, DummyHudHandler, 3);
+        delete hud;
         if (!bHudHintShown[i])
         {
             bHudHintShown[i] = true;
-            PrintToChat(i, "<HUD> 在聊天框输入!togglehud来切换梯子实体编辑HUD");
+            CPrintToChat(i, "<{olive}HUD{default}>在聊天框输入{green}!togglehud{default}{blue}来切换梯子实体编辑HUD{default}.");
         }
     }
+    return Plugin_Continue;
 }
 
-public DummyHudHandler(Handle:hMenu, MenuAction:action, param1, param2) {}
+public int DummyHudHandler(Menu hMenu, MenuAction action, int param1, int param2) { return 0; }
 
-public FillHudInfo(client, Handle:hHud)
+public void FillHudInfo(int client, Panel hHud)
 {
-    DrawPanelText(hHud, "Ladder Editor HUD");
-    DrawPanelText(hHud, " ");
-    decl String:buffer[512];
-    Format(buffer, sizeof(buffer), "Edit mode: %s", (bEditMode[client] ? "on" : "off"));
-    DrawPanelText(hHud, buffer);
-    DrawPanelText(hHud, " ");
-    new entity = selectedLadder[client];
+    hHud.DrawText("梯子实体编辑 HUD");
+    hHud.DrawText(" ");
+    char buffer[512];
+    Format(buffer, sizeof(buffer), "编辑模式: %s", (bEditMode[client] ? "开启" : "关闭"));
+    hHud.DrawText(buffer);
+    hHud.DrawText(" ");
+    int entity = selectedLadder[client];
     if (!IsValidEntity(entity)) {
-        Format(buffer, sizeof(buffer), "No ladder selected.");
-        DrawPanelText(hHud, buffer);
+        Format(buffer, sizeof(buffer), "未选择梯子实体");
+        hHud.DrawText(buffer);
         return;
     }
 
-    decl String:modelname[128], Float:origin[3], Float:position[3], Float:normal[3], Float:angles[3];
-    GetLadderEntityInfo(entity, modelname, sizeof(modelname), origin, position, normal, angles);
+    char modelname[128];
+    float origin[3], position[3], normal[3], angles[3];
+    int team;
+    GetLadderEntityInfo(entity, modelname, sizeof(modelname), origin, position, normal, angles, team);
 
-    Format(buffer, sizeof(buffer), "Entity: %i", entity);
-    DrawPanelText(hHud, buffer);
-    Format(buffer, sizeof(buffer), "Model Name: %s", modelname);
-    DrawPanelText(hHud, buffer);
-    Format(buffer, sizeof(buffer), "Position: %.2f, %.2f, %.2f", position[0], position[1], position[2]);
-    DrawPanelText(hHud, buffer);
-    Format(buffer, sizeof(buffer), "Origin: %.2f, %.2f, %.2f", origin[0], origin[1], origin[2]);
-    DrawPanelText(hHud, buffer);
-    Format(buffer, sizeof(buffer), "Normal: %.2f, %.2f, %.2f", normal[0], normal[1], normal[2]);
-    DrawPanelText(hHud, buffer);
-    Format(buffer, sizeof(buffer), "Angles: %.2f, %.2f, %.2f", angles[0], angles[1], angles[2]);
-    DrawPanelText(hHud, buffer);
+    Format(buffer, sizeof(buffer), "实体: %i", entity);
+    hHud.DrawText(buffer);
+    Format(buffer, sizeof(buffer), "模型名称: %s", modelname);
+    hHud.DrawText(buffer);
+    Format(buffer, sizeof(buffer), "位置: %.2f, %.2f, %.2f", position[0], position[1], position[2]);
+    hHud.DrawText(buffer);
+    Format(buffer, sizeof(buffer), "原点: %.2f, %.2f, %.2f", origin[0], origin[1], origin[2]);
+    hHud.DrawText(buffer);
+    Format(buffer, sizeof(buffer), "法线: %.2f, %.2f, %.2f", normal[0], normal[1], normal[2]);
+    hHud.DrawText(buffer);
+    Format(buffer, sizeof(buffer), "角度: %.2f, %.2f, %.2f", angles[0], angles[1], angles[2]);
+    hHud.DrawText(buffer);
+    Format(buffer, sizeof(buffer), "可使用梯子实体的队伍: %i", team);
+    hHud.DrawText(buffer);
 }
 
-public bool:GetEndPosition(client, Float:end[3])
+public bool GetEndPosition(int client, float end[3])
 {
-    decl Float:start[3], Float:angle[3];
+    float start[3], angle[3];
     GetClientEyePosition(client, start);
     GetClientEyeAngles(client, angle);
     TR_TraceRayFilter(start, angle, MASK_SOLID, RayType_Infinite, TraceEntityFilterPlayer, client);
@@ -162,17 +235,17 @@ public bool:GetEndPosition(client, Float:end[3])
     return false;
 }
 
-public bool:TraceEntityFilterPlayer(entity, contentsMask, any:data)
+public bool TraceEntityFilterPlayer(int entity, int contentsMask, int data)
 {
     return entity > MaxClients;
 }
 
-public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon) {
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) {
     if (client <= 0 || client > MaxClients) return Plugin_Continue;
     if (!IsClientInGame(client)) return Plugin_Continue;
     if (IsFakeClient(client)) return Plugin_Continue;
     
-    new prevButtons = buttons;
+    int prevButtons = buttons;
 
     // Player was holding m1, and now isn't. (Released)
     if (buttons & IN_ATTACK != IN_ATTACK && in_attack[client]) {
@@ -189,7 +262,7 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
     if (buttons & IN_ATTACK2 != IN_ATTACK2 && in_attack2[client]) {
         in_attack2[client] = false;
         if (bEditMode[client]) {
-            decl Float:end[3];
+            float end[3];
             if (GetEndPosition(client, end))
                 Move(client, end[0], end[1], end[2], true);
             else
@@ -251,11 +324,10 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
     return Plugin_Continue;
 }
 
-public PlayerTeam_Event(Handle:event, const String:name[], bool:dontBroadcast)
+public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
-    new client = GetClientOfUserId(GetEventInt(event, "userid"));
-    new team = GetEventInt(event, "team");
-    if (team != TEAM_INFECTED && bEditMode[client]) {
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    if (bEditMode[client]) {
         bEditMode[client] = false;
         PrintToChat(client, "退出编辑模式");
     }
@@ -269,7 +341,7 @@ public Action Command_Step(int client, int args)
     }
     char x[8];
     GetCmdArg(1, x, sizeof(x));
-    new size = StringToInt(x);
+    int size = StringToInt(x);
     if (size > 0) {
         stepSize[client] = size * 1.0;
         PrintToChat(client, "Step size set to（步长设置为） %i.", size);
@@ -282,10 +354,12 @@ public Action Command_Step(int client, int args)
 
 public Action Command_Edit(int client, int args)
 {
+    /*
     if (GetClientTeam(client) != TEAM_INFECTED) {
         PrintToChat(client, "必须在感染者团队中才能进入编辑模式");
         return Plugin_Handled;
     }
+    */
     if (bEditMode[client]) {
         bEditMode[client] = false;
         SetClientFrozen(client, false);
@@ -301,15 +375,15 @@ public Action Command_Edit(int client, int args)
 
 public Action Command_Kill(int client, int args)
 {
-    decl String:modelname[128];
-    new String:classname[MAX_STR_LEN];
-    new entity = selectedLadder[client];
+    char modelname[128];
+    char classname[MAX_STR_LEN];
+    int entity = selectedLadder[client];
     if (IsValidEntity(entity)) {
         GetEntityClassname(entity, classname, MAX_STR_LEN);
-        new Float:normal[3];
-        new Float:origin[3];
-        new Float:position[3];
-        decl Float:mins[3], Float:maxs[3];
+        float normal[3];
+        float origin[3];
+        float position[3];
+        float mins[3], maxs[3];
         GetEntPropVector(entity, Prop_Send, "m_climbableNormal", normal);
         GetEntPropVector(entity, Prop_Send, "m_vecOrigin", origin);
         GetEntPropVector(entity,Prop_Send,"m_vecMins",mins);
@@ -319,9 +393,9 @@ public Action Command_Kill(int client, int args)
         position[2] = origin[1] + (mins[2] + maxs[2]) * 0.5;
         AcceptEntityInput(entity, "Kill");
         selectedLadder[client] = -1;
-        decl String:key[8];
+        char key[8];
         IntToString(entity, key, 8);
-        RemoveFromTrie(hLadders, key);
+        hLadders.Remove(key);
         PrintToChat(client, "在 %i, %s at (%.2f,%.2f,%.2f). 位置: (%.2f,%.2f,%.2f). 法线: (%.2f,%.2f,%.2f) 删除梯子实体实体", entity, modelname, position[0], position[1], position[2], origin[0], origin[1], origin[2], normal[0], normal[1], normal[2]);
     }
     else {
@@ -330,14 +404,16 @@ public Action Command_Kill(int client, int args)
     return Plugin_Handled;
 }
 
-public GetLadderEntityInfo(entity, String:modelname[], modelnamelen, Float:origin[3], Float:position[3], Float:normal[3], Float:angles[3]) {
-    decl Float:mins[3], Float:maxs[3];
+public void GetLadderEntityInfo(int entity, char[] modelname, int modelnamelen, float origin[3], float position[3], float normal[3], float angles[3], int &team) {
+    float mins[3], maxs[3];
     GetEntPropString(entity, Prop_Data, "m_ModelName", modelname, modelnamelen);
     GetEntPropVector(entity, Prop_Send, "m_vecOrigin", origin);
     GetEntPropVector(entity, Prop_Send, "m_vecMins", mins);
     GetEntPropVector(entity, Prop_Send, "m_vecMaxs", maxs);
     GetEntPropVector(entity, Prop_Send, "m_climbableNormal", normal);
     GetEntPropVector(entity, Prop_Send, "m_angRotation", angles);
+    team = GetEntProp(entity, Prop_Send, "m_iTeamNum");
+
     Math_RotateVector(mins, angles, mins);
     Math_RotateVector(maxs, angles, maxs);
     position[0] = origin[0] + (mins[0] + maxs[0]) * 0.5;
@@ -347,30 +423,39 @@ public GetLadderEntityInfo(entity, String:modelname[], modelnamelen, Float:origi
 
 public Action Command_Info(int client, int args)
 {
-    new String:classname[MAX_STR_LEN];
-    new entity = GetClientAimTarget(client, false);
+    char classname[MAX_STR_LEN];
+    int team;
+    int entity = GetClientAimTarget(client, false);
     if (IsValidEntity(entity)) {
         GetEntityClassname(entity, classname, MAX_STR_LEN);
         if (StrEqual(classname, "func_simpleladder", false)) {
-            decl String:modelname[128], Float:origin[3], Float:position[3], Float:normal[3], Float:angles[3];
-            GetLadderEntityInfo(entity, modelname, sizeof(modelname), origin, position, normal, angles);
+            char modelname[128];
+            float origin[3], position[3], normal[3], angles[3];
+            GetLadderEntityInfo(entity, modelname, sizeof(modelname), origin, position, normal, angles, team);
+            
+            float mins[3], maxs[3];
+            GetEntPropVector(entity, Prop_Send, "m_vecMins", mins);
+            GetEntPropVector(entity, Prop_Send, "m_vecMaxs", maxs);
+            
+            PrintToChat(client, "梯子实体%i, %s在(%.2f,%.2f,%.2f). 位置: (%.2f,%.2f,%.2f). 法线: (%.2f,%.2f,%.2f). 角度: (%.2f,%.2f,%.2f)", entity, modelname, position[0], position[1], position[2], origin[0], origin[1], origin[2], normal[0], normal[1], normal[2], angles[0], angles[1], angles[2]);
 
-            PrintToChat(client, "梯子实体%i, %在(%.2f,%.2f,%.2f). 位置: (%.2f,%.2f,%.2f). 法线: (%.2f,%.2f,%.2f). 角度: (%.2f,%.2f,%.2f)", entity, modelname, position[0], position[1], position[2], origin[0], origin[1], origin[2], normal[0], normal[1], normal[2], angles[0], angles[1], angles[2]);
-
+            PrintToChat(client, "请打开控制台复制stripper信息");
             PrintToConsole(client, "add:");
             PrintToConsole(client, "{");
             PrintToConsole(client, "    \"model\" \"%s\"", modelname);
             PrintToConsole(client, "    \"normal.z\" \"%.2f\"", normal[2]);
             PrintToConsole(client, "    \"normal.y\" \"%.2f\"", normal[1]);
             PrintToConsole(client, "    \"normal.x\" \"%.2f\"", normal[0]);
-            PrintToConsole(client, "    \"team\" \"2\"");
+            PrintToConsole(client, "    \"team\" \"%i\"", team);
             PrintToConsole(client, "    \"classname\" \"func_simpleladder\"");
             PrintToConsole(client, "    \"origin\" \"%.2f %.2f %.2f\"", origin[0], origin[1], origin[2]);
             PrintToConsole(client, "    \"angles\" \"%.2f %.2f %.2f\"", angles[0], angles[1], angles[2]);
             PrintToConsole(client, "}");
+            PrintToConsole(client, "// mins: \"%.2f %.2f %.2f\"", mins[0], mins[1], mins[2]);
+            PrintToConsole(client, "// maxs: \"%.2f %.2f %.2f\"", maxs[0], maxs[1], maxs[2]);
         }
         else {
-            PrintToChat(client, "Not looking at a ladder（没有查看梯子实体）. 实体 %i, 类名: %s", entity, classname);
+            PrintToChat(client, "准心处没有梯子实体 实体 %i, 类名: %s", entity, classname);
         }
     }
     else {
@@ -379,12 +464,14 @@ public Action Command_Info(int client, int args)
     return Plugin_Handled;
 }
 
-public RotateStep(int client)
+public void RotateStep(int client)
 {
-    new entity = selectedLadder[client];
+    int entity = selectedLadder[client];
     if (IsValidEntity(entity)) {
-        decl String:modelname[128], Float:origin[3], Float:position[3], Float:normal[3], Float:angles[3];
-        GetLadderEntityInfo(entity, modelname, sizeof(modelname), origin, position, normal, angles);
+        char modelname[128];
+        float origin[3], position[3], normal[3], angles[3];
+        int team;
+        GetLadderEntityInfo(entity, modelname, sizeof(modelname), origin, position, normal, angles, team);
         Rotate(client, 0.0, angles[1] + 90, 0.0, true);
     }
     else {
@@ -392,13 +479,13 @@ public RotateStep(int client)
     }
 }
 
-public Nudge(int client, float x, float y, float z, bool bPrint)
+public void Nudge(int client, float x, float y, float z, bool bPrint)
 {
-    new entity = selectedLadder[client];
+    int entity = selectedLadder[client];
     if (IsValidEntity(entity)) {
-        new Float:position[3];
+        float position[3];
         GetEntPropVector(entity, Prop_Send, "m_vecOrigin", position);
-        new Float:origin[3];
+        float origin[3];
         origin[0] = position[0] + x;
         origin[1] = position[1] + y;
         origin[2] = position[2] + z;
@@ -413,32 +500,33 @@ public Nudge(int client, float x, float y, float z, bool bPrint)
     }
 }
 
-public Rotate(int client, float x, float y, float z, bool bPrint)
+public void Rotate(int client, float x, float y, float z, bool bPrint)
 {
-    new entity = selectedLadder[client];
+    int entity = selectedLadder[client];
     if (IsValidEntity(entity)) {
-        new sourceEnt;
-        decl String:key[8];
+        int sourceEnt;
+        char key[8];
         IntToString(entity, key, 8);
-        if (!GetTrieValue(hLadders, key, sourceEnt)) {
+        if (!hLadders.GetValue(key, sourceEnt)) {
             if (bPrint)
                 PrintToChat(client, "未找到原始梯子实体");
             return;
         }
-        
-        decl String:modelname[128], Float:sourceOrigin[3], Float:sourcePos[3], Float:sourceNormal[3], Float:sourceAngles[3];
-        GetLadderEntityInfo(sourceEnt, modelname, sizeof(modelname), sourceOrigin, sourcePos, sourceNormal, sourceAngles);
+        int team;
+        char modelname[128];
+        float sourceOrigin[3], sourcePos[3], sourceNormal[3], sourceAngles[3];
+        GetLadderEntityInfo(sourceEnt, modelname, sizeof(modelname), sourceOrigin, sourcePos, sourceNormal, sourceAngles, team);
         if (bPrint)
             PrintToChat(client, "原始梯子实体 %i 在 (%.2f,%.2f,%.2f)", sourceEnt, sourcePos[0], sourcePos[1], sourcePos[2]);
         
-        decl Float:origin[3], Float:position[3], Float:normal[3], Float:angles[3];
-        GetLadderEntityInfo(entity, modelname, sizeof(modelname), origin, position, normal, angles);
+        float origin[3], position[3], normal[3], angles[3];
+        GetLadderEntityInfo(entity, modelname, sizeof(modelname), origin, position, normal, angles, team);
         
         angles[0] = x;
         angles[1] = y;
         angles[2] = z;
         
-        new Float:rotatedPos[3];
+        float rotatedPos[3];
         Math_RotateVector(sourcePos, angles, rotatedPos);
         
         origin[0] = -rotatedPos[0] + position[0];
@@ -459,21 +547,23 @@ public Rotate(int client, float x, float y, float z, bool bPrint)
     }
 }
 
-public Move(int client, float x, float y, float z, bool bPrint)
+public void Move(int client, float x, float y, float z, bool bPrint)
 {
-    new entity = selectedLadder[client];
+    int entity = selectedLadder[client];
     if (IsValidEntity(entity)) {
-        new sourceEnt;
-        decl String:key[8];
+        int sourceEnt;
+        char key[8];
         IntToString(entity, key, 8);
-        if (!GetTrieValue(hLadders, key, sourceEnt)) {
+        if (!hLadders.GetValue(key, sourceEnt)) {
             if (bPrint)
                 PrintToChat(client, "未找到原始梯子实体");
             return;
         }
         
-        decl String:modelname[128], Float:origin[3], Float:sourcePos[3], Float:normal[3], Float:angles[3];
-        GetLadderEntityInfo(sourceEnt, modelname, sizeof(modelname), origin, sourcePos, normal, angles);
+        char modelname[128];
+        float origin[3], sourcePos[3], normal[3], angles[3];
+        int team;
+        GetLadderEntityInfo(sourceEnt, modelname, sizeof(modelname), origin, sourcePos, normal, angles, team);
 
         if (bPrint)
             PrintToChat(client, "原始梯子实体 %i 在 (%.2f,%.2f,%.2f)", sourceEnt, sourcePos[0], sourcePos[1], sourcePos[2]);
@@ -536,8 +626,8 @@ public Action Command_Move(int client, int args)
 
 public Action Command_Clone(int client, int args)
 {
-    new String:classname[MAX_STR_LEN];
-    new sourceEnt = selectedLadder[client];
+    char classname[MAX_STR_LEN];
+    int sourceEnt = selectedLadder[client];
     if (IsValidEntity(sourceEnt)) {
         GetEntityClassname(sourceEnt, classname, MAX_STR_LEN);
         if (!StrEqual(classname, "func_simpleladder", false)) {
@@ -545,16 +635,20 @@ public Action Command_Clone(int client, int args)
             PrintToChat(client, "没有选择梯子实体");
             return Plugin_Handled;
         }
-        decl String:modelname[128], Float:origin[3], Float:position[3], Float:normal[3], Float:angles[3];
-        GetLadderEntityInfo(sourceEnt, modelname, sizeof(modelname), origin, position, normal, angles);
+        char modelname[128];
+        float origin[3], position[3], normal[3], angles[3];
+        int team;
+        GetLadderEntityInfo(sourceEnt, modelname, sizeof(modelname), origin, position, normal, angles, team);
         PrecacheModel(modelname, true);
-        new entity = CreateEntityByName("func_simpleladder");
+        int entity = CreateEntityByName("func_simpleladder");
         if (entity == -1)
         {
             PrintToChat(client, "创建梯子实体失败");
             return Plugin_Handled;
         }
-        decl String:buf[32];
+        char buf[32];
+        char sTeam[32];
+        IntToString(team, sTeam, sizeof sTeam);
         DispatchKeyValue(entity, "model", modelname);
         Format(buf, sizeof(buf), "%.6f", normal[2]);
         DispatchKeyValue(entity, "normal.z", buf);
@@ -562,14 +656,15 @@ public Action Command_Clone(int client, int args)
         DispatchKeyValue(entity, "normal.y", buf);
         Format(buf, sizeof(buf), "%.6f", normal[0]);
         DispatchKeyValue(entity, "normal.x", buf);
-        DispatchKeyValue(entity, "team", "2");
-        DispatchKeyValue(entity, "origin", "50 0 0");
+        DispatchKeyValue(entity, "team", sTeam);
+        DispatchKeyValue(entity, "origin", "0 0 0");
 
         DispatchSpawn(entity);
+        
         selectedLadder[client] = entity;
-        decl String:key[8];
+        char key[8];
         IntToString(entity, key, 8);
-        SetTrieValue(hLadders, key, sourceEnt, true);
+        hLadders.SetValue(key, sourceEnt, true);
         PrintToChat(client, "克隆梯子实体 %i. 新实体 %i", sourceEnt, entity);
     }
     else {
@@ -580,20 +675,21 @@ public Action Command_Clone(int client, int args)
 
 public Action Command_Select(int client, int args)
 {
-    new String:classname[MAX_STR_LEN];
-    new entity = GetClientAimTarget(client, false);
+    char classname[MAX_STR_LEN];
+    int entity = GetClientAimTarget(client, false);
     if (IsValidEntity(entity)) {
         GetEntityClassname(entity, classname, MAX_STR_LEN);
         if (StrEqual(classname, "func_simpleladder", false)) {
             selectedLadder[client] = entity;
-            
-            decl String:modelname[128], Float:origin[3], Float:position[3], Float:normal[3], Float:angles[3];
-            GetLadderEntityInfo(entity, modelname, sizeof(modelname), origin, position, normal, angles);
+            int team;
+            char modelname[128];
+            float origin[3], position[3], normal[3], angles[3];
+            GetLadderEntityInfo(entity, modelname, sizeof(modelname), origin, position, normal, angles, team);
             PrintToChat(client, "选择梯子实体 %i, %s 在 (%.2f,%.2f,%.2f). 位置: (%.2f,%.2f,%.2f). 法线: (%.2f,%.2f,%.2f)", entity, modelname, position[0], position[1], position[2], origin[0], origin[1], origin[2], normal[0], normal[1], normal[2]);
         }
         else {
             selectedLadder[client] = -1;
-            PrintToChat(client, "Not looking at a ladder（没有查看梯子实体） 实体 %i, 类名: %s", entity, classname);
+            PrintToChat(client, "准心处无梯子实体 实体 %i, 类名: %s", entity, classname);
         }
     }
     else {
@@ -613,15 +709,15 @@ public Action Command_Select(int client, int args)
  *   angles[1] = 0.0;
  *   angles[2] = playerEyeAngles[1];
  *
- * @param vec 			Vector to rotate.
- * @param angles 		How to rotate the vector.
- * @param result		Output vector.
+ * @param vec             Vector to rotate.
+ * @param angles         How to rotate the vector.
+ * @param result        Output vector.
  * @noreturn
  */
-stock Math_RotateVector(const Float:vec[3], const Float:angles[3], Float:result[3])
+stock void Math_RotateVector(const float vec[3], const float angles[3], float result[3])
 {
     // First the angle/radiant calculations
-    decl Float:rad[3];
+    float rad[3];
     // I don't really know why, but the alpha, beta, gamma order of the angles are messed up...
     // 2 = xAxis
     // 0 = yAxis
@@ -631,16 +727,20 @@ stock Math_RotateVector(const Float:vec[3], const Float:angles[3], Float:result[
     rad[2] = DegToRad(angles[1]);
 
     // Pre-calc function calls
-    new Float:cosAlpha = Cosine(rad[0]);
-    new Float:sinAlpha = Sine(rad[0]);
-    new Float:cosBeta = Cosine(rad[1]);
-    new Float:sinBeta = Sine(rad[1]);
-    new Float:cosGamma = Cosine(rad[2]);
-    new Float:sinGamma = Sine(rad[2]);
+    float cosAlpha = Cosine(rad[0]);
+    float sinAlpha = Sine(rad[0]);
+    float cosBeta = Cosine(rad[1]);
+    float sinBeta = Sine(rad[1]);
+    float cosGamma = Cosine(rad[2]);
+    float sinGamma = Sine(rad[2]);
 
     // 3D rotation matrix for more information: http://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions
-    new Float:x = vec[0], Float:y = vec[1], Float:z = vec[2];
-    new Float:newX, Float:newY, Float:newZ;
+    float x = vec[0];
+    float y = vec[1];
+    float z = vec[2];
+    float newX;
+    float newY;
+    float newZ;
     newY = cosAlpha*y - sinAlpha*z;
     newZ = cosAlpha*z + sinAlpha*y;
     y = newY;
