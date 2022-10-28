@@ -143,6 +143,7 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [l4d_pipebomb_damage](https://forums.alliedmods.net/showthread.php?p=2680272) 设置手雷伤害对所有生物的倍数 可通过l4d_pipebomb_shove设置的伤害进行更改 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_pipebomb_damage.sp)   
 [l4d2_tank_announce](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_tank_announce) 坦克出现播放提示音及聊天框提示   
 [enhancedsprays](https://forums.alliedmods.net/showthread.php?p=1998984) 设定喷漆间隔和范围 [大红修改并更新语法(已获得上传许可)](https://github.com/apples1949/l4dplugins/blob/main/enhancedsprays.sp)  
+[l4d_ssi_teleport_fix](https://github.com/fbef0102/Game-Private_Plugin/tree/main/l4d_ssi_teleport_fix) 价值90r的仿Anne的特感传送 要的自己去买  
 [vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)：    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
