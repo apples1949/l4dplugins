@@ -365,7 +365,7 @@ public Action CmdReward(int client, int args)
 {
 	if( !g_bCvarAllow )
 	{
-		ReplyToCommand(client, "[礼物]礼物插件已关闭");
+		ReplyToCommand(client, "[Gift]礼物插件已关闭");
 		return Plugin_Handled;
 	}
 
@@ -388,14 +388,14 @@ public Action CmdGift(int client, int args)
 
 	if( !g_bCvarAllow )
 	{
-		ReplyToCommand(client, "[礼物]礼物插件已关闭");
+		ReplyToCommand(client, "[Gift]礼物插件已关闭");
 		return Plugin_Handled;
 	}
 
 	float vPos[3];
 	if( !SetTeleportEndPoint(client, vPos, NULL_VECTOR) )
 	{
-		PrintToChat(client, "[礼物] 无法放置礼物，请再次尝试");
+		PrintToChat(client, "[Gift] 无法放置礼物，请再次尝试");
 		return Plugin_Handled;
 	}
 
@@ -642,7 +642,7 @@ void GiveAward(int client)
 				case 3:		g_fRewarded[client] = GetGameTime() + g_fCvarSpeed;
 			}
 
-			PrintToChatAll("\x04[\x05礼物\x04]\x04%N\x01得到了\x05%s\x01奖励", client , random == 1 ? "弹药" : random == 2 ? "血量" : "速度");
+			PrintToChatAll("\x04[\x05Gift\x04]\x04%N\x01得到了\x05%s\x01奖励", client , random == 1 ? "弹药" : random == 2 ? "血量" : "加速");
 		}
 	}
 }
