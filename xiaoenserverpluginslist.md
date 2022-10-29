@@ -118,7 +118,6 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [l4d2_unlimited_upgrade_pack](https://forums.alliedmods.net/showthread.php?t=335601) 弹药升级包部署后可无限拿取 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_unlimited_upgrade_pack)   
 [l4d2_deathcheck](https://forums.alliedmods.net/showpost.php?p=2727648&postcount=10) 全部生还者死亡后游戏才失败 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_deathcheck.sp)   
 [l4d_bot_healing](https://forums.alliedmods.net/showthread.php?p=2785360) bot什么血量才能打包吃药 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_bot_healing)   
-[l4d_shove_handler](https://forums.alliedmods.net/showthread.php?p=2779571) 设置推感染者的伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_shove_handler)   
 [l4d_skip_intro](https://forums.alliedmods.net/showthread.php?p=2686527)/[FollowTarget_Detour](https://forums.alliedmods.net/showthread.php?p=2725811) 跳过开场动画/修复播放动画补丁 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_skip_intro)   
 [l4d_pause_message](https://forums.alliedmods.net/showthread.php?p=2682882) 阻止玩家控制台输出暂停消息   
 [l4d2_bacteria](https://forums.alliedmods.net/showthread.php?p=2675275) 恢复特感钢琴音提示   
@@ -127,7 +126,6 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [l4d2_car_alarm_bots](https://forums.alliedmods.net/showthread.php?p=2671546) bot或者特感可以打警报车 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_car_alarm_bots)   
 [l4d_tongue_damage](https://forums.alliedmods.net/showthread.php?p=2668589) 战役下舌头拖拽伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_tongue_damage.sp)   
 [l4d_witch_damage](https://forums.alliedmods.net/showthread.php?p=2667165) 设置女巫不同难度伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_witch_damage.sp)   
-[l4d_survivor_shove](https://forums.alliedmods.net/showthread.php?p=2667050) 可把生还者推的后退 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_shove_handler)   
 [l4d_infected_glow](https://forums.alliedmods.net/showthread.php?t=187933) 感染者燃烧发光 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_infected_glow.sp)   
 [l4d2_dead_air_barricade](https://forums.alliedmods.net/showthread.php?t=187933) 移除寂静时分救援火焰屏障   
 [l4d2_jukebox_spawner](https://forums.alliedmods.net/showthread.php?p=1405042) 安全区域生成点唱机 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/tree/main/l4d2_jukebox_spawner)   
