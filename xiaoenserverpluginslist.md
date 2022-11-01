@@ -1,6 +1,6 @@
-豆瓣包([2022-10-18豆瓣酱な (v1.1.1)(6911-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))：  
+豆瓣包([2022-10-31豆瓣酱な (v1.1.1)(6911-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))：  
 1.1.1插件平台linux版(6911-1148)(必须先启用这个)  
-必选-功能类插件(left4dhooks)(v1.119)(SilverShot)  
+必选-功能类插件(left4dhooks)(v1.120)(SilverShot)  
 必选-功能类插件(WeaponHandling)(v1.0.6)(Lux)  
 必选-功能类扩展(sourcescramble.ext)(v0.7.0)  
 必选-功能类扩展(voicehook.ext)  
@@ -13,10 +13,11 @@
 必选-修复类(v2)(修复SG552开镜换弹鬼畜)(bullet28)  
 可选-修复类(v1.0)(修复出现多次换弹动作)(HarryPotter)  
 可选-修复类(v1.1)(修复特定情况下角色语音跟当前人物模型不一致)(TBK Duy, Harry)  
-可选-修复类(v1.2.2)(修复玩家过关后装备和属性混乱)(sorallll)  
+可选-修复类(v1.2.3)(修复玩家过关后装备和属性混乱)(sorallll)  
 可选-修复类(v2.0)(修复有相同的幸存者角色时牛撞不动的问题)(Lux)  
+可选-修复类(修复玩家正在连接时不刷特感)(v1.0.9)(sorallll & Psyk0tik (Crasher_3637))  
 自选-8角色共存(修复c6m1和c6m3地图中的传送bug)  
-自选-8角色共存(v1.7.2)(DeatChaos25, Mi123456 & Merudo, Lux, SilverShot)  
+自选-8角色共存(v1.7.4)(DeatChaos25, Mi123456 & Merudo, Lux, SilverShot)  
 自选-保存玩家的STEAM用户名,数字ID跟聊天记录到logs目录(citkabuto)  
 自选-被特感控制时等禁止闲置和防止闲置加入提示刷屏(v1.0.0)  
 自选-彩色广告插件(Tsunami)  
@@ -34,19 +35,20 @@
 自选-击杀或爆头和黑枪提示和关闭队伤  
 自选-击杀特感坦克女巫奖励血量和前置弹药(可关闭击杀特感提示)(继续使用20221014版本)  
 自选-禁用游戏自带的投票  
-自选-排行榜插件(v1.6.8)(豆瓣酱な)(HUD提供者→sorallll)  
+自选-爬梯时可开枪(v1.0)(Lux)  
+自选-排行榜插件(1.8.10)(豆瓣酱な)(HUD提供者→sorallll)  
 自选-扔投掷物提示(v1.0.8)(注意-本地服务器慎用)(Mart)  
 自选-近战解锁(v1.6)(IA-NanaNana, sorallll)  
 自选-设置医疗物品倍数(根据人数或固定倍数)(修改-豆瓣酱な)(原作者-笨蛋海绵)  
 自选-生还者对坦克的伤害排名(v1.3.1)(豆瓣酱な)  
 自选-坦克特感女巫血量显示和坦克死亡提示(NiCo-op, Edited By Ernecio (Satanael))  
-自选-特感主动攻击幸存者(v1.2.0)(nosoop)(只限linux系统)  
+自选-特感主动攻击幸存者(v1.1.1)(nosoop)(只限linux系统)  
 自选-显示谁在按C骂人(v1.5)(Accelerator)  
 自选-显示幸存者开关安全门或次数限制  
 自选-小手枪替换成马格南(脚本)  
 自选-幸存者倒地使用马格南(v1.0.2)(sorallll)  
 自选-幸存者黑白发光(v2.0.2)(Lux)  
-自选-幸存者死亡和被制服提示(v1.0.3)(豆瓣酱な-死亡提示嫖至sorallll)  
+自选-幸存者死亡和被制服提示(v1.0.8)(豆瓣酱な-死亡提示嫖至sorallll)  
 自选-幸存者闲置状态快速双击鼠标右键使用自由视角(v1.0.0)(豆瓣酱な)  
 自选-幸存者自杀指令  
 自选-修改近战对坦克和女巫的比例伤害或固定伤害(v1.0)(Visor)  
@@ -55,7 +57,7 @@
 自选-M60正常化(可更换弹夹)+可拾取弹药(包括榴弹发射器)(Lux)  
 自选-MOD(8人大厅)  
 自选-tick解锁扩展(启动项加 -tickrate 100)(需要配合tick设置插件使用)  
-自选-指令!un关闭匹配和指令!sn崩溃服务端(v1.1.1)(豆瓣酱な)  
+自选-指令!un关闭匹配和指令!sn崩溃服务端(v1.2.2)(豆瓣酱な)  
 
 自找插件：  
 [all4dead2](https://github.com/apples1949/l4dplugins/tree/main/all4dead2) 物品特感生成 [自改自翻译](https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2)   
@@ -105,7 +107,6 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [l4d_stuckzombiemeleefix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_stuckzombiemeleefix.sp) 近战砍僵尸修复   
 [L4D_Elevator_Teleport](https://forums.alliedmods.net/showthread.php?p=2785701) 官图电梯倒计时 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/blob/main/L4D_Elevator_Teleport.sp)   
 [boss_controller](https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/BossController) 战役路程刷克和妹子   
-[L4D2_cs_ladders](https://github.com/LuxLuma/L4D-small-plugins/tree/master/L4D2_cs_ladders) 爬梯开枪    
 [noteam_nudging](https://github.com/LuxLuma/L4D-small-plugins/blob/master/L4D1-2_noteam_nudging/scripting/noteam_nudging.sp) 防止某些三方图玩家碰撞被挤下去   
 [l4d2_tooeasy](https://github.com/nuviktor/sm-l4d2-tooeasy) 禁简单普通难度 [翻译文本](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp)   
 [dialogue_criteria_fix](https://forums.alliedmods.net/showthread.php?t=335875) 修复两代人物对话   
