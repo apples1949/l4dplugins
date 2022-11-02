@@ -1,4 +1,4 @@
-豆瓣包([2022-10-31豆瓣酱な (v1.1.1)(6911-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))：  
+豆瓣包([2022-11-2豆瓣酱な (v1.1.1)(6911-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))：  
 1.1.1插件平台linux版(6911-1148)(必须先启用这个)  
 必选-功能类插件(left4dhooks)(v1.120)(SilverShot)  
 必选-功能类插件(WeaponHandling)(v1.0.6)(Lux)  
@@ -15,6 +15,7 @@
 可选-修复类(v1.1)(修复特定情况下角色语音跟当前人物模型不一致)(TBK Duy, Harry)  
 可选-修复类(v1.2.3)(修复玩家过关后装备和属性混乱)(sorallll)  
 可选-修复类(v2.0)(修复有相同的幸存者角色时牛撞不动的问题)(Lux)  
+可选-修复类(修复HUD闪屏)  
 可选-修复类(修复玩家正在连接时不刷特感)(v1.0.9)(sorallll & Psyk0tik (Crasher_3637))  
 自选-8角色共存(修复c6m1和c6m3地图中的传送bug)  
 自选-8角色共存(v1.7.4)(DeatChaos25, Mi123456 & Merudo, Lux, SilverShot)  
@@ -36,7 +37,7 @@
 自选-击杀特感坦克女巫奖励血量和前置弹药(可关闭击杀特感提示)(继续使用20221014版本)  
 自选-禁用游戏自带的投票  
 自选-爬梯时可开枪(v1.0)(Lux)  
-自选-排行榜插件(1.8.10)(豆瓣酱な)(HUD提供者→sorallll)  
+自选-排行榜插件(1.9.10)(豆瓣酱な)(HUD提供者→sorallll)  
 自选-扔投掷物提示(v1.0.8)(注意-本地服务器慎用)(Mart)  
 自选-近战解锁(v1.6)(IA-NanaNana, sorallll)  
 自选-设置医疗物品倍数(根据人数或固定倍数)(修改-豆瓣酱な)(原作者-笨蛋海绵)  
@@ -143,6 +144,7 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [l4d2_tank_announce](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_tank_announce) 坦克出现播放提示音及聊天框提示   
 [enhancedsprays](https://forums.alliedmods.net/showthread.php?p=1998984) 设定喷漆间隔和范围 [大红修改并更新语法(已获得上传许可)](https://github.com/apples1949/l4dplugins/blob/main/enhancedsprays.sp)  
 [l4d_ssi_teleport_fix](https://github.com/fbef0102/Game-Private_Plugin/tree/main/l4d_ssi_teleport_fix) 价值90r的仿Anne的特感传送 要的自己去买  
+[TickrateFixes](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/TickrateFixes.sp) 修复高tick下手枪射击间隔过快问题 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/TickrateFixes.sp)  
 [vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)：    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
