@@ -122,7 +122,7 @@ public void OnPluginStart()
 	HookEvent("weapon_fire", Event_WeaponFire);
 
 	// Slow Doors
-	g_hCvarDoorSpeed = CreateConVar("tick_door_speed", "1.3", "Sets the speed of all prop_door entities on a map. 1.05 means = 105% speed");
+	g_hCvarDoorSpeed = CreateConVar("tick_door_speed", "1.3", "设置所有的prop_door（门）的开关速度. 1.05=105%的速度");
 	g_fDoorSpeed = g_hCvarDoorSpeed.FloatValue;
 
 	g_hCvarDoorSpeed.AddChangeHook(Cvar_Changed);
