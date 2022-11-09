@@ -456,7 +456,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 				                                            attacker, victim, damage, shots, plural, assister_string);
 				    }
 				}*/
-				CPrintToChatAll("{green}★ {olive}%N{blue} %d {default}枪空爆了{olive}%N{default}  伤害：{blue}%d{default}  助攻: {olive}%s ",attacker, shots, victim, damage, assister_string);
+				CPrintToChatAll("{green}★ {olive}%N{blue}和团队 %d {default}枪空爆了{olive}%N{default}  伤害：{blue}%d{default}  助攻: {olive}%s ",attacker, shots, victim, damage, assister_string);
 			}
 			else {
 				/*CPrintToChat(victim, "{green}★ {default}You were skeeted by {olive}%N {default}in {blue}%d shot%c", attacker, shots, plural);
