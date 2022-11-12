@@ -136,7 +136,6 @@ l4d2_unreservelobby 动态大厅 Q群钵钵鸡更新版本
 [l4d2_multiple_gascan_fill](https://forums.alliedmods.net/showthread.php?t=330351) [可同时罐油或者倒可乐](https://github.com/apples1949/l4dplugins/blob/main/l4d2_multiple_gascan_fill.sp) 翻译cvar说明   
 [l4d2_gascan_guard](https://forums.alliedmods.net/showthread.php?p=2762850) 射击不会打破正飞在空中的油桶   
 [l4d2_incapped_pickup](https://forums.alliedmods.net/showthread.php?t=320828) 倒地可拾取物品 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_pickup)   
-[killregain](https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/KillRegain) 杀僵尸回子弹   
 [l4d_pipebomb_shove](https://forums.alliedmods.net/showthread.php?p=1733534) 设置引诱手雷伤害及手雷可吸附感染者头部 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_pipebomb_shove)   
 [l4d_pipebomb_damage](https://forums.alliedmods.net/showthread.php?p=2680272) 设置手雷伤害对所有生物的倍数 可通过l4d_pipebomb_shove设置的伤害进行更改 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_pipebomb_damage.sp)   
 [l4d2_tank_announce](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_tank_announce) 坦克出现播放提示音及聊天框提示   
