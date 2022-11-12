@@ -52,7 +52,7 @@ static bool IsTooEasy() {
 	char difficulty[16];
 
 	cvDifficulty.GetString(difficulty, sizeof(difficulty));
-	isEasy = StrEqual(difficulty, NORMAL) || StrEqual(difficulty, EASY);
+	isEasy = StrEqual(difficulty, EASY);
 
 	return (IsCoop() && IsOfficialMap() && isEasy);
 }
@@ -66,8 +66,8 @@ static bool AnyHumanPlayers() {
 }
 
 static void MakeItHard() {
-	PrintToServer("[Too Easy] Setting difficulty to advanced");
-	cvDifficulty.SetString(ADVANCED);
+	PrintToServer("[Too Easy] Setting difficulty to normal");
+	cvDifficulty.SetString(NORMAL);
 }
 
 public void Event_PlayerActivate(Event event, const char[] name, bool dontBroadcast) {
@@ -75,14 +75,14 @@ public void Event_PlayerActivate(Event event, const char[] name, bool dontBroadc
 
 	// Print a helpful message if the difficulty was forcibly changed at the beginning of the map.
 	if (wasTooEasy)
-		PrintToChat(player, "[难度管理]服务器只允许高级和专家难度，已自动变更为高级难度");
+		PrintToChat(player, "[难度管理]服务器禁止简单难度，已自动变更为普通难度");
 }
 
 public void OnDifficultyChange(ConVar convar, char[] oldValue, char[] newValue) {
 	// Check if any human players are on the server which suggests the difficulty was voted down.
 	if (AnyHumanPlayers() && IsTooEasy()) {
 		MakeItHard();
-		PrintToChatAll("[难度管理]服务器只允许高级和专家难度，已自动变更为高级难度");
+		PrintToChatAll("[难度管理]服务器禁止简单难度，已自动变更为普通难度");
 	}
 }
 
