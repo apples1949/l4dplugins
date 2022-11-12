@@ -142,6 +142,7 @@ l4d2_unreservelobby 动态大厅 Q群钵钵鸡更新版本
 [enhancedsprays](https://forums.alliedmods.net/showthread.php?p=1998984) 设定喷漆间隔和范围 [大红修改并更新语法(已获得上传许可)](https://github.com/apples1949/l4dplugins/blob/main/enhancedsprays.sp)  
 [l4d_ssi_teleport_fix](https://github.com/fbef0102/Game-Private_Plugin/tree/main/l4d_ssi_teleport_fix) 价值90r的仿Anne的特感传送 要的自己去买  
 [TickrateFixes](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/TickrateFixes.sp) 修复高tick下手枪射击间隔过快问题 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/TickrateFixes.sp)  
+[RestrictedGameModes](https://github.com/fantasylidong/L4d2_plugins/blob/main/RestrictGamemode/RestrictedGameModes.sp) 锁定模式 省的sb路人用指令到服务器开写实或者对抗 [去掉4人限制](https://github.com/apples1949/l4dplugins/blob/main/RestrictedGameModes.sp)   
 [vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)：    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
