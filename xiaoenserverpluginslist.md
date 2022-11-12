@@ -110,7 +110,6 @@ l4d2_unreservelobby 动态大厅 Q群钵钵鸡更新版本
 [L4D_Elevator_Teleport](https://forums.alliedmods.net/showthread.php?p=2785701) 官图电梯倒计时 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/blob/main/L4D_Elevator_Teleport.sp)   
 [boss_controller](https://github.com/GlowingTree880/L4D2_LittlePlugins/tree/main/BossController) 战役路程刷克和妹子   
 [noteam_nudging](https://github.com/LuxLuma/L4D-small-plugins/blob/master/L4D1-2_noteam_nudging/scripting/noteam_nudging.sp) 防止某些三方图玩家碰撞被挤下去   
-[l4d2_tooeasy](https://github.com/nuviktor/sm-l4d2-tooeasy) 禁简单普通难度 [翻译文本](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp)   
 [dialogue_criteria_fix](https://forums.alliedmods.net/showthread.php?t=335875) 修复两代人物对话   
 [l4d2_gift_rewards](https://forums.alliedmods.net/showthread.php?t=320067) 杀特随机掉礼物 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/tree/main/l4d2_gift_rewards)   
 [l4d_plane](https://github.com/apples1949/l4dplugins/tree/main/l4d_plane_crash_crash) 显示坠机动画 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_plane_crash)  
@@ -123,9 +122,7 @@ l4d2_unreservelobby 动态大厅 Q群钵钵鸡更新版本
 [l4d_bot_healing](https://forums.alliedmods.net/showthread.php?p=2785360) bot什么血量才能打包吃药 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_bot_healing)   
 [l4d_skip_intro](https://forums.alliedmods.net/showthread.php?p=2686527)/[FollowTarget_Detour](https://forums.alliedmods.net/showthread.php?p=2725811) 跳过开场动画/修复播放动画补丁 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_skip_intro)   
 [l4d_pause_message](https://forums.alliedmods.net/showthread.php?p=2682882) 阻止玩家控制台输出暂停消息   
-[l4d2_bacteria](https://forums.alliedmods.net/showthread.php?p=2675275) 恢复特感钢琴音提示   
 [l4d_christmas_tree](https://forums.alliedmods.net/showthread.php?p=2672241) 地图生成圣诞树及礼物补给 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_christmas_tree)   
-[l4d2_spitter_acid_damage](https://forums.alliedmods.net/showthread.php?p=2672091) 口水酸液可对感染者和爆炸物造成伤害 [自翻cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_spitter_acid_damage)   
 [l4d2_car_alarm_bots](https://forums.alliedmods.net/showthread.php?p=2671546) bot或者特感可以打警报车 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_car_alarm_bots)   
 [l4d_tongue_damage](https://forums.alliedmods.net/showthread.php?p=2668589) 战役下舌头拖拽伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_tongue_damage.sp)   
 [l4d_witch_damage](https://forums.alliedmods.net/showthread.php?p=2667165) 设置女巫不同难度伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_witch_damage.sp)   
@@ -151,4 +148,3 @@ l4d2_unreservelobby 动态大厅 Q群钵钵鸡更新版本
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
 [mod]zmweapon.vpk zm参数小枪 
 [mod]knife.vpk 恢复小刀 [来自anne](https://github.com/Caibiii/AnneServer/blob/main/left4dead2/addons/knife.vpk)   
-[mod]grenade3clip.vpk 自制榴弹发射器三发前置弹药
