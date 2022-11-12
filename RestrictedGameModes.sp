@@ -50,8 +50,8 @@ Changelog
 */
 public void  OnPluginStart()
 {
-	g_hPluginMode = CreateConVar("server_restricted_mode", "2", "游戏模式限制插件使用模式 (0关闭插件, 1白名单模式, 2黑名单模式).", 0, true, 0.0, true, 2.0);
-	g_hAllowMode = CreateConVar("server_allow_mode", "coop,realism,mutation4,community5", "白名单模式.", 0, false, 0.0, false, 0.0);
+	g_hPluginMode = CreateConVar("server_restricted_mode", "1", "游戏模式限制插件使用模式 (0关闭插件, 1白名单模式, 2黑名单模式).", 0, true, 0.0, true, 2.0);
+	g_hAllowMode = CreateConVar("server_allow_mode", "coop", "白名单模式.", 0, false, 0.0, false, 0.0);
 	g_hDisAllowMode = CreateConVar("server_disallow_mode", "versus,scavenge,mutation2,mutation12,mutation13,mutation15,mutation18", "黑名单模式.", 0, false, 0.0, false, 0.0);
 	g_hServerDealWith = CreateConVar("server_deal_with", "1", "服务器碰到不允许模式的处理方式 (1更改为设置好的模式, 2踢出玩家并重启服务器).", 0, true, 1.0, true, 2.0);
 	g_hDefMode = CreateConVar("server_default_mode", "coop", "默认模式和不允许模式切换为的模式.", 0, false, 0.0, false, 0.0);
@@ -111,26 +111,30 @@ public void OnClientPutInServer(int client)
 		if(!IsAllowMode)
 		{
 			LogToFileEx(g_sLogPath, "不允许的模式，重置模式");
-			CPrintToChat(client, "此服务器不允许游玩 {blue}%s{default} 模式，将在60秒后自动切换为 {blue}%s{default}", g_sCurrentGameMode, g_sDefMode);
-			ResetGameMode = CreateTimer(60.0, DealWithGameModeChange);
+			CPrintToChat(client, "此服务器不允许游玩 {blue}%s{default} 模式，将在20秒后自动切换为 {blue}%s{default}", g_sCurrentGameMode, g_sDefMode);
+			ResetGameMode = CreateTimer(20.0, DealWithGameModeChange);
 		}
 	}
 	else
 	{
-		CPrintToChat(client, "此服务器不允许游玩 {blue}%s{default} 模式，将在60秒后自动切换为 {blue}%s{default}", g_sCurrentGameMode, g_sDefMode);
+		CPrintToChat(client, "此服务器不允许游玩 {blue}%s{default} 模式，将在20秒后自动切换为 {blue}%s{default}", g_sCurrentGameMode, g_sDefMode);
 	}
 }
 
 public void OnMapEnd()
 {
-	if(ResetGameMode != INVALID_HANDLE)
+	if(ResetGameMode != INVALID_HANDLE){
 		CloseHandle(ResetGameMode);
+		ResetGameMode = INVALID_HANDLE;
+	}	
 }
 
 public void OnMapStart()
 {
-	if(ResetGameMode != INVALID_HANDLE)
+	if(ResetGameMode != INVALID_HANDLE){
 		CloseHandle(ResetGameMode);
+		ResetGameMode = INVALID_HANDLE;
+	}	
 }
 
 //锁定游戏难度
@@ -158,6 +162,10 @@ void GetCvars()
 
 Action DealWithGameModeChange(Handle timer)
 {
+	if(ResetGameMode != INVALID_HANDLE){
+		CloseHandle(ResetGameMode);
+		ResetGameMode = INVALID_HANDLE;
+	}	
 	if(g_iServerDealWith)
 	{
 		switch(g_iServerDealWith)
@@ -169,14 +177,14 @@ Action DealWithGameModeChange(Handle timer)
 				ServerCommand("sm_cvar mp_gamemode %s", g_sDefMode);
 				ServerCommand("mp_gamemode %s", g_sDefMode);
 				RestartMap();
-				return Plugin_Stop;
+				return Plugin_Continue;
 			}
 			case 2:
 			{
 				LogToFileEx(g_sLogPath, "不允许的模式%s，重启服务器", g_sCurrentGameMode);
 				KickAllPlayer();
 				RestartServer();
-				return Plugin_Stop;
+				return Plugin_Continue;
 			}
 		}
 	}
