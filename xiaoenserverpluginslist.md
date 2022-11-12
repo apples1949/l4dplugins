@@ -82,7 +82,7 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [lerptracker](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/lerptracker) 显示lerp [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/blob/main/lerptracker.sp)   
 [l4d_graves](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves) 生还者死亡后生成坟墓 [自翻cvar介绍](https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp)   
 [l4d_rock_lagcomp](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp) 战役模式中给坦克石头提供滞后补偿  
-[l4d2_nextmap_v1.1](https://forums.alliedmods.net/showthread.php?t=332291) 官图打完随机换图 [注释三方换图](https://github.com/apples1949/l4dplugins/tree/main/l4d2_nextmap_v1.1/sourcemod)  
+[map_changer/l4d2_map_vote/l4d2_nativevote/l4d2_source_keyvalues](https://github.com/umlka/l4d2/tree/main/map_changer) 钵钵鸡自动换图+投票换图  
 [l4d_rescue_vehicle_leave_timer](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rescue_vehicle_leave_timer) 官图救援倒计时 [自翻cvar](https://github.com/apples1949/l4dplugins/tree/main/l4d_rescue_vehicle_leave_timer)   
 [l4d_death_soul](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_death_soul) 死去的幸存者的灵魂飞向来世   
 [l4d_votedifficulty](https://forums.alliedmods.net/showthread.php?t=317257) 投票更改难度 [自翻译文本 自用删掉了简单难度选项](https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty)   
