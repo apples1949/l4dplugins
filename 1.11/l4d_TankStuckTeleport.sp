@@ -115,7 +115,7 @@ ConVar  g_hCvarRusherDist;
 ConVar  g_hCvarRusherCheckTimes;
 ConVar  g_hCvarRusherCheckInterv;
 ConVar  g_hCvarRusherMinPlayers;
-
+ConVar  g_hCvarRusherEnable;
 Handle 	g_hTimerIdler = INVALID_HANDLE;
 Handle 	g_hTimerRusher = INVALID_HANDLE;
 
@@ -153,36 +153,37 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-	CreateConVar(							"l4d_TankAntiStuck_version",				PLUGIN_VERSION,	"Plugin version", FCVAR_DONTRECORD );
-	g_hCvarEnable = CreateConVar(			"l4d_TankAntiStuck_enable",					"1",		"是否启动插件(1-是/0-否)", CVAR_FLAGS );
+	CreateConVar(							"l4d_TankAntiStuck_version",				PLUGIN_VERSION,	"插件版本", FCVAR_DONTRECORD );
+	g_hCvarEnable = CreateConVar(			"l4d_TankAntiStuck_enable",					"1",		"是否开启插件 (1 - 开 / 0 - 关)", CVAR_FLAGS );
 	
-	g_hCvarNonAngryTime = CreateConVar(		"l4d_TankAntiStuck_non_angry_time",			"45",		"如果坦克生成后的指定时间（秒）内没有行动，就会自动传送（0-禁用）", CVAR_FLAGS );
+	g_hCvarNonAngryTime = CreateConVar(		"l4d_TankAntiStuck_non_angry_time",			"120",		"如果在指定的时间(秒)里坦克出现但没有行动(响起BGM)则自动传送坦克(0 - 禁用)", CVAR_FLAGS );
 	
-	g_hCvarTankDistanceMax = CreateConVar(	"l4d_TankAntiStuck_tank_distance_max",		"1000",		"坦克与最近的玩家之间允许的最大距离（被激怒后）否则将被传送（0-禁用）", CVAR_FLAGS );
-	g_hCvarHeadHeightMax = CreateConVar(	"l4d_TankAntiStuck_head_height_max",		"150",		"坦克在玩家头顶下的距离，默认情况下，当坦克在使用平滑传送的情况下继续卡住时，将会被瞬间传送", CVAR_FLAGS );
-	g_hCvarHeadHeightMin = CreateConVar(	"l4d_TankAntiStuck_head_height_min",		"80",		"玩家头部以下的距离，如果插件无法找到更合适的位置，坦克将被立即传送", CVAR_FLAGS );
-	g_hCvarStuckInterval = CreateConVar(	"l4d_TankAntiStuck_check_interval",			"3",		"检查坦克卡住的时间间隔（秒）", CVAR_FLAGS );
-	g_hCvarNonStuckRadius = CreateConVar(	"l4d_TankAntiStuck_non_stuck_radius",		"15",		"坦克在X秒内没有移动时被认为没有被卡住的最大半径（见l4d_TankAntiStuck_check_interval ConVar）", CVAR_FLAGS );
-	g_hCvarInstTeleDist = CreateConVar(		"l4d_TankAntiStuck_inst_tele_dist",			"50",		"即时型传送的距离", CVAR_FLAGS );
-	g_hCvarSmoothTeleDist = CreateConVar(	"l4d_TankAntiStuck_smooth_tele_dist",		"150",		"平滑型传送的距离", CVAR_FLAGS );
-	g_hCvarSmoothTelePower = CreateConVar(	"l4d_TankAntiStuck_smooth_tele_power",		"300",		"平滑型传送的力量（速度）", CVAR_FLAGS, true, 251.0, true, 500.0 );
-	g_hCvarDestObject = CreateConVar(		"l4d_TankAntiStuck_dest_object",			"1",		"将坦克传送到：（0-当前坦克旁边，1-另一个坦克旁边，2-玩家旁边）", CVAR_FLAGS );
+	g_hCvarTankDistanceMax = CreateConVar(	"l4d_TankAntiStuck_tank_distance_max",		"2500",		"坦克与最近的幸存者允许的最远距离(BGM响起时). 如果超过这个距离则传送坦克 (0 - 禁用)", CVAR_FLAGS );
+	g_hCvarHeadHeightMax = CreateConVar(	"l4d_TankAntiStuck_head_height_max",		"150",		"当领队玩家(跑在最前面的玩家)与坦克(该出生的位置)相距达到这个距离时,坦克会立刻传送到这个(或者在附近)位置(避免坦克出生时卡住了,无法动弹)", CVAR_FLAGS );
+	g_hCvarHeadHeightMin = CreateConVar(	"l4d_TankAntiStuck_head_height_min",		"80",		"当领队玩家(跑在最前面的玩家)与坦克(该出生的位置)相距达到这个距离时,坦克会立刻传送到这个(或者在附近)位置(避免坦克出生时卡住了,无法动弹),在插件无法找到一个合适的位置是改为这个距离", CVAR_FLAGS );
+	g_hCvarStuckInterval = CreateConVar(	"l4d_TankAntiStuck_check_interval",			"3",		"每次过这么久(秒)检测一次坦克是否被卡住", CVAR_FLAGS );
+	g_hCvarNonStuckRadius = CreateConVar(	"l4d_TankAntiStuck_non_stuck_radius",		"15",		"在半径为这么大的圆内,即使坦克没有移动,坦克也不被考虑为被卡住", CVAR_FLAGS );
+	g_hCvarInstTeleDist = CreateConVar(		"l4d_TankAntiStuck_inst_tele_dist",			"300",		"瞬间传送的距离(直接改坦克坐标)", CVAR_FLAGS );
+	g_hCvarSmoothTeleDist = CreateConVar(	"l4d_TankAntiStuck_smooth_tele_dist",		"400",		"平滑传送的距离(把坦克移动过去)", CVAR_FLAGS );
+	g_hCvarSmoothTelePower = CreateConVar(	"l4d_TankAntiStuck_smooth_tele_power",		"300",		"平滑传送的速度", CVAR_FLAGS, true, 251.0, true, 500.0 );
+	g_hCvarDestObject = CreateConVar(		"l4d_TankAntiStuck_dest_object",			"2",		"坦克传送到什么物体旁边 (0 - 当前坦克附近, 1 - 别的坦克附近, 2 - 玩家附近)", CVAR_FLAGS );
 	
-	g_hCvarAllIntellect = CreateConVar(		"l4d_TankAntiStuck_all_intellect",			"1",		"1 - 对BOT或真实玩家都适用，0 - 只适用于BOT（假）", CVAR_FLAGS );
+	g_hCvarAllIntellect = CreateConVar(		"l4d_TankAntiStuck_all_intellect",			"0",		"防卡死应用的目标: 1 - 玩家和电脑人, 0 - 只有电脑人", CVAR_FLAGS );
 	
-	g_hCvarApplyConVar = CreateConVar(		"l4d_TankAntiStuck_apply_convar",			"1",		"1-应用特殊的ConVar，试图解决坦克在卡住后失去控制的问题（以防万一）。0-不应用", CVAR_FLAGS );
+	g_hCvarApplyConVar = CreateConVar(		"l4d_TankAntiStuck_apply_convar",			"1",		"防止坦克因为卡住而失去控制: 1 - 是. 0 - 否", CVAR_FLAGS );
 	
-	g_hCvarIdlerPunish = CreateConVar(		"l4d_TankAntiStuck_idler_punish",			"1",		"惩罚那些空闲玩家，把最近的坦克传送给他？(0-否/1-是)", CVAR_FLAGS );
-	g_hCvarIdlerRadius = CreateConVar(		"l4d_TankAntiStuck_idler_radius",			"30",		"玩家移动范围不超过多少会被认为空闲玩家", CVAR_FLAGS );
-	g_hCvarIdlerCheckTimes = CreateConVar(	"l4d_TankAntiStuck_idler_check_times",		"3",		"最终将玩家视为空闲玩家之前的检查次数", CVAR_FLAGS );
-	g_hCvarIdlerCheckInterv = CreateConVar(	"l4d_TankAntiStuck_idler_check_interval",	"3",		"每次检测空闲玩家的间隔（秒）", CVAR_FLAGS );
-	g_hCvarIdlerMinPlayers = CreateConVar(	"l4d_TankAntiStuck_idler_minplayers",		"2",		"至少多少名生还者玩家才会允许'空闲玩家'规则", CVAR_FLAGS );
+	g_hCvarIdlerPunish = CreateConVar(		"l4d_TankAntiStuck_idler_punish",			"0",		"是否将长时间不移动的玩家最近的坦克传送到他附近(以惩罚他)? (0 - 否 / 1 - 是)", CVAR_FLAGS );
+	g_hCvarIdlerRadius = CreateConVar(		"l4d_TankAntiStuck_idler_radius",			"30",		"如果玩家移动距离低于半径为这么大的圆则被视为长时间不移动", CVAR_FLAGS );
+	g_hCvarIdlerCheckTimes = CreateConVar(	"l4d_TankAntiStuck_idler_check_times",		"3",		"如果连续被检测这么多次玩家不移动则考虑这个玩家是长时间不移动", CVAR_FLAGS );
+	g_hCvarIdlerCheckInterv = CreateConVar(	"l4d_TankAntiStuck_idler_check_interval",	"3",		"每次经过这么久(秒)检测一次玩家是否移动", CVAR_FLAGS );
+	g_hCvarIdlerMinPlayers = CreateConVar(	"l4d_TankAntiStuck_idler_minplayers",		"2",		"至少要有这么多玩家才考虑检查是否有人长时间不移动", CVAR_FLAGS );
 	
-	g_hCvarRusherPunish = CreateConVar(		"l4d_TankAntiStuck_rusher_punish",			"1",		"是否惩罚那些距离最近坦克太远的玩家？（0-否/1-是）", CVAR_FLAGS );
-	g_hCvarRusherDist = CreateConVar(		"l4d_TankAntiStuck_rusher_dist",			"2000",		"与坦克多少距离的玩家视为跑图玩家", CVAR_FLAGS );
-	g_hCvarRusherCheckTimes = CreateConVar(	"l4d_TankAntiStuck_rusher_check_times",		"3",		"最终将玩家视为跑图玩家之前的检查次数", CVAR_FLAGS );
-	g_hCvarRusherCheckInterv = CreateConVar("l4d_TankAntiStuck_rusher_check_interval",	"10",		"每次跑图玩家检查之间的间隔（秒）", CVAR_FLAGS );	
-	g_hCvarRusherMinPlayers = CreateConVar(	"l4d_TankAntiStuck_rusher_minplayers",		"2",		"至少多少名生还者玩家才会允许'跑图玩家'规则", CVAR_FLAGS );
+	g_hCvarRusherPunish = CreateConVar(		"l4d_TankAntiStuck_rusher_punish",			"1",		"是否惩罚(把坦克传送到他附近)跑图(出了坦克不打,一个人跑)的玩家? (0 - 否 / 1 - 是)", CVAR_FLAGS );
+	g_hCvarRusherDist = CreateConVar(		"l4d_TankAntiStuck_rusher_dist",			"3000",		"离坦克这么远被认为是在跑图", CVAR_FLAGS );
+	g_hCvarRusherCheckTimes = CreateConVar(	"l4d_TankAntiStuck_rusher_check_times",		"3",		"如果连续被检测这么多次玩家在跑图确认玩家在跑图", CVAR_FLAGS );
+	g_hCvarRusherCheckInterv = CreateConVar("l4d_TankAntiStuck_rusher_check_interval",	"4",		"每次经过这么久(秒)检测一次玩家是否跑图", CVAR_FLAGS );	
+	g_hCvarRusherMinPlayers = CreateConVar(	"l4d_TankAntiStuck_rusher_minplayers",		"4",		"至少要这么多玩家才考虑检查是否有人跑图", CVAR_FLAGS );
+	g_hCvarRusherEnable = CreateConVar(	"l4d_TankAntiStuck_rusher_Enable",		"0",				"救援关是否检测跑图[1-是，0-否]", CVAR_FLAGS );
 	
 	AutoExecConfig(true,			"l4d_tank_antistuck");
 	
@@ -201,6 +202,7 @@ public void OnPluginStart()
 	HookConVarChange(g_hCvarNonAngryTime,		ConVarChanged);
 	HookConVarChange(g_hCvarIdlerPunish,		ConVarChanged);
 	HookConVarChange(g_hCvarRusherPunish,		ConVarChanged);
+	HookConVarChange(g_hCvarRusherEnable,		ConVarChanged);
 	
 	GetCvars();
 	
@@ -307,11 +309,11 @@ public Action Cmd_FindEmpty(int client, int args)
 	GetClientAbsOrigin(client, vOrigin);
 	
 	if (FindEmptyPos(client, client, 300.0, vEnd)) {
-		//PrintToChat(client, "找到空位置，距离: %f", GetVectorDistance(vOrigin, vEnd));
+		PrintToChat(client, "Empty pos is found, distance: %f", GetVectorDistance(vOrigin, vEnd));
 		TeleportEntity(client, vEnd, NULL_VECTOR, NULL_VECTOR);
 	}
 	else {
-		//PrintToChat(client, "找不到空位置!!!");
+		PrintToChat(client, "Cannot found empty pos!!!");
 		
 		float fSetDist = 100.0;
 		
@@ -319,10 +321,10 @@ public Action Cmd_FindEmpty(int client, int args)
 		vEnd[0] -= fSetDist;
 		float dist;
 		if ((dist = GetDistanceToVec(client, vEnd)) >= fSetDist) {
-			//PrintToChat(client, "ray infinite. dist = %f", dist);
+			PrintToChat(client, "ray infinite. dist = %f", dist);
 		}
 		else {
-			//PrintToChat(client, "ray infinite. dist = %f", dist);
+			PrintToChat(client, "ray infinite. dist = %f", dist);
 		}
 		
 	}
@@ -474,7 +476,7 @@ public void Event_TankSpawn(Event hEvent, const char[] name, bool dontBroadcast)
 		BeginIdlerRusherTracing();
 		
 		#if (DEBUG)
-			//PrintToChatAll("%N (id: %i) is spawned.", client, client);
+			PrintToChatAll("%N (id: %i) 出现了", client, client);
 		#endif
 	}
 }
@@ -497,8 +499,11 @@ void BeginIdlerRusherTracing(bool bResetStat = true)
 				g_hTimerIdler = CreateTimer(g_hCvarIdlerCheckInterv.FloatValue, Timer_CheckIdler, _, TIMER_REPEAT);
 		}
 		if (g_hCvarRusherPunish.BoolValue) {
-			if (g_hTimerRusher == INVALID_HANDLE)
-				g_hTimerRusher = CreateTimer(g_hCvarRusherCheckInterv.FloatValue, Timer_CheckRusher, _, TIMER_REPEAT);
+			if(g_hCvarRusherEnable.BoolValue && IsFinalMap() || !IsFinalMap())
+			{
+				if (g_hTimerRusher == INVALID_HANDLE)
+					g_hTimerRusher = CreateTimer(g_hCvarRusherCheckInterv.FloatValue, Timer_CheckRusher, _, TIMER_REPEAT);
+			}
 		}
 	}
 }
@@ -551,7 +556,7 @@ public Action Timer_CheckIdler(Handle timer) {
 							
 							if (tank != 0) {
 								TeleportToSurvivorInPlace(tank, i);
-								//PrintToChatAll("\x03%N \x04is punished for idle.", i);
+								//PrintToChatAll("\x04%N \x03因不走动而招致仇恨。", i);
 							}
 							g_iIdleTimes[i] = 0;
 						}
@@ -570,8 +575,8 @@ public Action Timer_CheckIdler(Handle timer) {
 	return Plugin_Continue;
 }
 
-public Action Timer_CheckRusher(Handle timer) {
-	
+public Action Timer_CheckRusher(Handle timer) 
+{
 	static float pos[3], postank[3], distance;
 	static int tank, i;
 	
@@ -588,7 +593,7 @@ public Action Timer_CheckRusher(Handle timer) {
 	
 	for (i = 1; i <= MaxClients; i++)
 	{
-		if (IsClientInGame(i) && GetClientTeam(i) == 2 && !IsFakeClient(i) && IsPlayerAlive(i))
+		if (IsClientInGame(i) && GetClientTeam(i) == 2 && !IsFakeClient(i) && IsPlayerAlive(i) && !IsIncapped(i) && !IsPlayerHeld(i))
 		{
 			GetClientAbsOrigin(i, pos);
 			
@@ -606,7 +611,7 @@ public Action Timer_CheckRusher(Handle timer) {
 						if (g_iRushTimes[i] >= g_hCvarRusherCheckTimes.IntValue) {
 
 							TeleportToSurvivorInPlace(tank, i);
-							PrintToChatAll("%N因跑图受到惩罚", i);
+							PrintToChatAll("\x04%N \x03因跑图而招致仇恨。", i);
 							
 							g_iRushTimes[i] = 0;
 						}
@@ -726,7 +731,7 @@ public Action Timer_CheckAngry(Handle timer, int UserId)
 		if (IsAngry(client) || g_bAngry[client]) {
 		
 			#if (DEBUG)
-				//PrintToChatAll("%N became angry!", client);
+				PrintToChatAll("%N 发起了进攻。", client);
 			#endif
 			
 			g_bAtLeastOneTankAngry = true;
@@ -791,11 +796,38 @@ public Action Timer_CheckPos(Handle timer, int UserId)
 			
 			static bool bOnLadder;
 			bOnLadder = IsOnLadder(tank);
-
+			
+			if (g_fMaxNonAngryDist != 0.0 && (GetDistanceToNearestClient(tank) > g_fMaxNonAngryDist || g_iStuckTimes[tank] > 2)) {
+				// object selectable by ConVar => teleport only when tank looks like completely stuck
+				TeleportToObject(tank);
+				// apply velocity
+				TeleportPlayerSmoothByPreset(tank);
+			}
+			else if (g_iStuckTimes[tank] > 1 || bOnLadder) {
+				/*
+				SetEntityMoveType (tank, MOVETYPE_NOCLIP);
+				#if (DEBUG)
+					PrintToChatAll("%N movetype: noclip", tank);
+				#endif
+				*/
+				
+				// teleport in direction of "bugger" player + apply velocity
+				MakeTeleport(tank);
+				
+				#if (DEBUG)
+					int anim = GetEntProp(tank, Prop_Send, "m_nSequence");
+					PrintToChatAll("%N stucked => micro-teleport, dist: %f, anim: %i", tank, distance, anim);
+				#endif
+				
+				/*
+				SetEntProp(tank, Prop_Send, "m_nSequence", 12);
+				CreateTimer(0.5, Timer_SetWalk, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+				*/
+			}
 			g_iStuckTimes[tank]++;
 			
 			#if (DEBUG)
-				//PrintToChatAll("%N stuck ++: %i", tank, g_iStuckTimes[tank]);
+				PrintToChatAll("%N stuck ++: %i", tank, g_iStuckTimes[tank]);
 			#endif
 			
 			CreateTimer(0.5, Timer_Unstuck, GetClientUserId(tank), TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
@@ -808,7 +840,7 @@ public Action Timer_CheckPos(Handle timer, int UserId)
 	}
 	else
 		return Plugin_Stop;
-
+	
 	return Plugin_Continue;
 }
 
@@ -856,7 +888,7 @@ public Action Timer_SetWalk(Handle timer, int UserId)
 	int client = GetClientOfUserId(UserId);
 	if (client != 0 && IsClientInGame(client) && IsPlayerAlive(client)) {
 		#if (DEBUG)
-			//PrintToChatAll("%N movetype: walk", client);
+			PrintToChatAll("%N movetype: walk", client);
 		#endif
 		SetEntityMoveType (client, MOVETYPE_WALK);
 	}
@@ -877,7 +909,7 @@ public Action Timer_CheckAngryTimeout(Handle timer, int UserId)
 		g_bAtLeastOneTankAngry = true;
 		
 		#if (DEBUG)
-			//PrintToChatAll("%N angry is timed out.", client);
+			PrintToChatAll("%N 进攻超时。", client);
 		#endif
 	}
 }
@@ -921,7 +953,7 @@ void TeleportToObject(int client) {
 		
 		TeleportEntity(client, pos, NULL_VECTOR, NULL_VECTOR);
 		#if (DEBUG)
-			//PrintToChatAll("%N is not angry. Teleported to %N", client, target);
+			PrintToChatAll("%N 等候超时，传送到 %N 处。", client, target);
 		#endif
 	}
 }
@@ -1186,5 +1218,24 @@ stock bool IsOnLadder(int entity)
 
 stock bool IsIncapped(int client)
 {
-	return GetEntProp(client, Prop_Send, "m_isIncapacitated", 1) == 1;
+	return GetEntProp(client, Prop_Send, "m_isIncapacitated", 1) == 1 || GetEntProp(client, Prop_Send, "m_isHangingFromLedge", 1) == 1;
+	// return GetEntProp(client, Prop_Send, "m_isIncapacitated", 1) == 1;
+}
+
+stock bool IsPlayerHeld(int client)
+{
+	int jockey = GetEntPropEnt(client, Prop_Send, "m_jockeyAttacker");
+	int charger = GetEntPropEnt(client, Prop_Send, "m_pummelAttacker");
+	int hunter = GetEntPropEnt(client, Prop_Send, "m_pounceAttacker");
+	int smoker = GetEntPropEnt(client, Prop_Send, "m_tongueOwner");
+	if (jockey > 0 || charger > 0 || hunter > 0 || smoker > 0)
+	{
+		return true;
+	}
+	return false;
+}
+
+stock bool IsFinalMap()
+{
+	return FindEntityByClassname(-1, "info_changelevel") == -1 && FindEntityByClassname(-1, "trigger_changelevel") == -1;
 }

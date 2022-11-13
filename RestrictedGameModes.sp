@@ -4,18 +4,19 @@
 #include <sourcemod>
 #include <colors>
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define MAX_LINE_WIDTH 64
+#define CheckInterval 3.0
 ConVar	
-		g_hPluginMode,
-		g_hAllowMode,
-		g_hDisAllowMode,
-		g_hDifficulty,
-		g_hServerDealWith,
-		g_hLockDifficult,
-		g_hDefDifficulty,
-		g_hDefMode,
-		g_hGameMode;
+	g_hPluginMode,
+	g_hAllowMode,
+	g_hDisAllowMode,
+	g_hDifficulty,
+	g_hServerDealWith,
+	g_hLockDifficult,
+	g_hDefDifficulty,
+	g_hDefMode,
+	g_hGameMode;
 char
 	g_sLogPath[PLATFORM_MAX_PATH],
 	g_sAllowGameMode[512],
@@ -30,7 +31,7 @@ int
 	g_iLockDifficult = 0,
 	g_iPluginMode = 0;
 Handle
-	ResetGameMode = INVALID_HANDLE;
+	g_hCheckHandle = null;
 public Plugin myinfo =
 {
 	name = "Restricted game modes",
@@ -47,6 +48,7 @@ Changelog
 2022.7.14
 1.2 自定义设置不允许模式切换为的模式[原自动为战役], 重新设置模式和重启服务器的模式的定时器由1.1的5s延长到了
 10s，5s人多的对抗模式很大可能不会重新设置模式
+1.3 定时器改为repeat模式，取消handle控制，运行完毕Return Plugin_stop结束计时器
 */
 public void  OnPluginStart()
 {
@@ -67,11 +69,21 @@ public void  OnPluginStart()
 	g_hAllowMode.AddChangeHook(ConVarChanged_Cvars);
 	g_hDisAllowMode.AddChangeHook(ConVarChanged_Cvars);
 	g_hServerDealWith.AddChangeHook(ConVarChanged_Cvars);
+	g_hGameMode.AddChangeHook(Gamemode_Changed);
 	
+	HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
+
 	IsAllowMode = true;
 	GetCvars();
 	AutoExecConfig(true, "RestrictedGameModes");
 }
+
+public Action RoundStart_Event(Handle event, const char[] name, bool dontBroadcast)
+{
+	CreateTimer(CheckInterval, CheckAllowGamemode, _, TIMER_REPEAT);
+	return Plugin_Continue;
+}
+
 // *********************
 //		获取Cvar值
 // *********************
@@ -101,40 +113,24 @@ void CheckAllow()
 	}
 }
 
-public void OnClientPutInServer(int client)
-{
-	if(!IsValidClient(client))
-		return;
-	if(ResetGameMode == INVALID_HANDLE)
+public Action CheckAllowGamemode(Handle timer){
+	CheckAllow();
+	if(!IsAllowMode)
 	{
-		CheckAllow();
-		if(!IsAllowMode)
-		{
-			LogToFileEx(g_sLogPath, "不允许的模式，重置模式");
-			CPrintToChat(client, "此服务器不允许游玩 {blue}%s{default} 模式，将在20秒后自动切换为 {blue}%s{default}", g_sCurrentGameMode, g_sDefMode);
-			ResetGameMode = CreateTimer(20.0, DealWithGameModeChange);
-		}
+		//LogToFileEx(g_sLogPath, "不允许的模式，重置模式");
+		if(g_hCheckHandle == null)
+			g_hCheckHandle = CreateTimer(CheckInterval, DealWithGameModeChange, _, TIMER_REPEAT);
+		return Plugin_Continue;
+	}else{
+		return Plugin_Stop;
 	}
-	else
-	{
-		CPrintToChat(client, "此服务器不允许游玩 {blue}%s{default} 模式，将在20秒后自动切换为 {blue}%s{default}", g_sCurrentGameMode, g_sDefMode);
-	}
+	
 }
 
-public void OnMapEnd()
-{
-	if(ResetGameMode != INVALID_HANDLE){
-		CloseHandle(ResetGameMode);
-		ResetGameMode = INVALID_HANDLE;
-	}	
-}
-
-public void OnMapStart()
-{
-	if(ResetGameMode != INVALID_HANDLE){
-		CloseHandle(ResetGameMode);
-		ResetGameMode = INVALID_HANDLE;
-	}	
+//检测是否为允许模式
+void Gamemode_Changed(ConVar convar, const char[] oldValue, const char[] newValue){
+	GetCvars();
+	CreateTimer(CheckInterval, CheckAllowGamemode, _, TIMER_REPEAT);
 }
 
 //锁定游戏难度
@@ -162,10 +158,6 @@ void GetCvars()
 
 Action DealWithGameModeChange(Handle timer)
 {
-	if(ResetGameMode != INVALID_HANDLE){
-		CloseHandle(ResetGameMode);
-		ResetGameMode = INVALID_HANDLE;
-	}	
 	if(g_iServerDealWith)
 	{
 		switch(g_iServerDealWith)
@@ -177,14 +169,16 @@ Action DealWithGameModeChange(Handle timer)
 				ServerCommand("sm_cvar mp_gamemode %s", g_sDefMode);
 				ServerCommand("mp_gamemode %s", g_sDefMode);
 				RestartMap();
-				return Plugin_Continue;
+				g_hCheckHandle = null;
+				return Plugin_Stop;
 			}
 			case 2:
 			{
 				LogToFileEx(g_sLogPath, "不允许的模式%s，重启服务器", g_sCurrentGameMode);
 				KickAllPlayer();
 				RestartServer();
-				return Plugin_Continue;
+				g_hCheckHandle = null;
+				return Plugin_Stop;
 			}
 		}
 	}

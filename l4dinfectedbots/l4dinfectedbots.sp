@@ -2798,7 +2798,7 @@ public Action Timer_CountSurvivor(Handle timer)
 			if(g_bCommonLimitAdjust)
 			{
 				SetConVarInt(h_common_limit_cvar, g_iCommonLimit + h_PlayerAddCommonLimit.IntValue * (addition/h_PlayerAddCommonLimitScale.IntValue));
-				if(g_bStatusAnnouncementEnable) C_PrintToChatAll("%t","Current status2",iAliveSurplayers,g_iMaxPlayerZombies,h_common_limit_cvar.IntValue);
+				if(g_bStatusAnnouncementEnable) C_PrintToChatAll("%t","Current status2",iAliveSurplayers,g_iMaxPlayerZombies,h_common_limit_cvar.IntValue,h_InfectedSpawnTimeMax.IntValue,h_InfectedSpawnTimeMin.IntValue);
 			}
 			else
 			{

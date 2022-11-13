@@ -424,17 +424,17 @@ public void Explode_Medic( int entity )
 			if( GetVectorDistance( vPos, vEnd ) <= fCvar_HealingFieldRange )
 			{
 				iHealth = GetClientHealth( i );
-				if( iHealth < 225 )
+				if( iHealth < 150 )
 				{
 //					iHealth += RoundFloat( 6.0 );
 					iHealth += iCvar_AmountHealth; // Add the extra amount wants to the current amount.
-					if( iHealth > 225 )
-						iHealth = 225;
+					if( iHealth > 150 )
+						iHealth = 150;
 
 					fHealth = GetTempHealth( i );
-					if( iHealth + fHealth > 225 )
+					if( iHealth + fHealth > 150 )
 					{
-						fHealth = 225.0 - iHealth;
+						fHealth = 150.0 - iHealth;
 						SetTempHealth( i, fHealth );
 					}
 
