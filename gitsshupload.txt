@@ -1,0 +1,7 @@
+git init
+git remote
+git remote add origin git@github.com:apples1949/l4dplugins.git
+git remote remove origin
+git add .
+git commit -m "test"
+git push -u origin main
