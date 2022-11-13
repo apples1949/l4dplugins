@@ -88,7 +88,6 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [l4d_votedifficulty](https://forums.alliedmods.net/showthread.php?t=317257) 投票更改难度 [自翻译文本 自用删掉了简单难度选项](https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty)   
 [l4d_nightvision](https://forums.alliedmods.net/showthread.php?p=2666575#post2666575) 夜视仪 [翻译了下文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_nightvision.sp)   
 [self_help](https://forums.alliedmods.net/showthread.php?p=2766775#post2766775) 自救插件 [自翻cvar介绍和文本和其他更改](https://github.com/apples1949/l4dplugins/tree/main/self_help)   
-l4d2_unreservelobby 动态大厅 Q群钵钵鸡更新版本   
 [l4d2_blackscreen_fix](https://forums.alliedmods.net/showthread.php?t=318739)/[sm_stringtable_dumper](https://forums.alliedmods.net/showthread.php?p=2689943) 黑屏加载修复/转储所有字符串表的记录    
 [l4d_TankStuckTeleport](https://forums.alliedmods.net/showthread.php?t=314741) 坦克防卡 [自翻cvar介绍和文本 自用删掉部分代码](https://github.com/apples1949/l4dplugins/blob/main/l4d_TankStuckTeleport.sp)    
 [l4d2_ThirdpersonShoulderShotgunSoundFix](https://forums.alliedmods.net/showthread.php?t=259986)  第三人称霰弹无声音修复   
