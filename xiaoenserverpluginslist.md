@@ -1,4 +1,4 @@
-豆瓣包([2022-11-8豆瓣酱な (v1.1.1)(6911-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))：  
+豆瓣包:([2022-11-8豆瓣酱な (v1.1.1)(6911-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))  
 1.1.1插件平台linux版(6911-1148)(必须先启用这个)  
 必选-功能类插件(left4dhooks)(v1.120)(SilverShot)  
 必选-功能类插件(WeaponHandling)(v1.0.6)(Lux)  
@@ -143,8 +143,9 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [RestrictedGameModes](https://github.com/fantasylidong/L4d2_plugins/blob/main/RestrictGamemode/RestrictedGameModes.sp) 锁定模式 省的sb路人用指令到服务器开写实或者对抗 [去掉4人限制](https://github.com/apples1949/l4dplugins/blob/main/RestrictedGameModes.sp)   
 [l4d2_tooeasy](https://github.com/nuviktor/sm-l4d2-tooeasy) 禁止普通简单难度 [自改仅禁简单难度](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp)  
 [linux_auto_restart](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/linux_auto_restart/plugins) 没人自动重启服务器  
-[vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)：    
+[vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)：  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
-[mod]zmweapon.vpk zm参数小枪 
-[mod]knife.vpk 恢复小刀 [来自anne](https://github.com/Caibiii/AnneServer/blob/main/left4dead2/addons/knife.vpk)   
+[mod]zmweapon.vpk zm参数小枪  
+[mod]knife.vpk 恢复小刀 [来自anne](https://github.com/Caibiii/AnneServer/blob/main/left4dead2/addons/knife.vpk)  
+[stripper微改地图](https://github.com/apples1949/l4dplugins/tree/main/stripper)  
