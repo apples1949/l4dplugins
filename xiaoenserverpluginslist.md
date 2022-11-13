@@ -1,4 +1,4 @@
-豆瓣包([2022-11-2豆瓣酱な (v1.1.1)(6911-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))：  
+豆瓣包([2022-11-8豆瓣酱な (v1.1.1)(6911-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))：  
 1.1.1插件平台linux版(6911-1148)(必须先启用这个)  
 必选-功能类插件(left4dhooks)(v1.120)(SilverShot)  
 必选-功能类插件(WeaponHandling)(v1.0.6)(Lux)  
@@ -25,7 +25,6 @@
 自选-点燃或打爆物品提示(v1.0.7)(注意-本地服务器慎用)(Mart)  
 自选-防止服务器人数不足而关闭(AtomicStryker)  
 自选-防止玩家一直挂机(可单独设置管理员的挂机时间)(豆瓣酱な)  
-自选-服务器没人后炸服或切换为官图(v1.1.0)(lakwsh, 豆瓣酱な)  
 自选-服务器中文名(v1.1.1)(指令!host立即刷新服名)(豆瓣酱な)  
 自选-管理员菜单更改难度(v1.0.2)(豆瓣酱な)  
 自选-管理员菜单更改游戏模式(v1.2.1)(豆瓣酱な)  
@@ -143,6 +142,7 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [TickrateFixes](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/TickrateFixes.sp) 修复高tick下手枪射击间隔过快问题 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/TickrateFixes.sp)  
 [RestrictedGameModes](https://github.com/fantasylidong/L4d2_plugins/blob/main/RestrictGamemode/RestrictedGameModes.sp) 锁定模式 省的sb路人用指令到服务器开写实或者对抗 [去掉4人限制](https://github.com/apples1949/l4dplugins/blob/main/RestrictedGameModes.sp)   
 [l4d2_tooeasy](https://github.com/nuviktor/sm-l4d2-tooeasy) 禁止普通简单难度 [自改仅禁简单难度](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp)  
+[linux_auto_restart](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/linux_auto_restart/plugins) 没人自动重启服务器  
 [vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)：    
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
