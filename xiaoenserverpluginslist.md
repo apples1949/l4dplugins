@@ -143,9 +143,14 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [RestrictedGameModes](https://github.com/fantasylidong/L4d2_plugins/blob/main/RestrictGamemode/RestrictedGameModes.sp) 锁定模式 省的sb路人用指令到服务器开写实或者对抗 [去掉4人限制](https://github.com/apples1949/l4dplugins/blob/main/RestrictedGameModes.sp)   
 [l4d2_tooeasy](https://github.com/nuviktor/sm-l4d2-tooeasy) 禁止普通简单难度 [自改仅禁简单难度](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp)  
 [linux_auto_restart](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/linux_auto_restart/plugins) 没人自动重启服务器  
-[vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)：  
+[l4d2_ai_damagefix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ai_damagefix.sp)移除Hunter和Charger减伤  
+[l4d2_block_stumble_scratches](https://github.com/fdxx/l4d2_plugins/blob/main/l4d2_block_stumble_scratches.sp)特感Bot被推后的硬直时间内，阻止使用右键抓人(注意gamedata文件)  
+[l4d_fix_deathfall_cam](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_deathfall_cam)修复由于point_deathfall_camera而导致的恼人的永久锁定视图问题  
+[l4d2_hltv_crash_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_hltv_crash_fix.sp)修复玩家可能通过SourceTV使服务器崩溃的问题(注意gamedata文件)  
+[l4d2_getup_fixes](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_getup_fixes)修复双起身  
+[vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
 [mod]zmweapon.vpk zm参数小枪  
 [mod]knife.vpk 恢复小刀 [来自anne](https://github.com/Caibiii/AnneServer/blob/main/left4dead2/addons/knife.vpk)  
-[stripper微改地图](https://github.com/apples1949/l4dplugins/tree/main/stripper)  
+服务器自改地图：[stripper微改地图](https://github.com/apples1949/l4dplugins/tree/main/stripper)  

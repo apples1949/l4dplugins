@@ -101,7 +101,7 @@ void CheckAllow()
 			IsAllowMode = true;
 		else
 			IsAllowMode = false;
-		LogToFileEx(g_sLogPath, "白名单模式:  %s %s是允许的模式", g_sCurrentGameMode, IsAllowMode?"":"不");
+		//LogToFileEx(g_sLogPath, "白名单模式:  %s %s是允许的模式", g_sCurrentGameMode, IsAllowMode?"":"不");
 	}
 	else if(g_iPluginMode == 2)
 	{
@@ -109,7 +109,7 @@ void CheckAllow()
 			IsAllowMode = false;
 		else
 			IsAllowMode = true;
-		LogToFileEx(g_sLogPath, "黑名单模式:  %s %s是允许的模式", g_sCurrentGameMode, IsAllowMode?"":"不");
+		//LogToFileEx(g_sLogPath, "黑名单模式:  %s %s是允许的模式", g_sCurrentGameMode, IsAllowMode?"":"不");
 	}
 }
 
