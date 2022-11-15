@@ -22,6 +22,8 @@
 自选-保存玩家的STEAM用户名,数字ID跟聊天记录到logs目录(citkabuto)  
 自选-被特感控制时等禁止闲置和防止闲置加入提示刷屏(v1.0.0)  
 自选-彩色广告插件(Tsunami)  
+自选-惩罚使用某些指令的玩家和隐藏某些不想看见的指令(sorallll)  
+自选-传送或处死长时间不进终点安全屋的玩家(v1.1.9)(sorallll)  
 自选-点燃或打爆物品提示(v1.0.7)(注意-本地服务器慎用)(Mart)  
 自选-防止服务器人数不足而关闭(AtomicStryker)  
 自选-防止玩家一直挂机(可单独设置管理员的挂机时间)(豆瓣酱な)  
@@ -83,7 +85,7 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [l4d_rock_lagcomp](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp) 战役模式中给坦克石头提供滞后补偿  
 [map_changer/l4d2_map_vote/l4d2_nativevote/l4d2_source_keyvalues](https://github.com/umlka/l4d2/tree/main/map_changer) 钵钵鸡自动换图+投票换图  
 [l4d_rescue_vehicle_leave_timer](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rescue_vehicle_leave_timer) 官图救援倒计时 [自翻cvar](https://github.com/apples1949/l4dplugins/tree/main/l4d_rescue_vehicle_leave_timer)   
-[l4d_death_soul](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_death_soul) 死去的幸存者的灵魂飞向来世   
+[l4d_death_soul](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_death_soul) 死去的幸存者的灵魂飞向天空   
 [l4d_votedifficulty](https://forums.alliedmods.net/showthread.php?t=317257) 投票更改难度 [自翻译文本 自用删掉了简单难度选项](https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty)   
 [l4d_nightvision](https://forums.alliedmods.net/showthread.php?p=2666575#post2666575) 夜视仪 [翻译了下文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_nightvision.sp)   
 [self_help](https://forums.alliedmods.net/showthread.php?p=2766775#post2766775) 自救插件 [自翻cvar介绍和文本和其他更改](https://github.com/apples1949/l4dplugins/tree/main/self_help)   
@@ -141,11 +143,11 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [l4d_ssi_teleport_fix](https://github.com/fbef0102/Game-Private_Plugin/tree/main/l4d_ssi_teleport_fix) 价值90r的仿Anne的特感传送 要的自己去买  
 [TickrateFixes](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/TickrateFixes.sp) 修复高tick下手枪射击间隔过快问题 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/TickrateFixes.sp)  
 [RestrictedGameModes](https://github.com/fantasylidong/L4d2_plugins/blob/main/RestrictGamemode/RestrictedGameModes.sp) 锁定模式 省的sb路人用指令到服务器开写实或者对抗 [去掉4人限制](https://github.com/apples1949/l4dplugins/blob/main/RestrictedGameModes.sp)   
-[l4d2_tooeasy](https://github.com/nuviktor/sm-l4d2-tooeasy) 禁止普通简单难度 [自改仅禁简单难度](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp)  
+[l4d2_tooeasy](https://github.com/nuviktor/sm-l4d2-tooeasy) 禁止简单难度 [自改仅禁简单难度](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp)  
 [linux_auto_restart](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/linux_auto_restart/plugins) 没人自动重启服务器  
 [l4d2_ai_damagefix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ai_damagefix.sp)移除Hunter和Charger减伤  
 [l4d2_block_stumble_scratches](https://github.com/fdxx/l4d2_plugins/blob/main/l4d2_block_stumble_scratches.sp)特感Bot被推后的硬直时间内，阻止使用右键抓人(注意gamedata文件)  
-[l4d_fix_deathfall_cam](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_deathfall_cam)修复由于point_deathfall_camera而导致的恼人的永久锁定视图问题  
+[l4d_fix_deathfall_cam](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_deathfall_cam)修复由point_deathfall_camera导致的永久锁定视图问题  
 [l4d2_hltv_crash_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_hltv_crash_fix.sp)修复玩家可能通过SourceTV使服务器崩溃的问题(注意gamedata文件)  
 [l4d2_getup_fixes](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_getup_fixes)修复双起身  
 [vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)  
