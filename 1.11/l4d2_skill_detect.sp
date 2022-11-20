@@ -2609,11 +2609,11 @@ stock void HandleLevel(int attacker, int victim)
 	{
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim))
 		{
-            CPrintToChatAll( "{green}★★★ {olive}%N {default}使用{blue}近战砍死了{default}正在冲锋的{olive}%N", attacker, victim );
+            CPrintToChatAll( "{green}★★★ {olive}%N{default}使用{blue}近战{default}砍死了正在冲锋的{olive}%N", attacker, victim );
 		}
 		else if (IS_VALID_INGAME(attacker))
 		{
-            CPrintToChatAll( "{green}★★★ {olive}%N {blue}{default}使用{blue}近战砍死了{default}正在冲锋的{olive}Charger", attacker );
+            CPrintToChatAll( "{green}★★★ {olive}%N{default}使用{blue}近战{default}砍死了正在冲锋的{olive}Charger", attacker );
 		}
 	}
 
@@ -2631,11 +2631,11 @@ stock void HandleLevelHurt(int attacker, int victim, int damage)
 	{
 		if (IS_VALID_INGAME(attacker) && IS_VALID_INGAME(victim) && !IsFakeClient(victim))
 		{
-            CPrintToChatAll( "{green}★ {olive}%N {default}使用{blue}近战砍死了{default}冲锋的 {olive}%N {default}(伤害{blue}%i {default})", attacker, victim, damage );
+            CPrintToChatAll( "{green}★ {olive}%N{default}使用{blue}近战{default}砍死了冲锋的{olive}%N{default}(伤害{blue}%i{default})", attacker, victim, damage );
 		}
 		else if (IS_VALID_INGAME(attacker))
 		{
-            CPrintToChatAll( "{green}★ {olive}%N {default}使用{blue}近战砍死了{default}冲锋的{olive}Charger{default}(伤害{blue}%i {default})", attacker, damage );
+            CPrintToChatAll( "{green}★ {olive}%N{default}使用{blue}近战{default}砍死了冲锋的{olive}Charger{default}(伤害{blue}%i{default})", attacker, damage );
 		}
 	}
 
@@ -2881,7 +2881,7 @@ void HandleSmokerSelfClear(int attacker, int victim, bool withShove = false)
 		}
 		else if (IS_VALID_INGAME(attacker))
 		{
-            CPrintToChatAll( "{green}★★ {olive}%N{default}被{olive}Smoker{default}的舌头拉后自救 {blue}%s", attacker, (withShove) ? "推停" : "" );
+            CPrintToChatAll( "{green}★★ {olive}%N{default}被{olive}Smoker{default}的舌头拉后自救{blue}%s", attacker, (withShove) ? "推停" : "" );
 		}
 	}
 	// call forward
@@ -2963,7 +2963,7 @@ stock void HandleJockeyDP(int attacker, int victim, float height)
 		}
 		else if (IS_VALID_INGAME(victim))
 		{
-            CPrintToChatAll( "{green}★★★ {olive}%N{default}被高度为{red}%i{default}的jockey控到了", victim, RoundFloat(height) );
+            CPrintToChatAll( "{green}★★★ {olive}%N{default}被高度为{red}%i{default}的jockey骑在了头上", victim, RoundFloat(height) );
 		}
 	}
 
@@ -2993,7 +2993,7 @@ stock void HandleDeathCharge(int attacker, int victim, float height, float dista
 		}
 		else if (IS_VALID_INGAME(victim))
 		{
-            CPrintToChatAll( "{green}★★★★ {olive}%N{default}被{olive}charger{default}的{red}冲锋秒杀.({red}高度{default}: {red}%i{default})",
+            CPrintToChatAll( "{green}★★★★ {olive}%N{default}被{olive}charger{default}的{red}冲锋秒杀了！({red}高度{default}: {red}%i{default})",
                     victim,
                     RoundFloat(height) 
                 );
@@ -3085,9 +3085,8 @@ stock void HandleBHopStreak(int survivor, int streak, float maxVelocity)
 {
 	if (GetConVarBool(g_hCvarReport) && IS_VALID_INGAME(survivor) && !IsFakeClient(survivor) && streak >= GetConVarInt(g_hCvarBHopMinStreak))
 	{
-        CPrintToChat(survivor, "{green}★ {olive}你{default}连跳了{blue}%i次{default} %s({blue}最高速度: {default}%.1f)",
+        CPrintToChat(survivor, "{green}★ {olive}你{default}连跳了{blue}%i次({blue}最高速度: {default}%.1f)",
                 streak,
-                ( streak > 1 ) ? " " : "",
                 maxVelocity
             );
 	}

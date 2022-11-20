@@ -114,7 +114,7 @@ public Plugin myinfo =
 #define DEFAULT_CONFIG		"server_default.cfg"
 
 char FILE_VOTE_BLOCK[]		= "data/votedifficulty_vote_block.txt";
-
+//没搞懂干嘛的
 ConVar g_ConVarDifficulty;
 ConVar g_ConVarZDiffLocked;
 ConVar g_ConVarDifficultyEx;
@@ -160,19 +160,19 @@ public void OnPluginStart()
 	
 	CreateConVar("l4d_votedifficulty_version", PLUGIN_VERSION, "Plugin version", CVAR_FLAGS | FCVAR_DONTRECORD);
 	
-	g_hCvarDelay = CreateConVar(			"sm_votedifficulty_delay",				"10",			"Minimum delay (in sec.) allowed between votes", CVAR_FLAGS );
-	g_hCvarTimeout = CreateConVar(			"sm_votedifficulty_timeout",			"10",			"How long (in sec.) does the vote last", CVAR_FLAGS );
-	g_hCvarAnnounceDelay = CreateConVar(	"sm_votedifficulty_announcedelay",		"2.0",			"Delay (in sec.) between announce and vote menu appearing", CVAR_FLAGS );
-	g_hMinPlayers = CreateConVar(			"sm_votedifficulty_minplayers",			"1",			"Minimum players present in game to allow starting vote for kick", CVAR_FLAGS );
+	g_hCvarDelay = CreateConVar(			"sm_votedifficulty_delay",				"10",			"投票之间允许的最小延迟(秒)", CVAR_FLAGS );
+	g_hCvarTimeout = CreateConVar(			"sm_votedifficulty_timeout",			"10",			"投票持续多长时间(秒)", CVAR_FLAGS );
+	g_hCvarAnnounceDelay = CreateConVar(	"sm_votedifficulty_announcedelay",		"2.0",			"宣布和投票菜单出现之间的延迟(秒)", CVAR_FLAGS );
+	g_hMinPlayers = CreateConVar(			"sm_votedifficulty_minplayers",			"1",			"最少要有多少名玩家在场才可以开始投票", CVAR_FLAGS );
 	g_hCvarAccessFlag = CreateConVar(		"sm_votedifficulty_accessflag",			"",				"发起投票所需要的权限 (无内容则所有人可发起投票)", CVAR_FLAGS );
 	g_hCvarLog = CreateConVar(				"sm_votedifficulty_log",				"0",			"是否启用日志? (1 - 是 / 0 - 否)", CVAR_FLAGS );
-	g_hCvarUseMasterPlus = CreateConVar(	"sm_votedifficulty_use_master_plus",	"0",			"是否启用自定义难度 'Master +' ? (1 - 是 / 0 - 否)", CVAR_FLAGS );
-	g_hCvarUseExpertPlus = CreateConVar(	"sm_votedifficulty_use_expert_plus",	"0",			"是否启用自定义难度 'Expert +' ? (1 - 是 / 0 - 否)", CVAR_FLAGS );
-	g_hCvarUseConfigPerDif = CreateConVar(	"sm_votedifficulty_use_config_per_dif",	"0",			"Use separate configs per each default difficulties ? (1 - Yes / 0 - No)", CVAR_FLAGS );
+	g_hCvarUseMasterPlus = CreateConVar(	"sm_votedifficulty_use_master_plus",	"0",			"是否启用自定义难度 '困难 +' ? (1 - 是 / 0 - 否)", CVAR_FLAGS );
+	g_hCvarUseExpertPlus = CreateConVar(	"sm_votedifficulty_use_expert_plus",	"0",			"是否启用自定义难度 '专家 +' ? (1 - 是 / 0 - 否)", CVAR_FLAGS );
+	g_hCvarUseConfigPerDif = CreateConVar(	"sm_votedifficulty_use_config_per_dif",	"1",			"不同难度下是否使用不同的难度配置? (1 - 是 / 0 - 否)", CVAR_FLAGS );
 	g_hCvarDefaultSet = CreateConVar(		"sm_votedifficulty_default_set",		"0",			"在服务器重启后是否设置默认难度? ((1 - 是 / 0 - 否)", CVAR_FLAGS );
 	g_hCvarDefaultDif = CreateConVar(		"sm_votedifficulty_default_difficulty",	"Easy",			"服务器重启后设置的默认难度", CVAR_FLAGS );
 	
-	AutoExecConfig(true,				"sm_votedifficulty");
+	AutoExecConfig(true,				"l4d_votedifficulty");
 	
 	g_hCvarAllowDifficultyMenu = FindConVar("sv_vote_issue_change_difficulty_allowed");
 	

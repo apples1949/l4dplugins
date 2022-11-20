@@ -456,7 +456,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 				                                            attacker, victim, damage, shots, plural, assister_string);
 				    }
 				}*/
-				CPrintToChatAll("{green}★ {olive}%N{blue} %d {default}枪空爆了{olive}%N{default}  伤害：{blue}%d{default}  助攻: {olive}%s ",attacker, shots, victim, damage, assister_string);
+				CPrintToChatAll("{green}★ {olive}%N{blue}和团队{olive}%d{default}枪空爆了{olive}%N{default}  伤害：{blue}%d{default}  助攻: {olive}%s ",attacker, shots, victim, damage, assister_string);
 			}
 			else {
 				/*CPrintToChat(victim, "{green}★ {default}You were skeeted by {olive}%N {default}in {blue}%d shot%c", attacker, shots, plural);
@@ -470,7 +470,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 				    }
 				}*/
 
-				CPrintToChatAll("{green}★ {olive}%N{blue} %d {default}枪{default}空爆了{olive}%N", attacker, shots, victim);
+				CPrintToChatAll("{green}★ {olive}%N{blue}%d{default}枪{default}空爆了{olive}%N", attacker, shots, victim);
 			}
 		}
 	}
@@ -521,15 +521,15 @@ public Action Timer_BoomerKilledCheck(Handle hTimer)
 		{
 			if (BoomerKillTime <= 0.5)
 			{
-				CPrintToChatAll("{green}★★★ {olive}%N 在%0.1fs秒内{default}打爆了 {olive}%s {default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
+				CPrintToChatAll("{green}★★★ {olive}%N{default}在{olive}%0.1fs{default}秒内打爆了{olive}%s {default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
 			}
 			else if (BoomerKillTime > 0.5 && BoomerKillTime <= 1.4)
 			{
-				CPrintToChatAll("{green}★★ {olive}%N 在%0.1fs秒内{default}打爆了 {olive}%s {default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
+				CPrintToChatAll("{green}★★ {olive}%N{default}在{olive}%0.1fs{default}秒内打爆了{olive}%s {default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
 			}
 			else
 			{
-				CPrintToChatAll("{green}★ {olive}%N 在%0.1fs秒内{default}打爆了 {olive}%s {default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
+				CPrintToChatAll("{green}★ {olive}%N{default}在{olive}%0.1fs{default}秒内打爆了{olive}%s {default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
 			}
 		}
 	}
@@ -611,7 +611,7 @@ public void Event_PlayerBoomed(Event hEvent, const char[] sEventName, bool bDont
 	        if (IsClientInGame(i)) {
 	            iTeam = GetClientTeam(i);
 	            if (iTeam == TEAM_SURVIVOR || iTeam == TEAM_SURVIVOR) {
-	                CPrintToChat(i, "{green}★ {olive}%N {default}尝试推停{olive}%s{default}的Boomer{blue}呕吐{default}, 但他推早了", g_iBoomerShover, Boomer);
+	                CPrintToChat(i, "{green}★ {olive}%N{default}尝试推停{olive}%s{default}的Boomer{blue}呕吐{default},但他推早了", g_iBoomerShover, Boomer);
 	            }
 	        }
 	    }
@@ -621,7 +621,7 @@ public void Event_PlayerBoomed(Event hEvent, const char[] sEventName, bool bDont
 	        if (IsClientInGame(i)) {
 	            iTeam = GetClientTeam(i);
 	            if (iTeam == TEAM_SURVIVOR || iTeam == TEAM_SURVIVOR) {
-							CPrintToChat(i, "{green}★ {olive}%N {default}尝试推停{olive}%s{default}的Boomer{blue}呕吐{default}, 但{olive}%N {default}推早了", g_iBoomerShover, Boomer, g_iBoomerKiller);
+							CPrintToChat(i, "{green}★ {olive}%N{default}尝试推停{olive}%s{default}的Boomer{blue}呕吐{default}, 但{olive}%N {default}推早了", g_iBoomerShover, Boomer, g_iBoomerKiller);
 	            }
 	        }
 	    }

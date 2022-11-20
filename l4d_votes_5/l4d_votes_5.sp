@@ -267,70 +267,70 @@ public Action Command_Votes(int client, int args)
 		SetPanelTitle(menu, "菜单");
 		if (VotensHpE_D == false)
 		{
-			DrawPanelItem(menu, "全体回血(禁用中) Give Hp(Disable)");
+			DrawPanelItem(menu, "全体回血(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "全体回血 Give hp");
+			DrawPanelItem(menu, "全体回血");
 		}
 		if (VotensAlltalkE_D == false)
 		{ 
-			DrawPanelItem(menu, "开启全体语音(禁用中) Turn on AllTalk(Disable)");
+			DrawPanelItem(menu, "开启全体语音(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "开启全体语音 All talk");
+			DrawPanelItem(menu, "开启全体语音");
 		}
 		if (VotensAlltalk2E_D == false)
 		{
-			DrawPanelItem(menu, "关闭全体语音(禁用中) Turn off AllTalk(Disable)");
+			DrawPanelItem(menu, "关闭全体语音(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "关闭全体语音 Turn off AllTalk");
+			DrawPanelItem(menu, "关闭全体语音");
 		}
 		if (VotensRestartmapE_D == false)
 		{
-			DrawPanelItem(menu, "重置当前地图(禁用中) Stop restartmap(Disable)");
+			DrawPanelItem(menu, "重置当前地图(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "重置当前地图 Restartmap");
+			DrawPanelItem(menu, "重置当前地图");
 		}
 		if (VotensMapE_D == false)
 		{
-			DrawPanelItem(menu, "投票更换官图(禁用中) Change Maps(Disable)");
+			DrawPanelItem(menu, "投票更换官图(禁用中,请使用!votemap)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "投票更换官图 Change Maps");
+			DrawPanelItem(menu, "投票更换官图");
 		}
 
 		if (VotensMap2E_D == false)
 		{
-			DrawPanelItem(menu, "投票更换三方图(禁用中) Change addon maps (Disable)");
+			DrawPanelItem(menu, "投票更换三方图(禁用中,请使用!votemap)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "投票更换第三方图 Change addon maps");
+			DrawPanelItem(menu, "投票更换第三方图");
 		}
 
 		if (g_bVotensKickED == false)
 		{
-			DrawPanelItem(menu, "踢出玩家(禁用中) Change addon map(Disable)");
+			DrawPanelItem(menu, "踢出玩家(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "踢出玩家 Kick Player");
+			DrawPanelItem(menu, "踢出玩家");
 		}
 
 		if (g_bVotensForceSpectateED == false)
 		{
-			DrawPanelItem(menu, "强制玩家旁观(禁用中) Forcespectate Player(Disable)");
+			DrawPanelItem(menu, "强制玩家旁观(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "强制玩家旁观 Forcespectate Player");
+			DrawPanelItem(menu, "强制玩家旁观");
 		}
 		DrawPanelText(menu, " \n");
 		DrawPanelText(menu, "0. 退出");
@@ -403,7 +403,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensMapE_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "投票更换官图已禁用");
+					CPrintToChat(client, "投票更换官图已禁用,请使用!votemap");
 				}
 				else if (VotensMapE_D == true)
 				{
@@ -415,7 +415,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensMap2E_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "投票更换三方图已禁用");
+					CPrintToChat(client, "投票更换三方图已禁用,请使用!votemap");
 				}
 				else if (VotensMap2E_D == true)
 				{
@@ -797,7 +797,7 @@ public Action Command_VotemapsMenu(int client, int args)
 	}
 	else if(g_bEnable == false || VotensMapE_D == false)
 	{
-		CPrintToChat(client, "官图投票已禁止");
+		CPrintToChat(client, "官图投票已禁止,请使用!votemap");
 	}
 	return Plugin_Handled;
 }
@@ -826,7 +826,7 @@ public Action Command_Votemaps2Menu(int client, int args)
 	}
 	else if(g_bEnable == false || VotensMap2E_D == false)
 	{
-		CPrintToChat(client, "投票更换三方图已禁用");
+		CPrintToChat(client, "三方图投票已禁止,请使用!votemap");
 	}
 	return Plugin_Handled;
 }
@@ -1102,7 +1102,7 @@ public Action Timer_forcespectate(Handle timer, any client)
 		if (GetClientTeam(client) == 3||GetClientTeam(client) == 2)
 		{
 			ChangeClientTeam(client, 1);
-			CPrintToChat(client, "{你被投票强制旁观!请在{green}%d秒{default}后回到队伍。温馨提示:被强制旁观建议就看着捏", g_iSpectatePenaltyCounter[client]);
+			CPrintToChat(client, "你被投票强制旁观!请在{green}%d秒{default}后回到队伍。温馨提示:被强制旁观建议就看着捏", g_iSpectatePenaltyCounter[client]);
 			bClientJoinedTeam = true;	//client tried to join the infected again when not allowed
 		}
 		g_iSpectatePenaltyCounter[client]--;
