@@ -18,7 +18,7 @@ ConVar
 	g_hDefMode,
 	g_hGameMode;
 char
-	g_sLogPath[PLATFORM_MAX_PATH],
+	//g_sLogPath[PLATFORM_MAX_PATH],
 	g_sAllowGameMode[512],
 	g_sDisAllowGameMode[512],
 	g_sDefDifficulty[64],
@@ -139,7 +139,7 @@ void GameDifficult_Changed(ConVar convar, const char[] oldValue, const char[] ne
 	if(g_iLockDifficult)
 	{
 		g_hDifficulty.SetString(g_sDefDifficulty);
-		LogToFileEx(g_sLogPath, "难度锁定: %s -> %s", oldValue, newValue);
+		//LogToFileEx(g_sLogPath, "难度锁定: %s -> %s", oldValue, newValue);
 	}	
 }
 
@@ -164,7 +164,7 @@ Action DealWithGameModeChange(Handle timer)
 		{
 			case 1:
 			{
-				LogToFileEx(g_sLogPath, "不允许的模式%s，切换为%s模式", g_sCurrentGameMode, g_sDefMode);
+				//LogToFileEx(g_sLogPath, "不允许的模式%s，切换为%s模式", g_sCurrentGameMode, g_sDefMode);
 				//PrintToChatAll("不允许的模式%s，切换为%s模式", g_sCurrentGameMode, g_sDefMode);
 				ServerCommand("sm_cvar mp_gamemode %s", g_sDefMode);
 				ServerCommand("mp_gamemode %s", g_sDefMode);
@@ -174,7 +174,7 @@ Action DealWithGameModeChange(Handle timer)
 			}
 			case 2:
 			{
-				LogToFileEx(g_sLogPath, "不允许的模式%s，重启服务器", g_sCurrentGameMode);
+				//LogToFileEx(g_sLogPath, "不允许的模式%s，重启服务器", g_sCurrentGameMode);
 				KickAllPlayer();
 				RestartServer();
 				g_hCheckHandle = null;
