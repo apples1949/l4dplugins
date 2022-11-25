@@ -153,6 +153,7 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [l4d_weapon_limits](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_weapon_limits.sp) 限制玩家整体可获取武器的数量 [汉化提示(注意gamedata)](https://github.com/apples1949/l4dplugins/tree/main/l4d_weapon_limits)  
 [TankDamageModifier](https://forums.alliedmods.net/showthread.php?t=283085)设置坦克伤害 [翻译cvar提示](https://github.com/apples1949/l4dplugins/blob/main/TankDamageModifier.sp)  
 [l4d2_doorlock](https://github.com/umlka/l4d2/tree/main/l4d2_doorlock) 玩家连接完毕才能开始游戏 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_doorlock)  
+[l4d2_block_match_connect](https://github.com/fdxx/l4d2_plugins/blob/main/l4d2_block_match_connect.sp)阻止玩家通过大厅进入服务器  妈妈再也不用担心总有sb用最佳服务器占着茅坑不拉屎捏 注意gamedata文件以及补丁扩展  
 [vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]meleedrop.vpk 死亡掉落近战 懒得用插件  
