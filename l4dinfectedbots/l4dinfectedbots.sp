@@ -936,32 +936,32 @@ public void OnPluginStart()
 	g_hCvarModes =		CreateConVar(	"l4d_infectedbots_modes",			"",				"在这些模式中启用插件，逗号隔开不需要空格（全空=全模式启用插件）", FCVAR_NOTIFY );
 	g_hCvarModesOff =	CreateConVar(	"l4d_infectedbots_modes_off",		"",				"在这些模式中关闭插件，逗号隔开不需要空格（全空=无）.", FCVAR_NOTIFY );
 	g_hCvarModesTog =	CreateConVar(	"l4d_infectedbots_modes_tog",		"0",			"在这些模式中启用插件. 0=全模式, 1=战役/写实, 2=生还者, 4=对抗, 8=清道夫 多个模式吧数字加到一起", FCVAR_NOTIFY );
-	h_BoomerLimit = CreateConVar("l4d_infectedbots_boomer_limit", "2", "插件可生成胖子的最大数量", FCVAR_NOTIFY, true, 0.0);
-	h_SmokerLimit = CreateConVar("l4d_infectedbots_smoker_limit", "2", "插件可生成舌头的最大数量", FCVAR_NOTIFY, true, 0.0);
+	h_BoomerLimit = CreateConVar("l4d_infectedbots_boomer_limit", "2", "插件可生成Boomer的最大数量", FCVAR_NOTIFY, true, 0.0);
+	h_SmokerLimit = CreateConVar("l4d_infectedbots_smoker_limit", "2", "插件可生成Smoker的最大数量", FCVAR_NOTIFY, true, 0.0);
 	h_HunterLimit = CreateConVar("l4d_infectedbots_hunter_limit", "2", "插件可生成hunter的最大数量", FCVAR_NOTIFY, true, 0.0);
-	h_WitchLimit = CreateConVar("l4d_infectedbots_witch_max_limit", "6", "插件可生成女巫的最大数量 （不影响剧情女巫）", FCVAR_NOTIFY, true, 0.0);
+	h_WitchLimit = CreateConVar("l4d_infectedbots_witch_max_limit", "6", "插件可生成Witch的最大数量 （不影响游戏自己生成的Witch）", FCVAR_NOTIFY, true, 0.0);
 	if (g_bL4D2Version)
 	{
-		h_SpitterLimit = CreateConVar("l4d_infectedbots_spitter_limit", "2", "插件可生成口水的最大数量", FCVAR_NOTIFY, true, 0.0);
-		h_JockeyLimit = CreateConVar("l4d_infectedbots_jockey_limit", "2", "插件可生成猴子的最大数量", FCVAR_NOTIFY, true, 0.0);
+		h_SpitterLimit = CreateConVar("l4d_infectedbots_spitter_limit", "2", "插件可生成Spitter的最大数量", FCVAR_NOTIFY, true, 0.0);
+		h_JockeyLimit = CreateConVar("l4d_infectedbots_jockey_limit", "2", "插件可生成Jockey的最大数量", FCVAR_NOTIFY, true, 0.0);
 		h_ChargerLimit = CreateConVar("l4d_infectedbots_charger_limit", "2", "插件可生成charger的最大数量", FCVAR_NOTIFY, true, 0.0);
 	}
-	h_TankLimit = CreateConVar("l4d_infectedbots_tank_limit", "1", "插件可生成坦克的最大数量（不影响剧情生成的坦克）", FCVAR_NOTIFY, true, 0.0);
-	h_PlayerAddTankLimitScale = CreateConVar("l4d_infectedbots_add_tanklimit_scale", "3", "玩家数量超过5个时，Tank数量上限 = tank_limit + [(存活的生还者数量-4) ÷ 'add_tanklimit_scale'] × 'add_tanklimit'.[不影响剧情生成的坦克]", FCVAR_NOTIFY, true, 1.0);
+	h_TankLimit = CreateConVar("l4d_infectedbots_tank_limit", "1", "插件可生成Tank的最大数量（不影响剧情生成的Tank）", FCVAR_NOTIFY, true, 0.0);
+	h_PlayerAddTankLimitScale = CreateConVar("l4d_infectedbots_add_tanklimit_scale", "3", "玩家数量超过5个时，Tank数量上限 = tank_limit + [(存活的生还者数量-4) ÷ 'add_tanklimit_scale'] × 'add_tanklimit'.[不影响剧情生成的Tank]", FCVAR_NOTIFY, true, 1.0);
 	h_PlayerAddTankLimit = CreateConVar("l4d_infectedbots_add_tanklimit", "1", "当生还者数量超过4个时，Tank数量上限 = tank_limit + [(存活的倖存者数量-4) ÷ 'add_tanklimit_scale'] × 'add_tanklimit'.", FCVAR_NOTIFY, true, 0.0);
-	h_TankSpawnFinal = CreateConVar("l4d_infectedbots_tank_spawn_final", "1", "如果为1，则救援开始后插件不会生成坦克（不影响剧情生成的坦克）", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_TankSpawnFinal = CreateConVar("l4d_infectedbots_tank_spawn_final", "1", "如果为1，则救援开始后插件不会生成Tank（不影响剧情生成的Tank）", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
 	h_MaxPlayerZombies = CreateConVar("l4d_infectedbots_max_specials", "2", "当生还者数量低于4个及以下时可生成的最大特感数量", FCVAR_NOTIFY, true, 0.0);
 	h_PlayerAddZombiesScale = CreateConVar("l4d_infectedbots_add_specials_scale", "2", "玩家数量超过4个时，最大特感数量上限 = max_specials + [(存活的生还者数量-4) ÷ 'add_specials_scale'] × 'add_specials'.", FCVAR_NOTIFY, true, 1.0);
 	h_PlayerAddZombies = CreateConVar("l4d_infectedbots_add_specials", "2", "当生还者数量超过4个时，最大特感数量上限 = max_specials + [(存活的生还者数量-4) ÷ 'add_specials_scale'] × 'add_specials'", FCVAR_NOTIFY, true, 0.0);
 
-	h_TankHealthAdjust = CreateConVar("l4d_infectedbots_adjust_tankhealth_enable", "1", "如果为1，则根据生还者数量修改坦克血量上限", FCVAR_NOTIFY, true, 0.0,true, 1.0);
-	h_TankHealth = CreateConVar("l4d_infectedbots_default_tankhealth", "4000", "设置坦克默认血量上限, 坦克血量上限受到游戏难度或模式影响 （若坦克血量上限设置为4000，则简单难度3000血，普通难度4000血，对抗类型模式6000血，高级/专家难度血量8000血）", FCVAR_NOTIFY, true, 1.0);
-	h_PlayerAddTankHealthScale = CreateConVar("l4d_infectedbots_add_tankhealth_scale", "1", "当生还者数量超过4个时，坦克血量上限 = max_specials + [(存活的生还者数量-4) ÷ 'add_specials_scale'] × 'add_specials'].", FCVAR_NOTIFY, true, 1.0);
+	h_TankHealthAdjust = CreateConVar("l4d_infectedbots_adjust_tankhealth_enable", "1", "如果为1，则根据生还者数量修改Tank血量上限", FCVAR_NOTIFY, true, 0.0,true, 1.0);
+	h_TankHealth = CreateConVar("l4d_infectedbots_default_tankhealth", "4000", "设置Tank默认血量上限, Tank血量上限受到游戏难度或模式影响 （若Tank血量上限设置为4000，则简单难度3000血，普通难度4000血，对抗类型模式6000血，高级/专家难度血量8000血）", FCVAR_NOTIFY, true, 1.0);
+	h_PlayerAddTankHealthScale = CreateConVar("l4d_infectedbots_add_tankhealth_scale", "1", "当生还者数量超过4个时，Tank血量上限 = max_specials + [(存活的生还者数量-4) ÷ 'add_specials_scale'] × 'add_specials'].", FCVAR_NOTIFY, true, 1.0);
 	h_PlayerAddTankHealth = CreateConVar("l4d_infectedbots_add_tankhealth", "500", "当生还者数量超过4个时，最大特感数量上限 = max_specials + [(存活的生还者数量-4) ÷ 'add_specials_scale'] × 'add_specials'", FCVAR_NOTIFY, true, 0.0);
 	h_InfectedSpawnTimeMax = CreateConVar("l4d_infectedbots_spawn_time_max", "60", "设置插件生成的特感最大时间", FCVAR_NOTIFY, true, 1.0);
 	h_InfectedSpawnTimeMin = CreateConVar("l4d_infectedbots_spawn_time_min", "40", "设置插件生成的特感最小时间", FCVAR_NOTIFY, true, 1.0);
-	h_CoopPlayableTank = CreateConVar("l4d_infectedbots_coop_versus_tank_playable", "0", "如果为1，玩家可以在战役/写实/生还者模式中接管坦克", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_CoopPlayableTank = CreateConVar("l4d_infectedbots_coop_versus_tank_playable", "0", "如果为1，玩家可以在战役/写实/生还者模式中接管Tank", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	h_JoinableTeams = CreateConVar("l4d_infectedbots_coop_versus", "1", "如果为1，则玩家可以在战役/写实/生还者模式中加入感染者(!ji加入感染者 !js加入生还者)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	if (!g_bL4D2Version)
 	{
@@ -975,17 +975,17 @@ public void OnPluginStart()
 	h_InitialSpawn = CreateConVar("l4d_infectedbots_initial_spawn_timer", "10", "离开安全区后多长时间开始刷特", FCVAR_NOTIFY, true, 0.0);
 	h_HumanCoopLimit = CreateConVar("l4d_infectedbots_coop_versus_human_limit", "2", "设置通过插件加入到感染者的玩家数量", FCVAR_NOTIFY, true, 0.0);
 	h_JoinInfectedAccess = CreateConVar("l4d_infectedbots_coop_versus_join_access", "z", " 有什么权限的玩家在战役/写实/生还者模式中可以加入到感染者 (无内容 = 所有人, -1: 无法加入)", FCVAR_NOTIFY);
-	h_DisableSpawnsTank = CreateConVar("l4d_infectedbots_spawns_disabled_tank", "0", "如果为1，则当坦克存活时禁止特感复活", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_DisableSpawnsTank = CreateConVar("l4d_infectedbots_spawns_disabled_tank", "0", "如果为1，则当Tank存活时禁止特感复活", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	h_VersusCoop = CreateConVar("l4d_infectedbots_versus_coop", "0", "如果为1，则在对抗/清道夫模式中，强迫所有玩家加入到感染者", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	h_AdjustSpawnTimes = CreateConVar("l4d_infectedbots_adjust_spawn_times", "1", "如果为1，则根据生还者数量调整特感复活时间", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	h_ReducedSpawnTimesOnPlayer = CreateConVar("l4d_infectedbots_adjust_reduced_spawn_times_on_player", "1", "每增加一位生还者，则减少复活时间（初始4位生还者也算在内）", FCVAR_NOTIFY, true, 0.0);
-	h_SafeSpawn = CreateConVar("l4d_infectedbots_safe_spawn", "0", "如果为1，则生还者离开安全区域才生成特感", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_SafeSpawn = CreateConVar("l4d_infectedbots_safe_spawn", "0", "如果为1，则安全区域也会生成特感（若为1，则不离开安全区域也会生成特感）", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	h_SpawnDistanceMin = CreateConVar("l4d_infectedbots_spawn_range_min", "400", "生成特感的最小范围（默认550，仅战役/写实模式）", FCVAR_NOTIFY, true, 0.0);
-	h_WitchPeriodMax = CreateConVar("l4d_infectedbots_witch_spawn_time_max", "120.0", "插件生成女巫的最大时间", FCVAR_NOTIFY, true, 1.0);
-	h_WitchPeriodMin = CreateConVar("l4d_infectedbots_witch_spawn_time_min", "90.0", "插件生成女巫的最小时间", FCVAR_NOTIFY, true, 1.0);
-	h_WitchSpawnFinal = CreateConVar("l4d_infectedbots_witch_spawn_final", "0", "如果为1，则救援开始时会生成女巫", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	h_WitchKillTime = CreateConVar("l4d_infectedbots_witch_lifespan", "200", "女巫生成多少秒才会踢出（仅插件生成的女巫）", FCVAR_NOTIFY, true, 1.0);
-	h_SpawnTankProbability = CreateConVar("l4d_infectedbots_tank_spawn_probability", "5", "每次生成一个特感的时候多少概率会变成坦克", FCVAR_NOTIFY, true, 0.0, true, 100.0);
+	h_WitchPeriodMax = CreateConVar("l4d_infectedbots_witch_spawn_time_max", "120.0", "插件生成Witch的最大时间", FCVAR_NOTIFY, true, 1.0);
+	h_WitchPeriodMin = CreateConVar("l4d_infectedbots_witch_spawn_time_min", "90.0", "插件生成Witch的最小时间", FCVAR_NOTIFY, true, 1.0);
+	h_WitchSpawnFinal = CreateConVar("l4d_infectedbots_witch_spawn_final", "0", "如果为1，则救援开始时会生成Witch", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	h_WitchKillTime = CreateConVar("l4d_infectedbots_witch_lifespan", "200", "Witch生成多少秒才会踢出（仅插件生成的Witch）", FCVAR_NOTIFY, true, 1.0);
+	h_SpawnTankProbability = CreateConVar("l4d_infectedbots_tank_spawn_probability", "5", "每次生成一个特感的时候多少概率会变成Tank", FCVAR_NOTIFY, true, 0.0, true, 100.0);
 	h_ZSDisableGamemode = CreateConVar("l4d_infectedbots_sm_zs_disable_gamemode", "0", "在哪些游戏模式中禁止感染者玩家使用/s/m/_infzs自杀(0: 无, 1: 战役/写实, 2: 对抗/清道夫, 4: 生还者, 多个模式添加数字输出)", FCVAR_NOTIFY, true, 0.0, true, 7.0);
 	h_CommonLimitAdjust = CreateConVar("l4d_infectedbots_adjust_commonlimit_enable", "1", "如果为1，则启用根据人数调整僵尸数量", FCVAR_NOTIFY, true, 0.0,true, 1.0);
 	h_CommonLimit = CreateConVar("l4d_infectedbots_default_commonlimit", "30", "当生还者数量不超过5人的僵尸数量", FCVAR_NOTIFY, true, 1.0);
@@ -3276,7 +3276,7 @@ public Action TankBugFix(Handle timer, int client)
 		int lifestate = GetEntData(client, FindSendPropInfo("CTerrorPlayer", "m_lifeState"));
 		if (lifestate == 0)
 		{
-			int bot = SDKCall(hCreateTank, "Tank Bot"); //召喚坦克
+			int bot = SDKCall(hCreateTank, "Tank Bot"); //召喚Tank
 			if (bot > 0 && IsValidClient(bot))
 			{
 				#if DEBUG

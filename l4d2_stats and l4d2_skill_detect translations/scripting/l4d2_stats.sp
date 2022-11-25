@@ -52,7 +52,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-//	LoadTranslations("l4d2_stats.phrases");
+	LoadTranslations("l4d2_stats.phrases");
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 
@@ -394,28 +394,32 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 			if (strcmp(weapon, "weapon_melee") == 0)
 			{
 				/*CPrintToChat(victim, "{green}★ {default}You were {blue}melee skeeted {default}by {olive}%N", attacker);
-				CPrintToChat(attacker, "{green}★ {default}你使用{blue}近战{default}击杀了飞扑的{olive}%N", victim);
+				CPrintToChat(attacker, "{green}★ {default}You {blue}melee{default}-{blue}skeeted {olive}%N", victim);
 
 				for (int b = 1; b <= MaxClients; b++) {
 				    //Print to Specs!
 				    if (IsClientInGame(b) && (victim != b) && (attacker != b)) {
-						CPrintToChat(b, "{green}★  {olive}%N {default}使用{blue}近战 {default}了飞扑的{olive}%N", attacker, victim)
+				        CPrintToChat(b, "{green}★  {olive}%N {default}was {blue}melee{default}-{blue}skeeted {default}by {olive}%N", victim, attacker)
 				    }
 				}*/
-				CPrintToChatAll("{green}★ {olive}%N {default}使用{blue}近战{default}击杀了飞扑的 {olive}%N",attacker, victim);
-			} else if (hEvent.GetBool("headshot") && strcmp(weapon, "weapon_sniper_scout") == 0) { // Scout Headshot
+				CPrintToChatAll("%t %t", "Tag+", "MeleeSkeeted", victim, attacker);
+			}
+			else if (hEvent.GetBool("headshot") && strcmp(weapon, "weapon_sniper_scout") == 0)
+			{    // Scout Headshot
 				/*CPrintToChat(victim, "{green}★ {default}You were {blue}Headshotted {default}by {blue}Scout-Player{default}: {olive}%N", attacker);
-				CPrintToChat(attacker, "{green}★ {default}你使用 {blue}鸟狙{olive}爆头{default}击杀了{olive}%N ", victim);
+				CPrintToChat(attacker, "{green}★ {default}You {blue}Headshotted {olive}%N {default}with the {blue}Scout", victim);
 
 				for (int b = 1; b <= MaxClients; b++) {
 				    //Print to Specs!
 				    if (IsClientInGame(b) && (victim != b) && (attacker != b)) {
-						CPrintToChat(b, "{green}★ {olive}%N {default}使用{blue}Scout{olive}爆头{default}击杀了{olive}%N", attacker, victim);
+				        CPrintToChat(b, "{green}★ {olive}%N {default}was {blue}Headshotted {default}by {blue}Scout-Player{default}: {olive}%N", \
+				                                        victim, attacker);
 				    }
 				}*/
 
-				CPrintToChatAll("{green}★ {olive}%N {default}使用 {blue}鸟狙{olive}爆头{default}击杀了 {olive}%N",attacker, victim);
-			} else if (assister_count) {
+				CPrintToChatAll("%t %t", "Tag+", "Headshotted", victim, attacker);
+			}
+			else if (assister_count) {
 				// Sort by damage, descending
 				SortCustom2D(assisters, assister_count, ClientValue2DSortDesc);
 
@@ -424,13 +428,13 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 				int  assist_shots = g_iShotsDealt[victim][assisters[0][0]];
 
 				// Construct assisters string
-				Format(assister_string, sizeof(assister_string), "%N (%d 伤害/%d枪 %s)", \
-														assisters[0][0], assisters[0][1], g_iShotsDealt[victim][assisters[0][0]], assist_shots == 1 ? "" : "");
+				Format(assister_string, sizeof(assister_string), "%N (%d/%d shot%s)",
+				       assisters[0][0], assisters[0][1], g_iShotsDealt[victim][assisters[0][0]], assist_shots == 1 ? "" : "s");
 
 				for (i = 1; i < assister_count; i++)
 				{
 					assist_shots = g_iShotsDealt[victim][assisters[i][0]];
-					Format(buf, sizeof(buf), ", %N (%d 伤害/%d枪 %s)", assisters[i][0], assisters[i][1], assist_shots, assist_shots == 1 ? "" : "");
+					Format(buf, sizeof(buf), ", %N (%d/%d shot%s)", assisters[i][0], assisters[i][1], assist_shots, assist_shots == 1 ? "" : "s");
 
 					StrCat(assister_string, sizeof(assister_string), buf);
 				}
@@ -438,7 +442,8 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 				/*
 				// Print to assisters
 				for (i = 0; i < assister_count; i++) {
-				    CPrintToChat(assisters[i][0], "{green}★ {olive}%N {default}teamskeeted {olive}%N {default}for {blue}%d damage {default}in {blue}%d shot%c{default}. Assisted by: {olive}%s", attacker, victim, damage, shots, plural, assister_string);
+				    CPrintToChat(assisters[i][0], "{green}★ {olive}%N {default}teamskeeted {olive}%N {default}for {blue}%d damage {default}in {blue}%d shot%c{default}. Assisted by: {olive}%s", \
+				                                        attacker, victim, damage, shots, plural, assister_string);
 				}
 
 				// Print to victim
@@ -456,21 +461,22 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 				                                            attacker, victim, damage, shots, plural, assister_string);
 				    }
 				}*/
-				CPrintToChatAll("{green}★ {olive}%N{blue}和团队{olive}%d{default}枪空爆了{olive}%N{default}  伤害：{blue}%d{default}  助攻: {olive}%s ",attacker, shots, victim, damage, assister_string);
+
+				CPrintToChatAll("%t %t", "Tag+" , "TeamSkeeted", attacker, victim, damage, shots, shots == 1 ? "" : "s", assister_string);
 			}
 			else {
 				/*CPrintToChat(victim, "{green}★ {default}You were skeeted by {olive}%N {default}in {blue}%d shot%c", attacker, shots, plural);
 
-				CPrintToChat(attacker, "{green}★ {default}你{blue} %d{default}枪空爆了{olive}%N", shots, victim, plural);
+				CPrintToChat(attacker, "{green}★ {default}You skeeted {olive}%N {default}in {blue}%d shot%c", victim, shots, plural);
 
 				for (int b = 1; b <= MaxClients; b++) {
 				    //Print to Everyone Else!
 				    if (IsClientInGame(b) && (victim != b) && attacker != b) {
-						CPrintToChat(b, "{green}★ {olive}%N{blue} %d {default}枪空爆了{olive}%N", attacker, shots, victim);
+				        CPrintToChat(b, "{green}★ {olive}%N {default}skeeted {olive}%N {default}in {blue}%d shot%c", attacker, victim, shots, plural);
 				    }
 				}*/
 
-				CPrintToChatAll("{green}★ {olive}%N{blue}%d{default}枪{default}空爆了{olive}%N", attacker, shots, victim);
+				CPrintToChatAll("%t %t", "Tag+", "Skeeted", attacker, victim, shots, shots == 1 ? "" : "s");
 			}
 		}
 	}
@@ -521,15 +527,15 @@ public Action Timer_BoomerKilledCheck(Handle hTimer)
 		{
 			if (BoomerKillTime <= 0.5)
 			{
-				CPrintToChatAll("{green}★★★ {olive}%N{default}在{olive}%0.1fs{default}秒内打爆了{olive}%s {default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
+				CPrintToChatAll("%t %t", "Tag+++", "ShutBoomer", g_iBoomerKiller, Boomer, BoomerKillTime);
 			}
 			else if (BoomerKillTime > 0.5 && BoomerKillTime <= 1.4)
 			{
-				CPrintToChatAll("{green}★★ {olive}%N{default}在{olive}%0.1fs{default}秒内打爆了{olive}%s {default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
+				CPrintToChatAll("%t %t", "Tag++", "ShutBoomer", g_iBoomerKiller, Boomer, BoomerKillTime);
 			}
 			else
 			{
-				CPrintToChatAll("{green}★ {olive}%N{default}在{olive}%0.1fs{default}秒内打爆了{olive}%s {default}Boomer.", g_iBoomerKiller, BoomerKillTime, Boomer);
+				CPrintToChatAll("%t %t", "Tag+", "ShutBoomer", g_iBoomerKiller, Boomer, BoomerKillTime);
 			}
 		}
 	}
@@ -611,7 +617,7 @@ public void Event_PlayerBoomed(Event hEvent, const char[] sEventName, bool bDont
 	        if (IsClientInGame(i)) {
 	            iTeam = GetClientTeam(i);
 	            if (iTeam == TEAM_SURVIVOR || iTeam == TEAM_SURVIVOR) {
-	                CPrintToChat(i, "{green}★ {olive}%N{default}尝试推停{olive}%s{default}的Boomer{blue}呕吐{default},但他推早了", g_iBoomerShover, Boomer);
+	                CPrintToChat(i, "{green}★ {olive}%N {default}shoved {olive}%s{default}'s Boomer, but popped it too early", g_iBoomerShover, Boomer);
 	            }
 	        }
 	    }
@@ -621,7 +627,7 @@ public void Event_PlayerBoomed(Event hEvent, const char[] sEventName, bool bDont
 	        if (IsClientInGame(i)) {
 	            iTeam = GetClientTeam(i);
 	            if (iTeam == TEAM_SURVIVOR || iTeam == TEAM_SURVIVOR) {
-							CPrintToChat(i, "{green}★ {olive}%N{default}尝试推停{olive}%s{default}的Boomer{blue}呕吐{default}, 但{olive}%N {default}推早了", g_iBoomerShover, Boomer, g_iBoomerKiller);
+	                CPrintToChat(i, "{green}★ {olive}%N {default}shoved {olive}%s{default}'s Boomer, but {olive}%N {default}popped it too early", g_iBoomerShover, Boomer, g_iBoomerKiller);
 	            }
 	        }
 	    }
@@ -644,7 +650,7 @@ public void Event_AlarmCar(Event hEvent, const char[] sEventName, bool bDontBroa
 	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (iClient > 0 && GetClientTeam(iClient) == TEAM_SURVIVOR)
 	{
-		CPrintToChatAll("{olive}%N{blue}触发了{olive}警报车警报", iClient);
+		CPrintToChatAll("%t %t", "Tag+", "AlarmedCar", iClient);
 	}
 }
 

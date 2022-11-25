@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <geoip>
 
-#define PLUGIN_VERSION "1.14"
+#define PLUGIN_VERSION "1.12"
 
 #define CVAR_FLAGS		FCVAR_NOTIFY
 
@@ -94,15 +94,6 @@ public Plugin myinfo =
 		* Impossible+
 	 - Removed #PRIVATE_STUFF
 	 - Added data/votedifficulty_vote_block.txt file allowing to block users from using vote functionality by name and SteamId.
-	 
-	1.13 (29-Nov-2021)
-	 - Able to change difficulty when lobby is reserved (thanks to Silvers).
-	 
-	1.14 (13-Nov-2022)
-	 - Added ConVar "sm_votedifficulty_default_set" - Do we need to set default difficulty when the server get restarted? (1 - Yes, 0 - No)
-	 - Added ConVar "sm_votedifficulty_default_difficulty" - Default difficulty to use when the server get restarted
-	 - Fixed warnings in SM 1.11.
-	 
 */
 
 #define EASY_CONFIG 		"server_easy.cfg"
@@ -116,7 +107,6 @@ public Plugin myinfo =
 char FILE_VOTE_BLOCK[]		= "data/votedifficulty_vote_block.txt";
 //没搞懂干嘛的
 ConVar g_ConVarDifficulty;
-ConVar g_ConVarZDiffLocked;
 ConVar g_ConVarDifficultyEx;
 ConVar g_hCvarDelay;
 ConVar g_hCvarTimeout;
@@ -128,8 +118,6 @@ ConVar g_hCvarAllowDifficultyMenu;
 ConVar g_hCvarUseMasterPlus;
 ConVar g_hCvarUseExpertPlus;
 ConVar g_hCvarUseConfigPerDif;
-ConVar g_hCvarDefaultDif;
-ConVar g_hCvarDefaultSet;
 
 ArrayList hArrayVoteBlock;
 
@@ -146,7 +134,6 @@ bool g_bConfigExecute = true;
 bool g_bDetectDifficulty = true;
 bool g_bEasy, g_bNormal, g_bHard, g_bHardPlus, g_bExpert, g_bExpertPlus;
 bool g_bLateload;
-bool g_bFirstStart = true;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -169,8 +156,6 @@ public void OnPluginStart()
 	g_hCvarUseMasterPlus = CreateConVar(	"sm_votedifficulty_use_master_plus",	"0",			"是否启用自定义难度 '困难 +' ? (1 - 是 / 0 - 否)", CVAR_FLAGS );
 	g_hCvarUseExpertPlus = CreateConVar(	"sm_votedifficulty_use_expert_plus",	"0",			"是否启用自定义难度 '专家 +' ? (1 - 是 / 0 - 否)", CVAR_FLAGS );
 	g_hCvarUseConfigPerDif = CreateConVar(	"sm_votedifficulty_use_config_per_dif",	"1",			"不同难度下是否使用不同的难度配置? (1 - 是 / 0 - 否)", CVAR_FLAGS );
-	g_hCvarDefaultSet = CreateConVar(		"sm_votedifficulty_default_set",		"0",			"在服务器重启后是否设置默认难度? ((1 - 是 / 0 - 否)", CVAR_FLAGS );
-	g_hCvarDefaultDif = CreateConVar(		"sm_votedifficulty_default_difficulty",	"Easy",			"服务器重启后设置的默认难度", CVAR_FLAGS );
 	
 	AutoExecConfig(true,				"l4d_votedifficulty");
 	
@@ -178,15 +163,14 @@ public void OnPluginStart()
 	
 	RegConsoleCmd("sm_vd", CmdVoteMenu, "Show menu to vote for difficulty");
 	
-	RegAdminCmd("sm_veto", 			Command_Veto, 		ADMFLAG_VOTE, 	"Allow admin to veto current vote.");
-	RegAdminCmd("sm_votepass", 		Command_Votepass, 	ADMFLAG_VOTE, 	"Allow admin to bypass current vote.");
+	RegAdminCmd("sm_veto", 			Command_Veto, 		ADMFLAG_VOTE, 	"允许管理员否决当前投票");
+	RegAdminCmd("sm_votepass", 		Command_Votepass, 	ADMFLAG_VOTE, 	"允许管理员强制通过当前投票");
 	
 	g_ConVarDifficulty 		= FindConVar("z_difficulty");
-	g_ConVarZDiffLocked 	= FindConVar("z_difficulty_locked");
 	
 	char diff[32];
 	g_ConVarDifficulty.GetDefault(diff, sizeof(diff));
-	g_ConVarDifficultyEx 	= CreateConVar("z_difficulty_ex",	diff,	"Extended game difficulty string", FCVAR_DONTRECORD );
+	g_ConVarDifficultyEx 	= CreateConVar("z_difficulty_ex",	diff,	"延长游戏难度字符串", FCVAR_DONTRECORD );
 	
 	if( g_bLateload )
 	{
@@ -229,17 +213,6 @@ public void OnMapStart()
 	g_bHardPlus = false;
 	g_bExpertPlus = false;
 	ReadFileToArrayList(FILE_VOTE_BLOCK, hArrayVoteBlock);
-	if( g_bFirstStart )
-	{
-		g_bFirstStart = false;
-		if( g_hCvarDefaultSet.IntValue != 0 )
-		{
-			char s[16];
-			g_hCvarDefaultDif.GetString(s, sizeof(s));
-			g_ConVarDifficulty.SetString(s, true, true);
-			g_ConVarDifficultyEx.SetString(s, false, false);
-		}
-	}
 }
 
 void DetectDifficulty()
@@ -303,7 +276,7 @@ void ApplyDifficulty(const char[] sDifficulty)
 	}
 }
 
-public void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast) // just in case
+public Action Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast) // just in case
 {
 	g_bVoteInProgress = false;
 	g_hCvarAllowDifficultyMenu.SetInt(0);
@@ -402,7 +375,6 @@ public int MenuHandler_MenuDifficulty(Menu menu, MenuAction action, int param1, 
 			VoteDifficulty(param1, sItem);
 		}
 	}
-	return 0;
 }
 
 void VoteDifficulty(int client, char[] sDifficulty)
@@ -530,7 +502,6 @@ Action Timer_VoteDelayed(Handle timer, Menu menu)
 			delete menu;
 		}
 	}
-	return Plugin_Continue;
 }
 
 int GetRealClientCount() {
@@ -581,19 +552,11 @@ public int Handle_VoteDifficulty(Menu menu, MenuAction action, int param1, int p
 	return 0;
 }
 
-//#include <left4dhooks>
-
 void Handler_PostVoteAction(bool bVoteSuccess)
 {
-	if( bVoteSuccess ) {
-		int oldval = g_ConVarZDiffLocked.IntValue;
-		g_ConVarZDiffLocked.SetInt(0); // prevents lock by lobby reservation, for test, enter: mm_dedicated_force_servers "IP:PORT"
-	
+	if (bVoteSuccess) {
 		ServerCommand("exec %s", DEFAULT_CONFIG);
 		ServerExecute();
-		
-		//L4D_LobbyUnreserve();
-		//PrintToChatAll("L4D_LobbyUnreserve executed.");
 		
 		g_bEasy = false;
 		g_bNormal = false;
@@ -647,8 +610,6 @@ void Handler_PostVoteAction(bool bVoteSuccess)
 			ServerExecute();
 		}
 		g_bDetectDifficulty = true;
-		
-		g_ConVarZDiffLocked.SetInt(oldval);
 		
 		LogVoteAction(0, "[ACCEPTED] Difficulty: %s.", g_sVoteResult);
 		CPrintToChatAll("%t", "vote_success", g_sVoteResult);
