@@ -228,7 +228,7 @@ void OnElevatorLocked(const char[] output, int caller, int activator, float dela
 		g_fDuration = g_hTeleportDelay.FloatValue;
 		int time = RoundToNearest(g_fDuration);
 		
-		PrintHintTextToAll("传送时间还有%d秒", time);
+		PrintHintTextToAll("机关传送时间还有 %d 秒", time);
 		CreateTimer (1.0, Timer_CountDown, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
@@ -241,7 +241,7 @@ void OnElevatorUnlocked(const char[] output, int caller, int activator, float de
 {
 	if (!g_hPluginEnable.BoolValue) return;
 	g_bUnlockedButtonPressed = true;
-	PrintHintTextToAll("Activated");
+	//PrintHintTextToAll("Activated");
 }
 
 /* =============================================================================================================== *
@@ -256,7 +256,7 @@ Action Timer_CountDown(Handle timer)
 	
 	else if (timeleft >= 0)
 	{
-		PrintHintTextToAll("传送时间还有%d秒", timeleft);
+		PrintHintTextToAll("机关传送时间还有 %d 秒", timeleft);
 		return Plugin_Continue;
 	}
 	

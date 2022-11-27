@@ -186,7 +186,7 @@ public Notify(client,time)
 public Action:NotifyClient(Handle:timer, any:client)
 {
 	if (IS_VALID_INFECTED(client) && IsPlayerGhost(client)){
-		PrintToChat(client, "As a ghost you can fly by holding your RELOAD button.");
+		PrintToChat(client, "灵魂状态下你可以按住换弹键飞行");
 	}
 
 }

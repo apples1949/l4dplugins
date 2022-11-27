@@ -5,7 +5,6 @@
 new Handle:sm_fktime;
 new Handle:sm_fkdistance;
 new Handle:g_fkEnable;
-new Handle:sm_ads;
 new Float:playerPos[3];
 new bool:g_fkJump = true;
 
@@ -24,9 +23,8 @@ public OnPluginStart()
 	HookEvent("tank_spawn", Event_Tank_Spawn);
 	/* CFG参数 */
 	g_fkEnable 		= CreateConVar("sm_doublejump_enabled", "1",			"是否开启坦克防卡.");
-	sm_ads				= CreateConVar("sm_ads", 								" ", 			"坦克卡住后随机瞬移到某一幸存者旁边");
-	sm_fktime 		= CreateConVar("sm_fktime", 						"10.0", 	"坦克卡住多少时间后才会随机瞬移到某一个幸存者身边(有误差，一般为X秒到2X秒之间!");
-	sm_fkdistance = CreateConVar("sm_fkdistance", 				"10.0", 	"坦克在多大的范围内活动才算卡住!(填0就是原地踏步!)");
+	sm_fktime 		= CreateConVar("sm_fktime", 						"8.0", 	"坦克卡住多少时间后才会随机瞬移到某一个幸存者身边(有误差，一般为X秒到2X秒之间!");
+	sm_fkdistance = CreateConVar("sm_fkdistance", 				"25.0", 	"坦克在多大的范围内活动才算卡住!(填0就是原地踏步!)");
 	/* 调用参数 */
 	HookConVarChange(g_fkEnable, convar_Change);
 	g_fkJump = GetConVarBool(g_fkEnable);
@@ -72,12 +70,12 @@ public Action:aTimer(client)
 	{
 		GetEntPropVector(client, Prop_Send, "m_vecOrigin", playerPos);
 		CreateTimer(GetConVarFloat(sm_fktime), TeleportTimer, client);
-		new Float:velo[3] = 0.0;
+		new Float:velo[3];
 		if (velo[2] != 0.0)
 		{
 			return Plugin_Handled;
 		}
-		new Float:vec[3] = 0.0;
+		new Float:vec[3];
 		vec[0] = velo[0];
 		vec[1] = velo[1];
 		vec[2] = velo[2] + 300.0;
@@ -87,8 +85,8 @@ public Action:aTimer(client)
 
 public Action:TeleportTimer(Handle:timer, any:client)
 {
-	new Float:entpos[3] = 0.0;
-	new Float:clientpos[3] = 0.0;
+	new Float:entpos[3];
+	new Float:clientpos[3];
 	new Float:distance = 0.0;
 	new Float:fkdistance = GetConVarFloat(sm_fkdistance);
 	
@@ -108,12 +106,12 @@ public Action:TeleportTimer(Handle:timer, any:client)
 		{
 			aTimer(client);
 		}
-		new Float:velo[3] = 0.0;
+		new Float:velo[3];
 		if (velo[2] != 0.0)
 		{
 			return Plugin_Handled;
 		}
-		new Float:vec[3] = 0.0;
+		new Float:vec[3];
 		vec[0] = velo[0];
 		vec[1] = velo[1];
 		vec[2] = velo[2] + 300.0;
