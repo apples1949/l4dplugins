@@ -156,8 +156,10 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [specialspawner](https://github.com/umlka/l4d2/tree/main/control_zombies)战役模式下玩家可扮演感染者/生还者玩家可叛变坦克  
 [l4d2_auto_add_zombie](https://github.com/apples1949/l4dplugins/blob/main/l4d2_auto_add_zombie.sp)群友写的动态僵尸数量插件  
 [specialspawner](https://github.com/umlka/l4d2/tree/main/specialspawner) 刷特插件  
+[l4d2_fb_fix](https://forums.alliedmods.net/showthread.php?p=2774567) botAI增强插件 建议搭配mod使用 [汉化cvar翻译及文本汉化](https://github.com/apples1949/l4dplugins/blob/main/l4d2_sb_fix.sp)  
 [vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]zmweapon.vpk zm参数小枪  
 [mod]knife.vpk 恢复小刀 [来自anne](https://github.com/Caibiii/AnneServer/blob/main/left4dead2/addons/knife.vpk)  
+[mod]modai.vpk [创意工坊](https://steamcommunity.com/sharedfiles/filedetails/?id=1968764163)的botAI增强mod 建议通过emd文件开启Full Power模式
 服务器自改地图：[stripper微改地图](https://github.com/apples1949/l4dplugins/tree/main/stripper)  

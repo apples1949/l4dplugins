@@ -594,10 +594,10 @@ void SelectImprovedTarget()
 	
 	
 	if (c_iSelectType == 0) {
-		PrintToChatAll("\x04已加强全部机器人");
+		PrintToChatAll("\x04[sb_fix]已加强全部机器人");
 	}
 	else if (c_iSelectType == 1) {
-		PrintToChatAll("\x04已加强 %d 机器人", c_iSelectNumber);
+		PrintToChatAll("\x04[sb_fix]已加强 %d 个机器人", c_iSelectNumber);
 		
 		int count;
 		for (int x = 1; x <= MaxClients; x++) {
@@ -615,7 +615,7 @@ void SelectImprovedTarget()
 		static char sSelectName[256];
 		GetConVarString(sb_fix_select_character_name, sSelectName, sizeof(sSelectName));
 		
-		PrintToChatAll("\x04已加强机器人 %s", sSelectName);
+		PrintToChatAll("\x04[sb_fix]已加强机器人 %s", sSelectName);
 
 		int count;
 		for (int x = 1; x <= MaxClients; x++) {
