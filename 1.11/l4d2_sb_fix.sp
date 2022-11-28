@@ -254,56 +254,56 @@ public void OnPluginStart()
 	// If the plugin is too heavy, Try disable searching for "Entities" other than Client. (CI, Witch and tank rock)
 	
 	// ---------------------------------
-	sb_fix_enabled				= CreateConVar("sb_fix_enabled", "1", "Enable the plugin. <0: Disable, 1: Enable>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_enabled				= CreateConVar("sb_fix_enabled", "1", "是否启用插件 <0: 禁用, 1: 启用>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	// ---------------------------------
-	sb_fix_select_type				= CreateConVar("sb_fix_select_type", "0", "Which survivor bots to improved. <0: All, 1: Randomly select X people when left the safe area, 2: Enter the character name of the survivor bot to improve in \"sb_fix_select_character_name\">", FCVAR_NOTIFY, true, 0.0, true, 2.0);
-	sb_fix_select_number			= CreateConVar("sb_fix_select_number", "1", "If \"sb_fix_select_type\" is 1, Enter the number of survivor bots. <0 ~ 4>", FCVAR_NOTIFY, true, 0.0);
-	sb_fix_select_character_name	= CreateConVar("sb_fix_select_character_name", "", "If \"sb_fix_select_type\" is 4, Enter the character name to improved. Separate with spaces. Example: \"nick francis bill\"", FCVAR_NOTIFY); // "coach ellis rochelle nick louis francis zoey bill"
+	sb_fix_select_type				= CreateConVar("sb_fix_select_type", "0", "哪些生还者机器人需要加强 <0: 全部的机器人, 1: 离开安全区时随机选择’sb_fix_select_number‘值设定的机器人数量, 2: 在 ‘sb_fix_select_character_name ’中输入要改进的生还者机器人的角色名称>", FCVAR_NOTIFY, true, 0.0, true, 2.0);
+	sb_fix_select_number			= CreateConVar("sb_fix_select_number", "1", "如果‘sb_fix_select_type’为1，请输入生还者机器人的数量。<0 ~ 4>", FCVAR_NOTIFY, true, 0.0);
+	sb_fix_select_character_name	= CreateConVar("sb_fix_select_character_name", "", "如果 ’sb_fix_select_type'的值是4，输入要改进的生还者机器人的名称。用空格隔开。例如：nick francis bill", FCVAR_NOTIFY); // "coach ellis rochelle nick louis francis zoey bill"
 	// ---------------------------------
-	sb_fix_dont_switch_secondary	= CreateConVar("sb_fix_dont_switch_secondary", "1", "Disallow switching to the secondary weapon until the primary weapon is out of ammo. <0:No, 1:Yes | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_dont_switch_secondary	= CreateConVar("sb_fix_dont_switch_secondary", "1", "生还者机器人在主武器没有弹药之前，是否不允许切换到副武器 <0:否, 1:是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	// ---------------------------------
-	sb_fix_help_enabled			= CreateConVar("sb_fix_help_enabled", "1", "Help a pinning survivor. <0: Disable, 1: Enable | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	sb_fix_help_range				= CreateConVar("sb_fix_help_range", "1200", "Range to shoot/search a pinning survivor. <1 ~ 3000 | def: 1200>", FCVAR_NOTIFY, true, 1.0, true, 3000.0);
-	sb_fix_help_shove_type			= CreateConVar("sb_fix_help_shove_type", "2", "Whether to help by shove. <0: Not help by shove, 1: Smoker only, 2: Smoker and Jockey, 3: Smoker, Jockey and Hunter | def: 2>", FCVAR_NOTIFY, true, 0.0, true, 3.0);
-	sb_fix_help_shove_reloading		= CreateConVar("sb_fix_help_shove_reloading", "0", "If \"sb_fix_help_shove_type\" is 2 or more, it is shove only while reloading. <0: No, 1: Yes | def: 0>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_help_enabled			= CreateConVar("sb_fix_help_enabled", "1", "生还者机器人是否救助倒地的生还者 <0: 否, 1: 是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_help_range				= CreateConVar("sb_fix_help_range", "1200", "生还者机器人救助倒地/被控生还者的范围", FCVAR_NOTIFY, true, 1.0, true, 3000.0);
+	sb_fix_help_shove_type			= CreateConVar("sb_fix_help_shove_type", "2", "是否允许生还者机器人使用推动感染者进行帮助 <0: 不用推动帮助, 1: 只推Smoker进行帮助, 2: 推Smoker和Jockey进行帮助, 3: 推Smoker、Jockey和Hunter进行帮助 | def: 2>", FCVAR_NOTIFY, true, 0.0, true, 3.0);
+	sb_fix_help_shove_reloading		= CreateConVar("sb_fix_help_shove_reloading", "0", "如果 ’sb_fix_help_shove_type‘的值为2或更多，则生还者机器人只在换弹时进行推动帮助 <0: 禁用, 1: 启用>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	// ---------------------------------
-	sb_fix_ci_enabled				= CreateConVar("sb_fix_ci_enabled", "1", "Deal with Common Infecteds. <0: Disable, 1: Enable | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	sb_fix_ci_range				= CreateConVar("sb_fix_ci_range", "500", "Range to shoot/search a Common Infected. <1 ~ 2000 | def: 500>", FCVAR_NOTIFY, true, 1.0, true, 2000.0);
-	sb_fix_ci_melee_allow			= CreateConVar("sb_fix_ci_melee_allow", "1", "Allow to deal with the melee weapon. <0: Disable 1: Enable | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	sb_fix_ci_melee_range			= CreateConVar("sb_fix_ci_melee_range", "160", "If \"sb_fix_ci_melee_allow\" is enabled, range to deal with the melee weapon. <1 ~ 500 | def: 160>", FCVAR_NOTIFY, true, 1.0, true, 500.0);
+	sb_fix_ci_enabled				= CreateConVar("sb_fix_ci_enabled", "1", "生还者机器人是否处理普通感染者 <0: 否, 1: 是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_ci_range				= CreateConVar("sb_fix_ci_range", "500", "生还者机器人处理普通感染者的范围", FCVAR_NOTIFY, true, 1.0, true, 2000.0);
+	sb_fix_ci_melee_allow			= CreateConVar("sb_fix_ci_melee_allow", "1", "生还者机器人是否使用近战处理普通感染者 <0: 否 1: 是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_ci_melee_range			= CreateConVar("sb_fix_ci_melee_range", "160", "如果启用了’sb_fix_ci_melee_allow‘ 则生还者机器人使用近战武器清理普通感染者的范围是多少", FCVAR_NOTIFY, true, 1.0, true, 500.0);
 	// ---------------------------------
-	sb_fix_si_enabled				= CreateConVar("sb_fix_si_enabled", "1", "Deal with Special Infecteds. <0: Disable, 1: Enable | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	sb_fix_si_range				= CreateConVar("sb_fix_si_range", "500", "Range to shoot/search a Special Infected. <1 ~ 3000 | def: 500>", FCVAR_NOTIFY, true, 1.0, true, 3000.0);
-	sb_fix_si_ignore_boomer		= CreateConVar("sb_fix_si_ignore_boomer", "1", "Ignore a Boomer near Survivors (and shove a Boomer). <0: No, 1: Yes | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	sb_fix_si_ignore_boomer_range	= CreateConVar("sb_fix_si_ignore_boomer_range", "200", "Range to ignore a Boomer. <1 ~ 900 | def: 200>", FCVAR_NOTIFY, true, 1.0, true, 500.0);
+	sb_fix_si_enabled				= CreateConVar("sb_fix_si_enabled", "1", "生还者机器人是否处理特殊感染者 <0: 否, 1: 是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_si_range				= CreateConVar("sb_fix_si_range", "500", "生还者机器人射击、搜索特殊感染者的范围", FCVAR_NOTIFY, true, 1.0, true, 3000.0);
+	sb_fix_si_ignore_boomer		= CreateConVar("sb_fix_si_ignore_boomer", "1", "生还者机器人是否忽略并推开其他生还者附近的Boomer <0: 否, 1: 是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_si_ignore_boomer_range	= CreateConVar("sb_fix_si_ignore_boomer_range", "200", "生还者机器人忽略Boomer的范围", FCVAR_NOTIFY, true, 1.0, true, 500.0);
 	// ---------------------------------
-	sb_fix_tank_enabled			= CreateConVar("sb_fix_tank_enabled", "1", "Deal with Tanks. <0: Disable, 1: Enable | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	sb_fix_tank_range				= CreateConVar("sb_fix_tank_range", "1200", "Range to shoot/search a Tank. <1 ~ 3000 | def: 1200>", FCVAR_NOTIFY, true, 1.0, true, 3000.0);
+	sb_fix_tank_enabled			= CreateConVar("sb_fix_tank_enabled", "1", "生还者机器人是否处理Tank. <0: 否, 1: 是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_tank_range				= CreateConVar("sb_fix_tank_range", "1200", "生还者机器人射击、搜索Tank的范围", FCVAR_NOTIFY, true, 1.0, true, 3000.0);
 	// ---------------------------------
-	sb_fix_si_tank_priority_type		= CreateConVar("sb_fix_si_tank_priority_type", "0", "When a Special Infected and a Tank is together within the specified range, which to prioritize. <0: Nearest, 1: Special Infected, 2: Tank | def: 0>", FCVAR_NOTIFY, true, 0.0, true, 2.0);
+	sb_fix_si_tank_priority_type		= CreateConVar("sb_fix_si_tank_priority_type", "0", "当一个特殊感染者和一个Tank克同时出现在指定范围内时，生还者机器人优先处理哪个 <0: 最近的, 1: 特殊感染者, 2: Tank>。", FCVAR_NOTIFY, true, 0.0, true, 2.0);
 	// ---------------------------------
-	sb_fix_bash_enabled			= CreateConVar("sb_fix_bash_enabled", "1", "Bash a flying Hunter or Jockey. <0: Disable, 1: Enable | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	sb_fix_bash_hunter_chance		= CreateConVar("sb_fix_bash_hunter_chance", "100", "Chance of bash a flying Hunter. (Even 100 doesn't can perfectly shove). <1 ~ 100 | def: 100>", FCVAR_NOTIFY, true, 0.0, true, 100.0);
-	sb_fix_bash_hunter_range		= CreateConVar("sb_fix_bash_hunter_range", "145", "Range to bash/search a flying Hunter. <1 ~ 500 | def: 145>", FCVAR_NOTIFY, true, 1.0, true, 500.0);
-	sb_fix_bash_jockey_chance		= CreateConVar("sb_fix_bash_jockey_chance", "100", "Chance of bash a flying Jockey. (Even 100 doesn't can perfectly shove). <1 ~ 100 | def: 100>", FCVAR_NOTIFY, true, 0.0, true, 100.0);
-	sb_fix_bash_jockey_range		= CreateConVar("sb_fix_bash_jockey_range", "125", "Range to bash/search a flying Jockey. <1 ~ 500 | def: 125>", FCVAR_NOTIFY, true, 1.0, true, 500.0);
+	sb_fix_bash_enabled			= CreateConVar("sb_fix_bash_enabled", "1", "生还者机器人是否推动飞行中的Hunter或者Jockey <0: 否, 1: 是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_bash_hunter_chance		= CreateConVar("sb_fix_bash_hunter_chance", "100", "生还者机器人成功推开飞行中Hunter的几率(即使设定为100也不确定一定能推动)", FCVAR_NOTIFY, true, 0.0, true, 100.0);
+	sb_fix_bash_hunter_range		= CreateConVar("sb_fix_bash_hunter_range", "145", "生还者机器人射击、搜索飞行中的Hunter范围", FCVAR_NOTIFY, true, 1.0, true, 500.0);
+	sb_fix_bash_jockey_chance		= CreateConVar("sb_fix_bash_jockey_chance", "100", "生还者机器人成功推开飞行中Jockey的几率(即使设定为100也不确定一定能推动)", FCVAR_NOTIFY, true, 0.0, true, 100.0);
+	sb_fix_bash_jockey_range		= CreateConVar("sb_fix_bash_jockey_range", "125", "生还者机器人射击、搜索飞行中的Jockey范围", FCVAR_NOTIFY, true, 1.0, true, 500.0);
 	// ---------------------------------
-	sb_fix_rock_enabled			= CreateConVar("sb_fix_rock_enabled", "1", "Shoot a tank rock. <0: Disable, 1: Enable | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	sb_fix_rock_range				= CreateConVar("sb_fix_rock_range", "700", "Range to shoot/search a tank rock. <1 ~ 2000 | def: 700>", FCVAR_NOTIFY, true, 1.0, true, 2000.0);
+	sb_fix_rock_enabled			= CreateConVar("sb_fix_rock_enabled", "1", "生还者机器人是否射击Tank扔出的石头 <0: 否, 1: 是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_rock_range				= CreateConVar("sb_fix_rock_range", "700", "生还者机器人射击、搜索Tank扔出的石头范围", FCVAR_NOTIFY, true, 1.0, true, 2000.0);
 	// ---------------------------------
-	sb_fix_witch_enabled			= CreateConVar("sb_fix_witch_enabled", "1", "Shoot a rage Witch. <0: Disable, 1: Enable | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	sb_fix_witch_range				= CreateConVar("sb_fix_witch_range", "1500", "Range to shoot/search a rage Witch. <1 ~ 2000 | def: 1500>", FCVAR_NOTIFY, true, 1.0, true, 2000.0);
-	sb_fix_witch_range_incapacitated	= CreateConVar("sb_fix_witch_range_incapacitated", "1000", "Range to shoot/search a Witch that incapacitated a survivor. <0 ~ 2000 | def: 1000>", FCVAR_NOTIFY, true, 0.0, true, 2000.0);
-	sb_fix_witch_range_killed		= CreateConVar("sb_fix_witch_range_killed", "0", "Range to shoot/search a Witch that killed a survivor. <0 ~ 2000 | def: 0>", FCVAR_NOTIFY, true, 0.0, true, 2000.0);
-	sb_fix_witch_shotgun_control	= CreateConVar("sb_fix_witch_shotgun_control", "1", "[Witch] If have the shotgun, controls the attack timing. <0: Disable, 1: Enable | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	sb_fix_witch_shotgun_range_max	= CreateConVar("sb_fix_witch_shotgun_range_max", "300", "If a Witch is within distance of the values, stop the attack. <1 ~ 1000 | def: 300>", FCVAR_NOTIFY, true, 1.0, true, 1000.0);
-	sb_fix_witch_shotgun_range_min	= CreateConVar("sb_fix_witch_shotgun_range_min", "70", "If a Witch is at distance of the values or more, stop the attack. <1 ~ 500 | def: 70>", FCVAR_NOTIFY, true, 1.0, true, 500.0);
+	sb_fix_witch_enabled			= CreateConVar("sb_fix_witch_enabled", "1", "是否使生还者机器人射击愤怒的Witch <0: 否, 1: 是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_witch_range				= CreateConVar("sb_fix_witch_range", "1500", "生还者机器人射击、搜索愤怒的Witch范围", FCVAR_NOTIFY, true, 1.0, true, 2000.0);
+	sb_fix_witch_range_incapacitated	= CreateConVar("sb_fix_witch_range_incapacitated", "1000", "生还者机器人射击、搜索使生还者倒地的Witch范围", FCVAR_NOTIFY, true, 0.0, true, 2000.0);
+	sb_fix_witch_range_killed		= CreateConVar("sb_fix_witch_range_killed", "0", "生还者机器人射击、搜索击杀生还者的Witch范围", FCVAR_NOTIFY, true, 0.0, true, 2000.0);
+	sb_fix_witch_shotgun_control	= CreateConVar("sb_fix_witch_shotgun_control", "1", "如果如果有猎枪，控制攻击时机持有霰弹枪，是否控制攻击时机 <0: 否, 1: 是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_witch_shotgun_range_max	= CreateConVar("sb_fix_witch_shotgun_range_max", "300", "如果Witch在生还者机器人设定的范围内，则生还者机器人停止攻击", FCVAR_NOTIFY, true, 1.0, true, 1000.0);
+	sb_fix_witch_shotgun_range_min	= CreateConVar("sb_fix_witch_shotgun_range_min", "70", "如果Witch不在生还者机器人设定的范围或更远，则生还者机器人停止攻击。", FCVAR_NOTIFY, true, 1.0, true, 500.0);
 	// ---------------------------------
-	sb_fix_prioritize_ownersmoker	= CreateConVar("sb_fix_prioritize_ownersmoker", "1", "Priority given to dealt a Smoker that is try to pinning self. <0: No, 1: Yes | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_prioritize_ownersmoker	= CreateConVar("sb_fix_prioritize_ownersmoker", "1", "是否使生还者机器人优先处理试图自杀的Smoker <0: 否, 1: 是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	// ---------------------------------
-	sb_fix_incapacitated_enabled		= CreateConVar("sb_fix_incapacitated_enabled", "1", "Enable Incapacitated Cmd. <0: Disable, 1: Enable | def: 1>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_incapacitated_enabled		= CreateConVar("sb_fix_incapacitated_enabled", "1", "是否启用倒地者指令 <0: 否, 1: 是>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	// ---------------------------------
-	sb_fix_debug					= CreateConVar("sb_fix_debug", "0", "[For debug] Print the action status. <0:Disable, 1:Enable>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	sb_fix_debug					= CreateConVar("sb_fix_debug", "0", "是否启用调试信息输出 <0:禁用, 1:启用>", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	
 	sb_fix_help_enabled.AddChangeHook(SBHelp_ChangeConvar);
@@ -542,7 +542,6 @@ public Action Timer_PlayerLeftCheck(Handle Timer)
 		if (!LeftSafeRoom) {
 			LeftSafeRoom = true;
 			SelectImprovedTarget();
-			// PrintToChatAll("[sb_fix] Survivors left the safe area.");
 		}
 		
 		TimerAlreadyWorking = false;
@@ -588,22 +587,17 @@ bool LeftStartArea()
 
 void SelectImprovedTarget()
 {
-	// PrintToChatAll("type %i, leftsaferoom %b", c_iSelectType, LeftSafeRoom);
 	
 	if (!g_bEnabled || !LeftSafeRoom) return; // Select targets when left the safe area.
 	
 	EmitSoundToAll(SOUND_SELECT, SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.5); // Selected Sound
 	
-	static char bufferChat[512];
-	Format(bufferChat, sizeof(bufferChat), "\x05[sb_fix] \x01Improved targets:");
 	
 	if (c_iSelectType == 0) {
-		//PrintToChatAll("\x04Type0 - ALL bots");
-		Format(bufferChat, sizeof(bufferChat), "%s\x04\nType0 - ALL bots", bufferChat);
+		PrintToChatAll("\x04已加强全部机器人");
 	}
 	else if (c_iSelectType == 1) {
-		//PrintToChatAll("\x04Type1 - %d bot%s", c_iSelectNumber, (c_iSelectNumber == 1) ? "" : "s");
-		Format(bufferChat, sizeof(bufferChat), "%s\x04\nType1 - %d bot%s", bufferChat, c_iSelectNumber, (c_iSelectNumber == 1) ? "" : "s");
+		PrintToChatAll("\x04已加强 %d 机器人", c_iSelectNumber);
 		
 		int count;
 		for (int x = 1; x <= MaxClients; x++) {
@@ -611,7 +605,6 @@ void SelectImprovedTarget()
 				g_bFixTarget[x] = true;
 				count++;
 				//PrintToChatAll("\x04(%d/%d)\x05. %N", count, c_iSelectNumber, x);
-				Format(bufferChat, sizeof(bufferChat), "%s\x04\n(%d/%d)\x05. %N", bufferChat, count, c_iSelectNumber, x);
 			}
 			
 			if (count >= c_iSelectNumber) { break; }
@@ -622,9 +615,8 @@ void SelectImprovedTarget()
 		static char sSelectName[256];
 		GetConVarString(sb_fix_select_character_name, sSelectName, sizeof(sSelectName));
 		
-		//PrintToChatAll("\x04Type2 - \"%s\"", sSelectName);
-		Format(bufferChat, sizeof(bufferChat), "%s\x04\nType2 - \"%s\"", bufferChat, sSelectName);
-		
+		PrintToChatAll("\x04已加强机器人 %s", sSelectName);
+
 		int count;
 		for (int x = 1; x <= MaxClients; x++) {
 			if (isSurvivorBot(x)) {
@@ -634,8 +626,6 @@ void SelectImprovedTarget()
 				if (strcmp(sSelectName, sName) == 0) {
 					g_bFixTarget[x] = true;
 					count++;
-					//PrintToChatAll("\x04%d\x05. %N", count, x);
-					Format(bufferChat, sizeof(bufferChat), "%s\x04\n%d\x05. %N", bufferChat, count, x);
 				} else {
 					g_bFixTarget[x] = false;
 				}
@@ -644,7 +634,6 @@ void SelectImprovedTarget()
 		}
 	}
 	
-	PrintToChatAll(bufferChat);
 }
 
 public Action Timer_ShoveChance(Handle Timer)
@@ -659,14 +648,10 @@ public Action Timer_ShoveChance(Handle Timer)
 						if (zombieClass == ZC_HUNTER) {
 							if (GetRandomInt(0, 100) <= c_iBash_HunterChance) g_bShove[sb][x] = true;
 							else g_bShove[sb][x] = false;
-							
-							// PrintToChatAll("%N's Shove to %N: %b", sb, x, g_bShove[sb][x]);
 						}
 						else if (zombieClass == ZC_JOCKEY) {
 							if (GetRandomInt(0, 100) <= c_iBash_JockeyChance) g_bShove[sb][x] = true;
 							else g_bShove[sb][x] = false;
-							
-							// PrintToChatAll("%N's Shove to %N: %b", sb, x, g_bShove[sb][x]);
 						}
 					}
 				}
@@ -681,7 +666,7 @@ public Action Timer_ShoveChance(Handle Timer)
 
 /* Client key input processing
  *
- * buttons: Entered keys (enum��include/entity_prop_stock.inc�Q��)
+ * buttons: Entered keys (enumはinclude/entity_prop_stock.inc参照)
 
  * angles:
  *      [0]: pitch(UP-DOWN) -89~+89
@@ -749,9 +734,6 @@ public Action WeaponSwitch(int client, int weapon)
 			
 			//if (!g_bCommonWithinMelee[client] && (clip != 0 || extra_ammo != 0)) PrintToChatAll("switch Stoped");
 			
-			if (clip == 0 && extra_ammo == 0) {
-				PrintToChatAll("\x05[sb_fix] \x04%N\x01 ammo out.", client);
-			}
 			
 			if (!g_bCommonWithinMelee[client] && (clip != 0 || extra_ammo != 0)) return Plugin_Handled;
 		}
@@ -761,6 +743,7 @@ public Action WeaponSwitch(int client, int weapon)
 	{
 		if (g_bDanger[client]) return Plugin_Handled;
 	}
+	
 	return Plugin_Continue;
 }
 
@@ -1040,7 +1023,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 						}
 					}
 					
-					if (dist <= c_fCI_MeleeRange) { // ��낯�ĂĂ� MeleeCount �ɂ͓����
+					if (dist <= c_fCI_MeleeRange) { // よろけてても MeleeCount には入れる
 						iCI_MeleeCount += 1;
 					}
 					
@@ -1164,7 +1147,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 		
 		/* ====================================================================================================
 		*
-		*   �D��xA : Bash | flying Hunter, Jockey
+		*   優先度A : Bash | flying Hunter, Jockey
 		*
 		==================================================================================================== */ 
 		if (aHunterJockey > 0) {
@@ -1192,7 +1175,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 		
 		/* ====================================================================================================
 		*
-		*   �D��xB : Self Smoker | aCapSmoker
+		*   優先度B : Self Smoker | aCapSmoker
 		*
 		==================================================================================================== */ 
 		if (aCapSmoker > 0) { // Shoot even if client invisible the smoker
@@ -1236,7 +1219,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 		
 		/* ====================================================================================================
 		*
-		*  �D��xC : Help | aCap_Infected, aCap_Survivor
+		*  優先度C : Help | aCap_Infected, aCap_Survivor
 		*
 		==================================================================================================== */ 
 		if (aCap_Survivor > 0) { // Pass if the client and target are "visible" to each other. so aCap Smoker doesn't pass
@@ -1249,7 +1232,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			GetClientEyePosition(aCap_Survivor, e_pos);
 			
 			if (HasValidEnt(aCap_Survivor, "m_pounceAttacker")) e_pos[2] += 5.0;
-			else if (aCapSmoker > 0) { // ���������Ă���Smoker
+			else if (aCapSmoker > 0) { // 引っ張っているSmoker
 				GetClientEyePosition(aCapSmoker, e_pos);
 				e_pos[2] += -10.0;
 			}
@@ -1286,7 +1269,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 						|| (c_iHelp_ShoveType >= 3 && HasValidEnt(aCap_Survivor, "m_pounceAttacker") && aimdist < 100.0)))
 				{
 					if ((!c_bHelp_ShoveOnlyReloading) || (c_bHelp_ShoveOnlyReloading && isReloading(client)))
-						buttons |= IN_ATTACK2; // ����
+						buttons |= IN_ATTACK2; // 殴り
 				}
 				
 				if (GetRandomInt(0, 4) == 0) buttons &= ~IN_ATTACK;
@@ -1366,7 +1349,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 		
 		/* ====================================================================================================
 		*
-		*   �D��xD : Tank Rock, Witch
+		*   優先度D : Tank Rock, Witch
 		*
 		==================================================================================================== */ 
 		if (aTankRock > 1 && !HasValidEnt(client, "m_reviveTarget")) {
@@ -1388,7 +1371,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			
 			float aimdist = GetVectorDistance(c_pos, rock_e_pos);
 			
-			if (aimdist > 40.0 && !isHaveItem(AW_Classname, "weapon_melee")) { //�ߐڂ������Ă��Ȃ��ꍇ
+			if (aimdist > 40.0 && !isHaveItem(AW_Classname, "weapon_melee")) { //近接を持っていない場合
 				TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 				
 				if (GetRandomInt(0, 4) == 0) buttons &= ~IN_ATTACK;
@@ -1439,12 +1422,12 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 		
 		/* ====================================================================================================
 		*
-		*   �D��xE : Common Infected
+		*   優先度E : Common Infected
 		*
 		==================================================================================================== */ 
 		if (aCommonInfected > 0) {
 			if (!HasValidEnt(client, "m_reviveTarget") && strcmp(AW_Classname, "first_aid_kit") != 0) {
-				// Even if aCommonInfected dies and disappears, the Entity may not disappear for a while.(Bot keeps shooting the place)�B Even with InValidEntity(), true appears...
+				// Even if aCommonInfected dies and disappears, the Entity may not disappear for a while.(Bot keeps shooting the place)。 Even with InValidEntity(), true appears...
 				// When the entity disappears, m_nNextThinkTick will not advance, so skip that if NextThinkTick has the same value as before.
 				
 				int iNextThinkTick = GetEntProp(aCommonInfected, Prop_Data, "m_nNextThinkTick");
@@ -1563,7 +1546,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 		
 		/* ====================================================================================================
 		*
-		*   �D��xF : Special Infected and Tank (new_target)
+		*   優先度F : Special Infected and Tank (new_target)
 		*
 		==================================================================================================== */ 
 		if (new_target > 0) {
@@ -1701,7 +1684,7 @@ stock Action onSBRunCmd_Incapacitated(int client, int &buttons, float vel[3], fl
 		GetClientEyePosition(client, self_pos);
 		if (!NeedsTeammateHelp(client)) {
 			for (int x = 1; x <= MaxClients; ++x) {
-				// �S������Ă��鐶���҂�T��
+				// 拘束されている生存者を探す
 				if (isSurvivor(x)
 					&& NeedsTeammateHelp(x)
 					&& (x != client)
@@ -1715,7 +1698,7 @@ stock Action onSBRunCmd_Incapacitated(int client, int &buttons, float vel[3], fl
 					}
 				}
 				
-				// �S�����Ă�����ꊴ���҂�T��
+				// 拘束している特殊感染者を探す
 				if (isInfected(x)
 					&& CappingSuvivor(x)
 					&& (isVisibleTo(client, x) || isVisibleTo(x, client)))

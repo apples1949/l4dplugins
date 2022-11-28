@@ -816,7 +816,7 @@ void SetSpawnCount() {
 
 	g_cSILimit.IntValue = limit;
 	g_cSpawnSize.IntValue = spawnSize;
-	PrintToChatAll("\x01[\x05%d特\x01/\x05次\x01] \x05%d特 \x01[\x03%.1f\x01~\x03%.1f\x01]\x04秒", spawnSize <= limit ? spawnSize : limit, limit, g_fSpawnTimeMin, g_fSpawnTimeMax);
+	PrintToChatAll("\x01[\x05%d特\x01/\x05次\x01] [\x03%.1f\x01~\x03%.1f\x01]\x04秒", spawnSize <= limit ? spawnSize : limit, g_fSpawnTimeMin, g_fSpawnTimeMax);
 }
 
 void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast) {

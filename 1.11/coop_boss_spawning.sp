@@ -40,19 +40,6 @@ public Action L4D_OnGetScriptValueInt(const char[] key, int &retVal) {
 	return Plugin_Continue;
 }
 
-public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client) {
-	int round = GameRules_GetProp("m_bInSecondHalfOfRound");
-	if (!L4D2Direct_GetVSTankToSpawnThisRound(round))
-		CPrintToChatAll("{olive}Tank{default}: {red}none");
-	else
-		CPrintToChatAll("{olive}Tank{default}: {red}%d%%", RoundToNearest(L4D2Direct_GetVSTankFlowPercent(round) * 100.0));
-
-	if (!L4D2Direct_GetVSWitchToSpawnThisRound(round))
-		CPrintToChatAll("{olive}Witch{default}: {red}none");
-	else
-		CPrintToChatAll("{olive}Witch{default}: {red}%d%%", RoundToNearest(L4D2Direct_GetVSWitchFlowPercent(round) * 100.0));
-}
-
 void InitGameData() {
 	char buffer[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, buffer, sizeof buffer, "gamedata/%s.txt", GAMEDATA);
