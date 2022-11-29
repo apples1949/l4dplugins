@@ -1,0 +1,149 @@
+"Games"
+{
+	"#default"
+	{
+		"Functions"
+		{
+			"CTerrorPlayer::StartHealing"
+			{
+				"signature"		"CTerrorPlayer::StartHealing"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"target"	// Client being healed
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+			"CTerrorPlayer::StartReviving"
+			{
+				"signature"		"CTerrorPlayer::StartReviving"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"target"	// client being saved
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+			"CFirstAidKit::ShouldStartAction"
+			{
+				"signature"		"CFirstAidKit::ShouldStartAction"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"actionType"
+					{
+						"type"	"int"
+					}
+					"client"
+					{
+						"type"	"cbaseentity"
+					}
+					"target"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+			
+			"CItemDefibrillator::ShouldStartAction"
+			{
+				"signature"		"CItemDefibrillator::ShouldStartAction"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"actionType"
+					{
+						"type"	"int"
+					}
+					"client"
+					{
+						"type"	"cbaseentity"
+					}
+					"targetModel"
+					{
+						"type"	"cbaseentity"
+					}	
+				}
+			}
+		}
+	}
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			/*
+			 *	CTerrorPlayer::StartReviving(CTerrorPlayer *)
+			 */
+			"CTerrorPlayer::StartReviving"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer13StartRevivingEPS_"
+				"windows"	"\x55\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x8B\x83\x2A\x2A\x2A\x2A\x56"
+				/* 55 8B ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 8B 83 ? ? ? ? 56 */
+				/* Search: aSStartsRevivin */
+			}
+			/*
+			 *	CFirstAidKit::ShouldStartAction(CBaseBackpackItem::BackpackItemActionType,CTerrorPlayer *,CBaseEntity *)
+			 */
+			"CFirstAidKit::ShouldStartAction"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CFirstAidKit17ShouldStartActionEN17CBaseBackpackItem22BackpackItemActionTypeEP13CTerrorPlayerP11CBaseEntity"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x57\x8B\x2A\x8B\x2A\xFF\x2A\x84\x2A\x75\x2A\x5F"
+				/* ? ? ? ? ? ? ? 8B ? 8B 90 ? ? ? ? 57 8B ? 8B ? FF ? 84 ? 75 ? 5F */
+				/* Search: https://github.com/Psykotikism/L4D1-2_Signatures/blob/main/l4d2/gamedata/l4d2_signatures.txt#L1630 */
+			}
+			/*
+			 *	CItemDefibrillator::ShouldStartAction(CBaseBackpackItem::BackpackItemActionType,CTerrorPlayer *,CBaseEntity *)
+			 */
+			"CItemDefibrillator::ShouldStartAction"
+			 {
+				"library"	"server"
+				"linux"		"@_ZN18CItemDefibrillator17ShouldStartActionEN17CBaseBackpackItem22BackpackItemActionTypeEP13CTerrorPlayerP11CBaseEntity"
+				"windows"	"\x55\x8B\x2A\x53\x56\x57\x8B\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\xFF\x2A\x8B"
+				/* 55 8B ? 53 56 57 8B ? ? 8B ? 8B ? ? ? ? ? 8B ? 8B ? FF ? 8B */
+				/* Search: "defibrillator_used_fail" */
+			 }
+		}	
+	}
+	"left4dead"
+	{
+		"Signatures"
+		{
+			/*
+			 *	CTerrorPlayer::StartHealing(CTerrorPlayer*)
+			 */
+			"CTerrorPlayer::StartHealing"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer12StartHealingEPS_"
+				"windows"	"\x83\x2A\x2A\x55\x8B\x2A\x2A\x2A\x85\x2A\x56\x8B\x2A\x0F"
+				/* 83 ? ? 55 8B ? ? ? 85 ? 56 8B ? 0F */
+				/* Search: aHealingFriend or aHealingSelf */
+			}
+			/*
+			 *  CTerrorPlayer::StartReviving(CTerrorPlayer *)
+			 */
+			"CTerrorPlayer::StartReviving"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer13StartRevivingEPS_"
+				"windows"	"\x81\xEC\x2A\x2A\x2A\x2A\x53\x8B\x9C\x2A\x2A\x2A\x2A\x2A\x8B\x83\x2A\x2A\x2A\x2A\x83"
+				/* 81 EC ? ? ? ? 53 8B 9C ? ? ? ? ? 8B 83 ? ? ? ? 83 */
+				/* Search: aSStartsRevivin */
+			}
+		}
+	}
+}

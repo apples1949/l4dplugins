@@ -341,8 +341,8 @@ public void OnPlayerDown(Event event, const char[] name, bool dontBroadcast)
 		
 		if (StrEqual(name, "player_incapacitated"))
 		{
-			PrintHintText(wounded, "按住换弹键以复活其他倒地的生还者");
-			
+			PrintHintText(wounded, "按住下蹲键自救\n按住换弹键救起活其他倒地的生还者");
+			CPrintToChat(wounded,"按住{green}下蹲键{default}自救!\n按住{green}换弹键{default}救起其他倒地的生还者!");
 			if (bIsL4D)
 			{
 				if (iSHCount[wounded] + 1 > iMaxCount)
@@ -423,7 +423,8 @@ public Action FireUpMechanism(Handle timer, any userid)
 		
 		if (IsSelfHelpAble(client) && !IsFakeClient(client))
 		{
-			CPrintToChat(client, "按住{green}下蹲键{default}自救!");
+			PrintHintText(client,"按住下蹲键自救\n按住换弹键救起活其他倒地的生还者");
+			CPrintToChat(client,"按住{green}下蹲键{default}自救!\n按住{green}换弹键{default}救起其他倒地的生还者!");
 		}
 		hSHTime[client] = CreateTimer(0.1, AnalyzePlayerState, GetClientUserId(client), TIMER_REPEAT);
 	}

@@ -108,7 +108,7 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [l4d_penetration_pistol](https://forums.alliedmods.net/showthread.php?t=337509) 调整小手枪对小僵尸的伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_penetration_pistol.sp)   
 [l4d_medicines_unlimited](https://forums.alliedmods.net/showthread.php?t=336226) 设置血量上限及处理溢出的虚血 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_medicines_unlimited.sp)   
 [l4d2_unlimited_upgrade_pack](https://forums.alliedmods.net/showthread.php?t=335601) 弹药升级包部署后可无限拿取 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_unlimited_upgrade_pack)   
-[l4d2_deathcheck](https://forums.alliedmods.net/showpost.php?p=2727648&postcount=10) 全部生还者死亡后游戏才失败 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_deathcheck.sp)   
+[cge_l4d2_deathcheck](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/cge_l4d2_deathcheck) 全部生还者死亡后游戏才失败 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/cge_l4d2_deathcheck.sp)   
 [l4d_bot_healing](https://forums.alliedmods.net/showthread.php?p=2785360) bot什么血量才能打包吃药 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_bot_healing)   
 [l4d_skip_intro](https://forums.alliedmods.net/showthread.php?p=2686527)/[FollowTarget_Detour](https://forums.alliedmods.net/showthread.php?p=2725811) 跳过开场动画/修复播放动画补丁 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_skip_intro)   
 [l4d_pause_message](https://forums.alliedmods.net/showthread.php?p=2682882) 阻止玩家控制台输出暂停消息   
@@ -157,6 +157,8 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [l4d2_auto_add_zombie](https://github.com/apples1949/l4dplugins/blob/main/l4d2_auto_add_zombie.sp)群友写的动态僵尸数量插件  
 [specialspawner](https://github.com/umlka/l4d2/tree/main/specialspawner) 刷特插件  
 [l4d2_fb_fix](https://forums.alliedmods.net/showthread.php?p=2774567) botAI增强插件 建议搭配mod使用 [汉化cvar翻译及文本汉化](https://github.com/apples1949/l4dplugins/blob/main/l4d2_sb_fix.sp)  
+[l4d2_si_ladder_booster](https://github.com/fbef0102/Rotoblin-AZMod/blob/master/SourceCode/scripting-az/l4d2_si_ladder_booster.sp)AI感染者爬梯加速 [增加cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_si_ladder_booster.smx)
+[l4d_lootboxes](https://forums.alliedmods.net/showthread.php?t=338173)杀特掉落补给 [修复编译问题 翻译cvar说明 翻译游戏文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_lootboxes)  
 [vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]zmweapon.vpk zm参数小枪  
