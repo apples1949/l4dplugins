@@ -1,6 +1,6 @@
 /*
 *	Incapped Weapons Patch
-*	Copyright (C) 2021 Silvers
+*	Copyright (C) 2022 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION 		"1.13"
+#define PLUGIN_VERSION 		"1.15"
 
 /*=======================================================================================
 	Plugin Info:
@@ -31,6 +31,16 @@
 
 ========================================================================================
 	Change Log:
+
+1.15 (22-Nov-2022)
+	- Fixed cvar "l4d_incapped_weapons_throw" not preventing standing up animation when plugin is late loaded. Thanks to "TBK Duy" for reporting.
+
+1.14 (12-Nov-2022)
+	- Added cvar "l4d_incapped_weapons_throw" to optionally prevent the standing up animation when throwing grenades.
+	- Now optionally uses "Left4DHooks" plugin to prevent standing up animation when throwing grenades.
+
+1.13a (09-Jul-2021)
+	- L4D2: Fixed GameData file from the "2.2.2.0" update.
 
 1.13 (16-Jun-2021)
 	- L4D2: Optimized plugin by resetting Melee damage hooks on map end and round start.
@@ -96,8 +106,8 @@
 #define CVAR_FLAGS			FCVAR_NOTIFY
 #define GAMEDATA			"l4d_incapped_weapons"
 
-ConVar g_hCvarAllow, g_hCvarMPGameMode, g_hCvarModes, g_hCvarModesOff, g_hCvarModesTog, g_hCvarMelee, g_hCvarPist, g_hCvarRest;
-bool g_bCvarAllow, g_bMapStarted, g_bLeft4Dead2, g_bLateLoad;
+ConVar g_hCvarAllow, g_hCvarMPGameMode, g_hCvarModes, g_hCvarModesOff, g_hCvarModesTog, g_hCvarMelee, g_hCvarPist, g_hCvarRest, g_hCvarThrow;
+bool g_bCvarAllow, g_bMapStarted, g_bLeft4Dead2, g_bLeft4DHooks, g_bLateLoad, g_bCvarThrow;
 int g_iCvarPist, g_iCvarMelee;
 
 ArrayList g_ByteSaved_Deploy, g_ByteSaved_OnIncap;
@@ -105,6 +115,23 @@ Address g_Address_Deploy, g_Address_OnIncap;
 
 ArrayList g_aRestrict;
 StringMap g_aWeaponIDs;
+
+// From left4dhooks
+typeset AnimHookCallback
+{
+	/**
+	 * @brief Callback called whenever animation is invoked.
+	 *
+	 * @param client		Client triggering.
+	 * @param sequence		The animation "activity" (pre-hook) or "m_nSequence" (post-hook) sequence number being used.
+	 *
+	 * @return				Plugin_Changed to change animation, Plugin_Continue otherwise.
+	 */
+	function Action(int client, int &sequence);
+}
+
+native bool AnimHookEnable(int client, AnimHookCallback callback, AnimHookCallback callbackPost = INVALID_FUNCTION);
+native bool AnimHookDisable(int client, AnimHookCallback callback, AnimHookCallback callbackPost = INVALID_FUNCTION);
 
 
 
@@ -132,8 +159,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 
+	MarkNativeAsOptional("AnimHookEnable");
+	MarkNativeAsOptional("AnimHookDisable");
+
 	g_bLateLoad = late;
 	return APLRes_Success;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if( strcmp(name, "left4dhooks") == 0 )
+	{
+		g_bLeft4DHooks = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if( strcmp(name, "left4dhooks") == 0 )
+	{
+		g_bLeft4DHooks = false;
+	}
 }
 
 public void OnAllPluginsLoaded()
@@ -224,6 +270,8 @@ public void OnPluginStart()
 	} else {
 		g_hCvarRest =	CreateConVar(	"l4d_incapped_weapons_restrict",		"8,12",					"空字符串以允许全部武器物品。防止这些武器/物品ID在倒地被使用。有关详细信息，请参阅发布帖", CVAR_FLAGS);
 	}
+	g_hCvarThrow =	CreateConVar(		"l4d_incapped_weapons_throw",			"0",					"0=阻止投掷手榴弹的动画，以防止在投掷时站起来（需要Left4DHooks插件）1=允许投掷动画", CVAR_FLAGS);
+
 	CreateConVar(						"l4d_incapped_weapons_version",			PLUGIN_VERSION,			"Incapped Weapons plugin version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	AutoExecConfig(true,				"l4d_incapped_weapons");
 
@@ -239,6 +287,7 @@ public void OnPluginStart()
 		g_hCvarMelee.AddChangeHook(ConVarChanged_Cvars);
 	}
 	g_hCvarRest.AddChangeHook(ConVarChanged_Cvars);
+	g_hCvarThrow.AddChangeHook(ConVarChanged_Cvars);
 
 
 
@@ -300,11 +349,18 @@ public void OnPluginStart()
 	// ====================================================================================================
 	if( g_bLateLoad )
 	{
+		g_bLeft4DHooks = LibraryExists("left4dhooks");
+
 		for( int i = 1; i <= MaxClients; i++ )
 		{
-			if( IsClientInGame(i) && GetClientTeam(i) == 2 && IsPlayerAlive(i) && GetEntProp(i, Prop_Send, "m_isIncapacitated", 1) && GetEntProp(i, Prop_Send, "m_isHangingFromLedge") == 0 )
+			if( IsClientInGame(i) && GetClientTeam(i) == 2 && IsPlayerAlive(i) && GetEntProp(i, Prop_Send, "m_isIncapacitated", 1) && GetEntProp(i, Prop_Send, "m_isHangingFromLedge", 1) == 0 )
 			{
 				SDKHook(i, SDKHook_WeaponCanSwitchTo, CanSwitchTo);
+
+				if( g_bLeft4DHooks && !g_bCvarThrow && !IsFakeClient(i) )
+				{
+					AnimHookEnable(i, OnAnimPre);
+				}
 			}
 		}
 	}
@@ -340,18 +396,20 @@ public void OnConfigsExecuted()
 	IsAllowed();
 }
 
-public void ConVarChanged_Allow(Handle convar, const char[] oldValue, const char[] newValue)
+void ConVarChanged_Allow(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	IsAllowed();
 }
 
-public void ConVarChanged_Cvars(Handle convar, const char[] oldValue, const char[] newValue)
+void ConVarChanged_Cvars(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	GetCvars();
 }
 
 void GetCvars()
 {
+	g_bCvarThrow = g_hCvarThrow.BoolValue;
+
 	if( g_bLeft4Dead2 )
 	{
 		g_iCvarPist = g_hCvarPist.IntValue;
@@ -478,7 +536,7 @@ bool IsAllowedGameMode()
 	return true;
 }
 
-public void OnGamemode(const char[] output, int caller, int activator, float delay)
+void OnGamemode(const char[] output, int caller, int activator, float delay)
 {
 	if( strcmp(output, "OnCoop") == 0 )
 		g_iCurrentMode = 1;
@@ -513,11 +571,17 @@ void UnhookEvents()
 	UnhookEvent("round_start",				Event_RoundStart,	EventHookMode_PostNoCopy);
 }
 
-public void Event_Incapped(Event event, const char[] name, bool dontBroadcast)
+void Event_Incapped(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if( client && GetClientTeam(client) == 2 )
 	{
+		// Prevent standing up animation when throwing grenades
+		if( g_bLeft4DHooks && !g_bCvarThrow && !IsFakeClient(client) )
+		{
+			AnimHookEnable(client, OnAnimPre);
+		}
+
 		// Melee weapons block friendly fire
 		if( g_bLeft4Dead2 && g_iCvarPist == 0 && g_iCvarMelee == 0 )
 		{
@@ -570,7 +634,7 @@ void MeleeDamageBlock(bool enable)
 	{
 		for( int i = 1; i <= MaxClients; i++ )
 		{
-			if( IsClientInGame(i) && GetClientTeam(i) == 2 && IsPlayerAlive(i) && GetEntProp(i, Prop_Send, "m_isIncapacitated", 1) && GetEntProp(i, Prop_Send, "m_isHangingFromLedge") == 0 )
+			if( IsClientInGame(i) && GetClientTeam(i) == 2 && IsPlayerAlive(i) && GetEntProp(i, Prop_Send, "m_isIncapacitated", 1) && GetEntProp(i, Prop_Send, "m_isHangingFromLedge", 1) == 0 )
 			{
 				incapped = true;
 				break;
@@ -591,9 +655,9 @@ void MeleeDamageBlock(bool enable)
 	}
 }
 
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
+Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
 {
-	if( victim > 0 && victim <= MaxClients && attacker > 0 && attacker <= MaxClients && GetClientTeam(victim) == 2 && GetClientTeam(attacker) == 2 && GetEntProp(attacker, Prop_Send, "m_isIncapacitated", 1) && GetEntProp(attacker, Prop_Send, "m_isHangingFromLedge") == 0 )
+	if( victim > 0 && victim <= MaxClients && attacker > 0 && attacker <= MaxClients && GetClientTeam(victim) == 2 && GetClientTeam(attacker) == 2 && GetEntProp(attacker, Prop_Send, "m_isIncapacitated", 1) && GetEntProp(attacker, Prop_Send, "m_isHangingFromLedge", 1) == 0 )
 	{
 		weapon = GetEntPropEnt(attacker, Prop_Send, "m_hActiveWeapon");
 		if( weapon > MaxClients && IsValidEntity(weapon) )
@@ -612,7 +676,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if( client && GetClientTeam(client) == 2 )
@@ -622,11 +686,16 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 			MeleeDamageBlock(true);
 		}
 
+		if( g_bLeft4DHooks )
+		{
+			AnimHookDisable(client, OnAnimPre);
+		}
+
 		SDKUnhook(client, SDKHook_WeaponCanSwitchTo, CanSwitchTo);
 	}
 }
 
-public void Event_ReviveSuccess(Event event, const char[] name, bool dontBroadcast)
+void Event_ReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("subject"));
 	if( client && GetClientTeam(client) == 2 )
@@ -636,11 +705,16 @@ public void Event_ReviveSuccess(Event event, const char[] name, bool dontBroadca
 			MeleeDamageBlock(true);
 		}
 
+		if( g_bLeft4DHooks )
+		{
+			AnimHookDisable(client, OnAnimPre);
+		}
+
 		SDKUnhook(client, SDKHook_WeaponCanSwitchTo, CanSwitchTo);
 	}
 }
 
-public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	ResetPlugin();
 
@@ -654,6 +728,11 @@ void ResetPlugin()
 	{
 		if( IsClientInGame(i) )
 		{
+			if( g_bLeft4DHooks )
+			{
+				AnimHookDisable(i, OnAnimPre);
+			}
+
 			SDKUnhook(i, SDKHook_WeaponCanSwitchTo, CanSwitchTo);
 		}
 	}
@@ -669,6 +748,39 @@ Action CanSwitchTo(int client, int weapon)
 
 	if( index == 0 || g_aRestrict.FindValue(index) != -1 )
 		return Plugin_Handled;
+	return Plugin_Continue;
+}
+
+// Uses "Activity" numbers, which means 1 animation number is the same for all Survivors.
+Action OnAnimPre(int client, int &anim)
+{
+	if( g_bLeft4Dead2 )
+	{
+		switch( anim )
+		{
+			// case L4D2_ACT_PRIMARYATTACK_GREN1_IDLE, L4D2_ACT_PRIMARYATTACK_GREN2_IDLE:
+			case 997, 998:
+			{
+				// anim = L4D2_ACT_IDLE_INCAP_PISTOL;
+				anim = 700;
+				return Plugin_Changed;
+			}
+		}
+	}
+	else
+	{
+		switch( anim )
+		{
+			// case L4D1_ACT_PRIMARYATTACK_GREN1_IDLE, L4D1_ACT_PRIMARYATTACK_GREN2_IDLE:
+			case 1510, 1511:
+			{
+				// anim = L4D1_ACT_IDLE_INCAP_PISTOL;
+				anim = 1201;
+				return Plugin_Changed;
+			}
+		}
+	}
+
 	return Plugin_Continue;
 }
 

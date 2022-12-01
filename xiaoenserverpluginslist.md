@@ -62,8 +62,8 @@
 自选-M60正常化(可更换弹夹)+可拾取弹药(包括榴弹发射器)(Lux)  
 自选-tick解锁扩展(启动项加 -tickrate 100)(需要配合tick设置插件使用)  
 
-自找插件：(2022年11月26日已检查更新)  
-fbef0102:  
+自找插件：  
+[fbef0102](https://github.com/fbef0102/)2022年12月1日16:47已检查更新:  
 [all4dead2](https://github.com/apples1949/l4dplugins/tree/main/all4dead2) 物品特感生成 [自改自翻译](https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2)   
 [show_mic](https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic) / [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?p=2529779) 屏幕中心显示谁在说话/第三人称指令查询简化  
 [l4d2_item_hint](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_item_hint)/[l4d_use_priority](https://forums.alliedmods.net/showthread.php?t=327511) 标记插件/相关修复插件 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d2_item_hint)  
@@ -82,7 +82,7 @@ fbef0102:
 [l4d2_gifts](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_gifts) 击杀特感掉落礼物补给 [翻译cvar及自用修改](https://github.com/apples1949/l4dplugins/blob/main/l4d2_gifts)  
 [l4d2_fb_fix](https://forums.alliedmods.net/showthread.php?p=2774567) 哈利修复 botAI增强插件 建议搭配mod使用 [汉化cvar翻译及文本汉化](https://github.com/apples1949/l4dplugins/blob/main/l4d2_sb_fix.sp)  
 
-Silvers:  
+[Silvers](https://forums.alliedmods.net/member.php?u=85778)2022年12月1日16:57已检查更新:  
 [l4d_gear_transfer](https://forums.alliedmods.net/showthread.php?t=137616) 按键给予物品 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_gear_transfer)  
 [l4d_coop_markers](https://forums.alliedmods.net/showthread.php?t=321288) 路程进度主动显示  
 [l4d_dissolve_infected](https://forums.alliedmods.net/showthread.php?t=306789) 僵尸溶解 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_dissolve_infected)   
@@ -105,16 +105,16 @@ Silvers:
 [l4d_pipebomb_damage](https://forums.alliedmods.net/showthread.php?p=2680272) 设置手雷伤害对所有生物的倍数 可通过l4d_pipebomb_shove设置的伤害进行更改 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_pipebomb_damage.sp)   
 [l4d_anti_rush](https://forums.alliedmods.net/showthread.php?t=322392) 反跑图 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush/sourcemod)   
 
-Dragokas:  
+[Dragokas](https://forums.alliedmods.net/member.php?u=282667)2022年12月1日17:07已检查更新:  
 [TankOnSpawn](https://forums.alliedmods.net/showthread.php?t=323813) 每次生成多个坦克 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/TankOnSpawn)   
 [l4d_votedifficulty](https://forums.alliedmods.net/showthread.php?t=317257) 投票更改难度 [自翻译文本 自用删掉了简单难度选项](https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty)   
 
-lux:  
+[lux](https://forums.alliedmods.net/member.php?u=257841)2022年12月1日17:08已检查更新:  
 [l4d2_Survivor_Legs](https://forums.alliedmods.net/showthread.php?t=299560) 显示双腿   
 [noteam_nudging](https://github.com/LuxLuma/L4D-small-plugins/blob/master/L4D1-2_noteam_nudging/scripting/noteam_nudging.sp) 防止某些三方图玩家碰撞被挤下去   
 [TankDamageModifier](https://forums.alliedmods.net/showthread.php?t=283085)设置坦克伤害 [翻译cvar提示](https://github.com/apples1949/l4dplugins/blob/main/TankDamageModifier.sp)  
 
-sorallll:  
+[sorallll](https://github.com/umlka/)懒得更新 等下个月:  
 [superversus1.8.15.5改(多人插件)-v1.11.1](https://github.com/umlka/l4d2/tree/main/superversus1.8.15.5-modify) sorallll改的多人插件  
 [map_changer/l4d2_map_vote/l4d2_nativevote/l4d2_source_keyvalues](https://github.com/umlka/l4d2/tree/main/map_changer) sorallll自动换图+投票换图  
 [coop_boss_spawning](https://github.com/umlka/l4d2/tree/main/coop_boss_spawning) 战役路程刷克和妹子   
@@ -126,30 +126,30 @@ sorallll:
 [l4d2_hostname](https://github.com/umlka/l4d2/blob/main/l4d2_hostname) 服务器中文名加上游戏进度显示  
 [jockey_ride_stuck_fix](https://forums.alliedmods.net/showthread.php?p=2756577) 修复猴子因被控玩家/bot被踢出游戏而导致卡在半空的问题 [使用作者git版本](https://github.com/umlka/l4d2/tree/main/jockey_ride_stuck_fix)  
 [safedoor_scavenge](https://forums.alliedmods.net/showthread.php?t=335661) 安全门需要罐油才能进入[使用作者git版本](https://github.com/umlka/l4d2/tree/main/safedoor_scavenge) [翻译cvar说明及注释debug指令](https://github.com/apples1949/l4dplugins/blob/main/safedoor_scavenge)  
-[specialspawner](https://github.com/umlka/l4d2/tree/main/control_zombies)战役模式下玩家可扮演感染者/生还者玩家可叛变坦克  
+[control_zombies](https://github.com/umlka/l4d2/tree/main/control_zombies)战役模式下玩家可扮演感染者/生还者玩家可叛变坦克  
 [specialspawner](https://github.com/umlka/l4d2/tree/main/specialspawner) 刷特插件  
 
-DeathChaos25:  
+[DeathChaos25](https://forums.alliedmods.net/member.php?u=244944):  
 [l4d2_DefibUsingBots](https://forums.alliedmods.net/showthread.php?t=261566) 强制bot使用电击器   
 [l4d2_ThirdpersonShoulderShotgunSoundFix](https://forums.alliedmods.net/showthread.php?t=259986)  第三人称霰弹无声音修复   
 
-NoroHime:  
+[NoroHime](https://forums.alliedmods.net/member.php?u=272518):  
 [l4d_medicines_unlimited](https://forums.alliedmods.net/showthread.php?t=336226) 设置血量上限及处理溢出的虚血 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_medicines_unlimited.sp)   
 [l4d2_unlimited_upgrade_pack](https://forums.alliedmods.net/showthread.php?t=335601) 弹药升级包部署后可无限拿取 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_unlimited_upgrade_pack)   
 
-xZk:  
+[xZk](https://forums.alliedmods.net/member.php?u=282888):  
 [l4d2_incapped_pickup](https://forums.alliedmods.net/showthread.php?t=320828) 倒地可拾取物品 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_pickup)   
 
 ReFlexPoison:  
 [enhancedsprays](https://forums.alliedmods.net/showthread.php?p=1998984) 设定喷漆间隔和范围 [大红修改并更新语法(已获得上传许可)](https://github.com/apples1949/l4dplugins/blob/main/enhancedsprays.sp)  
 
-fantasylidong:  
+[fantasylidong](https://github.com/fantasylidong):  
 [RestrictedGameModes](https://github.com/fantasylidong/L4d2_plugins/blob/main/RestrictGamemode/RestrictedGameModes.sp) 锁定模式 省的sb路人用指令到服务器开写实或者对抗 [去掉4人限制](https://github.com/apples1949/l4dplugins/blob/main/RestrictedGameModes.sp)   
 
-nuviktor:  
+[nuviktor](https://github.com/nuviktor):  
 [l4d2_tooeasy](https://github.com/nuviktor/sm-l4d2-tooeasy) 禁止简单难度 [自改仅禁简单难度](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp)  
 
-fdxx:  
+[fdxx](https://github.com/fdxx):  
 [l4d2_gascan_guard](https://forums.alliedmods.net/showthread.php?p=2762850) 射击不会打破正飞在空中的油桶  
 [l4d2_block_stumble_scratches](https://github.com/fdxx/l4d2_plugins/blob/main/l4d2_block_stumble_scratches.sp)特感Bot被推后的硬直时间内，阻止使用右键抓人(注意gamedata文件)  
 
@@ -159,36 +159,25 @@ AldoDiaz01:
 coleo:  
 [l4d_bunnyhop](https://forums.alliedmods.net/showthread.php?t=298555) 连跳插件 [自翻cvar介绍](https://github.com/apples1949/l4dplugins/blob/main/l4d_bunnyhop.sp)  
 
-BloodyBlade:  
-[l4d_nightvision](https://forums.alliedmods.net/showthread.php?p=2666575#post2666575) 夜视仪 [翻译了下文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_nightvision.sp)   
-[l4d2_extendedsight](https://forums.alliedmods.net/showthread.php?p=2666299) 生还透视特感 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_extendedsight)   
-[spraytracenomenu](https://forums.alliedmods.net/showthread.php?p=2667346)显示谁的喷漆 [翻译cvar说明，添加中文游戏文本](https://github.com/apples1949/l4dplugins/blob/main/spraytracenomenu)  
-
-BHaType:  
+[BHaType](https://forums.alliedmods.net/member.php?u=286417):  
 [l4d2_blackscreen_fix](https://forums.alliedmods.net/showthread.php?t=318739)/[sm_stringtable_dumper](https://forums.alliedmods.net/showthread.php?p=2689943) 黑屏加载修复/转储所有字符串表的记录    
 
-King_OXO:
-[self_help](https://forums.alliedmods.net/showthread.php?p=2766775#post2766775) 自救插件 [自翻cvar介绍和文本和其他更改](https://github.com/apples1949/l4dplugins/tree/main/self_help)   
-
-MasterMe:  
-[l4d_grenade_throwing_bots](https://forums.alliedmods.net/showthread.php?t=296150&page=16) 允许bot扔投抛   
-
-Ernecio:  
+[Ernecio](https://forums.alliedmods.net/member.php?u=294449):  
 [l4d_healing_field](https://forums.alliedmods.net/showthread.php?t=324501) 坦克死亡留下治疗阵 [自翻cvar说明及文本 修改回血上限150](https://github.com/apples1949/l4dplugins/blob/main/l4d_healing_field.sp)    
 
-tRololo312312:  
+[tRololo312312](https://forums.alliedmods.net/member.php?u=259918):  
 [lagpreventor](https://forums.alliedmods.net/showthread.php?p=2758895) 优化某些三方图炸ping问题   
 
-MatthewClair:  
+[MatthewClair](https://github.com/MatthewClair):  
 [flying_ghosts](https://github.com/MatthewClair/sourcemod-plugins/blob/master/flying_ghosts/flying_ghosts.sp) 特感灵魂飞行
 
-alasfourom:  
+[alasfourom}(https://forums.alliedmods.net/member.php?u=320417):  
 [L4D_Elevator_Teleport](https://forums.alliedmods.net/showthread.php?p=2785701) 官图电梯倒计时 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/blob/main/L4D_Elevator_Teleport.sp)   
 
-GlowingTree880:  
+[GlowingTree880](https://github.com/GlowingTree880/L4D2_LittlePlugins):  
 [killsound](https://github.com/GlowingTree880/L4D2_LittlePlugins/blob/main/KillSound/killsound.sp) 爆头提示音 [自改仅特感爆头提示音](https://github.com/apples1949/l4dplugins/blob/main/killsound.sp)   
 
-NoroHime:  
+[NoroHime](https://forums.alliedmods.net/member.php?u=272518}:  
 [l4d_penetration_pistol](https://forums.alliedmods.net/showthread.php?t=337509) 调整小手枪对小僵尸的伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_penetration_pistol.sp)   
 
 zm:  
@@ -202,6 +191,17 @@ zm:
 [l4d2_hltv_crash_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_hltv_crash_fix.sp)修复玩家可能通过SourceTV使服务器崩溃的问题(注意gamedata文件)  
 [l4d2_getup_fixes](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_getup_fixes)修复双起身  
 [l4d_weapon_limits](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_weapon_limits.sp) 限制玩家整体可获取武器的数量 [汉化提示(注意gamedata)](https://github.com/apples1949/l4dplugins/tree/main/l4d_weapon_limits)  
+
+BloodyBlade(社区热心修复玩家):  
+[l4d_nightvision](https://forums.alliedmods.net/showthread.php?p=2666575#post2666575) 夜视仪 [翻译了下文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_nightvision.sp)   
+[l4d2_extendedsight](https://forums.alliedmods.net/showthread.php?p=2666299) 生还透视特感 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_extendedsight)   
+[spraytracenomenu](https://forums.alliedmods.net/showthread.php?p=2667346)显示谁的喷漆 [翻译cvar说明，添加中文游戏文本](https://github.com/apples1949/l4dplugins/blob/main/spraytracenomenu)  
+
+King_OXO(社区热心修复玩家):
+[self_help](https://forums.alliedmods.net/showthread.php?p=2766775#post2766775) 自救插件 [自翻cvar介绍和文本和其他更改](https://github.com/apples1949/l4dplugins/tree/main/self_help)   
+
+MasterMe(社区热心修复玩家):  
+[l4d_grenade_throwing_bots](https://forums.alliedmods.net/showthread.php?t=296150&page=16) 允许bot扔投抛   
 
 其他：  
 witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples1949/l4dplugins/blob/main/witch_announce.smx) zm不支持多人   
