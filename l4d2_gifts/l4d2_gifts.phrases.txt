@@ -1,0 +1,37 @@
+"Phrases"
+{
+
+	"Spawn Gift Special Not Points"
+	{
+		"en"			"%N got gift + %s!"
+		"es"			"%N obtuvo un regalo + %s!"
+		"zho"			"%N 取得 物品 + %s!"
+		"chi"			"%N 取得 物品 + %s!"
+		"ru"			"%N Нашёл в подарке %s!"
+	}
+	"Infected Got Gift"
+	{
+		"en"			"%N got Health + %d HP!"
+		"zho"			"%N 獲得 血量 + %d HP!"
+		"chi"			"%N 获得 血量 + %d HP!"
+		"ru"			"%N Нашёл в подарке %d HP!"
+	}
+	
+	"Number of gifts collected"
+	{
+		"en"			"Number of gifts collected"
+		"es"			"Cantidad de regalos recogidos"
+		"zho"			"已蒐集的禮物數量"
+		"chi"			"已搜集的礼物数量"
+		"ru"			"Подарков собрано"
+
+	}
+	"In current map: %d | In current round: %d"
+	{
+		"en"			"In current map: %d | In current round: %d"
+		"es"			"En el mapa actual: %d | En la ronda actual: %d"
+		"zho"			"目前地圖: %d | 當前回合: %d" 
+		"chi"			"目前地图: %d | 当前回合: %d"
+		"ru"			"На этой карте: %d | В этом раунде: %d"
+	}
+}

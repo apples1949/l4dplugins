@@ -91,7 +91,7 @@ enum struct Player {
 	bool Notify;
 
 	char Model[128];
-	char AuthId[32];
+	char AuthId[MAX_AUTHID_LENGTH];
 }
 
 Player

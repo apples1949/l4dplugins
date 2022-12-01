@@ -128,7 +128,7 @@ public void OnPluginStart() {
 	g_cvFinaleFailureCount.AddChangeHook(CvarChanged);
 	g_cvFinaleRandomNextMap.AddChangeHook(CvarChanged);
 
-	AutoExecConfig(true,"map_changer");
+	//AutoExecConfig(true);
 
 	HookEvent("round_end", 				Event_RoundEnd, 		EventHookMode_PostNoCopy);
 	HookEvent("finale_win", 			Event_FinaleWin,		EventHookMode_PostNoCopy);

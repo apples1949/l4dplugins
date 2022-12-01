@@ -39,7 +39,7 @@
 #define MAX_LBOXES			64
 #define MAX_TOXCLOUD		8
 #define MAX_WEAPONS			96
-#define CHAT_TAG			"\x04[\x05LB\x04] \x01"
+#define CHAT_TAG			"\x04[\x05提示\x04]\x01"
 
 #define MODEL_BOX			"models/props_junk/cardboard_box07.mdl"
 #define MODEL_BARREL		"models/props_industrial/barrel_fuel.mdl"
