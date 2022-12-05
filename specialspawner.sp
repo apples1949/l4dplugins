@@ -801,6 +801,7 @@ void SetSpawnCount() {
 			count++;
 	}
 
+	/*
 	count -= 4;
 	if (count < 1) {
 		limit = g_iBaseLimit;
@@ -810,7 +811,9 @@ void SetSpawnCount() {
 		limit = g_iBaseLimit + RoundToNearest(g_fExtraLimit * count);
 		spawnSize = g_iBaseSize + RoundToNearest(count / g_fExtraSize);
 	}
-
+	*/
+	limit = RoundToNearest(g_fExtraLimit * count);
+	spawnSize = count / g_fExtraSize;
 	if (limit == g_iSILimit && spawnSize == g_iSpawnSize)
 		return;
 

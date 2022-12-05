@@ -121,7 +121,7 @@ public void OnPluginStart()
 	g_hItemHintCoolDown		= CreateConVar("l4d2_item_hint_cooldown_time", "1.0", "玩家使用语音菜单的‘看’创建查看物品的冷却时间", FCVAR_NOTIFY, true, 0.0);
 	g_hItemUseHintRange		= CreateConVar("l4d2_item_hint_use_range", "150", "玩家使用语音菜单查看物品最远距离", FCVAR_NOTIFY, true, 1.0);
 	g_hItemUseSound			= CreateConVar("l4d2_item_hint_use_sound", "buttons/blip1.wav", "物品提示音(格式一般是：sound/,无内容：禁用)", FCVAR_NOTIFY);
-	g_hItemAnnounceType		= CreateConVar("l4d2_item_hint_announce_type", "1", "物品提示的显示方式。(0：禁用，1：在聊天中，2：在提示框中，3：在屏幕中心）", FCVAR_NOTIFY, true, 0.0, true, 3.0);
+	g_hItemAnnounceType		= CreateConVar("l4d2_item_hint_announce_type", "1", "物品提示的显示方式。(0：禁用，1：在聊天中，2：在提示框中，3：在屏幕中心，4:2和3）", FCVAR_NOTIFY, true, 0.0, true, 4.0);
 	g_hItemGlowTimer		= CreateConVar("l4d2_item_hint_glow_timer", "10.0", "物品发光时间", FCVAR_NOTIFY, true, 0.0);
 	g_hItemGlowRange		= CreateConVar("l4d2_item_hint_glow_range", "800", "物品发光范围", FCVAR_NOTIFY, true, 0.0);
 	g_hItemCvarColor		= CreateConVar("l4d2_item_hint_glow_color", "0 255 255", "物品发光颜色，自行去https://tool.oschina.net/commons?type=3比对颜色(无内容=禁用物品发光)", FCVAR_NOTIFY);
@@ -1301,7 +1301,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintHintText(i, "\x01(\x04Vocalize\x01) \x05%N\x01: %s", client, sItemName);
+						PrintHintText(i, "(Vocalize) %N: %s", client, sItemName);
 					}
 				}
 			}
@@ -1310,7 +1310,17 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintCenterText(i, "\x01(\x04Vocalize\x01) \x05%N\x01: %s", client, sItemName);
+						PrintCenterText(i, "(Vocalize) %N: %s", client, sItemName);
+					}
+				}
+			}
+			case 4: {
+				for (int i=1; i <= MaxClients; i++)
+				{
+					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
+					{
+						PrintHintText(i, "(Vocalize) %N: %s", client, sItemName);
+						PrintCenterText(i, "(Vocalize) %N: %s", client, sItemName);
 					}
 				}
 			}
@@ -1335,7 +1345,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintHintText(i, "\x01(\x04Vocalize\x01) \x05%N\x01: \x04%s", client, sItemName);
+						PrintHintText(i, "(Vocalize) %N: %s", client, sItemName);
 					}
 				}
 			}
@@ -1344,7 +1354,17 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintCenterText(i, "\x01(\x04Vocalize\x01) \x05%N\x01: \x04%s", client, sItemName);
+						PrintCenterText(i, "(Vocalize) %N: %s", client, sItemName);
+					}
+				}
+			}
+			case 4: {
+				for (int i=1; i <= MaxClients; i++)
+				{
+					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
+					{
+						PrintHintText(i, "(Vocalize) %N: %s", client, sItemName);
+						PrintCenterText(i, "(Vocalize) %N: %s", client, sItemName);
 					}
 				}
 			}
