@@ -64,7 +64,7 @@
 自选-tick解锁扩展(启动项加 -tickrate 100)(需要配合tick设置插件使用)  
 
 自找插件：  
-[fbef0102](https://github.com/fbef0102/)2022年12月1日16:47已检查更新:  
+[HarryPotter](https://github.com/fbef0102/)2022年12月1日16:47已检查更新:  
 [all4dead2](https://github.com/apples1949/l4dplugins/tree/main/all4dead2) 物品特感生成 [自改自翻译](https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2)   
 [show_mic](https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic) / [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?p=2529779) 屏幕中心显示谁在说话/第三人称指令查询简化  
 [l4d2_item_hint](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_item_hint)/[l4d_use_priority](https://forums.alliedmods.net/showthread.php?t=327511) 标记插件/相关修复插件 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d2_item_hint)  
@@ -82,6 +82,7 @@
 [witch_target_override](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/witch_target_override) witch击倒玩家后可攻击其他生还者 [根据作者说明翻译cvar说明]((https://github.com/apples1949/l4dplugins/blob/main/witch_target_override.sp)  
 [l4d2_gifts](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_gifts) 击杀特感掉落礼物补给 [翻译cvar及自用修改](https://github.com/apples1949/l4dplugins/blob/main/l4d2_gifts)  
 [l4d2_fb_fix](https://forums.alliedmods.net/showthread.php?p=2774567) 哈利修复 botAI增强插件 建议搭配mod使用 [汉化cvar翻译及文本汉化](https://github.com/apples1949/l4dplugins/blob/main/l4d2_sb_fix.sp)  
+[l4d_vocalize_antiflood](https://github.com/fbef0102/Rotoblin-AZMod/tree/master/SourceCode/scripting-az) 限制玩家使用语音表单的频率 [翻译cvar说明 去除文本限制](https://github.com/apples1949/l4dplugins/blob/main/l4d_vocalize_antiflood)  
 
 [Silvers](https://forums.alliedmods.net/member.php?u=85778)2022年12月1日16:57已检查更新:  
 [l4d_gear_transfer](https://forums.alliedmods.net/showthread.php?t=137616) 按键给予物品 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_gear_transfer)  
