@@ -793,11 +793,11 @@ Action tmrUpdate(Handle timer) {
 }
 
 void SetSpawnCount() {
-	int count;
+	int count = 0;
 	int limit;
 	int spawnSize;
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && GetClientTeam(i) == 2)
+		if (IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == 2)
 			count++;
 	}
 

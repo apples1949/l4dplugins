@@ -6,7 +6,7 @@
 		"en"			"%N got gift + %s!"
 		"es"			"%N obtuvo un regalo + %s!"
 		"zho"			"%N 取得 物品 + %s!"
-		"chi"			"%N 取得 物品 + %s!"
+		"chi"			"%N 取得物品：%s "
 		"ru"			"%N Нашёл в подарке %s!"
 	}
 	"Infected Got Gift"

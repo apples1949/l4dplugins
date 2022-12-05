@@ -93,8 +93,10 @@ static char weapons_name_standard[][][] =
 {
 	//{"grenade_launcher","榴弹发射器"},
 	//{"rifle_m60", "M60"},
-	{"defibrillator","电击器"},
+	//{"defibrillator","电击器"},
 	//{"first_aid_kit","医疗包"},
+	{"pain_pills", "止痛药丸"},
+	{"adrenaline", "肾上腺素"},
 	{"pain_pills", "止痛药丸"},
 	{"adrenaline", "肾上腺素"},
 	//{"health_100", "生命值+100"},
@@ -158,9 +160,9 @@ static char weapons_name_standard[][][] =
 static char weapons_name_special[][][] = 
 {
 	//{"first_aid_kit","医疗包"},
-	//{"first_aid_kit","医疗包"},
+	{"first_aid_kit","医疗包"},
 	{"defibrillator","电击器"},
-	{"defibrillator","电击器"},
+	//{"defibrillator","电击器"},
 	{"pain_pills", "止痛药丸"},
 	{"adrenaline", "肾上腺素"},
 	//{"health_100", "生命值+100"},
@@ -175,23 +177,23 @@ static char weapons_name_special[][][] =
 //WeaponName/AmmoOffset/AmmoGive
 static char weapon_ammo[][][] =
 {
-	{"weapon_smg",		 				"5", 	"500"},
+	{"weapon_smg",		 				"5", 	"250"},
 	{"weapon_pumpshotgun",				"7", 	"36"},
-	{"weapon_rifle",					"3", 	"360"},
-	{"weapon_autoshotgun",				"8", 	"90"},
+	{"weapon_rifle",					"3", 	"180"},
+	{"weapon_autoshotgun",				"8", 	"45"},
 	{"weapon_hunting_rifle",			"9", 	"90"},
-	{"weapon_smg_silenced",				"5", 	"500"},
-	{"weapon_smg_mp5", 	 				"5", 	"500"},
+	{"weapon_smg_silenced",				"5", 	"250"},
+	{"weapon_smg_mp5", 	 				"5", 	"250"},
 	{"weapon_shotgun_chrome",	 		"7", 	"36"},
-	{"weapon_rifle_ak47",  				"3",	"400"},
-	{"weapon_rifle_desert",				"3", 	"360"},
+	{"weapon_rifle_ak47",  				"3",	"200"},
+	{"weapon_rifle_desert",				"3", 	"180"},
 	{"weapon_sniper_military",			"10", 	"120"},
 	{"weapon_grenade_launcher", 	 	"17", 	"15"},
-	{"weapon_rifle_sg552",	 			"3", 	"360"},
+	{"weapon_rifle_sg552",	 			"3", 	"180"},
 	{"weapon_rifle_m60",  				"6",	"300"},
 	{"weapon_sniper_awp", 	 			"10", 	"60"},
 	{"weapon_sniper_scout",	 			"10", 	"60"},
-	{"weapon_shotgun_spas",  			"8",	"90"}
+	{"weapon_shotgun_spas",  			"8",	"45"}
 };
 
 int CurrentPointsForMap[MAXPLAYERS+1];

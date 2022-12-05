@@ -733,7 +733,7 @@ int iCountSurvivorTeam()
 	int iSurvivors;
 	for(int i = 1; i <= MaxClients; i++)
 	{
-		if(IsClientInGame(i) && GetClientTeam(i) == 2)
+		if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == 2)
 			iSurvivors++;
 	}
 	return iSurvivors;

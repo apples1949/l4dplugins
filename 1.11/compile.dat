@@ -229,7 +229,7 @@ Age=1433902534
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d_rock_lagcomp.sp]
 Age=1429906053
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d_votes_5.sp]
-Age=1433691944
+Age=1434817368
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4dinfectedbots.sp]
 Age=1433207318
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\bots.sp]
@@ -261,7 +261,7 @@ Age=1429960017
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\sm_l4d_mapchanger.sp]
 Age=1429960722
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d_votedifficulty.sp]
-Age=1434021271
+Age=1434552481
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\RestrictedGameModes.sp]
 Age=1434028102
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\self_help.sp]
@@ -309,7 +309,7 @@ Age=1357096166
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\get-up_fix-l4d2.sp]
 Age=1358010731
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d_incapped_weapons.sp]
-Age=1430746011
+Age=1434552084
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_extendedsight.sp]
 Age=1430746671
 [admin-sql-prefetch.sp]
@@ -793,7 +793,7 @@ Age=1434151608
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\jockey_ride_stuck_fix.sp]
 Age=1434151958
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\safedoor_scavenge.sp]
-Age=1434152472
+Age=1434814941
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\flying_ghosts.sp]
 Age=1434153065
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\linux_auto_restart.sp]
@@ -803,11 +803,11 @@ Age=1434235411
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\witch_and_tankifier.sp]
 Age=1434156402
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\control_zombies.sp]
-Age=1434156779
+Age=1434816960
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_auto_add_zombie.sp]
 Age=1434157108
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\specialspawner.sp]
-Age=1434233328
+Age=1434811057
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d_boss_percent.sp]
 Age=1434234201
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_si_ladder_booster.sp]
@@ -835,4 +835,6 @@ Age=1434520913
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\witch_target_override.sp]
 Age=1434548745
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_gifts.sp]
-Age=1434549865
+Age=1434806694
+[C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_tank_add_health.sp]
+Age=1434808746
