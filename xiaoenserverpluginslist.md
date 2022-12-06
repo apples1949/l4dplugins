@@ -179,8 +179,12 @@ coleo:
 [GlowingTree880](https://github.com/GlowingTree880/L4D2_LittlePlugins):  
 [killsound](https://github.com/GlowingTree880/L4D2_LittlePlugins/blob/main/KillSound/killsound.sp) 爆头提示音 [自改仅特感爆头提示音](https://github.com/apples1949/l4dplugins/blob/main/killsound.sp)   
 
-[NoroHime](https://forums.alliedmods.net/member.php?u=272518}:  
+[NoroHime](https://forums.alliedmods.net/member.php?u=272518):  
 [l4d_penetration_pistol](https://forums.alliedmods.net/showthread.php?t=337509) 调整小手枪对小僵尸的伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_penetration_pistol.sp)   
+
+[MasterMind420](https://forums.alliedmods.net/member.php?u=97257)(已退出A站):  
+[l4d_pills_pass_fix](https://forums.alliedmods.net/showthread.php?t=314488) 防止别人给药时切换到药  
+
 
 zm:  
 [l4d2_stats/l4d2_skill_detect](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting) 技能检测插件 [使用东哥翻译文本](https://github.com/fantasylidong/CompetitiveWithAnne/tree/master/addons/sourcemod/translations/chi)  
@@ -193,11 +197,12 @@ zm:
 [l4d2_hltv_crash_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_hltv_crash_fix.sp)修复玩家可能通过SourceTV使服务器崩溃的问题(注意gamedata文件)  
 [l4d2_getup_fixes](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_getup_fixes)修复双起身  
 [l4d_weapon_limits](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_weapon_limits.sp) 限制玩家整体可获取武器的数量 [汉化提示(注意gamedata)](https://github.com/apples1949/l4dplugins/tree/main/l4d_weapon_limits)  
+[l4d2_ellis_hunter_bandaid_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ellis_hunter_bandaid_fix.sp)修复Ellis被hunter扑中后起身比其他角色慢的问题  
 
 BloodyBlade(社区热心修复玩家):  
 [l4d_nightvision](https://forums.alliedmods.net/showthread.php?p=2666575#post2666575) 夜视仪 [翻译了下文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_nightvision.sp)   
 [l4d2_extendedsight](https://forums.alliedmods.net/showthread.php?p=2666299) 生还透视特感 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_extendedsight)   
-[spraytracenomenu](https://forums.alliedmods.net/showthread.php?p=2667346)显示谁的喷漆 [翻译cvar说明，添加中文游戏文本](https://github.com/apples1949/l4dplugins/blob/main/spraytracenomenu)  
+[spraytracenomenu](https://forums.alliedmods.net/showthread.php?p=2667346)显示谁的喷漆 [翻译cvar说明，添加中文游戏文本 添加玩家喷漆提示](https://github.com/apples1949/l4dplugins/blob/main/spraytracenomenu)  
 
 King_OXO(社区热心修复玩家):
 [self_help](https://forums.alliedmods.net/showthread.php?p=2766775#post2766775) 自救插件 [自翻cvar介绍和文本和其他更改](https://github.com/apples1949/l4dplugins/tree/main/self_help)   

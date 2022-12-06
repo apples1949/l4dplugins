@@ -160,6 +160,7 @@ public Action PlayerSpray(const char[] szTempEntName, const int[] arrClients, in
 		g_arrSprayTime[client] = RoundFloat(GetGameTime());
 		GetClientName(client, g_arrSprayName[client], 64);
 		GetClientAuthId(client, AuthId_Steam2, g_arrSprayID[client], 32);
+		PrintToChatAll("\x03%N\x01 使用了色图喷漆 ( ﹁ ﹁ ) ~", client);
 	}
 }
 

@@ -79,6 +79,20 @@
 				}
 				"read"	"0"
 			}
+
+			"SavedSurvivorBotsCount"
+			{
+				"linux"
+				{
+					"signature"	"RestoreTransitionedSurvivorBots"
+					"read"		"57"
+				}
+				"windows"
+				{
+					"signature"	"RestoreTransitionedSurvivorBots"
+					"read"		"53"
+				}
+			}
 		}
 
 		"Offsets"
@@ -117,22 +131,8 @@
 			}
 
 			/**
-			 * CTerrorPlayer::OnIncapacitatedAsSurvivor(CTakeDamageInfo const&)
-			 *
-			 * How to find on Windows:
-			 * 1. Search for the "PlayerIncapacitated" string to locate the "CTerrorPlayer::OnIncapacitatedAsSurvivor" function.
-			 * 2. Look for the "weapon_pistol" string which should be a few lines above the "PainLevel:Critical" string.
-			 * 3. There are two function calls above the line where "weapon_pistol" is referenced.
-			 * 4. The variable that is being assigned a value below those two function calls has an offset.
-			 * 5. The offset will be the offset for the hidden melee weapon.
-			 *
-			 * How to find on Linux:
-			 * 1. Locate the function.
-			 * 2. Look for the "weapon_pistol" string which should be a few lines above the "PainLevel:Critical" string.
-			 * 3. There are two function calls above the line where "weapon_pistol" is referenced.
-			 * 4. The variable that is being assigned a value below those two function calls has an offset.
-			 * 5. Multiply the offset by 4 to get the offset for the hidden melee weapon.
-			 **/
+			* 搜索字符串 "PainLevel:Critical"
+			**/
 			"m_hHiddenWeapon"
 			{
 				"linux"		"16288"
@@ -240,6 +240,15 @@
 				/* ? ? ? ? ? ? ? ? 50 E8 ? ? ? ? 83 ? ? 84 ? 0F 84 ? ? ? ? A1 ? ? ? ? 8B 88 */
 			}
 
+			/* CDirector::IsInTransition(CDirector *__hidden this) */
+			"CDirector::IsInTransition"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector14IsInTransitionEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\x80\xB9\xCC"
+				/* ? ? ? ? ? ? ? 75 ? 80 B9 CC */
+			}
+
 			"TheDirector"
 			{
 				"library"	"server"
@@ -254,13 +263,13 @@
 				/* ? ? ? ? ? ? 56 57 8B ? 8B 0D ? ? ? ? E8 ? ? ? ? 84 ? 0F */
 			}
 
-			/* CDirector::IsInTransition(CDirector *__hidden this) */
-			"CDirector::IsInTransition"
+			/* RestoreTransitionedSurvivorBots(void) */
+			"RestoreTransitionedSurvivorBots"
 			{
 				"library"	"server"
-				"linux"		"@_ZNK9CDirector14IsInTransitionEv"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\x80\xB9\xCC"
-				/* ? ? ? ? ? ? ? 75 ? 80 B9 CC */
+				"linux"		"@_Z31RestoreTransitionedSurvivorBotsv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x53\x56\x57\x50\x68"
+				/* ? ? ? ? ? ? ? ? 83 ? ? 85 ? 0F 84 ? ? ? ? 53 56 57 50 68 */
 			}
 		}
     }
