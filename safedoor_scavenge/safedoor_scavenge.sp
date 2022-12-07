@@ -562,7 +562,7 @@ Action tmrBlockNav(Handle timer, DataPack dPack)
 	SetEntPropVector(entity, Prop_Send, "m_vecMins", vMins);
 	SetEntPropVector(entity, Prop_Send, "m_vecMaxs", vMaxs);
 
-	AcceptEntityInput(entity, "BlockNav");
+	//AcceptEntityInput(entity, "BlockNav");
 
 	g_iFuncNavBlocker = EntIndexToEntRef(entity);
 
@@ -1082,7 +1082,7 @@ void vOnUseFinished(const char[] output, int caller, int activator, float delay)
 		vUnhookAllCheckpointDoor();
 
 		if(bIsValidEntRef(g_iFuncNavBlocker))
-			AcceptEntityInput(g_iFuncNavBlocker, "UnblockNav");
+			//AcceptEntityInput(g_iFuncNavBlocker, "UnblockNav");
 
 		if(bIsValidEntRef(g_iTargetDoor))
 			SetEntProp(g_iTargetDoor, Prop_Send, "m_glowColorOverride", iGetColorInt(0, 255, 0));

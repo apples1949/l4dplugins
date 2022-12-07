@@ -5,7 +5,7 @@
 #include <sdktools>
 #include <left4dhooks>
 
-#define DEBUG		0
+#define DEBUG		1
 #define BENCHMARK	0
 #if BENCHMARK
 	#include <profiler>
@@ -810,9 +810,6 @@ void SetSpawnCount() {
 		limit = g_iBaseLimit + RoundToNearest(g_fExtraLimit * count);
 		spawnSize = g_iBaseSize + RoundToNearest(count / g_fExtraSize);
 	}
-
-	if (limit == g_iSILimit && spawnSize == g_iSpawnSize)
-		return;
 
 	g_cSILimit.IntValue = limit;
 	g_cSpawnSize.IntValue = spawnSize;

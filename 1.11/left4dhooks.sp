@@ -18,7 +18,8 @@
 
 
 
-#define PLUGIN_VERSION		"1.120"
+#define PLUGIN_VERSION		"1.123"
+#define PLUGIN_VERLONG		1123
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down)
@@ -310,7 +311,14 @@ Address g_pNavMesh;
 Address g_pZombieManager;
 Address g_pMeleeWeaponInfoStore;
 Address g_pWeaponInfoDatabase;
+Address g_pCTerrorPlayer_CanBecomeGhost;
 Address g_pScriptVM;
+
+
+
+// CanBecomeGhost patch
+ArrayList g_hCanBecomeGhost;
+int g_iCanBecomeGhostOffset;
 
 
 
@@ -336,6 +344,7 @@ ConVar g_hCvar_Adrenaline;
 ConVar g_hCvar_Revives;
 ConVar g_hCvar_MPGameMode;
 DynamicHook g_hScriptHook;
+
 
 
 // Spitter acid projectile damage
@@ -421,7 +430,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 
 	g_hThisPlugin = myself;
-	RegPluginLibrary("left4dhooks");
 
 
 
@@ -435,7 +443,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	// ====================================================================================================
 	//									DUPLICATE PLUGIN RUNNING
 	// ====================================================================================================
-	if( GetFeatureStatus(FeatureType_Native, "L4D_GetPointer") != FeatureStatus_Unknown )
+	if( GetFeatureStatus(FeatureType_Native, "L4D_BecomeGhost") == FeatureStatus_Available )
 	{
 		strcopy(error, err_max, "\n====================\nPlugin \"Left 4 DHooks\" is already running. Please remove the duplicate plugin.\n====================");
 		return APLRes_SilentFailure;
@@ -458,6 +466,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	//									SETUP FORWARDS AND NATIVES
 	// ====================================================================================================
 	SetupForwardsNatives(); // From: "l4dd/l4dd_setup.sp"
+
+
+
+	// ====================================================================================================
+	//									END SETUP
+	// ====================================================================================================
+	RegPluginLibrary("left4dhooks");
 
 
 
@@ -499,10 +514,13 @@ public void OnPluginStart()
 
 	g_iClassTank = g_bLeft4Dead2 ? 8 : 5;
 
+	g_hCanBecomeGhost = new ArrayList();
+
 	if( g_bLeft4Dead2 )
 		g_iAttackTimer = FindSendPropInfo("CTerrorWeapon", "m_attackTimer");
 	g_iOffsetAmmo = FindSendPropInfo("CTerrorPlayer", "m_iAmmo");
 	g_iPrimaryAmmoType = FindSendPropInfo("CBaseCombatWeapon", "m_iPrimaryAmmoType");
+
 
 
 	// NULL PTR - METHOD (kept for demonstration)
@@ -719,8 +737,16 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 // ====================================================================================================
 public void OnPluginEnd()
 {
+	// Unpatch AddonsDisabler
 	if( g_bLeft4Dead2 )
 		AddonsDisabler_Unpatch();
+
+	// Unpatch CanBecomeGhost
+	int count = g_hCanBecomeGhost.Length;
+	for( int i = 0; i < count; i++ )
+	{
+		StoreToAddress(g_pCTerrorPlayer_CanBecomeGhost + view_as<Address>(g_iCanBecomeGhostOffset + i), g_hCanBecomeGhost.Get(i), NumberType_Int8, true);
+	}
 
 	// Target Filters
 	UnloadTargetFilters();

@@ -234,15 +234,6 @@
 				/* E8 ? ? ? ? 8B 75 80 */
 			}
 
-			/* CTerrorPlayer::TakeOverZombieBot(CTerrorPlayer*) */
-			"CTerrorPlayer::TakeOverZombieBot"
-			{
-				"library"	"server"
-				"linux"		"@_ZN13CTerrorPlayer17TakeOverZombieBotEPS_"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x80\xBB"
-				/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 80 BB */
-			}
-
 			/* CTerrorPlayer::SetBecomeGhostAt(CTerrorPlayer *__hidden this, float s2) */
 			"CTerrorPlayer::SetBecomeGhostAt"
 			{

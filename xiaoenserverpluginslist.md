@@ -1,6 +1,6 @@
-豆瓣包:([2022-11-8豆瓣酱な (v1.1.1)(6911-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))  
+豆瓣包:([2022-12-6豆瓣酱な (v1.1.1)(6911-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))  
 1.1.1插件平台linux版(6911-1148)(必须先启用这个)  
-必选-功能类插件(left4dhooks)(v1.120)(SilverShot)  
+必选-功能类插件(left4dhooks)(v1.123)(SilverShot)  
 必选-功能类插件(WeaponHandling)(v1.0.6)(Lux)  
 必选-功能类扩展(sourcescramble.ext)(v0.7.0)  
 必选-功能类扩展(voicehook.ext)  
@@ -25,6 +25,7 @@
 自选-惩罚使用某些指令的玩家和隐藏某些不想看见的指令(sorallll)  
 自选-传送或处死长时间不进终点安全屋的玩家(v1.1.9)(sorallll)  
 自选-点燃或打爆物品提示(v1.0.7)(注意-本地服务器慎用)(Mart)  
+自选-动态大厅(v2.0.1)(Downtown1, Anime4000, sorallll)  
 自选-防止服务器人数不足而关闭(AtomicStryker)  
 自选-防止玩家一直挂机(可单独设置管理员的挂机时间)(豆瓣酱な)  
 自选-服务器没人后炸服或切换为官图(v1.1.0)(lakwsh, 豆瓣酱な)  
@@ -46,7 +47,7 @@
 自选-设置医疗物品倍数(根据人数或固定倍数)(修改-豆瓣酱な)(原作者-笨蛋海绵)  
 自选-生还者对坦克的伤害排名(v1.3.1)(豆瓣酱な)  
 自选-生还者受伤屏幕晃动消除(v1.0.0)(sorallll)  
-自选-坦克出现时根据幸存者人数增加血量和女巫随机或固定血量(v1.3.3)(Visor,豆瓣酱な)  
+自选-坦克出现时根据幸存者人数增加血量和女巫随机或固定血量(v1.5.6)(Visor,豆瓣酱な)
 自选-坦克特感女巫血量显示和坦克死亡提示(v1.0.4)(NiCo-op, Edited By Ernecio (Satanael))  
 自选-特感主动攻击幸存者(v1.1.1)(nosoop)(只限linux系统)  
 自选-显示谁在按C骂人(v1.5)(Accelerator)  
@@ -116,7 +117,7 @@
 [noteam_nudging](https://github.com/LuxLuma/L4D-small-plugins/blob/master/L4D1-2_noteam_nudging/scripting/noteam_nudging.sp) 防止某些三方图玩家碰撞被挤下去   
 [TankDamageModifier](https://forums.alliedmods.net/showthread.php?t=283085)设置坦克伤害 [翻译cvar提示](https://github.com/apples1949/l4dplugins/blob/main/TankDamageModifier.sp)  
 
-[sorallll](https://github.com/umlka/)懒得更新 等下个月:  
+[sorallll](https://github.com/umlka/)懒得更新 部分插件使用Q群作者版本:  
 [superversus1.8.15.5改(多人插件)-v1.11.1](https://github.com/umlka/l4d2/tree/main/superversus1.8.15.5-modify) sorallll改的多人插件  
 [map_changer/l4d2_map_vote/l4d2_nativevote/l4d2_source_keyvalues](https://github.com/umlka/l4d2/tree/main/map_changer) sorallll自动换图+投票换图  
 [coop_boss_spawning](https://github.com/umlka/l4d2/tree/main/coop_boss_spawning) 战役路程刷克和妹子   
@@ -127,7 +128,6 @@
 [l4d2_transition_info_fix](https://forums.alliedmods.net/showthread.php?p=2762953) [使用sorallll的git版本](https://github.com/umlka/l4d2/tree/main/l4d2_transition_info_fix)  
 [l4d2_hostname](https://github.com/umlka/l4d2/blob/main/l4d2_hostname) 服务器中文名加上游戏进度显示  
 [jockey_ride_stuck_fix](https://forums.alliedmods.net/showthread.php?p=2756577) 修复猴子因被控玩家/bot被踢出游戏而导致卡在半空的问题 [使用作者git版本](https://github.com/umlka/l4d2/tree/main/jockey_ride_stuck_fix)  
-[safedoor_scavenge](https://forums.alliedmods.net/showthread.php?t=335661) 安全门需要罐油才能进入[使用作者git版本](https://github.com/umlka/l4d2/tree/main/safedoor_scavenge) [翻译cvar说明及注释debug指令](https://github.com/apples1949/l4dplugins/blob/main/safedoor_scavenge)  
 [control_zombies](https://github.com/umlka/l4d2/tree/main/control_zombies)战役模式下玩家可扮演感染者/生还者玩家可叛变坦克  
 [specialspawner](https://github.com/umlka/l4d2/tree/main/specialspawner) 刷特插件  
 
@@ -190,7 +190,6 @@ zm:
 [l4d2_stats/l4d2_skill_detect](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting) 技能检测插件 [使用东哥翻译文本](https://github.com/fantasylidong/CompetitiveWithAnne/tree/master/addons/sourcemod/translations/chi)  
 [l4dhots](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4dhots.sp) 缓慢回血 [更改默认设置以及增加自动生成cfg](https://github.com/apples1949/l4dplugins/blob/main/l4dhots.sp)   
 [l4d_stuckzombiemeleefix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_stuckzombiemeleefix.sp) 近战砍僵尸修复   
-[l4d2_tank_announce](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_tank_announce) 坦克出现播放提示音及聊天框提示   
 [TickrateFixes](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/TickrateFixes.sp) 修复高tick下手枪射击间隔过快问题 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/TickrateFixes.sp)  
 [l4d2_ai_damagefix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ai_damagefix.sp)移除Hunter和Charger减伤  
 [l4d_fix_deathfall_cam](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_deathfall_cam)修复由point_deathfall_camera导致的永久锁定视图问题  
@@ -220,6 +219,6 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
 [mod]zmweapon.vpk zm参数小枪  
 [mod]knife.vpk 恢复小刀 [来自anne](https://github.com/Caibiii/AnneServer/blob/main/left4dead2/addons/knife.vpk)  
-[mod]modai.vpk [创意工坊](https://steamcommunity.com/sharedfiles/filedetails/?id=1968764163)的botAI增强mod 建议通过emd文件开启Full Power模式  
 [mod]adminsyatem.vpk [创意工坊](https://steamcommunity.com/sharedfiles/filedetails/?id=214630948)的管理员菜单  
+[mod]Good baseballbat.vpk/[mod]Good crowbar.vpk/[mod]Good golfclub.vpk/[mod]Good shovel.vpk  钝器变锐器  
 服务器自改地图：[stripper微改地图](https://github.com/apples1949/l4dplugins/tree/main/stripper)  

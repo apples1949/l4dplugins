@@ -58,16 +58,16 @@
 
 
 
-// Natives: 237
-// L4D1 = 29 [left4downtown] + 47 [l4d_direct] + 15 [l4d2addresses] + 49 [silvers - mine!] + 4 [anim] = 139
-// L4D2 = 65 [left4downtown] + 61 [l4d_direct] + 26 [l4d2addresses] + 91 [silvers - mine!] + 4 [anim] = 236
+// Natives: 240
+// L4D1 = 30 [left4downtown] + 47 [l4d_direct] + 15 [l4d2addresses] + 52 [silvers - mine!] + 4 [anim] = 142
+// L4D2 = 66 [left4downtown] + 61 [l4d_direct] + 26 [l4d2addresses] + 94 [silvers - mine!] + 4 [anim] = 239
 
-// Forwards: 166
+// Forwards: 168
 // L4D1 = 123;
-// L4D2 = 163;
+// L4D2 = 165;
 
-// Stocks: 159 (L4D1 = 109, L4D2 = 155)
-// left4dhooks_silver			43 stocks	(L4D1 = 36,		L4D2 = 43)
+// Stocks: 163 (L4D1 = 109, L4D2 = 159)
+// left4dhooks_silver			43 stocks	(L4D1 = 36,		L4D2 = 47)
 // left4dhooks_stocks			83 stocks	(L4D1 = 44,		L4D2 = 79)
 // left4dhooks_lux_library		34 stocks	(L4D1 = 30,		L4D2 = 34)
 
@@ -118,6 +118,7 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D_HasAnySurvivorLeftSafeArea");
 	MarkNativeAsOptional("L4D_IsAnySurvivorInStartArea");
 	MarkNativeAsOptional("L4D_IsAnySurvivorInCheckpoint");
+	MarkNativeAsOptional("L4D_AreAllSurvivorsInFinaleArea");
 	MarkNativeAsOptional("L4D_IsInFirstCheckpoint");
 	MarkNativeAsOptional("L4D_IsInLastCheckpoint");
 	MarkNativeAsOptional("L4D_GetCheckpointFirst");
@@ -136,6 +137,7 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D_GetEntityFromAddress");
 	MarkNativeAsOptional("L4D_ReadMemoryString");
 	MarkNativeAsOptional("L4D_GetServerOS");
+	MarkNativeAsOptional("Left4DHooks_Version");
 	MarkNativeAsOptional("L4D2_GetScriptScope");
 	MarkNativeAsOptional("L4D2_GetVScriptEntity");
 	MarkNativeAsOptional("L4D2_ExecVScriptCode");
@@ -146,6 +148,7 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D_SetHumanSpec");
 	MarkNativeAsOptional("L4D_TakeOverBot");
 	MarkNativeAsOptional("L4D_CanBecomeGhost");
+	MarkNativeAsOptional("L4D_SetBecomeGhostAt");
 	MarkNativeAsOptional("L4D2_AreWanderersAllowed");
 	MarkNativeAsOptional("L4D2_GetCurrentFinaleStage");
 	MarkNativeAsOptional("L4D2_ForceNextStage");
@@ -2249,6 +2252,36 @@ forward Action L4D2_OnJockeyRide(int victim, int attacker);
 forward void L4D2_OnJockeyRide_Post(int victim, int attacker);
 
 /**
+ * @brief Called whenever CTerrorPlayer::OnSlammedSurvivor() is invoked
+ * @remarks Called when a Survivor is slammed into a wall by a Charger, or on the first pummel if bWallSlam is 0
+ * @bDeadlyCharge seems to always return 1 on Windows
+ *
+ * @param victim			the client who's being slammed
+ * @param attacker			the Charger slamming someone
+ * @param bWallSlam			when slammed into a wall. Changing this can play a different animation
+ * @param bDeadlyCharge		indicates the carry ends at a height down 360.0 units from the carry start, and adds DMG_PARALYZE to the damage flags to incap the victim. Changing this can incap the victim.
+ *
+ * @return					Plugin_Changed to use overwritten values from plugin, Plugin_Continue otherwise
+ */
+ // L4D2 only.
+forward Action L4D2_OnSlammedSurvivor(int victim, int attacker, bool &bWallSlam, bool &bDeadlyCharge);
+
+/**
+ * @brief Called whenever CTerrorPlayer::OnSlammedSurvivor() is invoked
+ * @remarks Called when a Survivor is slammed into a wall by a Charger, or on the first pummel if bWallSlam is 0
+ * @bDeadlyCharge seems to always return 1 on Windows
+ *
+ * @param victim			the client who's being slammed
+ * @param attacker			the Charger slamming someone
+ * @param bWallSlam			when slammed into a wall. Changing this can play a different animation
+ * @param bDeadlyCharge		indicates the carry ends at a height down 360.0 units from the carry start, and adds DMG_PARALYZE to the damage flags to incap the victim. Changing this can incap the victim.
+ *
+ * @noreturn
+ */
+ // L4D2 only.
+forward void L4D2_OnSlammedSurvivor_Post(int victim, int attacker, bool bWallSlam, bool bDeadlyCharge);
+
+/**
  * @brief Called whenever CTerrorPlayer::OnStartCarryingVictim() is invoked
  * @remarks Called when a Survivor player is about to be carried by a Charger
  * @remarks This forward will not trigger if there's no room to charge when grabbing a survivor, but "L4D2_OnPummelVictim" will trigger
@@ -2768,6 +2801,24 @@ native int L4D_ReadMemoryString(Address addy, char[] buffer, int maxlength);
 native int L4D_GetServerOS();
 
 /**
+ * @brief Returns the Left4DHooks version number. For example version "1.122" is 1122.
+ * @note This will only work from Left4DHooks version 1.122 or newer.
+ *
+ * @remarks Use to verify a newer version is running from a certain version number, where for example a new native or forward was added.
+ * @remarks Each version number will be greater than the previous.
+ * @remarks Example code:
+ * @remarks Put: MarkNativeAsOptional("Left4DHooks_Version") in your plugins "AskPluginLoad2" section.
+ * @remarks Then run this code to determine the version:
+ * @remarks if( GetFeatureStatus(FeatureType_Native, "Left4DHooks_Version") == FeatureStatus_Available && Left4DHooks_Version() >= 1122 )
+ *
+ * @remarks Alternatively, to support all versions, it would be better to use the "left4dhooks_version" convar, retrieve as a float and check.
+ * @remarks For example: FindConVar("left4dhooks_version").FloatValue >= 1.122
+ *
+ * @return	Version number
+ */
+native int Left4DHooks_Version();
+
+/**
 * @brief Returns an entities script scope (HSCRIPT)
 *
 * @param	entity		The entity to retrieve it's script scope
@@ -3040,6 +3091,13 @@ native bool L4D_IsAnySurvivorInStartArea();
 native bool L4D_IsAnySurvivorInCheckpoint();
 
 /**
+ * @brief Returns true when all survivors are in the finale area.
+ *
+ * @return			True when in all Survivors are in the area. False otherwise.
+ */
+native bool L4D_AreAllSurvivorsInFinaleArea();
+
+/**
  * @brief Returns true when the specified Survivor or Special Infected is in the starting checkpoint area.
  *
  * @param client	Client id to check their checkpoint.
@@ -3292,6 +3350,15 @@ native bool L4D_TakeOverBot(int client);
  * @return			True or false
  */
 native bool L4D_CanBecomeGhost(int client);
+
+/**
+ * @brief Set a dead Special Infected players time until they transition into ghost state. Can be used when the "ghost_spawn_time" event triggers.
+ *
+ * @param client	Client ID to check
+ *
+ * @return			True or false
+ */
+native void L4D_SetBecomeGhostAt(int client, float time);
 
 /**
  * @brief Sets a client as idle, afk - away from keyboard.

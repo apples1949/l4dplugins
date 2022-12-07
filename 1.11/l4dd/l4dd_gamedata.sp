@@ -247,23 +247,26 @@ void LoadGameData()
 			LogError("Failed to create SDKCall: \"TerrorNavArea::FindRandomSpot\" (%s)", g_sSystem);
 	}
 
-	StartPrepSDKCall(SDKCall_Static);
-	if( !PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "IsVisibleToPlayer") )
+	if( g_bLeft4Dead2 )
 	{
-		LogError("Failed to find signature: \"IsVisibleToPlayer\" (%s)", g_sSystem);
-	} else {
-		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Pointer);
-		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Pointer);
-		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-		g_hSDK_IsVisibleToPlayer = EndPrepSDKCall();
-		if( g_hSDK_IsVisibleToPlayer == null)
-				LogError("Failed to create SDKCall: \"IsVisibleToPlayer\" (%s)", g_sSystem);
+		StartPrepSDKCall(SDKCall_Static);
+		if( !PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "IsVisibleToPlayer") )
+		{
+			LogError("Failed to find signature: \"IsVisibleToPlayer\" (%s)", g_sSystem);
+		} else {
+			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Pointer);
+			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+			g_hSDK_IsVisibleToPlayer = EndPrepSDKCall();
+			if( g_hSDK_IsVisibleToPlayer == null)
+					LogError("Failed to create SDKCall: \"IsVisibleToPlayer\" (%s)", g_sSystem);
+		}
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
@@ -297,6 +300,17 @@ void LoadGameData()
 		g_hSDK_CDirector_IsAnySurvivorInExitCheckpoint = EndPrepSDKCall();
 		if( g_hSDK_CDirector_IsAnySurvivorInExitCheckpoint == null )
 			LogError("Failed to create SDKCall: \"CDirector::IsAnySurvivorInExitCheckpoint\" (%s)", g_sSystem);
+	}
+
+	StartPrepSDKCall(SDKCall_Raw);
+	if( PrepSDKCall_SetFromConf(hGameData, g_bLeft4Dead2 ?  SDKConf_Signature : SDKConf_Address, "CDirector::AreAllSurvivorsInFinaleArea") == false )
+	{
+		LogError("Failed to find signature: \"CDirector::AreAllSurvivorsInFinaleArea\" (%s)", g_sSystem);
+	} else {
+		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+		g_hSDK_CDirector_AreAllSurvivorsInFinaleArea = EndPrepSDKCall();
+		if( g_hSDK_CDirector_AreAllSurvivorsInFinaleArea == null )
+			LogError("Failed to create SDKCall: \"CDirector::AreAllSurvivorsInFinaleArea\" (%s)", g_sSystem);
 	}
 
 	/*
@@ -1103,6 +1117,18 @@ void LoadGameData()
 		g_hSDK_CTerrorPlayer_CanBecomeGhost = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_CanBecomeGhost == null )
 			LogError("Failed to create SDKCall: \"CTerrorPlayer::CanBecomeGhost\" (%s)", g_sSystem);
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::SetBecomeGhostAt") == false )
+	{
+		LogError("Failed to find signature: \"CTerrorPlayer::SetBecomeGhostAt\" (%s)", g_sSystem);
+	} else {
+		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+		g_hSDK_CTerrorPlayer_SetBecomeGhostAt = EndPrepSDKCall();
+		if( g_hSDK_CTerrorPlayer_SetBecomeGhostAt == null )
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::SetBecomeGhostAt\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -1947,6 +1973,39 @@ void LoadGameData()
 
 	g_iOff_MobSpawnTimer = hGameData.GetOffset("MobSpawnTimer");
 	ValidateOffset(g_iOff_MobSpawnTimer, "MobSpawnTimer");
+
+
+
+	// ====================
+	// Patch to allow "L4D_SetBecomeGhostAt" to work. Thanks to "sorallll" for this method.
+	// ====================
+	// Address to function
+	g_pCTerrorPlayer_CanBecomeGhost = hGameData.GetAddress("CTerrorPlayer::CanBecomeGhost::Address");
+	ValidateAddress(g_pCTerrorPlayer_CanBecomeGhost, "CTerrorPlayer::CanBecomeGhost::Address", true);
+
+	// Offset to patch
+	g_iCanBecomeGhostOffset = hGameData.GetOffset("CTerrorPlayer::CanBecomeGhost::Offset");
+	ValidateOffset(g_iCanBecomeGhostOffset, "CTerrorPlayer::CanBecomeGhost::Offset");
+
+	// Patch count and byte match
+	int bytes = hGameData.GetOffset("CTerrorPlayer::CanBecomeGhost::Bytes");
+	int count = hGameData.GetOffset("CTerrorPlayer::CanBecomeGhost::Count");
+
+	// Verify bytes and patch
+	int byte = LoadFromAddress(g_pCTerrorPlayer_CanBecomeGhost + view_as<Address>(g_iCanBecomeGhostOffset), NumberType_Int8);
+	if( byte == bytes )
+	{
+		for( int i = 0; i < count; i++ )
+		{
+			g_hCanBecomeGhost.Push(LoadFromAddress(g_pCTerrorPlayer_CanBecomeGhost + view_as<Address>(g_iCanBecomeGhostOffset), NumberType_Int8));
+			StoreToAddress(g_pCTerrorPlayer_CanBecomeGhost + view_as<Address>(g_iCanBecomeGhostOffset + i), 0x90, NumberType_Int8, true);
+		}
+	}
+	else if( byte != 0x90 )
+	{
+		LogError("CTerrorPlayer::CanBecomeGhost patch: byte mis-match. %X", LoadFromAddress(g_pCTerrorPlayer_CanBecomeGhost + view_as<Address>(g_iCanBecomeGhostOffset), NumberType_Int8));
+	}
+	// ====================
 
 
 

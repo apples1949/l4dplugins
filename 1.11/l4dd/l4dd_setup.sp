@@ -126,6 +126,8 @@ void SetupForwardsNatives()
 	g_hFWD_CTerrorPlayer_OnKnockedDown										= new GlobalForward("L4D_OnKnockedDown",								ET_Event, Param_Cell, Param_Cell);
 	g_hFWD_CTerrorPlayer_OnKnockedDown_Post									= new GlobalForward("L4D_OnKnockedDown_Post",							ET_Event, Param_Cell, Param_Cell);
 	g_hFWD_CTerrorPlayer_OnKnockedDown_PostHandled							= new GlobalForward("L4D_OnKnockedDown_PostHandled",					ET_Event, Param_Cell, Param_Cell);
+	g_hFWD_CTerrorPlayer_OnSlammedSurvivor									= new GlobalForward("L4D2_OnSlammedSurvivor",							ET_Event, Param_Cell, Param_Cell, Param_CellByRef, Param_CellByRef);
+	g_hFWD_CTerrorPlayer_OnSlammedSurvivor_Post								= new GlobalForward("L4D2_OnSlammedSurvivor_Post",						ET_Event, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
 	g_hFWD_CTerrorPlayer_QueuePummelVictim									= new GlobalForward("L4D2_OnPummelVictim",								ET_Event, Param_Cell, Param_Cell);
 	g_hFWD_CTerrorPlayer_QueuePummelVictim_Post								= new GlobalForward("L4D2_OnPummelVictim_Post",							ET_Event, Param_Cell, Param_Cell);
 	g_hFWD_CTerrorPlayer_QueuePummelVictim_PostHandled						= new GlobalForward("L4D2_OnPummelVictim_PostHandled",					ET_Event, Param_Cell, Param_Cell);
@@ -244,6 +246,7 @@ void SetupForwardsNatives()
 	CreateNative("L4D_GetEntityFromAddress",		 				Native_GetEntityFromAddress);
 	CreateNative("L4D_ReadMemoryString",		 					Native_ReadMemoryString);
 	CreateNative("L4D_GetServerOS",		 							Native_GetServerOS);
+	CreateNative("Left4DHooks_Version",		 						Native_Left4DHooks_Version);
 	CreateNative("L4D_GetGameModeType",		 						Native_Internal_GetGameMode);
 	CreateNative("L4D2_IsGenericCooperativeMode",		 			Native_CTerrorGameRules_IsGenericCooperativeMode);
 	CreateNative("L4D_IsCoopMode",		 							Native_Internal_IsCoopMode);
@@ -273,6 +276,7 @@ void SetupForwardsNatives()
 	CreateNative("L4D_HasAnySurvivorLeftSafeArea",		 			Native_CDirector_HasAnySurvivorLeftSafeArea);
 	CreateNative("L4D_IsAnySurvivorInStartArea",		 			Native_CDirector_IsAnySurvivorInStartArea);
 	CreateNative("L4D_IsAnySurvivorInCheckpoint",		 			Native_CDirector_IsAnySurvivorInExitCheckpoint);
+	CreateNative("L4D_AreAllSurvivorsInFinaleArea",		 			Native_CDirector_AreAllSurvivorsInFinaleArea);
 	CreateNative("L4D_IsInFirstCheckpoint",		 					Native_IsInFirstCheckpoint);
 	CreateNative("L4D_IsInLastCheckpoint",		 					Native_IsInLastCheckpoint);
 	CreateNative("L4D_GetCheckpointFirst",		 					Native_GetCheckpointFirst);
@@ -288,6 +292,7 @@ void SetupForwardsNatives()
 	CreateNative("L4D_SetHumanSpec",								Native_SurvivorBot_SetHumanSpectator);
 	CreateNative("L4D_TakeOverBot",									Native_CTerrorPlayer_TakeOverBot);
 	CreateNative("L4D_CanBecomeGhost",								Native_CTerrorPlayer_CanBecomeGhost);
+	CreateNative("L4D_SetBecomeGhostAt",							Native_CTerrorPlayer_SetBecomeGhostAt);
 	CreateNative("L4D_IsFinaleEscapeInProgress",					Native_CDirector_IsFinaleEscapeInProgress);
 
 	// L4D2 only:
