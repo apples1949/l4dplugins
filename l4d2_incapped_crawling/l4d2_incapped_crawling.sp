@@ -1,6 +1,6 @@
 /*
 *	Incapped Crawling with Animation
-*	Copyright (C) 2021 Silvers
+*	Copyright (C) 2022 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION 		"2.8"
+#define PLUGIN_VERSION 		"2.9"
 
 /*======================================================================================
 	Plugin Info:
@@ -31,6 +31,9 @@
 
 ========================================================================================
 	Change Log:
+
+2.9 (11-Dec-2022)
+	- Changes to fix compile warnings on SourceMod 1.11.
 
 2.8 (04-Mar-2021)
 	- Increased a model string variable to support custom models with longer names. Thanks to "Sappykun" for fixing.
@@ -323,19 +326,19 @@ public void OnPluginStart()
 		g_bTranslation = true;
 	}
 
-	g_hCvarAllow =		CreateConVar(	"l4d2_crawling",			"1",			"0=关闭插件，1=开启插件", CVAR_FLAGS);
-	g_hCvarCrazy =		CreateConVar(	"l4d2_crawling_crazy",		"0",			"0=关闭。1=使用疯狂脸谱（2.0版之前的原版）", CVAR_FLAGS);
-	g_hCvarGlow =		CreateConVar(	"l4d2_crawling_glow",		"1",			"=禁用生存者爬行时的发光轮廓，1=如果不是写实模式，则启用轮廓", CVAR_FLAGS);
-	g_hCvarHint =		CreateConVar(	"l4d2_crawling_hint",		"3",			" 如何提示倒地爬行 0=禁用，1=聊天文本，2=提示框，3=两者都有", CVAR_FLAGS);
-	g_hCvarHintS =		CreateConVar(	"l4d2_crawling_hint_num",	"2",			"显示多少次提示", CVAR_FLAGS);
-	g_hCvarHurt =		CreateConVar(	"l4d2_crawling_hurt",		"0",			"在爬行过程中，每秒钟都要给倒地的幸存者施加伤害，0=爬行时没有伤害", CVAR_FLAGS);
-	g_hCvarModes =		CreateConVar(	"l4d2_crawling_modes",		"",				"在这些游戏模式下打开插件，用逗号分隔（没有空格）（空=全部）", CVAR_FLAGS );
-	g_hCvarModesOff =	CreateConVar(	"l4d2_crawling_modes_off",	"",				"在这些游戏模式下关闭插件，用逗号分隔（没有空格）（空=无）", CVAR_FLAGS );
-	g_hCvarModesTog =	CreateConVar(	"l4d2_crawling_modes_tog",	"0",			"在这些游戏模式中打开插件。0=全部，1=战役，2=生还者，4=对抗，8=清道夫。将数字相加", CVAR_FLAGS );
-	g_hCvarRate =		CreateConVar(	"l4d2_crawling_rate",		"80",			"设置爬行动画的播放速度", CVAR_FLAGS);
-	g_hCvarSpeeds =		CreateConVar(	"l4d2_crawling_speed",		"80",			" 改变'survivor_crawl_speed'的cvar（倒地爬行速度）", CVAR_FLAGS);
-	g_hCvarSpit =		CreateConVar(	"l4d2_crawling_spit",		"1",			"0=禁止在吐出的酸液中爬行，1=允许在吐出的酸液中爬行", CVAR_FLAGS);
-	g_hCvarView =		CreateConVar(	"l4d2_crawling_view",		"1",			"0=爬行时第一人称视角，1=爬行时第三人称视角。2=爬行时第一人称视角并隐藏自己的动画", CVAR_FLAGS);
+	g_hCvarAllow =		CreateConVar(	"l4d2_crawling",			"1",			"0=Plugin off, 1=Plugin on.", CVAR_FLAGS);
+	g_hCvarCrazy =		CreateConVar(	"l4d2_crawling_crazy",		"0",			"0=Off. 1=Use crazy faces (original before version 2.0).", CVAR_FLAGS);
+	g_hCvarGlow =		CreateConVar(	"l4d2_crawling_glow",		"0",			"0=Disables survivor glow on crawling, 1=Enables glow if not realism.", CVAR_FLAGS);
+	g_hCvarHint =		CreateConVar(	"l4d2_crawling_hint",		"2",			"0=Dislables, 1=Chat text, 2=Hint box.", CVAR_FLAGS);
+	g_hCvarHintS =		CreateConVar(	"l4d2_crawling_hint_num",	"2",			"How many times to display hints.", CVAR_FLAGS);
+	g_hCvarHurt =		CreateConVar(	"l4d2_crawling_hurt",		"2",			"Damage to apply every second of crawling, 0=No damage when crawling.", CVAR_FLAGS);
+	g_hCvarModes =		CreateConVar(	"l4d2_crawling_modes",		"",				"Turn on the plugin in these game modes, separate by commas (no spaces). (Empty = all).", CVAR_FLAGS );
+	g_hCvarModesOff =	CreateConVar(	"l4d2_crawling_modes_off",	"",				"Turn off the plugin in these game modes, separate by commas (no spaces). (Empty = none).", CVAR_FLAGS );
+	g_hCvarModesTog =	CreateConVar(	"l4d2_crawling_modes_tog",	"0",			"Turn on the plugin in these game modes. 0=All, 1=Coop, 2=Survival, 4=Versus, 8=Scavenge. Add numbers together.", CVAR_FLAGS );
+	g_hCvarRate =		CreateConVar(	"l4d2_crawling_rate",		"15",			"Sets the playback speed of the crawling animation.", CVAR_FLAGS);
+	g_hCvarSpeeds =		CreateConVar(	"l4d2_crawling_speed",		"15",			"Changes 'survivor_crawl_speed' cvar.", CVAR_FLAGS);
+	g_hCvarSpit =		CreateConVar(	"l4d2_crawling_spit",		"1",			"0=Disables crawling in spitter acid, 1=Enables crawling in spit.", CVAR_FLAGS);
+	g_hCvarView =		CreateConVar(	"l4d2_crawling_view",		"1",			"0=Firstperson view when crawling, 1=Thirdperson view when crawling. 2=Firstperson view when crawling and hides own animation.", CVAR_FLAGS);
 	CreateConVar(						"l4d2_crawling_version",	PLUGIN_VERSION, "Incapped Crawling plugin version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	AutoExecConfig(true,				"l4d2_incapped_crawling");
 
@@ -393,17 +396,17 @@ public void OnConfigsExecuted()
 	IsAllowed();
 }
 
-public void ConVarChanged_Allow(Handle convar, const char[] oldValue, const char[] newValue)
+void ConVarChanged_Allow(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	IsAllowed();
 }
 
-public void ConVarChanged_Cvars(Handle convar, const char[] oldValue, const char[] newValue)
+void ConVarChanged_Cvars(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	GetCvars();
 }
 
-public void ConVarChanged_Speed(Handle convar, const char[] oldValue, const char[] newValue)
+void ConVarChanged_Speed(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	g_iSpeed = g_hCvarSpeeds.IntValue;
 	g_hCvarSpeed.IntValue = g_iSpeed;
@@ -415,7 +418,7 @@ void GetCvars()
 	g_bGlow = g_hCvarGlow.BoolValue;
 	g_iHint = g_hCvarHint.IntValue;
 	g_iHints = g_hCvarHintS.IntValue;
-	g_iHurt = g_hCvarHurt.IntValue;
+	g_iHurt = g_hCvarHurt.IntValue;
 	g_iRate = g_hCvarRate.IntValue;
 	g_iSpeed = g_hCvarSpeeds.IntValue;
 	g_bSpit = g_hCvarSpit.BoolValue;
@@ -504,7 +507,7 @@ bool IsAllowedGameMode()
 	return true;
 }
 
-public void OnGamemode(const char[] output, int caller, int activator, float delay)
+void OnGamemode(const char[] output, int caller, int activator, float delay)
 {
 	if( strcmp(output, "OnCoop") == 0 )
 		g_iCurrentMode = 1;
@@ -542,13 +545,13 @@ void UnhookEvents()
 // ====================================================================================================
 //					EVENT - ROUND START / END
 // ====================================================================================================
-public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bRoundOver = false;
 	CreateTimer(0.1, TimerRoundStart);
 }
 
-public Action TimerRoundStart(Handle timer)
+Action TimerRoundStart(Handle timer)
 {
 	if( g_bCvarAllow )
 	{
@@ -561,9 +564,11 @@ public Action TimerRoundStart(Handle timer)
 		g_fClientHurt[i] = 0.0;
 		g_iClone[i] = 0;
 	}
+
+	return Plugin_Continue;
 }
 
-public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bRoundOver = true;
 	g_hCvarCrawl.IntValue = 0;
@@ -574,7 +579,7 @@ public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 // ====================================================================================================
 //					EVENT - PLAYER HURT
 // ====================================================================================================
-public void Event_PlayerHurt(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 {
 	if( !g_bSpit && event.GetInt("type") == 263168 )	// Crawling in spit not allowed & acid damage type
 	{
@@ -588,7 +593,7 @@ public void Event_PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 // ====================================================================================================
 //					EVENT - INCAPACITATED
 // ====================================================================================================
-public void Event_Incapped(Event event, const char[] name, bool dontBroadcast)
+void Event_Incapped(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if( !IsFakeClient(client) && GetClientTeam(client) == 2 )
@@ -604,16 +609,15 @@ public void Event_Incapped(Event event, const char[] name, bool dontBroadcast)
 }
 
 // Display hint message, allow crawling
-public Action TimerResetStart(Handle timer, any client)
+Action TimerResetStart(Handle timer, any client)
 {
 	client = GetClientOfUserId(client);
 
 	if( g_bRoundOver || !g_iHint || (g_iHint < 3 && g_iDisplayed[client] >= g_iHints) || !IsValidClient(client) )
-		return;
+		return Plugin_Continue;
 
 	g_iDisplayed[client]++;
 	static char sBuffer[128];
-	static char sBuffer1[128];
 
 	switch ( g_iHint )
 	{
@@ -622,7 +626,7 @@ public Action TimerResetStart(Handle timer, any client)
 			if( g_bTranslation )
 				Format(sBuffer, sizeof(sBuffer), "\x04[\x01Incapped Crawling\x04]\x01 %T", "Crawl", client);
 			else
-				Format(sBuffer, sizeof(sBuffer), "\x04[\x01Incapped Crawling\x04]\x01 - Press FORWARD to crawl while incapped!");
+				Format(sBuffer, sizeof(sBuffer), "\x04[\x01Incapped Crawling\x04]\x01 Press FORWARD to crawl while incapped");
 
 			PrintToChat(client, sBuffer);
 		}
@@ -632,26 +636,13 @@ public Action TimerResetStart(Handle timer, any client)
 			if( g_bTranslation )
 				Format(sBuffer, sizeof(sBuffer), "[Incapped Crawling] %T", "Crawl", client);
 			else
-				Format(sBuffer, sizeof(sBuffer), "[Incapped Crawling] - Press FORWARD to crawl while incapped!");
+				Format(sBuffer, sizeof(sBuffer), "[Incapped Crawling] - Press FORWARD to crawl while incapped");
 
 			PrintHintText(client, sBuffer);
 		}
-		case 3:		//自加 包括前面两者（代码不行可能有bug）
-		{
-			if( g_bTranslation )
-			{
-				Format(sBuffer, sizeof(sBuffer), "\x04[\x01Incapped Crawling\x04]\x01 %T", "Crawl", client);
-				Format(sBuffer1, sizeof(sBuffer), "[Incapped Crawling] %T", "Crawl", client);
-			}
-			else
-			{
-				Format(sBuffer, sizeof(sBuffer), "\x04[\x01Incapped Crawling\x04]\x01 - Press FORWARD to crawl while incapped!");
-				Format(sBuffer1, sizeof(sBuffer), "[Incapped Crawling] - Press FORWARD to crawl while incapped!");
-			}
-				PrintToChat(client, sBuffer);
-				PrintHintText(client, sBuffer1);
-		}
 	}
+
+	return Plugin_Continue;
 }
 
 
@@ -669,7 +660,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	if(
 		buttons & IN_FORWARD &&
 		GetEntProp(client, Prop_Send, "m_isIncapacitated", 1) &&
-		GetEntProp(client, Prop_Send, "m_isHangingFromLedge") == 0
+		GetEntProp(client, Prop_Send, "m_isHangingFromLedge", 1) == 0
 	)
 	{
 		if(
@@ -707,7 +698,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 // ====================================================================================================
 //					ANIMATION
 // ====================================================================================================
-public Action PlayAnim(int client)
+Action PlayAnim(int client)
 {
 	// Prediction
 	SendConVarValue(client, g_hCvarCrawl, "1");
@@ -722,7 +713,7 @@ public Action PlayAnim(int client)
 	if( clone == -1 )
 	{
 		LogError("Failed to create %s '%s' (%N)", g_bCrazy ? "prop_dynamic" : "commentary_dummy", sModel, client);
-		return;
+		return Plugin_Continue;
 	}
 
 	if( coach )		SetEntityModel(clone, MODEL_NICK);
@@ -769,17 +760,17 @@ public Action PlayAnim(int client)
 	//LMC
 
 	// Coach anim - Bone merge - Ignore if LMC handling.
-	if( coach && iEntity < 1 )
+	if( iEntity < 1 )
 	{
 		int cloneCoach = CreateEntityByName(g_bCrazy ? "prop_dynamic" : "commentary_dummy");
 		if( cloneCoach == -1 )
 		{
 			LogError("Failed to create clone coach.");
-			return;
+			return Plugin_Continue;
 		}
 
 		SetEntityRenderMode(clone, RENDER_NONE); // Hide original clone.
-		SetEntityModel(cloneCoach, MODEL_COACH);
+		SetEntityModel(cloneCoach, sModel);
 		SetEntProp(cloneCoach, Prop_Send, "m_fEffects", EF_BONEMERGE|EF_NOSHADOW|EF_PARENT_ANIMATES);
 
 		// Attach to survivor
@@ -800,7 +791,7 @@ public Action PlayAnim(int client)
 	}
 
 	// Disable Glow
-	if(!g_bGlow)
+	if( !g_bGlow )
 		SetEntProp(client, Prop_Send, "m_bSurvivorGlowEnabled", 0);
 
 	// Thirdperson view
@@ -808,9 +799,11 @@ public Action PlayAnim(int client)
 		GotoThirdPerson(client);
 	else if( g_iView == 2 )
 		SDKHook(clone, SDKHook_SetTransmit, OnTransmit);
+
+	return Plugin_Continue;
 }
 
-public Action OnTransmit(int entity, int client)
+Action OnTransmit(int entity, int client)
 {
 	if( g_iClone[client]
 		&& EntRefToEntIndex(g_iClone[client]) == entity
@@ -826,7 +819,7 @@ public Action OnTransmit(int entity, int client)
 // ====================================================================================================
 //					DAMAGE PLAYER
 // ====================================================================================================
-public Action TimerHurt(Handle timer)
+Action TimerHurt(Handle timer)
 {
 	bool bIsCrawling;
 
@@ -880,7 +873,7 @@ void GotoFirstPerson(int client)
 	SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 1);
 }
 
-public bool IsValidClient(int client)
+bool IsValidClient(int client)
 {
 	if( client && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) == 2 )
 		return true;
@@ -922,7 +915,7 @@ void RemoveClone(int client)
 		}
 		//LMC
 
-		AcceptEntityInput(clone, "Kill");
+		RemoveEntity(clone);
 
 		if( IsPlayerAlive(client) )
 		{

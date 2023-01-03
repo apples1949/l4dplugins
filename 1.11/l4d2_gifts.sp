@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION		"2.9"
+#define PLUGIN_VERSION		"3.0"
 
 /*
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -47,10 +47,9 @@ static char weapons_name_standard[][][] =
 	{"ammo","Ammo"},
 	{"ammo","Ammo"},
 	{"ammo","Ammo"},
-	{"ammo","Ammo"},
-	{"ammo","Ammo"},
-	{"ammo","Ammo"},
-	{"ammo","Ammo"}
+	{"hp_+50","Health+50"},
+	{"hp_+50","Health+50"},
+	{"hp_+50","Health+50"}
 };
 
 static char weapons_name_special[][][] = 
@@ -141,7 +140,6 @@ bool g_bGiftEnable;
 float g_fGiftLife;
 int g_iGiftChance, g_iSpecialGiftChance, g_iGiftMaxMap, g_iGiftMaxRound,
 	g_iGiftGlowRange, g_iSpecialGiftGlowRange, g_iGiftHP, g_iSpecialGiftHP;
-int survivor_max_incapacitated_count_int;
 float pain_pills_decay_rate_float;
 int g_iCvarAnnounce;
 
@@ -345,7 +343,6 @@ void GetCvars()
 	g_iGiftHP = cvar_gift_infected_hp.IntValue;
 	g_iSpecialGiftHP = cvar_special_gift_infected_hp.IntValue;
 
-	survivor_max_incapacitated_count_int = survivor_max_incapacitated_count.IntValue;
 	pain_pills_decay_rate_float = pain_pills_decay_rate.FloatValue;
 }
 
@@ -577,6 +574,7 @@ void NotifyGift(int client, int type, int gift = -1)
 
 		int iSlot0 = GetPlayerWeaponSlot(client, 0);
 		int index = GetURandomIntRange(0,sizeof(weapons_name_standard)-1);
+		int hp = 0;
 		if( strcmp(weapons_name_standard[index][0], "laser_sight") == 0 || 
 			strcmp(weapons_name_standard[index][0], "incendiary_ammo") == 0 || 
 			strcmp(weapons_name_standard[index][0], "explosive_ammo") == 0)
@@ -587,64 +585,25 @@ void NotifyGift(int client, int type, int gift = -1)
 		{
 			if(iSlot0 > MaxClients) GiveClientAmmo(client, iSlot0);
 		}
-		else if ( strcmp(weapons_name_standard[index][0], "health_100") == 0)
-			GiveClientHealth(client, 100);
+		else if ( strncmp(weapons_name_standard[index][0], "hp_", 3, false) == 0)
+		{
+			char sNumber[2][6];
+			ExplodeString(weapons_name_standard[index][0], "_", sNumber, sizeof(sNumber), sizeof(sNumber[]));
+
+			hp = StringToInt(sNumber[1]);
+			if(hp >= 0)
+			{
+				GiveClientHealth(client, hp);
+			}
+			else
+			{
+				HurtEntity(client, client, float(-hp));
+			}
+		}
 		else
 			GiveWeapon(client, weapons_name_standard[index][0]);
 
-		switch(g_iCvarAnnounce)
-		{
-			case 0: { }
-			case 1:
-			{
-				for (int i = 1; i <= MaxClients; i++)
-				{
-					if(!IsClientInGame(i)) continue;
-					if(IsFakeClient(i)) continue;
-					if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
-					{
-						PrintToChat(i, "%T", "Got Gift", i, client, weapons_name_standard[index][1]);
-					}
-				}
-			}
-			case 2:
-			{
-				for (int i = 1; i <= MaxClients; i++)
-				{
-					if(!IsClientInGame(i)) continue;
-					if(IsFakeClient(i)) continue;
-					if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
-					{
-						PrintHintText(i, "%T", "Got Gift", i, client, weapons_name_standard[index][1]);
-					}
-				}
-			}
-			case 3:
-			{
-				for (int i = 1; i <= MaxClients; i++)
-				{
-					if(!IsClientInGame(i)) continue;
-					if(IsFakeClient(i)) continue;
-					if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
-					{
-						PrintCenterText(i, "%T", "Got Gift", i, client, weapons_name_standard[index][1]);
-					}
-				}
-			}
-			case 4:
-			{
-				for (int i = 1; i <= MaxClients; i++)
-				{
-					if(!IsClientInGame(i)) continue;
-					if(IsFakeClient(i)) continue;
-					if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
-					{
-						PrintToChat(i, "%T", "Got Gift", i, client, weapons_name_standard[index][1]);
-						PrintCenterText(i, "%T", "Got Gift", i, client, weapons_name_standard[index][1]);
-					}
-				}
-			}
-		}
+		AnnounceToChat(client, weapons_name_standard[index][1], hp);
 
 		PlaySound(client,SOUND_STANDARD);
 		AddCollect(client, type);
@@ -658,6 +617,7 @@ void NotifyGift(int client, int type, int gift = -1)
 
 		int iSlot0 = GetPlayerWeaponSlot(client, 0);
 		int index = GetURandomIntRange(0, sizeof(weapons_name_special)-1);
+		int hp = 0;
 		if( strcmp(weapons_name_special[index][0], "laser_sight") == 0 || 
 			strcmp(weapons_name_special[index][0], "incendiary_ammo") == 0 || 
 			strcmp(weapons_name_special[index][0], "explosive_ammo") == 0)
@@ -668,64 +628,25 @@ void NotifyGift(int client, int type, int gift = -1)
 		{
 			if(iSlot0 > MaxClients) GiveClientAmmo(client, iSlot0);
 		}
-		else if ( strcmp(weapons_name_special[index][0], "health_100") == 0 )
-			GiveClientHealth(client, 100);
+		else if ( strncmp(weapons_name_special[index][0], "hp_", 3, false) == 0)
+		{
+			char sNumber[2][6];
+			ExplodeString(weapons_name_special[index][0], "_", sNumber, sizeof(sNumber), sizeof(sNumber[]));
+
+			hp = StringToInt(sNumber[1]);
+			if(hp > 0)
+			{
+				GiveClientHealth(client, hp);
+			}
+			else
+			{
+				HurtEntity(client, client, float(-hp));
+			}
+		}
 		else
 			GiveWeapon(client, weapons_name_special[index][0]);
 
-		switch(g_iCvarAnnounce)
-		{
-			case 0: { }
-			case 1:
-			{
-				for (int i = 1; i <= MaxClients; i++)
-				{
-					if(!IsClientInGame(i)) continue;
-					if(IsFakeClient(i)) continue;
-					if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
-					{
-						PrintToChat(i, "%T", "Got Gift", i, client, weapons_name_special[index][1]);
-					}
-				}
-			}
-			case 2:
-			{
-				for (int i = 1; i <= MaxClients; i++)
-				{
-					if(!IsClientInGame(i)) continue;
-					if(IsFakeClient(i)) continue;
-					if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
-					{
-						PrintHintText(i, "%T", "Got Gift", i, client, weapons_name_special[index][1]);
-					}
-				}
-			}
-			case 3:
-			{
-				for (int i = 1; i <= MaxClients; i++)
-				{
-					if(!IsClientInGame(i)) continue;
-					if(IsFakeClient(i)) continue;
-					if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
-					{
-						PrintCenterText(i, "%T", "Got Gift", i, client, weapons_name_special[index][1]);
-					}
-				}
-			}
-			case 4:
-			{
-				for (int i = 1; i <= MaxClients; i++)
-				{
-					if(!IsClientInGame(i)) continue;
-					if(IsFakeClient(i)) continue;
-					if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
-					{
-						PrintToChat(i, "%T", "Got Gift", i, client, weapons_name_special[index][1]);
-						PrintCenterText(i, "%T", "Got Gift", i, client, weapons_name_special[index][1]);
-					}
-				}
-			}
-		}
+		AnnounceToChat(client, weapons_name_special[index][1], hp);
 
 		PlaySound(client, SOUND_SPECIAL);
 		AddCollect(client, type);
@@ -902,8 +823,9 @@ public void OnTouchPost(int gift, int other)
 		if(iTeam == 1) return;
 
 		if(iTeam == 2 && IsPlayerAlive(other) &&
-			!GetEntProp(other, Prop_Send, "m_isHangingFromLedge") &&
-			!GetEntProp(other, Prop_Send, "m_isIncapacitated"))
+			!IsIncapacitated(other) &&
+			!IsHandingFromLedge(other) &&
+			L4D_GetPinnedInfected(other) == 0 )
 		{
 
 			if (strcmp(g_sGifType[gift], STRING_STANDARD) == 0)
@@ -1053,20 +975,27 @@ stock void GiveClientAmmo(int client, int iSlot0)
 	}			
 }
 
-stock void GiveClientHealth(int client, int iHealthAdd)
+void GiveClientHealth(int client, int iHealthAdd)
 {
-	if(IsIncapacitated(client) || IsHandingFromLedge(client))
+	int iHealth = GetClientHealth( client );
+	float fHealth = GetTempHealth( client );
+
+	if(iHealthAdd>=99) 
 	{
-		GiveWeapon(client, "health");
-		SetTempHealth( client, 0.0 );
+		int flagsgive = GetCommandFlags("give");
+		SetCommandFlags("give", flagsgive & ~FCVAR_CHEAT);
+		FakeClientCommand(client, "give health");
+		SetCommandFlags("give", flagsgive);
+	}
+
+	if( GetEntProp( client, Prop_Send, "m_currentReviveCount" ) >= 1 )
+	{
+		SetTempHealth( client, fHealth + iHealthAdd);
 	}
 	else
 	{
-		int iHealth = GetClientHealth( client );
-		float fHealth = GetTempHealth( client );
-
 		SetEntityHealth( client, iHealth + iHealthAdd );
-		SetClientHealth( client, fHealth );
+		SetTempHealth( client, fHealth );
 	}
 }
 
@@ -1076,12 +1005,12 @@ void SetTempHealth(int client, float fHealth)
 	SetEntPropFloat(client, Prop_Send, "m_healthBufferTime", GetGameTime());
 }
 
-stock bool IsIncapacitated(int client)
+bool IsIncapacitated(int client)
 {
 	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isIncapacitated"));
 }
 
-stock bool IsHandingFromLedge(int client)
+bool IsHandingFromLedge(int client)
 {
 	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isHangingFromLedge") || GetEntProp(client, Prop_Send, "m_isFallingFromLedge"));
 }
@@ -1093,20 +1022,6 @@ float GetTempHealth(int client)
 	float fHealth = GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
 	fHealth -= (fGameTime - fHealthTime) * pain_pills_decay_rate_float;
 	return fHealth < 0.0 ? 0.0 : fHealth;
-}
-
-void SetClientHealth(int client, float fHealth)
-{	
-	if( GetEntProp( client, Prop_Send, "m_currentReviveCount" ) >= 1 && survivor_max_incapacitated_count_int >= 1 ) 	// The client has been incompetent once.
-	{
-		int flagsgive = GetCommandFlags("give");
-		SetCommandFlags("give", flagsgive & ~FCVAR_CHEAT);
-		FakeClientCommand(client, "give health");
-		SetCommandFlags("give", flagsgive);
-		
-		SetEntPropFloat( client, Prop_Send, "m_healthBuffer", fHealth < 0.0 ? 0.0 : fHealth );
-		SetEntPropFloat( client, Prop_Send, "m_healthBufferTime", GetGameTime() );
-	}
 }
 
 bool CheckIfEntityMax(int entity)
@@ -1142,3 +1057,143 @@ void SetRandomColor()
 	GetColor("255 255 0", ColorYellow);
 	GetColor("144 238 144", ColorLightGreen);
 }
+
+void HurtEntity(int victim, int attacker, float damage)
+{
+	SDKHooks_TakeDamage(victim, attacker, attacker, damage, DMG_SLASH);
+}
+
+void AnnounceToChat(int client, char[] buffer, int hp)
+{
+	if(strncmp(buffer, "Health", 6, false) == 0)
+	{
+		if(hp >= 0)
+		{
+			switch(g_iCvarAnnounce)
+			{
+				case 0: { }
+				case 1:
+				{
+					for (int i = 1; i <= MaxClients; i++)
+					{
+						if(!IsClientInGame(i)) continue;
+						if(IsFakeClient(i)) continue;
+						if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
+						{
+							PrintToChat(i, "%T", "Got Gift (+hp)", i, client, hp);
+						}
+					}
+				}
+				case 2:
+				{
+					for (int i = 1; i <= MaxClients; i++)
+					{
+						if(!IsClientInGame(i)) continue;
+						if(IsFakeClient(i)) continue;
+						if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
+						{
+							PrintHintText(i, "%T", "Got Gift (+hp)", i, client, hp);
+						}
+					}
+				}
+				case 3:
+				{
+					for (int i = 1; i <= MaxClients; i++)
+					{
+						if(!IsClientInGame(i)) continue;
+						if(IsFakeClient(i)) continue;
+						if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
+						{
+							PrintCenterText(i, "%T", "Got Gift (+hp)", i, client, hp);
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			switch(g_iCvarAnnounce)
+			{
+				case 0: { }
+				case 1:
+				{
+					for (int i = 1; i <= MaxClients; i++)
+					{
+						if(!IsClientInGame(i)) continue;
+						if(IsFakeClient(i)) continue;
+						if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
+						{
+							PrintToChat(i, "%T", "Got Gift (-hp)", i, client, hp);
+						}
+					}
+				}
+				case 2:
+				{
+					for (int i = 1; i <= MaxClients; i++)
+					{
+						if(!IsClientInGame(i)) continue;
+						if(IsFakeClient(i)) continue;
+						if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
+						{
+							PrintHintText(i, "%T", "Got Gift (-hp)", i, client, hp);
+						}
+					}
+				}
+				case 3:
+				{
+					for (int i = 1; i <= MaxClients; i++)
+					{
+						if(!IsClientInGame(i)) continue;
+						if(IsFakeClient(i)) continue;
+						if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
+						{
+							PrintCenterText(i, "%T", "Got Gift (-hp)", i, client, hp);
+						}
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		switch(g_iCvarAnnounce)
+		{
+			case 0: { }
+			case 1:
+			{
+				for (int i = 1; i <= MaxClients; i++)
+				{
+					if(!IsClientInGame(i)) continue;
+					if(IsFakeClient(i)) continue;
+					if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
+					{
+						PrintToChat(i, "%T", "Got Gift", i, client, buffer);
+					}
+				}
+			}
+			case 2:
+			{
+				for (int i = 1; i <= MaxClients; i++)
+				{
+					if(!IsClientInGame(i)) continue;
+					if(IsFakeClient(i)) continue;
+					if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
+					{
+						PrintHintText(i, "%T", "Got Gift", i, client, buffer);
+					}
+				}
+			}
+			case 3:
+			{
+				for (int i = 1; i <= MaxClients; i++)
+				{
+					if(!IsClientInGame(i)) continue;
+					if(IsFakeClient(i)) continue;
+					if(GetClientTeam(i) == TEAM_SURVIVOR || GetClientTeam(i) == TEAM_SPECTATOR)
+					{
+						PrintCenterText(i, "%T", "Got Gift", i, client, buffer);
+					}
+				}
+			}
+		}
+	}

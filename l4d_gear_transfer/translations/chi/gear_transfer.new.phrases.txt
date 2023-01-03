@@ -18,7 +18,7 @@
 	"Switched"
 	{
 		"#format"		"{1:s},{2:s},{3:s}"
-		"chi"			"{1} 拿 {2} 与 {3} 交換"
+		"chi"			"{1} 将 {2} 与 {3} 交换"
 	}
 	"weapon_molotov"
 	{
@@ -26,7 +26,7 @@
 	}
 	"weapon_pipe_bomb"
 	{
-		"chi"			"土制炸彈"
+		"chi"			"土质炸弹"
 	}
 	"weapon_vomitjar"
 	{

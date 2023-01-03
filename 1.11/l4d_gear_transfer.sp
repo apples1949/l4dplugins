@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"2.27"
+#define PLUGIN_VERSION		"2.28"
 
 /*======================================================================================
 	Plugin Info:
@@ -31,6 +31,11 @@
 
 ========================================================================================
 	Change Log:
+
+2.28 (25-Dec-2022)
+	- Added Simplified Chinese translations. Thanks to "NoroHime" and "a2121858" for providing.
+	- Added cvar "l4d_gear_transfer_notifies" to determine the types of transfers that will be notified in chat. Requested by "Yabi".
+	- Changed cvar "l4d_gear_transfer_notify" added an option to only print to participants of transfers and an option to ignore pills/adrenaline transfers. Requested by "Yabi".
 
 2.27 (25-Aug-2022)
 	- Fixed property not found errors. Thanks to "haiping567" and "Dominatez" for reporting.
@@ -76,7 +81,7 @@
 	- Fixed the weapon slots equip icon not displaying like older versions. Thanks to "TBK Duy" for reporting.
 
 2.14 (25-Jul-2021)
-	- New translation files added (please update them all).
+	- New translation files added (please update them all). Thanks to "imyz" for re-working the translations.
 	- Compatibility support for the "Survivor Shove" plugin (version 1.10 or newer).
 
 2.13 (26-Feb-2021)
@@ -385,11 +390,11 @@
 
 
 // Cvar handles
-ConVar g_hCvarAllow, g_hCvarDying, g_hCvarDistGive, g_hCvarDistGrab, g_hCvarGive, g_hCvarGrab, g_hCvarIdle, g_hCvarMethod, g_hCvarModesBot, g_hCvarModesOn, g_hCvarModesOff, g_hCvarModesTog, g_hCvarNotify, g_hCvarSounds, g_hCvarTimeout, g_hCvarTimerGive, g_hCvarTimerGrab, g_hCvarTraces, g_hCvarTypes, g_hCvarVocalize;
+ConVar g_hCvarAllow, g_hCvarDying, g_hCvarDistGive, g_hCvarDistGrab, g_hCvarGive, g_hCvarGrab, g_hCvarIdle, g_hCvarMethod, g_hCvarModesBot, g_hCvarModesOn, g_hCvarModesOff, g_hCvarModesTog, g_hCvarNotify, g_hCvarNotifies, g_hCvarSounds, g_hCvarTimeout, g_hCvarTimerGive, g_hCvarTimerGrab, g_hCvarTraces, g_hCvarTypes, g_hCvarVocalize;
 ConVar g_hCvarMPGameMode, g_hCvarMaxIncap;
 
 // Cvar variables
-int g_iCvarMaxIncap, g_iCvarDying, g_iCvarGive, g_iCvarGrab, g_iCvarMethod, g_iCvarNotify, g_iCvarTypes, g_iCvarTraces, g_iCvarVocalize;
+int g_iCvarMaxIncap, g_iCvarDying, g_iCvarGive, g_iCvarGrab, g_iCvarMethod, g_iCvarNotify, g_iCvarNotifies, g_iCvarTypes, g_iCvarTraces, g_iCvarVocalize;
 bool g_bCvarSounds, g_bCvarIdle;
 float g_fDistGive, g_fDistGrab, g_fTimerGive, g_fTimerGrab, g_fCvarTimeout, g_fBlockVocalize;
 
@@ -421,24 +426,39 @@ ArrayList g_TypePack;
 // Enums for code legibility
 enum
 {
-	SLOT_NADE = 2,
-	SLOT_PACK = 3,
-	SLOT_MEDS = 4
+	SLOT_NADE		= 2,
+	SLOT_PACK		= 3,
+	SLOT_MEDS		= 4
 }
 
 enum
 {
-	EMPTY_NADE = (1<<0),
-	EMPTY_PACK = (1<<1),
-	EMPTY_MEDS = (1<<2)
+	EMPTY_NADE		= (1<<0),
+	EMPTY_PACK		= (1<<1),
+	EMPTY_MEDS		= (1<<2)
 }
 
 enum
 {
-	METHOD_NONE = 0,
-	METHOD_GIVE = (1<<0),
-	METHOD_GRAB = (1<<1),
-	METHOD_SWAP = (1<<2)
+	METHOD_NONE		= 0,
+	METHOD_GIVE		= (1<<0),
+	METHOD_GRAB		= (1<<1),
+	METHOD_SWAP		= (1<<2)
+}
+
+enum
+{
+	NOTIFY_GIVE		= (1<<0),
+	NOTIFY_GRAB		= (1<<1),
+	NOTIFY_SWITCH	= (1<<2)
+}
+
+enum
+{
+	NOTIFY_ALL		= (1<<0),	// PrintToChatAll
+	NOTIFY_EVENT	= (1<<1),	// Print games transfer event
+	NOTIFY_CLIENT	= (1<<2),	// Print client only
+	NOTIFY_IGNORE	= (1<<3)	// Ignore printing pills/adrenaline and use game prompt only
 }
 
 enum
@@ -453,6 +473,8 @@ enum
 	TYPE_INCEN,
 	TYPE_DEFIB
 }
+
+
 
 // ORDER GRAB/GIVE:
 // Items are picked up in order defined by "g_sPickups" array. Only re-arrange items within their slot positions.
@@ -592,6 +614,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 
+	RegPluginLibrary("l4d_gear_transfer");
+
 	MarkNativeAsOptional("Heartbeat_GetRevives");
 
 	g_hForwardGive = new GlobalForward("GearTransfer_OnWeaponGive",						ET_Event, Param_Cell, Param_Cell, Param_Cell);
@@ -651,7 +675,8 @@ public void OnPluginStart()
 	g_hCvarDying =			CreateConVar(	"l4d_gear_transfer_dying",			"0",			"被接收物品玩家在黑白状态时,接收什么物品会发出声音,0=忽略。1=急救包。2=药丸或肾上腺素（游戏逻辑无论如何都会给出，除非使用Bot Healing插件）。3=两者.", CVAR_FLAGS);
 	g_hCvarIdle =			CreateConVar(	"l4d_gear_transfer_idle",			"0",			"玩家可以获取或者给予以及交换闲置玩家物品.0=否，1=是.", CVAR_FLAGS);
 	g_hCvarMethod =			CreateConVar(	"l4d_gear_transfer_method",			"3",			"0=关闭. 0=推键, 1=换弹键, 2=推键或换弹键给于物品.", CVAR_FLAGS);
-	g_hCvarNotify =			CreateConVar(	"l4d_gear_transfer_notify",			"1",			"0=关, 1=在聊天信息窗显示给于或获取物品信息.", CVAR_FLAGS);
+	g_hCvarNotifies =		CreateConVar(	"l4d_gear_transfer_notifies",			"7",			"提示这些类型的给予：1=给予,2=获取,4=交换,7=全部.把数字加在一起.", CVAR_FLAGS);
+	g_hCvarNotify =			CreateConVar(	"l4d_gear_transfer_notify",			"1",			"0=关闭, 1=向所有人提示给予行为, 2=也提示游戏本身的系统给予药丸/肾上腺素行为, 4=只在接收者之间显示.8=忽略提示药丸/肾上腺素，只使用游戏提示. 把数字加在一起.", CVAR_FLAGS);
 	g_hCvarSounds =			CreateConVar(	"l4d_gear_transfer_sounds",			"1",			"0=关, 1=给于/接收物品时播放声音", CVAR_FLAGS);
 	g_hCvarTimerGive =		CreateConVar(	"l4d_gear_transfer_timer_give",		"1.0",			"0.0=关闭. 多久检测一次bot和玩家位置方便bot自动给与物品", CVAR_FLAGS, true, 0.0, true, 10.0);
 	g_hCvarTimerGrab =		CreateConVar(	"l4d_gear_transfer_timer_grab",		"0.5",			"0.0=关闭. 多久检测一次bot和物品位置以便bot自动拾取物品.", CVAR_FLAGS, true, 0.0, true, 10.0);
@@ -687,6 +712,7 @@ public void OnPluginStart()
 	g_hCvarIdle.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarMethod.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarNotify.AddChangeHook(ConVarChanged_Cvars);
+	g_hCvarNotifies.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarSounds.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarTimeout.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarTimerGive.AddChangeHook(ConVarChanged_Cvars);
@@ -833,6 +859,7 @@ void GetCvars()
 	g_bCvarIdle = g_hCvarIdle.BoolValue;
 	g_iCvarMethod = g_hCvarMethod.IntValue;
 	g_iCvarNotify = g_hCvarNotify.IntValue;
+	g_iCvarNotifies = g_hCvarNotifies.IntValue;
 	g_bCvarSounds = g_hCvarSounds.BoolValue;
 	g_fCvarTimeout = g_hCvarTimeout.FloatValue;
 	g_fTimerGive = g_hCvarTimerGive.FloatValue;
@@ -1135,7 +1162,7 @@ void Event_SpawnerGiveItem(Event event, const char[] name, bool dontBroadcast)
 	for( int i = 2; i < 5; i++ )
 	{
 		if( strncmp(classname[7], g_sPickups[i][7], 7) == 0 )				// Item must be a grenade
-			AcceptEntityInput(ent, "kill");
+			RemoveEntity(ent);
 	}
 }
 
@@ -1165,7 +1192,7 @@ void Event_WeaponFire(Event event, const char[] name, bool dontBroadcast)
 // ======================================================================================
 //					EVENT - PILLS / ADREN GIVEN
 // ======================================================================================
-// This event stops pills/adren being auto given by bots after you have given to them, and stops you taking it back straight away
+// This event stops pills/adrenaline being auto given by bots after you have given to them, and stops you taking it back straight away
 void Event_WeaponGiven(Event event, const char[] name, bool dontBroadcast)
 {
 	int giver = GetClientOfUserId(event.GetInt("giver"));
@@ -1177,7 +1204,7 @@ void Event_WeaponGiven(Event event, const char[] name, bool dontBroadcast)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
 
-		if( g_iCvarNotify == 2 && g_fNextTransfer[client] < GetGameTime() )
+		if( g_iCvarNotify & NOTIFY_EVENT && g_iCvarNotifies & NOTIFY_GIVE && g_fNextTransfer[client] < GetGameTime() )
 		{
 			int type;
 
@@ -1191,7 +1218,9 @@ void Event_WeaponGiven(Event event, const char[] name, bool dontBroadcast)
 				MPrintToChatAll(giver, "Gave", g_sPickups[type], client);
 			}
 			else
-				CPrintToChatAll("GE \x05%N \x01%t \x04%t \x01%t \x05%N", giver, "Gave", g_sPickups[type], "To", client);
+			{
+				CPrintToChatAll("\x05%N \x01%t \x04%t \x01%t \x05%N", giver, "Gave", g_sPickups[type], "To", client);
+			}
 		}
 
 		if( g_iCvarGive && IsFakeClient(client) )
@@ -1426,7 +1455,7 @@ void TransferItem(int client, int target, bool b_FromShove)
 	if( transferType == METHOD_NONE || (transferType != METHOD_GIVE && fakeTarget == false) )
 		return;
 
-	// Don't give pills/adren from shoves, the game already does this.
+	// Don't give pills/adrenaline from shoves, the game already does this.
 	// Don't allow medkits to be transferred from shoves, so they can heal others!
 	if( b_FromShove &&
 		((transferType == METHOD_GIVE && type <= TOP_INDEX_MEDS) ||
@@ -1511,35 +1540,47 @@ void GiveItem(int client, int target, int item, int slot, int type, int transfer
 	// Notification
 	if( g_iCvarNotify && g_bTranslation && GetGameTime() > g_fBlockVocalize )
 	{
-		if( transferType == METHOD_GIVE )
+		if( transferType == METHOD_GIVE && g_iCvarNotifies & NOTIFY_GIVE )
 		{
-			if( g_bTranslationNew )
-				MPrintToChatAll(client, "Gave", g_sPickups[type], target);
-			else
-				CPrintToChatAll("\x05%N \x01%t \x04%t \x01%t \x05%N", client, "Gave", g_sPickups[type], "To", target);
+			if( !(g_iCvarNotify & NOTIFY_IGNORE) || (type != TYPE_PILLS && type != TYPE_ADREN) )
+			{
+				if( g_bTranslationNew )
+					MPrintToChatAll(client, "Gave", g_sPickups[type], target);
+				else
+					CPrintToChatAll("\x05%N \x01%t \x04%t \x01%t \x05%N", client, "Gave", g_sPickups[type], "To", target);
+			}
 		}
-		else if( transferType == METHOD_GRAB )
+		else if( transferType == METHOD_GRAB && g_iCvarNotifies & NOTIFY_GRAB )
 		{
-			if( g_bTranslationNew )
-				MPrintToChatAll(client, "Grabbed", g_sPickups[type], target);
-			else
-				CPrintToChatAll("\x05%N \x01%t \x04%t \x01%t \x05%N", client, "Grabbed", g_sPickups[type], "From", target);
+			if( !(g_iCvarNotify & NOTIFY_IGNORE) || (type != TYPE_PILLS && type != TYPE_ADREN) )
+			{
+				if( g_bTranslationNew )
+					MPrintToChatAll(client, "Grabbed", g_sPickups[type], target);
+				else
+					CPrintToChatAll("\x05%N \x01%t \x04%t \x01%t \x05%N", client, "Grabbed", g_sPickups[type], "From", target);
+			}
 		}
-		else
+		else if( transferType == METHOD_SWAP && g_iCvarNotifies & NOTIFY_SWITCH )
 		{
 			type = g_iClientType[client][slot] - 1;
 
-			if( g_bTranslationNew )
-				MPrintToChatAll(client, "Switched", g_sPickups[type], target);
-			else
-				CPrintToChatAll("\x05%N \x01%t \x04%t \x01%t \x05%N", client, "Switched", g_sPickups[type], "With", target);
+			if( !(g_iCvarNotify & NOTIFY_IGNORE) || (type != TYPE_PILLS && type != TYPE_ADREN) )
+			{
+				if( g_bTranslationNew )
+					MPrintToChatAll(client, "Switched", g_sPickups[type], target);
+				else
+					CPrintToChatAll("\x05%N \x01%t \x04%t \x01%t \x05%N", client, "Switched", g_sPickups[type], "With", target);
+			}
 
 			type = g_iClientType[target][slot] - 1;
 
-			if( g_bTranslationNew )
-				MPrintToChatAll(target, "Gave", g_sPickups[type], client);
-			else
-				CPrintToChatAll("\x05%N \x01%t \x04%t \x01%t \x05%N", target, "Gave", g_sPickups[type], "To", client);
+			if( !(g_iCvarNotify & NOTIFY_IGNORE) || (type != TYPE_PILLS && type != TYPE_ADREN) )
+			{
+				if( g_bTranslationNew )
+					MPrintToChatAll(target, "Gave", g_sPickups[type], client);
+				else
+					CPrintToChatAll("\x05%N \x01%t \x04%t \x01%t \x05%N", target, "Gave", g_sPickups[type], "To", client);
+			}
 		}
 	}
 
@@ -1674,7 +1715,7 @@ int CreateAndEquip(int client, int type)
 	int entity = GivePlayerItem(client, classname);
 	if( entity != INVALID_ENT_REFERENCE )
 	{
-		EquipPlayerWeapon(client, entity);
+		// EquipPlayerWeapon(client, entity);
 		return entity;
 	}
 
@@ -2168,7 +2209,7 @@ Action TimerAutoGrab(Handle timer)
 							int flag = GetEntProp(weapon, Prop_Data, "m_spawnflags");
 							if( flag & (1<<3) )
 							{
-								// Unlimited ammo, do nothing.
+								// Unlimited items, do nothing.
 							}
 							else
 							{
@@ -2176,7 +2217,7 @@ Action TimerAutoGrab(Handle timer)
 								if( iCount > 1 )
 									SetEntProp(weapon, Prop_Data, "m_itemCount", iCount -1);
 								else
-									AcceptEntityInput(weapon, "kill");
+									RemoveEntity(weapon);
 							}
 
 							int item = CreateEntityByName(g_sPickups[type]);
@@ -2229,7 +2270,7 @@ Action TimerAutoGrab(Handle timer)
 
 						Vocalize(bot, type);
 
-						if( g_iCvarNotify && g_bTranslation && times > g_fBlockVocalize )
+						if( g_iCvarNotify & NOTIFY_ALL && g_bTranslation && times > g_fBlockVocalize && g_iCvarNotifies & NOTIFY_GRAB )
 						{
 							if( g_bTranslationNew )
 								MPrintToChatAll(bot, "BotGrabbed", g_sPickups[type], 0);
@@ -2337,7 +2378,7 @@ void FireEventsGeneral(int client, int target, int weapon, int type)
 	}
 }
 
-stock bool HasSpectator(int client)
+bool HasSpectator(int client)
 {
 	if( g_bCvarIdle ) return false; // Allow transfer with idle players
 
@@ -2349,14 +2390,14 @@ stock bool HasSpectator(int client)
 	return true;
 }
 
-stock bool IsReviving(int client)
+bool IsReviving(int client)
 {
 	if( GetEntPropEnt(client, Prop_Send, "m_reviveOwner") > 0 )
 		return true;
 	return false;
 }
 
-stock bool IsIncapped(int client)
+bool IsIncapped(int client)
 {
 	if( GetEntProp(client, Prop_Send, "m_isIncapacitated", 1) > 0 )
 		return true;
@@ -2427,14 +2468,14 @@ void Vocalize(int client, int type)
 
 	switch( model[29] )
 	{
-		case 'c': { Format(model, sizeof(model), "coach");		surv = 1; }
-		case 'b': { Format(model, sizeof(model), "gambler");	surv = 2; }
-		case 'h': { Format(model, sizeof(model), "mechanic");	surv = 3; }
-		case 'd': { Format(model, sizeof(model), "producer");	surv = 4; }
-		case 'v': { Format(model, sizeof(model), "NamVet");		surv = 5; }
-		case 'e': { Format(model, sizeof(model), "Biker");		surv = 6; }
-		case 'a': { Format(model, sizeof(model), "Manager");	surv = 7; }
-		case 'n': { Format(model, sizeof(model), "TeenGirl");	surv = 8; }
+		case 'c': { model = "coach";		surv = 1; }
+		case 'b': { model = "gambler";		surv = 2; }
+		case 'h': { model = "mechanic";		surv = 3; }
+		case 'd': { model = "producer";		surv = 4; }
+		case 'v': { model = "NamVet";		surv = 5; }
+		case 'e': { model = "Biker";		surv = 6; }
+		case 'a': { model = "Manager";		surv = 7; }
+		case 'n': { model = "TeenGirl";		surv = 8; }
 		default:
 		{
 			int character = GetEntProp(client, Prop_Send, "m_survivorCharacter");
@@ -2443,22 +2484,22 @@ void Vocalize(int client, int type)
 			{
 				switch( character )
 				{
-					case 0:	{ Format(model, sizeof(model), "gambler");		surv = 2; } // Nick
-					case 1:	{ Format(model, sizeof(model), "producer");		surv = 4; } // Rochelle
-					case 2:	{ Format(model, sizeof(model), "coach");		surv = 1; } // Coach
-					case 3:	{ Format(model, sizeof(model), "mechanic");		surv = 3; } // Ellis
-					case 4:	{ Format(model, sizeof(model), "NamVet");		surv = 5; } // Bill
-					case 5:	{ Format(model, sizeof(model), "TeenGirl");		surv = 8; } // Zoey
-					case 6:	{ Format(model, sizeof(model), "Biker");		surv = 6; } // Francis
-					case 7:	{ Format(model, sizeof(model), "Manager");		surv = 7; } // Louis
+					case 0:	{ model = "gambler";		surv = 2; } // Nick
+					case 1:	{ model = "producer";		surv = 4; } // Rochelle
+					case 2:	{ model = "coach";			surv = 1; } // Coach
+					case 3:	{ model = "mechanic";		surv = 3; } // Ellis
+					case 4:	{ model = "NamVet";			surv = 5; } // Bill
+					case 5:	{ model = "TeenGirl";		surv = 8; } // Zoey
+					case 6:	{ model = "Biker";			surv = 6; } // Francis
+					case 7:	{ model = "Manager";		surv = 7; } // Louis
 				}
 			} else {
 				switch( character )
 				{
-					case 0:	 { Format(model, sizeof(model) ,"TeenGirl");	surv = 8; } // Zoey
-					case 1:	 { Format(model, sizeof(model) ,"NamVet");		surv = 5; } // Bill
-					case 2:	 { Format(model, sizeof(model) ,"Biker");		surv = 6; } // Francis
-					case 3:	 { Format(model, sizeof(model) ,"Manager");		surv = 7; } // Louis
+					case 0:	 { model = "TeenGirl";		surv = 8; } // Zoey
+					case 1:	 { model = "NamVet";		surv = 5; } // Bill
+					case 2:	 { model = "Biker";			surv = 6; } // Francis
+					case 3:	 { model = "Manager";		surv = 7; } // Louis
 				}
 			}
 		}
@@ -2565,21 +2606,33 @@ void PlaySound(int client, const char sound[32])
 
 
 // ====================================================================================================
-//					PRINT TO CHAT ALL
+//					PRINT TO CHAT
 // ====================================================================================================
 // Taken from:
 // https://docs.sourcemod.net/api/index.php?fastload=show&id=151&
-void CPrintToChatAll(const char[] format, any ...)
+void CPrintToChatAll(const char[] format, any ..., int client = 0)
 {
 	static char buffer[192];
 
-	for( int i = 1; i <= MaxClients; i++ )
+	if( g_iCvarNotify & NOTIFY_CLIENT )
 	{
-		if( IsClientInGame(i) && !IsFakeClient(i) )
+		if( IsClientInGame(client) && !IsFakeClient(client) )
 		{
-			SetGlobalTransTarget(i);
-			VFormat(buffer, sizeof(buffer), format, 2);
-			PrintToChat(i, buffer);
+			SetGlobalTransTarget(client);
+			VFormat(buffer, sizeof(buffer), format, 3);
+			PrintToChat(client, buffer);
+		}
+	}
+	else
+	{
+		for( int i = 1; i <= MaxClients; i++ )
+		{
+			if( IsClientInGame(i) && !IsFakeClient(i) )
+			{
+				SetGlobalTransTarget(i);
+				VFormat(buffer, sizeof(buffer), format, 2);
+				PrintToChat(i, buffer);
+			}
 		}
 	}
 }
@@ -2590,29 +2643,48 @@ void MPrintToChatAll(int client, const char[] phrase, const char[] item, int tar
 	static char targetName[192];
 	static char pickupItem[192];
 
-	for( int i = 1; i <= MaxClients; i++ )
+	int max = g_iCvarNotify & NOTIFY_CLIENT ? 2 : MaxClients;
+	int user;
+
+	for( int i = 1; i <= max; i++ )
 	{
-		if( IsClientInGame(i) && !IsFakeClient(i) )
+		if( max == 2 )
 		{
-			SetGlobalTransTarget(i);
-			pickupItem = Translate(i, "\x04%t\x01", item);
-			clientName = Translate(i, "\x05%N\x01", client);
+			if( i == 2 )
+				user = target;
+			else
+				user = client;
+		}
+		else
+		{
+			user = i;
+		}
+
+		if( IsClientInGame(user) && !IsFakeClient(user) )
+		{
+			SetGlobalTransTarget(user);
+			pickupItem = Translate(user, "\x04%t\x01", item);
+			clientName = Translate(user, "\x05%N\x01", client);
+
 			if( target == 0 )	// Announcing Bot auto-grabs an item
 			{
-				PrintToChat(i, "%t", phrase, clientName, pickupItem);
+				PrintToChat(user, "%t", phrase, clientName, pickupItem);
 			}
 			else
 			{
-				targetName = Translate(i, "\x05%N\x01", target);
-				PrintToChat(i, "%t", phrase, clientName, pickupItem, targetName);
+				targetName = Translate(user, "\x05%N\x01", target);
+				PrintToChat(user, "%t", phrase, clientName, pickupItem, targetName);
 			}
 		}
 	}
 }
+
+
+
 // ====================================================================================================
 //					TRANSLATE
 // ====================================================================================================
-stock char[] Translate(int client, const char[] format, any ...)
+char[] Translate(int client, const char[] format, any ...)
 {
 	char buffer[192];
 	SetGlobalTransTarget(client);

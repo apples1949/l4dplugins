@@ -18,7 +18,7 @@
 #define PLUGIN_NAME				"Control Zombies In Co-op"
 #define PLUGIN_AUTHOR			"sorallll"
 #define PLUGIN_DESCRIPTION		""
-#define PLUGIN_VERSION			"3.5.6"
+#define PLUGIN_VERSION			"3.5.8"
 #define PLUGIN_URL				"https://steamcommunity.com/id/sorallll"
 
 #define GAMEDATA 				"control_zombies"
@@ -63,6 +63,7 @@ ConVar
 	g_cPZPunishHealth,
 	g_cAutoDisplayMenu,
 	g_cPZTeamLimit,
+	g_cTakeOverGhost,
 	g_cCmdCooldownTime,
 	g_cCmdEnterCooling,
 	g_cLotTargetPlayer,
@@ -91,6 +92,7 @@ bool
 	g_bSbAllBotGame,
 	g_bAllowAllBotSur,
 	g_bExchangeTeam,
+	g_bTakeOverGhost,
 	g_bGlowColorEnable,
 	g_bOnPassPlayerTank,
 	g_bOnMaterializeFromGhost;
@@ -182,27 +184,28 @@ public void OnPluginStart() {
 	LoadTranslations("common.phrases");
 	CreateConVar("control_zombies_version", PLUGIN_VERSION, "Control Zombies In Co-op plugin version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
-	g_cMaxTankPlayer = 				CreateConVar("cz_max_tank_player", 					"1", 					"坦克玩家达到多少后插件将不再控制玩家接管(0=不接管坦克)", CVAR_FLAGS, true, 0.0);
-	g_cMapFilterTank = 				CreateConVar("cz_map_filter_tank", 					"3", 					"在哪些地图上才允许叛变和接管坦克(0=禁用叛变和接管坦克,1=非结局地图,2=结局地图,3=所有地图)", CVAR_FLAGS, true, 0.0);
-	g_cSurvivorLimit = 				CreateConVar("cz_allow_survivor_limit", 			"1", 					"至少有多少名正常生还者(未被控,未倒地,未死亡)时,才允许玩家接管坦克", CVAR_FLAGS, true, 0.0);
-	g_cSurvivorChance = 			CreateConVar("cz_survivor_allow_chance", 			"0.0", 					"准备叛变的玩家数量为0时,自动抽取生还者和感染者玩家的几率(排除闲置旁观玩家)(0.0=不自动抽取)", CVAR_FLAGS);
-	g_cExchangeTeam = 				CreateConVar("cz_exchange_team", 					"0", 					"特感玩家杀死生还者玩家后是否互换队伍?(0=否,1=是)", CVAR_FLAGS);
-	g_cPZSuicideTime = 				CreateConVar("cz_pz_suicide_time", 					"0", 					"特感玩家复活后自动处死的时间(0=不会处死复活后的特感玩家)", CVAR_FLAGS, true, 0.0);
-	g_cPZPunishTime = 				CreateConVar("cz_pz_punish_time", 					"15", 					"特感玩家在ghost状态下切换特感类型后下次复活延长的时间(0=插件不会延长复活时间)", CVAR_FLAGS, true, 0.0);
-	g_cPZPunishHealth = 			CreateConVar("cz_pz_punish_health", 				"0", 					"特感玩家在ghost状态下切换特感类型是否进行血量惩罚(0.0=不惩罚.计算方式为当前血量乘以该值)", CVAR_FLAGS, true, 0.0);
-	g_cAutoDisplayMenu = 			CreateConVar("cz_atuo_display_menu", 				"1", 					"在感染玩家进入灵魂状态后自动向其显示更改类型的菜单?(0=不显示,-1=每次都显示,大于0=每回合总计显示的最大次数)", CVAR_FLAGS, true, -1.0);
-	g_cPZTeamLimit = 				CreateConVar("cz_pz_team_limit", 					"2", 					"感染玩家数量达到多少后将限制使用sm_team3命令(-1=感染玩家不能超过生还玩家,大于等于0=感染玩家不能超过该值)", CVAR_FLAGS, true, -1.0);
-	g_cCmdCooldownTime = 			CreateConVar("cz_cmd_cooldown_time", 				"60.0", 				"sm_team2,sm_team3命令的冷却时间(0.0-无冷却)", CVAR_FLAGS, true, 0.0);
-	g_cCmdEnterCooling = 			CreateConVar("cz_return_enter_cooling", 			"31", 					"什么情况下sm_team2,sm_team3命令会进入冷却(1=使用其中一个命令,2=坦克玩家掉控,4=坦克玩家死亡,8=坦克玩家未及时重生,16=特感玩家杀掉生还者玩家,31=所有)", CVAR_FLAGS);
-	g_cLotTargetPlayer = 			CreateConVar("cz_lot_target_player", 				"5", 					"抽取哪些玩家来接管坦克?(-1=由游戏自身控制,0=不抽取,1=叛变玩家,2=生还者,4=感染者)", CVAR_FLAGS);
-	g_cPZChangeTeamTo = 			CreateConVar("cz_pz_change_team_to", 				"0", 					"换图,过关以及任务失败时是否自动将特感玩家切换到哪个队伍?(0=不切换,1=旁观者,2=生还者)", CVAR_FLAGS);
-	g_cGlowColorEnable = 			CreateConVar("cz_survivor_color_enable", 			"1", 					"是否给生还者创发光建模型?(0=否,1=是)", CVAR_FLAGS);
-	g_cGlowColor[COLOR_NORMAL] = 	CreateConVar("cz_survivor_color_normal", 			"0 180 0", 				"特感玩家看到的正常状态生还者发光颜色", CVAR_FLAGS);
-	g_cGlowColor[COLOR_INCAPA] = 	CreateConVar("cz_survivor_color_incapacitated", 	"180 0 0", 				"特感玩家看到的倒地状态生还者发光颜色", CVAR_FLAGS);
-	g_cGlowColor[COLOR_BLACKW] = 	CreateConVar("cz_survivor_color_blackwhite", 		"255 255 255", 			"特感玩家看到的黑白状态生还者发光颜色", CVAR_FLAGS);
-	g_cGlowColor[COLOR_VOMITED] = 	CreateConVar("cz_survivor_color_nowit", 			"155 0 180", 			"特感玩家看到的被Boomer喷或炸中过的生还者发光颜色", CVAR_FLAGS);
-	g_cUserFlagBits = 				CreateConVar("cz_user_flagbits", 					";z;;z;z;;z", 			"哪些标志能绕过sm_team2,sm_team3,sm_pb,sm_tt,sm_pt,sm_class,鼠标中键重置冷却的使用限制(留空表示所有人都不会被限制)", CVAR_FLAGS);
-	g_cImmunityLevels = 			CreateConVar("cz_immunity_levels", 					"99;99;99;99;99;99;99", "要达到什么免疫级别才能绕过sm_team2,sm_team3,sm_pb,sm_tt,sm_pt,sm_class,鼠标中键重置冷的使用限制", CVAR_FLAGS);
+	g_cMaxTankPlayer = 				CreateConVar("cz_max_tank_player",					"1",					"坦克玩家达到多少后插件将不再控制玩家接管(0=不接管坦克)", CVAR_FLAGS, true, 0.0);
+	g_cMapFilterTank = 				CreateConVar("cz_map_filter_tank",					"3",					"在哪些地图上才允许叛变和接管坦克(0=禁用叛变和接管坦克,1=非结局地图,2=结局地图,3=所有地图)", CVAR_FLAGS, true, 0.0);
+	g_cSurvivorLimit = 				CreateConVar("cz_allow_survivor_limit",				"1",					"至少有多少名正常生还者(未被控,未倒地,未死亡)时,才允许玩家接管坦克", CVAR_FLAGS, true, 0.0);
+	g_cSurvivorChance = 			CreateConVar("cz_survivor_allow_chance",			"0.0",					"准备叛变的玩家数量为0时,自动抽取生还者和感染者玩家的几率(排除闲置旁观玩家)(0.0=不自动抽取)", CVAR_FLAGS);
+	g_cExchangeTeam = 				CreateConVar("cz_exchange_team",					"0",					"特感玩家杀死生还者玩家后是否互换队伍?(0=否,1=是)", CVAR_FLAGS);
+	g_cPZSuicideTime = 				CreateConVar("cz_pz_suicide_time",					"120",					"特感玩家复活后自动处死的时间(0=不会处死复活后的特感玩家)", CVAR_FLAGS, true, 0.0);
+	g_cPZPunishTime = 				CreateConVar("cz_pz_punish_time",					"10",					"特感玩家在ghost状态下切换特感类型后下次复活延长的时间(0=插件不会延长复活时间)", CVAR_FLAGS, true, 0.0);
+	g_cPZPunishHealth = 			CreateConVar("cz_pz_punish_health",					"0.5",					"特感玩家在ghost状态下切换特感类型是否进行血量惩罚(0.0=不惩罚.计算方式为当前血量乘以该值)", CVAR_FLAGS, true, 0.0);
+	g_cAutoDisplayMenu = 			CreateConVar("cz_atuo_display_menu",				"1",					"在感染玩家进入灵魂状态后自动向其显示更改类型的菜单?(0=不显示,-1=每次都显示,大于0=每回合总计显示的最大次数)", CVAR_FLAGS, true, -1.0);
+	g_cPZTeamLimit = 				CreateConVar("cz_pz_team_limit",					"2",					"感染玩家数量达到多少后将限制使用sm_team3命令(-1=感染玩家不能超过生还玩家,大于等于0=感染玩家不能超过该值)", CVAR_FLAGS, true, -1.0);
+	g_cTakeOverGhost = 				CreateConVar("cz_takeover_ghost",					"1",					"插件在控制玩家接管坦克后是否进入ghost状态", CVAR_FLAGS);
+	g_cCmdCooldownTime = 			CreateConVar("cz_cmd_cooldown_time",				"60.0",					"sm_team2,sm_team3命令的冷却时间(0.0-无冷却)", CVAR_FLAGS, true, 0.0);
+	g_cCmdEnterCooling = 			CreateConVar("cz_return_enter_cooling",				"31",					"什么情况下sm_team2,sm_team3命令会进入冷却(1=使用其中一个命令,2=坦克玩家掉控,4=坦克玩家死亡,8=坦克玩家未及时重生,16=特感玩家杀掉生还者玩家,31=所有)", CVAR_FLAGS);
+	g_cLotTargetPlayer = 			CreateConVar("cz_lot_target_player",				"7",					"抽取哪些玩家来接管坦克?(-1=由游戏自身控制,0=不抽取,1=叛变玩家,2=生还者,4=感染者)", CVAR_FLAGS);
+	g_cPZChangeTeamTo = 			CreateConVar("cz_pz_change_team_to",				"0",					"换图,过关以及任务失败时是否自动将特感玩家切换到哪个队伍?(0=不切换,1=旁观者,2=生还者)", CVAR_FLAGS);
+	g_cGlowColorEnable = 			CreateConVar("cz_survivor_color_enable",			"1",					"是否给生还者创发光建模型?(0=否,1=是)", CVAR_FLAGS);
+	g_cGlowColor[COLOR_NORMAL] = 	CreateConVar("cz_survivor_color_normal",			"0 180 0",				"特感玩家看到的正常状态生还者发光颜色", CVAR_FLAGS);
+	g_cGlowColor[COLOR_INCAPA] = 	CreateConVar("cz_survivor_color_incapacitated",		"180 0 0",				"特感玩家看到的倒地状态生还者发光颜色", CVAR_FLAGS);
+	g_cGlowColor[COLOR_BLACKW] = 	CreateConVar("cz_survivor_color_blackwhite",		"255 255 255",			"特感玩家看到的黑白状态生还者发光颜色", CVAR_FLAGS);
+	g_cGlowColor[COLOR_VOMITED] = 	CreateConVar("cz_survivor_color_nowit",				"155 0 180",			"特感玩家看到的被Boomer喷或炸中过的生还者发光颜色", CVAR_FLAGS);
+	g_cUserFlagBits = 				CreateConVar("cz_user_flagbits",					";z;;z;z;;z",			"哪些标志能绕过sm_team2,sm_team3,sm_pb,sm_tt,sm_pt,sm_class,鼠标中键重置冷却的使用限制(留空表示所有人都不会被限制)", CVAR_FLAGS);
+	g_cImmunityLevels = 			CreateConVar("cz_immunity_levels",					"99;99;99;99;99;99;99", "要达到什么免疫级别才能绕过sm_team2,sm_team3,sm_pb,sm_tt,sm_pt,sm_class,鼠标中键重置冷的使用限制", CVAR_FLAGS);
 
 	AutoExecConfig(true, "controll_zombies");
 	// 想要生成cfg的,把上面那一行的注释去掉保存后重新编译就行
@@ -228,6 +231,7 @@ public void OnPluginStart() {
 	g_cPZPunishHealth.AddChangeHook(CvarChanged);
 	g_cAutoDisplayMenu.AddChangeHook(CvarChanged);
 	g_cPZTeamLimit.AddChangeHook(CvarChanged);
+	g_cTakeOverGhost.AddChangeHook(CvarChanged);
 	g_cCmdCooldownTime.AddChangeHook(CvarChanged);
 	g_cCmdEnterCooling.AddChangeHook(CvarChanged);
 	g_cLotTargetPlayer.AddChangeHook(CvarChanged);
@@ -242,12 +246,12 @@ public void OnPluginStart() {
 
 	//RegAdminCmd("sm_cz", cmdCz, ADMFLAG_ROOT, "测试");
 
-	RegConsoleCmd("sm_team2", 	cmdTeam2, 			"切换到Team 2.");
-	RegConsoleCmd("sm_team3", 	cmdTeam3, 			"切换到Team 3.");
-	RegConsoleCmd("sm_pb", 		cmdPanBian, 		"提前叛变.");
-	RegConsoleCmd("sm_tt", 		cmdTakeOverTank, 	"接管坦克.");
-	RegConsoleCmd("sm_pt", 		cmdTransferTank, 	"转交坦克.");
-	RegConsoleCmd("sm_class", 	cmdChangeClass,		"更改特感类型.");
+	RegConsoleCmd("sm_team2",	cmdTeam2,			"切换到Team 2.");
+	RegConsoleCmd("sm_team3",	cmdTeam3,			"切换到Team 3.");
+	RegConsoleCmd("sm_pb",		cmdPanBian,			"提前叛变.");
+	RegConsoleCmd("sm_tt",		cmdTakeOverTank,	"接管坦克.");
+	RegConsoleCmd("sm_pt",		cmdTransferTank,	"转交坦克.");
+	RegConsoleCmd("sm_class",	cmdChangeClass,		"更改特感类型.");
 
 	if (g_bLateLoad)
 		g_bLeftSafeArea = L4D_HasAnySurvivorLeftSafeArea();
@@ -372,6 +376,7 @@ void GetCvars_General() {
 	g_fPZPunishHealth =		g_cPZPunishHealth.FloatValue;
 	g_iAutoDisplayMenu =	g_cAutoDisplayMenu.IntValue;
 	g_iPZTeamLimit =		g_cPZTeamLimit.IntValue;
+	g_bTakeOverGhost =		g_cTakeOverGhost.BoolValue;
 	g_fCmdCooldownTime =	g_cCmdCooldownTime.FloatValue;
 	g_iCmdEnterCooling =	g_cCmdEnterCooling.IntValue;
 	g_iLotTargetPlayer =	g_cLotTargetPlayer.IntValue;
@@ -706,11 +711,6 @@ Action cmdTakeOverTank(int client, int args) {
 }
 
 bool TakeOverLimit(int tank, int target, int reply) {
-	if (!CanTarget(reply, target)) {
-		PrintToChat(reply, "权限不足");
-		return false;
-	}
-
 	switch (GetClientTeam(target)) {
 		case 2: {
 			if (!AllowSurTakeOver()) {
@@ -781,6 +781,11 @@ Action cmdTransferTank(int client, int args) {
 			return Plugin_Handled;
 		}
 
+		if (!CanTarget(client, target_list[0])) {
+			PrintToChat(client, "权限低于目标玩家");
+			return Plugin_Handled;
+		}
+
 		OfferTankMenu(client, target_list[0], client, access);
 	}
 	else {
@@ -801,7 +806,7 @@ void OfferTankMenu(int tank, int target, int reply, bool access = false) {
 	if (!TakeOverLimit(tank, target, reply))
 		return;
 
-	if (access)
+	if (access && CanTarget(reply, target))
 		TransferTank(tank, target, reply);
 	else {
 		Menu menu = new Menu(OfferTank_MenuHandler);
@@ -975,9 +980,9 @@ void TransferTank(int tank, int target, int reply) {
 	if (GetClientTeam(target) == 3)
 		g_ePlayer[target].LastTeamID = g_ePlayer[target].LastTeamID == 2 ? 2 : team != 3 ? 2 : 3;
 
-	int ghost = GetEntProp(tank, Prop_Send, "m_isGhost", 1);
+	int ghost = GetEntProp(tank, Prop_Send, "m_isGhost");
 	if (ghost)
-		SetEntProp(tank, Prop_Send, "m_isGhost", 0, 1);
+		SetEntProp(tank, Prop_Send, "m_isGhost", 0);
 
 	if (IsFakeClient(tank))
 		g_iTransferTankBot = tank;
@@ -1019,7 +1024,7 @@ Action cmdChangeClass(int client, int args) {
 		return Plugin_Handled;
 	}
 
-	if (GetClientTeam(client) != 3 || !IsPlayerAlive(client) || !GetEntProp(client, Prop_Send, "m_isGhost", 1)) {
+	if (GetClientTeam(client) != 3 || !IsPlayerAlive(client) || !GetEntProp(client, Prop_Send, "m_isGhost")) {
 		PrintToChat(client, "灵魂状态下的特感才能使用该指令");
 		return Plugin_Handled;
 	}
@@ -1068,7 +1073,7 @@ void DisplayClassMenu(int client) {
 int DisplayClass_MenuHandler(Menu menu, MenuAction action, int param1, int param2) {
 	switch (action) {
 		case MenuAction_Select: {
-			if (param2 == 0 && !IsFakeClient(param1) && GetClientTeam(param1) == 3 && IsPlayerAlive(param1) && GetEntProp(param1, Prop_Send, "m_isGhost", 1))
+			if (param2 == 0 && !IsFakeClient(param1) && GetClientTeam(param1) == 3 && IsPlayerAlive(param1) && GetEntProp(param1, Prop_Send, "m_isGhost"))
 				SelectClassMenu(param1);
 		}
 	
@@ -1100,7 +1105,7 @@ int SelectClass_MenuHandler(Menu menu, MenuAction action, int param1, int param2
 	switch (action) {
 		case MenuAction_Select: {
 			int zombieClass;
-			if (!IsFakeClient(param1) && GetClientTeam(param1) == 3 && IsPlayerAlive(param1) && (zombieClass = GetEntProp(param1, Prop_Send, "m_zombieClass")) != 8 && GetEntProp(param1, Prop_Send, "m_isGhost", 1)) {
+			if (!IsFakeClient(param1) && GetClientTeam(param1) == 3 && IsPlayerAlive(param1) && (zombieClass = GetEntProp(param1, Prop_Send, "m_zombieClass")) != 8 && GetEntProp(param1, Prop_Send, "m_isGhost")) {
 				char item[2];
 				menu.GetItem(param2, item, sizeof item);
 				int class = StringToInt(item);
@@ -1162,7 +1167,7 @@ public void OnPlayerRunCmdPost(int client) {
 	if (GetEntProp(client, Prop_Data, "m_afButtonPressed") & IN_ZOOM == 0)
 		return;
 
-	if (GetEntProp(client, Prop_Send, "m_isGhost", 1)) {
+	if (GetEntProp(client, Prop_Send, "m_isGhost")) {
 		if (!g_ePlayer[client].Materialized && CheckClientAccess(client, 5))
 			SetClassAndPunish(client, GetNextClass(client));
 	}
@@ -1189,7 +1194,6 @@ int GetNextClass(int client) {
 	return zombieClass % SI_MAX_SIZE + 1;
 }
 
-// https://forums.alliedmods.net/showthread.php?p=1542365
 void SetNextActivationTime(int client, float time) {
 	int ability = GetEntPropEnt(client, Prop_Send, "m_customAbility");
 	if (ability > MaxClients) {
@@ -1314,8 +1318,8 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast) {
 		case 3: {
 			g_ePlayer[client].LastTeamID = 0;
 
-			if (team == 2 && GetEntProp(client, Prop_Send, "m_isGhost", 1))
-				SetEntProp(client, Prop_Send, "m_isGhost", 0, 1);
+			if (team == 2 && GetEntProp(client, Prop_Send, "m_isGhost"))
+				SetEntProp(client, Prop_Send, "m_isGhost", 0);
 			
 			CreateTimer(0.1, tmrLadderAndGlow, event.GetInt("userid"), TIMER_FLAG_NO_MAPCHANGE);
 		}
@@ -1539,7 +1543,7 @@ Action tmrPlayer(Handle timer) {
 						g_ePlayer[i].SuicideStart = 0.0;
 					}
 				}
-				/*else if (!GetEntProp(i, Prop_Send, "m_isGhost", 1)) {
+				/*else if (!GetEntProp(i, Prop_Send, "m_isGhost")) {
 					static bool frustrated[MAXPLAYERS + 1];
 					if (frustrated[i] && L4D_GetTankFrustration(i) > 99 && GetEntityFlags(i) & FL_ONFIRE == 0) {
 						frustrated[i] = false;
@@ -1667,7 +1671,7 @@ void TeleportToSurvivor(int client) {
 		if (target == client || !IsClientInGame(target) || GetClientTeam(target) != 2 || !IsPlayerAlive(target))
 			continue;
 	
-		aClients.Set(aClients.Push(!GetEntProp(target, Prop_Send, "m_isIncapacitated", 1) ? 0 : !GetEntProp(target, Prop_Send, "m_isHangingFromLedge", 1) ? 1 : 2), target, 1);
+		aClients.Set(aClients.Push(!GetEntProp(target, Prop_Send, "m_isIncapacitated") ? 0 : !GetEntProp(target, Prop_Send, "m_isHangingFromLedge") ? 1 : 2), target, 1);
 	}
 
 	if (!aClients.Length)
@@ -1876,7 +1880,7 @@ bool AllowSurTakeOver() {
 }
 
 bool IsPinned(int client) {
-	if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
+	if (GetEntProp(client, Prop_Send, "m_isIncapacitated"))
 		return true;
 	if (GetEntPropEnt(client, Prop_Send, "m_tongueOwner") > 0)
 		return true;
@@ -2011,7 +2015,7 @@ int GetColorType(int client) {
 	if (GetEntPropFloat(client, Prop_Send, "m_itTimer", 1) > 0.0)
 		return 3;
 	else {
-		if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
+		if (GetEntProp(client, Prop_Send, "m_isIncapacitated"))
 			return 1;
 		else
 			return GetEntProp(client, Prop_Send, "m_currentReviveCount") >= g_iSurvivorMaxInc ? 2 : 0;
@@ -2049,7 +2053,7 @@ void ChangeTeamToSurvivor(int client) {
 		return;
 
 	// 防止因切换而导致正处于Ghost状态的坦克丢失
-	if (GetEntProp(client, Prop_Send, "m_isGhost", 1))
+	if (GetEntProp(client, Prop_Send, "m_isGhost"))
 		L4D_MaterializeFromGhost(client);
 
 	int bot = GetClientOfUserId(g_ePlayer[client].Bot);
@@ -2160,8 +2164,8 @@ enum struct Data {
 			return;
 		}
 
-		if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1)) {
-			if (!GetEntProp(client, Prop_Send, "m_isHangingFromLedge", 1)) {
+		if (GetEntProp(client, Prop_Send, "m_isIncapacitated")) {
+			if (!GetEntProp(client, Prop_Send, "m_isHangingFromLedge")) {
 				static ConVar cSurvivorReviveH;
 				if (!cSurvivorReviveH)
 					cSurvivorReviveH = FindConVar("survivor_revive_health");
@@ -2226,7 +2230,7 @@ enum struct Data {
 		}
 
 		// Mutant_Tanks (https://github.com/Psykotikism/Mutant_Tanks)
-		if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1)) {
+		if (GetEntProp(client, Prop_Send, "m_isIncapacitated")) {
 			int secondary = GetEntDataEnt2(client, m_hHiddenWeapon);
 			switch (secondary > MaxClients && IsValidEntity(secondary)) {
 				case true:
@@ -2305,7 +2309,7 @@ enum struct Data {
 		if (!IsPlayerAlive(client)) 
 			return;
 
-		if (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1))
+		if (GetEntProp(client, Prop_Send, "m_isIncapacitated"))
 			L4D_ReviveSurvivor(client);
 
 		SetEntProp(client, Prop_Send, "m_iHealth", this.health);
@@ -2522,11 +2526,11 @@ bool OnEndScenario() {
 int TakeOverZombieBot(int client, int target, bool ghost) {
 	int m_iHealth = GetEntProp(target, Prop_Data, "m_iHealth");
 	int m_iMaxHealth = GetEntProp(target, Prop_Data, "m_iMaxHealth");
-	if (IsPlayerAlive(client) && !GetEntProp(client, Prop_Send, "m_isGhost", 1))
+	if (IsPlayerAlive(client) && !GetEntProp(client, Prop_Send, "m_isGhost"))
 		L4D_ReplaceWithBot(client);
 
 	L4D_TakeOverZombieBot(client, target);
-	if (ghost)
+	if (ghost && g_bTakeOverGhost)
 		EnterGhostMode(client);
 	
 	SetEntProp(client, Prop_Data, "m_iHealth", m_iHealth);
@@ -2535,7 +2539,7 @@ int TakeOverZombieBot(int client, int target, bool ghost) {
 }
 
 void EnterGhostMode(int client) {
-	if (GetClientTeam(client) == 3 && IsPlayerAlive(client) && !GetEntProp(client, Prop_Send, "m_isGhost", 1)) {
+	if (GetClientTeam(client) == 3 && IsPlayerAlive(client) && !GetEntProp(client, Prop_Send, "m_isGhost")) {
 		float vPos[3];
 		float vAng[3];
 		float vVel[3];
@@ -2562,7 +2566,7 @@ Action tmrTank(Handle timer, int client) {
 		return Plugin_Stop;
 	}
 
-	if (GetClientTeam(client) != 3 || !IsPlayerAlive(client) || GetEntProp(client, Prop_Send, "m_zombieClass") != 8 || !GetEntProp(client, Prop_Send, "m_isGhost", 1)) {
+	if (GetClientTeam(client) != 3 || !IsPlayerAlive(client) || GetEntProp(client, Prop_Send, "m_zombieClass") != 8 || !GetEntProp(client, Prop_Send, "m_isGhost")) {
 		i = cd[client] = CD;
 		return Plugin_Stop;
 	}
@@ -2647,7 +2651,7 @@ public void L4D_OnEnterGhostState(int client) {
 	if (g_ePlayer[client].Materialized)
 		return;
 
-	if (IsFakeClient(client) || !GetEntProp(client, Prop_Send, "m_isGhost", 1))
+	if (IsFakeClient(client) || !GetEntProp(client, Prop_Send, "m_isGhost"))
 		return;
 
 	if (GetEntProp(GetPlayerResourceEntity(), Prop_Send, "m_bAlive", _, client))
@@ -2685,7 +2689,7 @@ public void L4D_OnMaterializeFromGhost(int client) {
 
 	g_bOnMaterializeFromGhost = false;
 
-	if (GetEntProp(client, Prop_Send, "m_isGhost", 1))
+	if (GetEntProp(client, Prop_Send, "m_isGhost"))
 		return;
 
 	if (!GetEntProp(GetPlayerResourceEntity(), Prop_Send, "m_isGhost", _, client))
@@ -2716,7 +2720,7 @@ void NextFrame_EnteredGhostState(int client) {
 	if (!(client = GetClientOfUserId(client)) || !IsClientInGame(client) || GetClientTeam(client) != 3)
 		return;
 
-	if (!IsPlayerAlive(client) || GetEntProp(client, Prop_Send, "m_zombieClass") == 8 || !GetEntProp(client, Prop_Send, "m_isGhost", 1))
+	if (!IsPlayerAlive(client) || GetEntProp(client, Prop_Send, "m_zombieClass") == 8 || !GetEntProp(client, Prop_Send, "m_isGhost"))
 		return;
 
 	DelaySelectClass(client);
@@ -2752,9 +2756,9 @@ void SpawnablePZScan(bool protect) {
 				if (i == g_iSpawnablePZ || !IsClientInGame(i) || IsFakeClient(i) || GetClientTeam(i) != 3)
 					continue;
 
-				if (GetEntProp(i, Prop_Send, "m_isGhost", 1)) {
+				if (GetEntProp(i, Prop_Send, "m_isGhost")) {
 					ghost[i] = true;
-					SetEntProp(i, Prop_Send, "m_isGhost", 0, 1);
+					SetEntProp(i, Prop_Send, "m_isGhost", 0);
 				}
 				else if (!IsPlayerAlive(i)) {
 					lifeState[i] = true;
@@ -2766,7 +2770,7 @@ void SpawnablePZScan(bool protect) {
 		case false:  {
 			for (i = 1; i <= MaxClients; i++) {
 				if (ghost[i])
-					SetEntProp(i, Prop_Send, "m_isGhost", 1, 1);
+					SetEntProp(i, Prop_Send, "m_isGhost", 1);
 
 				if (lifeState[i])
 					SetEntProp(i, Prop_Send, "m_lifeState", 1);
@@ -2778,7 +2782,7 @@ void SpawnablePZScan(bool protect) {
 	}
 }
 
-// https://github.com/bcserv/smlib/blob/transitional_syntax/scripting/include/smlib/math.inc
+// https://github.com/bcserv/smlib/blob/2c14acb85314e25007f5a61789833b243e7d0cab/scripting/include/smlib/math.inc#L144-L163
 #define SIZE_OF_INT	2147483647 // without 0
 int Math_GetRandomInt(int min, int max) {
 	int random = GetURandomInt();

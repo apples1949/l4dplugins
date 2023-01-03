@@ -1,4 +1,24 @@
-#define PLUGIN_VERSION		"1.2"
+/*
+*	Global Shadow Fix
+*	Copyright (C) 2022 Silvers
+*
+*	This program is free software: you can redistribute it and/or modify
+*	it under the terms of the GNU General Public License as published by
+*	the Free Software Foundation, either version 3 of the License, or
+*	(at your option) any later version.
+*
+*	This program is distributed in the hope that it will be useful,
+*	but WITHOUT ANY WARRANTY; without even the implied warranty of
+*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*	GNU General Public License for more details.
+*
+*	You should have received a copy of the GNU General Public License
+*	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+
+
+#define PLUGIN_VERSION		"1.3"
 
 /*=======================================================================================
 	Plugin Info:
@@ -11,6 +31,9 @@
 
 ========================================================================================
 	Change Log:
+
+1.3 (11-Dec-2022)
+	- Changes to fix compile warnings on SourceMod 1.11.
 
 1.2 (10-May-2020)
 	- Various changes to tidy up code.
@@ -25,6 +48,8 @@
 
 #pragma semicolon 1
 #pragma newdecls required
+
+#define ALLOW_EDITING		false		// Enables the "sm_shadow*" commands to move the shadow position
 
 #include <sourcemod>
 #include <sdktools>
@@ -60,12 +85,12 @@ public void OnPluginStart()
 	CreateConVar("l4d2_global_shadow_fix_version", PLUGIN_VERSION, "Shadow Fix version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
 	// Reset to the new values and manually change the shadow direction
-	/*
-	RegAdminCmd("sm_shadows", CmdSh, ADMFLAG_GENERIC);
-	RegAdminCmd("sm_shadowx", CmdShX, ADMFLAG_GENERIC);
-	RegAdminCmd("sm_shadowy", CmdShY, ADMFLAG_GENERIC);
-	RegAdminCmd("sm_shadowz", CmdShZ, ADMFLAG_GENERIC);
-	*/
+	#if ALLOW_EDITING
+	RegAdminCmd("sm_shadows", CmdSh, ADMFLAG_ROOT);
+	RegAdminCmd("sm_shadowx", CmdShX, ADMFLAG_ROOT);
+	RegAdminCmd("sm_shadowy", CmdShY, ADMFLAG_ROOT);
+	RegAdminCmd("sm_shadowz", CmdShZ, ADMFLAG_ROOT);
+	#endif
 }
 
 // ====================================================================================================
@@ -116,8 +141,8 @@ bool SetPos()
 // ====================================================================================================
 //					COMMANDS
 // ====================================================================================================
-/*
-public Action:CmdSh(client, args)
+#if ALLOW_EDITING
+Action CmdSh(int client, int args)
 {
 	if( SetPos() == true )
 		PrintToChat(client, "\x04[\x01Shadow Fix\x04]\x01 Corrected!");
@@ -126,43 +151,45 @@ public Action:CmdSh(client, args)
 	return Plugin_Handled;
 }
 
-public Action:CmdShX(client, args)
+Action CmdShX(int client, int args)
 {
 	SetShadow(client, 1, args);
 	return Plugin_Handled;
 }
 
-public Action:CmdShY(client, args)
+Action CmdShY(int client, int args)
 {
 	SetShadow(client, 2, args);
 	return Plugin_Handled;
 }
 
-public Action:CmdShZ(client, args)
+Action CmdShZ(int client, int args)
 {
 	SetShadow(client, 3, args);
 	return Plugin_Handled;
 }
 
-SetShadow(client, type, any:...)
+void SetShadow(int client, int type, any ...)
 {
-	decl String:arg1[32];
+	char arg1[32];
 	GetCmdArg(1, arg1, sizeof(arg1));
 
-	new ent = -1, Float:fCorrected[3], Float:fLen = StringToFloat(arg1);
+	int entity = -1;
+	float fCorrected[3];
+	float fDistance = StringToFloat(arg1);
 
-	while( (ent = FindEntityByClassname(ent, "shadow_control")) != INVALID_ENT_REFERENCE )
+	while( (entity = FindEntityByClassname(entity, "shadow_control")) != INVALID_ENT_REFERENCE )
 	{
-		GetEntPropVector(ent, Prop_Send, "m_shadowDirection", fCorrected);
+		GetEntPropVector(entity, Prop_Send, "m_shadowDirection", fCorrected);
 		PrintToChat(client, "\x04[\x01Shadow Fix\x04]\x01 Was: %f %f %f", fCorrected[0], fCorrected[1], fCorrected[2]);
 		switch(type)
 		{
-			case 1:	fCorrected[0] += fLen;
-			case 2:	fCorrected[1] += fLen;
-			case 3:	fCorrected[2] += fLen;
+			case 1:	fCorrected[0] += fDistance;
+			case 2:	fCorrected[1] += fDistance;
+			case 3:	fCorrected[2] += fDistance;
 		}
-		SetEntPropVector(ent, Prop_Send, "m_shadowDirection", fCorrected);
+		SetEntPropVector(entity, Prop_Send, "m_shadowDirection", fCorrected);
 		PrintToChat(client, "\x04[\x01Shadow Fix\x04]\x01 Now: %f %f %f", fCorrected[0], fCorrected[1], fCorrected[2]);
 	}
 }
-*/
+#endif

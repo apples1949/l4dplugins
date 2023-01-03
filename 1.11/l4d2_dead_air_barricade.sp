@@ -1,6 +1,6 @@
 /*
 *	Dead Air Barricade
-*	Copyright (C) 2020 Silvers
+*	Copyright (C) 2022 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.3"
+#define PLUGIN_VERSION		"1.4"
 
 /*=======================================================================================
 	Plugin Info:
@@ -31,6 +31,9 @@
 
 ========================================================================================
 	Change Log:
+
+1.4 (11-Dec-2022)
+	- Changes to fix compile warnings on SourceMod 1.11.
 
 1.3 (05-Oct-2020)
 	- Fixed the plugin not working on first map load. Thanks to "aiyoaiui" for reporting.
@@ -52,7 +55,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-int g_iMap;
+bool g_bValidMap;
 
 
 
@@ -83,7 +86,7 @@ public void OnPluginStart()
 {
 	CreateConVar("l4d2_dead_air_barricade", PLUGIN_VERSION, "Dead Air Barricade plugin version", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
-	HookEvent("round_start",	Event_RoundStart,	EventHookMode_PostNoCopy);
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 }
 
 public void OnMapStart()
@@ -93,28 +96,28 @@ public void OnMapStart()
 
 	if( strcmp(sMap, "c11m5_runway") == 0 )
 	{
-		CreateTimer(5.0, TimerDel, _, TIMER_FLAG_NO_MAPCHANGE);
-		g_iMap = 1;
+		CreateTimer(5.0, TimerDelete, _, TIMER_FLAG_NO_MAPCHANGE);
+		g_bValidMap = true;
 	}
 }
 
 public void OnMapEnd()
 {
-	g_iMap = 0;
+	g_bValidMap = false;
 }
 
-public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if( g_iMap == 1 )
+	if( g_bValidMap )
 	{
-		CreateTimer(5.0, TimerDel, _, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(5.0, TimerDelete, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
-public Action TimerDel(Handle timer)
+Action TimerDelete(Handle timer)
 {
 	char sName[20];
-	int entity;
+	int entity = -1;
 
 	while( (entity = FindEntityByClassname(entity, "logic_relay")) != INVALID_ENT_REFERENCE )
 	{
@@ -122,8 +125,10 @@ public Action TimerDel(Handle timer)
 
 		if( strcmp(sName, "ribbon_fire_relay") == 0 )
 		{
-			AcceptEntityInput(entity, "Kill");
-			return;
+			RemoveEntity(entity);
+			return Plugin_Continue;
 		}
 	}
+
+	return Plugin_Continue;
 }

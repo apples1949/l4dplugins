@@ -714,7 +714,9 @@ public int Menu_VotesKick(Menu menu, MenuAction action, int param1, int param2)
 			ClientVoteMenu[param1] = false;
 	}
 	else if ( action == MenuAction_End)
+	{
 		delete menu;
+	}
 
 	return 0;
 }
@@ -1067,7 +1069,7 @@ public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int pa
 			g_votedelay = VOTEDELAY_TIME;
 			CreateTimer(1.0, Timer_VoteDelay, _, TIMER_REPEAT| TIMER_FLAG_NO_MAPCHANGE);
 			EmitSoundToAll("ui/beep_error01.wav");
-			CPrintToChatAll("[{olive}VOTE{default}]{red}投票失败。{default}至少{red}%d%%%%{default}的玩家同意。(同意： {green}%d%%%{default}, 不同意的玩家： {green}%i {default})", RoundToNearest(100.0*g_fLimit), RoundToNearest(100.0*percent), totalVotes);
+			CPrintToChatAll("[{olive}VOTE{default}]{red}投票失败。{default}至少{red}%d%%%%{default}的玩家同意。(同意： {green}%d%%%%{default}, 不同意： {green}%i {default})", RoundToNearest(100.0*g_fLimit), RoundToNearest(100.0*percent), totalVotes);
 			CreateTimer(2.0, VoteEndDelay);
 		}
 		else
@@ -1083,7 +1085,7 @@ public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int pa
 	else if(action == MenuAction_End)
 	{
 		VoteMenuClose();
-		delete menu;
+		//delete menu;
 	}
 
 	return 0;

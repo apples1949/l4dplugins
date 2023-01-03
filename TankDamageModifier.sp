@@ -44,7 +44,7 @@ public OnPluginStart()
 	
 	hCvar_DmgEnable = CreateConVar("tank_damage_enable", "1", "是否启用坦克伤害修改插件", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	hCvar_Damage = CreateConVar("tank_damage", "20.0", "坦克攻击生还者造成多少伤害", FCVAR_NOTIFY, true, 0.0, true, 9999.0);
-	hCvar_IncapMulti = CreateConVar("tank_damage_modifier", "10.0", "对倒地的生还者造成多少伤害", FCVAR_NOTIFY, true, 0.0, true, 9999.0);
+	hCvar_IncapMulti = CreateConVar("tank_damage_modifier", "10.0", "对倒地的生还者造成多少倍数的伤害(设置的伤害*倒地时设定的伤害倍数)", FCVAR_NOTIFY, true, 0.0, true, 9999.0);
 	
 	HookConVarChange(hCvar_DmgEnable, eConvarChanged);
 	HookConVarChange(hCvar_Damage, eConvarChanged);

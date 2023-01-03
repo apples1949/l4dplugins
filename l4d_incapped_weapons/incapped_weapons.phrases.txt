@@ -1,0 +1,38 @@
+"Phrases"
+{
+	"Revive_Wait"
+	{
+		"en"		"{olive}Reviving {white}in {orange}%d"
+		"chi"		"{orange}%d {white}后{olive}起身"
+	}
+
+	"Revive_Done"
+	{
+		"en"		"{olive}Revived!"
+		"chi"		"{olive}已起身!"
+	}
+
+	"Revive_UsePills"
+	{
+		"en"		"{olive}[Revive] {white}you can use {orange}Pills {white}to revive!"
+		"chi"		"{olive}[Revive] {white}你可以使用 {orange}药丸 {white}恢复生命！"
+	}
+
+	"Revive_UseAdren"
+	{
+		"en"		"{olive}[Revive] {white}you can use {orange}Adrenaline {white}to revive!"
+		"chi"		"{olive}[Revive] {white}你可以使用 {orange}肾上腺素 {white}恢复生命！"
+	}
+
+	"Heal_UsePills"
+	{
+		"en"		"{olive}[Revive] {white}you can use {orange}Pills {white}to heal"
+		"chi"		"{olive}[Revive] {white}你可以使用 {orange}药丸 {white}治疗！"
+	}
+
+	"Heal_UseAdren"
+	{
+		"en"		"{olive}[Revive] {white}you can use {orange}Adrenaline {white}to heal"
+		"chi"		"{olive}[Revive] {white}你可以使用 {orange}肾上腺素 {white}治疗！"
+	}
+}

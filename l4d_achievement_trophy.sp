@@ -1,9 +1,29 @@
-#define PLUGIN_VERSION 		"2.6"
+/*
+*	Achievement Trophy
+*	Copyright (C) 2022 Silvers
+*
+*	This program is free software: you can redistribute it and/or modify
+*	it under the terms of the GNU General Public License as published by
+*	the Free Software Foundation, either version 3 of the License, or
+*	(at your option) any later version.
+*
+*	This program is distributed in the hope that it will be useful,
+*	but WITHOUT ANY WARRANTY; without even the implied warranty of
+*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*	GNU General Public License for more details.
+*
+*	You should have received a copy of the GNU General Public License
+*	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+
+
+#define PLUGIN_VERSION 		"2.7"
 
 /*======================================================================================
 	Plugin Info:
 
-*	Name	:	[L4D2] Achivement Trophy
+*	Name	:	[L4D2] Achievement Trophy
 *	Author	:	SilverShot
 *	Descrp	:	Displays the TF2 trophy when a player unlocks an achievement.
 *	Link	:	https://forums.alliedmods.net/showthread.php?t=136174
@@ -11,6 +31,9 @@
 
 ========================================================================================
 	Change Log:
+
+2.7 (11-Dec-2022)
+	- Various changes to tidy up code.
 
 2.6 (10-May-2020)
 	- Extra checks to prevent "IsAllowedGameMode" throwing errors.
@@ -184,12 +207,12 @@ void RemoveEffects(int client)
 
 	entity = g_iParticles[client][0];
 	if( IsValidEntRef(entity) )
-		AcceptEntityInput(entity, "Kill");
+		RemoveEntity(entity);
 	g_iParticles[client][0] = 0;
 
 	entity = g_iParticles[client][1];
 	if( IsValidEntRef(entity) )
-		AcceptEntityInput(entity, "Kill");
+		RemoveEntity(entity);
 	g_iParticles[client][1] = 0;
 }
 
@@ -203,12 +226,12 @@ public void OnConfigsExecuted()
 	IsAllowed();
 }
 
-public void ConVarChanged_Allow(Handle convar, const char[] oldValue, const char[] newValue)
+void ConVarChanged_Allow(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	IsAllowed();
 }
 
-public void ConVarChanged_Cvars(Handle convar, const char[] oldValue, const char[] newValue)
+void ConVarChanged_Cvars(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	GetCvars();
 }
@@ -307,7 +330,7 @@ bool IsAllowedGameMode()
 	return true;
 }
 
-public void OnGamemode(const char[] output, int caller, int activator, float delay)
+void OnGamemode(const char[] output, int caller, int activator, float delay)
 {
 	if( strcmp(output, "OnCoop") == 0 )
 		g_iCurrentMode = 1;
@@ -324,19 +347,19 @@ public void OnGamemode(const char[] output, int caller, int activator, float del
 // ====================================================================================================
 //					EVENTS
 // ====================================================================================================
-public void Event_Remove(Event event, const char[] name, bool dontBroadcast)
+void Event_Remove(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	RemoveEffects(client);
 }
 
-public void Event_RemoveAll(Event event, const char[] name, bool dontBroadcast)
+void Event_RemoveAll(Event event, const char[] name, bool dontBroadcast)
 {
 	for( int i = 1; i <= MaxClients; i++ )
 		RemoveEffects(i);
 }
 
-public void Event_Achievement(Event event, const char[] name, bool dontBroadcast)
+void Event_Achievement(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = event.GetInt("player");
 	CreateEffects(client, true);
@@ -442,7 +465,7 @@ void CreateEffects(int client, bool event)
 	}
 }
 
-public Action CmdTrophy(int client, int args)
+Action CmdTrophy(int client, int args)
 {
 	if( args == 0 )
 	{
