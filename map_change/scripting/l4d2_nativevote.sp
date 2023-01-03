@@ -9,7 +9,7 @@
 
 enum struct Vote {
 	bool InProgress;
-	bool StartAction;
+	bool VoteStarted;
 	char Title[64];
 	char Info[512];
 	any Value;
@@ -138,14 +138,14 @@ public void OnMapStart() {
 	delete g_hVoteYesTimer;
 	delete g_hEndVoteTimer;
 	g_Vote.InProgress = false;
-	g_Vote.StartAction = false;
+	g_Vote.VoteStarted = false;
 }
 
 public void OnMapEnd() {
 	delete g_hVoteYesTimer;
 	delete g_hEndVoteTimer;
 	g_Vote.InProgress = false;
-	g_Vote.StartAction = false;
+	g_Vote.VoteStarted = false;
 }
 
 // public native L4D2NativeVote CreateVote(L4D2VoteHandler handler);
@@ -212,14 +212,14 @@ any Native_DisplayVote(Handle plugin, int numParams) {
 	if (vote != Valid_Vote || !g_Vote.InProgress)
 		return false;
 
-	int numClients = GetNativeCell(3);
-	int[] clients = new int[numClients];
-	GetNativeArray(2, clients, numClients);
+	int size = GetNativeCell(3);
+	int[] clients = new int[size];
+	GetNativeArray(2, clients, size);
 
 	int i;
 	int client;
 	int numVote;
-	for (; i < numClients; i++) {
+	for (; i < size; i++) {
 		client = clients[i];
 		if (client > 0 && client <= MaxClients && IsClientInGame(client)) {
 			clients[numVote++] = client;
@@ -248,8 +248,8 @@ any Native_DisplayVote(Handle plugin, int numParams) {
 	bf.WriteString(name);						// initiatorName
 	EndMessage();
 
-	if (!g_Vote.StartAction) {
-		g_Vote.StartAction = true;
+	if (!g_Vote.VoteStarted) {
+		g_Vote.VoteStarted = true;
 		UpdateVotes(VoteAction_Start, initiator);
 
 		if (name[0] && g_cvAutoVoteYes.BoolValue) {
@@ -398,7 +398,7 @@ void ResetVote() {
 	delete g_hEndVoteTimer;
 	delete g_fwdCreateVote;
 	g_Vote.InProgress = false;
-	g_Vote.StartAction = false;
+	g_Vote.VoteStarted = false;
 
 	g_Vote.Title[0] = '\0';
 	g_Vote.Info[0] = '\0';

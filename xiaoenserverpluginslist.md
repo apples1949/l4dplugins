@@ -64,7 +64,7 @@
 自选-M60正常化(可更换弹夹)+可拾取弹药(包括榴弹发射器)(Lux)  
 自选-tick解锁扩展(启动项加 -tickrate 100)(需要配合tick设置插件使用)  
 
-自找插件 2023年1月1日已检查更新:  
+自找插件 2023年1月3日已检查更新:  
 [HarryPotter](https://github.com/fbef0102/)  
 [all4dead2](https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2) 物品特感生成 [自改自翻译](https://github.com/apples1949/l4dplugins/tree/main/all4dead2)   
 [show_mic](https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic) / [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?p=2529779) 屏幕中心显示谁在说话/第三人称指令查询简化 [仓库地址](https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2)  
@@ -82,7 +82,6 @@
 [l4d2_si_ladder_booster](https://github.com/fbef0102/Rotoblin-AZMod/blob/master/SourceCode/scripting-az/l4d2_si_ladder_booster.sp)AI感染者爬梯加速 [增加cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_si_ladder_booster.sp)  
 [witch_target_override](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/witch_target_override) witch击倒玩家后可攻击其他生还者 [根据作者说明翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/witch_target_override.sp)  
 [l4d2_gifts](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_gifts) 击杀特感掉落礼物补给 [翻译cvar及自用修改](https://github.com/apples1949/l4dplugins/blob/main/l4d2_gifts)  
-[l4d2_fb_fix](https://forums.alliedmods.net/showthread.php?p=2774567) 哈利修复 botAI增强插件 建议搭配mod使用 [汉化cvar翻译及文本汉化](https://github.com/apples1949/l4dplugins/blob/main/l4d2_sb_fix.sp)  
 [l4d_vocalize_antiflood](https://github.com/fbef0102/Rotoblin-AZMod/tree/master/SourceCode/scripting-az) 限制玩家使用语音表单的频率 [翻译cvar说明 去除文本限制](https://github.com/apples1949/l4dplugins/blob/main/l4d_vocalize_antiflood)  
 
 [Silvers](https://forums.alliedmods.net/member.php?u=85778)  
@@ -106,15 +105,15 @@
 [l4d_achievement_trophy](https://forums.alliedmods.net/showthread.php?p=1279984) 玩家达成steam成就时头上展示奖杯 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_achievement_trophy.sp)   
 [l4d_pipebomb_shove](https://forums.alliedmods.net/showthread.php?p=1733534) 设置引诱手雷伤害及手雷可吸附感染者头部 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_pipebomb_shove)   
 [l4d_pipebomb_damage](https://forums.alliedmods.net/showthread.php?p=2680272) 设置手雷伤害对所有生物的倍数 可通过l4d_pipebomb_shove设置的伤害进行更改 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_pipebomb_damage.sp)   
-[l4d_anti_rush](https://forums.alliedmods.net/showthread.php?t=322392) 反跑图 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush/sourcemod)   
+[l4d_anti_rush](https://forums.alliedmods.net/showthread.php?t=322392) 反跑图 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush)   
 
 [Dragokas](https://forums.alliedmods.net/member.php?u=282667)  
 [TankOnSpawn](https://forums.alliedmods.net/showthread.php?t=323813) 每次生成多个坦克 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/TankOnSpawn)   
 [l4d_votedifficulty](https://forums.alliedmods.net/showthread.php?t=317257) 投票更改难度 [自翻译文本 自用删掉了简单难度选项](https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty)   
 
 [lux](https://forums.alliedmods.net/member.php?u=257841)  
-[l4d2_Survivor_Legs](https://forums.alliedmods.net/showthread.php?t=299560) 显示双腿   
-[noteam_nudging](https://github.com/LuxLuma/L4D-small-plugins/blob/master/L4D1-2_noteam_nudging/scripting/noteam_nudging.sp) 防止某些三方图玩家碰撞被挤下去   
+[l4d2_Survivor_Legs](https://forums.alliedmods.net/showthread.php?t=299560) 显示双腿 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_Survivor_Legs.sp)  
+[noteam_nudging](https://github.com/LuxLuma/L4D-small-plugins/blob/master/L4D1-2_noteam_nudging/scripting/noteam_nudging.sp) 防止某些三方图玩家碰撞被挤下去 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/noteam_nudging.sp)  
 [TankDamageModifier](https://forums.alliedmods.net/showthread.php?t=283085)设置坦克伤害 [翻译cvar提示](https://github.com/apples1949/l4dplugins/blob/main/TankDamageModifier.sp)  
 
 [sorallll](https://github.com/umlka/)懒得更新到git 部分插件使用Q群作者版本:  
@@ -132,8 +131,8 @@
 [specialspawner](https://github.com/umlka/l4d2/tree/main/specialspawner) 刷特插件[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/specialspawner.sp)  
 
 [DeathChaos25](https://forums.alliedmods.net/member.php?u=244944):  
-[l4d2_DefibUsingBots](https://forums.alliedmods.net/showthread.php?t=261566) 强制bot使用电击器   
-[l4d2_ThirdpersonShoulderShotgunSoundFix](https://forums.alliedmods.net/showthread.php?t=259986)  第三人称霰弹无声音修复   
+[l4d2_DefibUsingBots](https://forums.alliedmods.net/showthread.php?t=261566) 强制bot使用电击器 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_DefibUsingBots.sp)  
+[l4d2_ThirdpersonShoulderShotgunSoundFix](https://forums.alliedmods.net/showthread.php?t=259986)  第三人称霰弹无声音修复 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_ThirdpersonShoulderShotgunSoundFix.sp)  
 
 [NoroHime](https://forums.alliedmods.net/member.php?u=272518):  
 [l4d_medicines_unlimited](https://forums.alliedmods.net/showthread.php?t=336226) 设置血量上限及处理溢出的虚血 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_medicines_unlimited.sp)   
@@ -144,7 +143,7 @@
 
 zm:  
 [l4d2_stats/l4d2_skill_detect](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting) 技能检测插件 [使用东哥翻译文本](https://github.com/fantasylidong/CompetitiveWithAnne/tree/master/addons/sourcemod/translations/chi)  
-[l4dhots](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4dhots.sp) 缓慢回血 [更改默认设置以及增加自动生成cfg](https://github.com/apples1949/l4dplugins/blob/main/l4dhots.sp)   
+[l4dhots](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4dhots.sp) 吃药缓慢回血 [更改默认设置以及增加自动生成cfg](https://github.com/apples1949/l4dplugins/blob/main/l4dhots.sp)   
 [l4d_stuckzombiemeleefix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_stuckzombiemeleefix.sp) 近战砍僵尸修复   
 [TickrateFixes](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/TickrateFixes.sp) 修复高tick下手枪射击间隔过快问题 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/TickrateFixes.sp)  
 [l4d2_ai_damagefix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ai_damagefix.sp)移除Hunter和Charger减伤  
@@ -153,7 +152,7 @@ zm:
 [l4d2_getup_fixes](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_getup_fixes)修复双起身  
 [l4d_weapon_limits](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_weapon_limits.sp) 限制玩家整体可获取武器的数量 [汉化提示(注意gamedata)](https://github.com/apples1949/l4dplugins/tree/main/l4d_weapon_limits)  
 [l4d2_ellis_hunter_bandaid_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ellis_hunter_bandaid_fix.sp)修复Ellis被hunter扑中后起身比其他角色慢的问题  
-[l4d2_dominatorscontrol](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_dominatorscontrol.sp) 解除控制性特感生成限制 [仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_dominatorscontrol)  
+[l4d2_dominatorscontrol](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_dominatorscontrol.sp) 解除控制性特感生成限制 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_dominatorscontrol)  
 
 ReFlexPoison:  
 [enhancedsprays](https://forums.alliedmods.net/showthread.php?p=1998984) 设定喷漆间隔和范围 [大红修改并更新语法(已获得上传许可)](https://github.com/apples1949/l4dplugins/blob/main/enhancedsprays.sp)  

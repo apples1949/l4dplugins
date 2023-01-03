@@ -1,0 +1,53 @@
+"Games"
+{
+	/*
+	 * All credits for detours and updated signatures belong to "Silvers".
+	 */
+	 
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"GetScriptValueInt"
+			{
+				"signature"		"GetScriptValueInt"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"charptr"
+					}
+					"a2"
+					{
+						"type"	"int"
+					}
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			// =========================
+			// SILVERS SIGS
+			// =========================
+			
+
+			/*
+			 * CDirector::GetScriptValue(const char*, int)
+			 * Find CTerrorPlayer::OnRevived(), then look for string SurvivorMaxIncapacitatedCount
+			 * If you look for string "No conversion from %s to int now\n" you will be one call too deep
+			 */
+			"GetScriptValueInt"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector14GetScriptValueEPKci"
+				"windows"	"\x55\x8B\xEC\x8B\x81\x2A\x2A\x2A\x2A\x83\xEC\x10\x83\xF8\xFF\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x45\x2A\x8B"
+				/* 55 8B EC 8B 81 ? ? ? ? 83 EC 10 83 F8 FF ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 8B 45 ? 8B */
+			}
+		}
+	}
+}
+

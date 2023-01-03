@@ -12,6 +12,9 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
+#undef REQUIRE_PLUGIN
+#tryinclude <l4d_info_editor>
+#define DEBUG 0
 
 #define WEPID_PISTOL 1
 
@@ -19,7 +22,7 @@ public Plugin myinfo =
 {
 	name		= "L4D2 Drop Secondary",
 	author		= "HarryPotter",
-	version		= "2.3",
+	version		= "2.5",
 	description	= "Survivor players will drop their secondary weapon when they die",
 	url			= "https://steamcommunity.com/profiles/76561198026784913/"
 };
@@ -41,6 +44,9 @@ static int iOffs_m_hSecondaryHiddenWeaponPreDead = -1;
 static int iOffs_m_SecondaryWeaponDoublePistolPreDead = -1;
 static int iOffs_m_SecondaryWeaponIDPreDead = -1;
 
+static char g_sMeleeClass[16][32];
+static int g_iMeleeClassCount;
+
 public void OnPluginStart()
 {
 	iOffs_m_SecondaryWeaponIDPreDead = FindSendPropInfo("CTerrorPlayer", "m_knockdownTimer") + 108;
@@ -49,6 +55,11 @@ public void OnPluginStart()
 
 	HookEvent("player_spawn", Event_PlayerSpawn,	EventHookMode_Post);
 	HookEvent("player_death", OnPlayerDeath, 		EventHookMode_Pre);
+}
+
+public void OnMapStart()
+{
+	CreateTimer(1.0, Timer_GetMeleeTable, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 //playerspawn is triggered even when bot or human takes over each other (even they are already dead state) or a survivor is spawned
@@ -130,6 +141,9 @@ public void OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 	skin = GetEntProp(weapon, Prop_Send, "m_nSkin", 4);
 	if (strcmp(sWeapon, "weapon_melee") == 0)
 	{
+		/*
+		//註解以下code
+		//原因：有時候死亡得到的 m_strMapSetScriptName 為空
 		char sMeleeName[64];
 		if (HasEntProp(weapon, Prop_Data, "m_strMapSetScriptName")) //support custom melee
 		{
@@ -162,6 +176,32 @@ public void OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 		else
 		{
 			// LogMessage("%N drops unknow melee weapon", client);
+			Clear(client);
+			return;
+		}*/
+		int meleeWeaponId = GetEntProp(weapon, Prop_Send, "m_hMeleeWeaponInfo");
+		if(meleeWeaponId >= 0 && meleeWeaponId < g_iMeleeClassCount)
+		{
+			new_weapon = CreateEntityByName(sWeapon);
+			if(new_weapon == -1) return;
+
+			DispatchKeyValue(new_weapon, "solid", "6");
+			DispatchKeyValue(new_weapon, "melee_script_name", g_sMeleeClass[meleeWeaponId]);
+
+			#if DEBUG
+				char m_ModelName[PLATFORM_MAX_PATH];
+				GetEntPropString(weapon, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
+				LogMessage(">>>>[Melee] Drop Melee Weapon: %s (%s), player: %N", g_sMeleeClass[meleeWeaponId], m_ModelName, client);
+			#endif
+		}
+		else
+		{
+			#if DEBUG
+				char m_ModelName[PLATFORM_MAX_PATH];
+				GetEntPropString(weapon, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
+				LogMessage(">>>>[Melee] Drop Unknown Melee Weapon ID: %d (%s), player: %N", meleeWeaponId, m_ModelName, client);
+			#endif
+
 			Clear(client);
 			return;
 		}
@@ -210,7 +250,8 @@ public void OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 	}
 	
 	/*
-	//倒地之前閒置=>等待自己的bot倒地=>取代bot=>接著死亡=>出現error
+	//註解以下code
+	//原因：倒地之前閒置=>等待自己的bot倒地=>取代bot=>接著死亡=>出現error
 	//Exception reported: Weapon X is not owned by client X
 	SetEntPropEnt(weapon, Prop_Send, "m_hOwnerEntity", client);
 
@@ -233,6 +274,58 @@ public void OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 	Clear(client);
 }
 
+public Action Timer_GetMeleeTable(Handle timer)
+{
+	GetMeleeClasses();
+	return Plugin_Continue;
+}
+
+//credit spirit12 for auto melee detection
+stock void GetMeleeClasses()
+{
+	int MeleeStringTable = FindStringTable( "MeleeWeapons" );
+	g_iMeleeClassCount = GetStringTableNumStrings( MeleeStringTable );
+	
+	int len = sizeof(g_sMeleeClass[]);
+	
+	for( int i = 0; i < g_iMeleeClassCount; i++ )
+	{
+		ReadStringTable( MeleeStringTable, i, g_sMeleeClass[i], len );
+		#if DEBUG
+			char sMap[64];
+			GetCurrentMap(sMap, sizeof(sMap));
+			LogMessage( "[%s] Function::GetMeleeClasses - Getting melee classes: %s", sMap, g_sMeleeClass[i]);
+		#endif
+	}	
+}
+
+// Credit: github.com/SamuelXXX/l4d2_supercoop_for2/blob/master/left4dead2/addons/sourcemod/scripting/_sc_drop_melee_when_died.sp
+/* comment out reason: too frequently call OnGetMissionInfo (every 20~30 seconds)
+public void OnGetMissionInfo(int pThis)
+{
+	//由info_editor提供的一个回调函数，用来获取当前战役的一些设置信息
+	//在本插件中则是为了获取地图设定的近战列表
+	RequestFrame(onMissionSettingParsed, pThis);
+}
+
+public void onMissionSettingParsed(int pThis)
+{
+	//提取本轮战役的近战字符串列表
+	char temp[256];
+	InfoEditor_GetString(pThis, "meleeweapons", temp, sizeof(temp));
+	g_iMeleeClassCount = ExplodeString(temp,";",g_sMeleeClass,16,16,true);
+
+	#if DEBUG
+		char sMap[64];
+		GetCurrentMap(sMap, sizeof(sMap));
+		LogMessage(">>>>[Melee] Melee Weapon List In %s: %s", sMap, temp);
+		for(int i=0;i<g_iMeleeClassCount;i++)
+		{
+			LogMessage(">>>>[Melee] Melee Weapon %d : %s",i,g_sMeleeClass[i]);
+		}
+	#endif
+}
+*/
 void Clear(int client)
 {
 	SetSecondaryWeaponIDPreDead(client, 1);

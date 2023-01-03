@@ -6,7 +6,7 @@
 #define PLUGIN_NAME				"bots(coop)"
 #define PLUGIN_AUTHOR			"DDRKhat, Marcus101RR, Merudo, Lux, Shadowysn, sorallll"
 #define PLUGIN_DESCRIPTION		"coop"
-#define PLUGIN_VERSION			"1.11.5"
+#define PLUGIN_VERSION			"1.11.4"
 #define PLUGIN_URL				"https://forums.alliedmods.net/showthread.php?p=2405322#post2405322"
 
 #define GAMEDATA 				"bots"
@@ -42,7 +42,6 @@ Address
 
 ConVar
 	g_cBotLimit,
-	g_cJoinLimit,
 	g_cJoinFlags,
 	g_cJoinRespawn,
 	g_cSpecNotify,
@@ -53,7 +52,6 @@ ConVar
 int
 	g_iSurvivorBot,
 	g_iBotLimit,
-	g_iJoinLimit,
 	g_iJoinFlags,
 	g_iSpecNotify,
 	m_hWeaponHandle,
@@ -303,7 +301,6 @@ public void OnPluginStart() {
 	CreateConVar("bots_version", PLUGIN_VERSION, "bots(coop) plugin version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
 	g_cBotLimit =				CreateConVar("bots_limit",				"4",		"开局Bot的数量", CVAR_FLAGS, true, 1.0, true, float(MaxClients));
-	g_cJoinLimit =				CreateConVar("bots_join_limit",			"-1",		"生还者玩家数量达到该值后将禁用sm_join命令和本插件的自动加入功能(不会影响游戏原有的加入功能). \n-1=插件不进行处理.", CVAR_FLAGS, true, -1.0, true, float(MaxClients));
 	g_cJoinFlags =				CreateConVar("bots_join_flags",			"3",		"额外玩家加入生还者的方法. \n0=插件不进行处理, 1=输入!join手动加入, 2=进服后插件自动加入, 3=手动+自动", CVAR_FLAGS);
 	g_cJoinRespawn =			CreateConVar("bots_join_respawn",		"1",		"玩家第一次进服时如果没有存活的Bot可以接管是否复活. \n0=否, 1=是.", CVAR_FLAGS);
 	g_cSpecNotify =				CreateConVar("bots_spec_notify",		"3",		"完全旁观玩家点击鼠标左键时, 提示加入生还者的方式 \n0=不提示, 1=聊天栏, 2=屏幕中央, 3=弹出菜单.", CVAR_FLAGS);
@@ -316,13 +313,12 @@ public void OnPluginStart() {
 	g_cGiveTime =				CreateConVar("bots_give_time",			"0",		"什么时候给玩家装备. \n0=每次出生时, 1=只在本插件创建Bot和复活玩家时.", CVAR_FLAGS);
 
 	g_cSurLimit = FindConVar("survivor_limit");
-	g_cSurLimit.Flags &= ~FCVAR_NOTIFY;
+	g_cSurLimit.Flags &= ~FCVAR_NOTIFY; // 移除ConVar变动提示
 	g_cSurLimit.SetBounds(ConVarBound_Upper, true, float(MaxClients));
 
 	g_cBotLimit.AddChangeHook(CvarChanged_Limit);
 	g_cSurLimit.AddChangeHook(CvarChanged_Limit);
 
-	g_cJoinLimit.AddChangeHook(CvarChanged_General);
 	g_cJoinFlags.AddChangeHook(CvarChanged_General);
 	g_cJoinRespawn.AddChangeHook(CvarChanged_General);
 	g_cSpecNotify.AddChangeHook(CvarChanged_General);
@@ -407,11 +403,6 @@ Action cmdJoinTeam2(int client, int args) {
 
 	if (!(g_iJoinFlags & JOIN_MANUAL)) {
 		PrintToChat(client, "手动加入已禁用.");
-		return Plugin_Handled;
-	}
-
-	if (CheckJoinLimit()) {
-		PrintToChat(client, "\x05已达到生还者数量限制 \x04%d\x01.", g_iJoinLimit);
 		return Plugin_Handled;
 	}
 
@@ -509,11 +500,6 @@ Action cmdTakeOverBot(int client, int args) {
 		return Plugin_Handled;
 	}
 
-	if (CheckJoinLimit()) {
-		PrintToChat(client, "\x05已达到生还者数量限制 \x04%d\x01.", g_iJoinLimit);
-		return Plugin_Handled;
-	}
-
 	if (!FindUselessSurBot(true)) {
 		PrintToChat(client, "\x01没有 \x05空闲的电脑BOT \x01可以接管\x01.");
 		return Plugin_Handled;
@@ -563,11 +549,6 @@ void TakeOverBotMenu(int client) {
 int TakeOverBot_MenuHandler(Menu menu, MenuAction action, int param1, int param2) {
 	switch (action) {
 		case MenuAction_Select: {
-			if (CheckJoinLimit()) {
-				PrintToChat(param1, "\x05已达到生还者数量限制 \x04%d\x01.", g_iJoinLimit);
-				return 0;
-			}
-
 			int bot;
 			char item[12];
 			menu.GetItem(param2, item, sizeof item);
@@ -663,9 +644,6 @@ Action Listener_spec_next(int client, char[] command, int argc) {
 		return Plugin_Continue;
 
 	if (GetClientTeam(client) != TEAM_SPECTATOR || GetBotOfIdlePlayer(client))
-		return Plugin_Continue;
-
-	if (CheckJoinLimit())
 		return Plugin_Continue;
 
 	if (PrepRestoreBots())
@@ -765,7 +743,6 @@ void CvarChanged_General(ConVar convar, const char[] oldValue, const char[] newV
 }
 
 void GeCvars_General() {
-	g_iJoinLimit = 		g_cJoinLimit.IntValue;
 	g_iJoinFlags =		g_cJoinFlags.IntValue;
 	g_bJoinRespawn =	g_cJoinRespawn.BoolValue;
 	g_iSpecNotify =		g_cSpecNotify.IntValue;
@@ -776,14 +753,14 @@ void CvarChanged_Weapon(ConVar convar, const char[] oldValue, const char[] newVa
 }
 
 void GeCvars_Weapon() {
-	int num;
+	int count;
 	for (int i; i < MAX_SLOT; i++) {
 		g_eWeapon[i].Count = 0;
 		if (!g_eWeapon[i].Flags.BoolValue || IsNullSlot(i))
-			num++;
+			count++;
 	}
 
-	g_bGiveType = num < MAX_SLOT ? g_cGiveType.BoolValue : false;
+	g_bGiveType = count < MAX_SLOT ? g_cGiveType.BoolValue : false;
 	g_bGiveTime = g_cGiveTime.BoolValue;
 }
 
@@ -947,9 +924,6 @@ Action tmrJoinTeam2(Handle timer, int client) {
 	if (GetClientTeam(client) > TEAM_SPECTATOR || GetBotOfIdlePlayer(client))
 		return Plugin_Stop;
 
-	if (CheckJoinLimit())
-		return Plugin_Stop;
-
 	if (!g_bRoundStart || PrepRestoreBots() || GetClientTeam(client) <= TEAM_NOTEAM)
 		return Plugin_Continue;
 
@@ -1074,7 +1048,7 @@ int GetIdlePlayerOfBot(int client) {
 }
 
 int GetTeamPlayers(int team, bool includeBots) {
-	int num;
+	int count;
 	for (int i = 1; i <= MaxClients; i++) {
 		if (!IsClientInGame(i) || GetClientTeam(i) != team)
 			continue;
@@ -1082,22 +1056,9 @@ int GetTeamPlayers(int team, bool includeBots) {
 		if (!includeBots && IsFakeClient(i) && !GetIdlePlayerOfBot(i))
 			continue;
 
-		num++;
+		count++;
 	}
-	return num;
-}
-
-bool CheckJoinLimit() {
-	if (g_iJoinLimit == -1)
-		return false;
-
-	int num;
-	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_SURVIVOR && (!IsFakeClient(i) || GetIdlePlayerOfBot(i)))
-			num++;
-	}
-
-	return num >= g_iJoinLimit;
+	return count;
 }
 
 int FindUnusedSurBot() {
@@ -1273,7 +1234,7 @@ void DrawTeamPanel(int client, bool autoRefresh) {
 		if (!IsClientInGame(i) || GetClientTeam(i) != TEAM_SPECTATOR)
 			continue;
 
-		GetClientName(i, name, sizeof name);
+		SplitName(i, name, sizeof name);
 		FormatEx(info, sizeof info, "%s - %s", GetBotOfIdlePlayer(i) ? "闲置" : "观众", name);
 		panel.DrawText(info);
 	}
@@ -1290,7 +1251,7 @@ void DrawTeamPanel(int client, bool autoRefresh) {
 		if (!IsClientInGame(i) || GetClientTeam(i) != TEAM_SURVIVOR)
 			continue;
 
-		GetClientName(i, name, sizeof name);
+		SplitName(i, name, sizeof name);
 
 		if (!IsPlayerAlive(i))
 			FormatEx(info, sizeof info, "死亡 - %s", name);
@@ -1325,12 +1286,12 @@ void DrawTeamPanel(int client, bool autoRefresh) {
 		aClients.PushArray(zombie);
 	}
 
-	int num = aClients.Length;
-	if (num) {
+	int count = aClients.Length;
+	if (count) {
 		aClients.Sort(Sort_Ascending, Sort_Integer);
-		for (i = 0; i < num; i++) {
+		for (i = 0; i < count; i++) {
 			aClients.GetArray(i, zombie);
-			GetClientName(zombie.client, name, sizeof name);
+			SplitName(zombie.client, name, sizeof name);
 
 			if (IsPlayerAlive(zombie.client)) {
 				if (GetEntProp(zombie.client, Prop_Send, "m_isGhost"))
@@ -1381,13 +1342,21 @@ Action tmrPanel(Handle timer, int client) {
 	return Plugin_Continue;
 }
 
+void SplitName(int client, char[] name, int len) {
+	GetClientName(client, name, len);
+	if (strlen(name) > 18) {
+		name[15] = name[16] = name[17] = '.';
+		name[18] = '\0';
+	}
+}
+
 int GetSurBotsCount() {
-	int num;
+	int count;
 	for (int i = 1; i <= MaxClients; i++) {
 		if (IsValidSurBot(i))
-			num++;
+			count++;
 	}
-	return num;
+	return count;
 }
 
 int GetTempHealth(int client) {
@@ -1860,7 +1829,7 @@ void RemoveAllWeapons(int client) {
 	}
 }
 
-// https://github.com/bcserv/smlib/blob/2c14acb85314e25007f5a61789833b243e7d0cab/scripting/include/smlib/math.inc#L144-L163
+// https://github.com/bcserv/smlib/blob/transitional_syntax/scripting/include/smlib/math.inc
 #define SIZE_OF_INT	2147483647 // without 0
 int Math_GetRandomInt(int min, int max) {
 	int random = GetURandomInt();

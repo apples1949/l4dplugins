@@ -113,7 +113,7 @@ Age=1434153326
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d_bunnyhop.sp]
 Age=1431963160
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_item_hint.sp]
-Age=1434827586
+Age=1445175567
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\nextmap.sp]
 Age=1360246176
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_sb_fix.sp]
@@ -187,7 +187,7 @@ Age=1434153516
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\TDR2.sp]
 Age=1420466958
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\show_mic.sp]
-Age=1429836508
+Age=1445175382
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\ThirdPersonShoulder_Detect.sp]
 Age=1414101144
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d_nightvision.sp]
@@ -203,7 +203,7 @@ Age=1420859974
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_tda.sp]
 Age=1420586820
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\drop_secondary.sp]
-Age=1434152619
+Age=1445175916
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\stringpool_fix.sp]
 Age=1421216506
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_ammo_set.sp]
@@ -223,7 +223,7 @@ Age=1422068082
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d_TankOnSpawn.sp]
 Age=1429953036
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d_anti_rush.sp]
-Age=1424787172
+Age=1445173789
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_skill_detect.sp]
 Age=1435079057
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d_rock_lagcomp.sp]
@@ -233,7 +233,7 @@ Age=1445039048
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4dinfectedbots.sp]
 Age=1433207318
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\bots.sp]
-Age=1434367247
+Age=1445176228
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\zombie_spawn_fix.sp]
 Age=1429909943
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d_tankAttackOnSpawn.sp]
@@ -299,7 +299,7 @@ Age=1430158978
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_block_pour_gascan.sp]
 Age=1430159048
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_biletheworld.sp]
-Age=1430160026
+Age=1445175797
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4dhots.sp]
 Age=1430162466
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\double_get-up_fix-l4d2.sp]
@@ -759,9 +759,9 @@ Age=1432158760
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\TickrateFixes.sp]
 Age=1432526659
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_map_vote.sp]
-Age=1433250024
+Age=1445176305
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_nativevote.sp]
-Age=1433250022
+Age=1445176307
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d2_source_keyvalues.sp]
 Age=1427393260
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\map_changer.sp]
@@ -844,3 +844,5 @@ Age=1434917998
 Age=1434823723
 [C:\Users\apples1949\Desktop\l4dplugins\1.11\l4d_pills_pass_fix.sp]
 Age=1434871592
+[C:\Users\apples1949\Desktop\l4dplugins\1.11\current.sp]
+Age=1434234304

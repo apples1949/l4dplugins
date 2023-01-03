@@ -574,13 +574,14 @@ void VoteNextMap(int client, const char[] item) {
 	int team;
 	int clients[1];
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && !IsFakeClient(i) && ((team = GetClientTeam(i)) == 2) || team == 3) {
-			fmt_Translate(item, buffer, sizeof buffer, i, item);
-			vote.SetTitle("设置下一张地图为: %s", buffer);
+		if (!IsClientInGame(i) || IsFakeClient(i) || (team = GetClientTeam(i)) < 2 || team > 3)
+			continue;
 
-			clients[0] = i;
-			vote.DisplayVote(clients, 1, 20);
-		}
+		fmt_Translate(item, buffer, sizeof buffer, i, item);
+		vote.SetTitle("设置下一张地图为: %s", buffer);
+
+		clients[0] = i;
+		vote.DisplayVote(clients, 1, 20);
 	}
 }
 
@@ -787,14 +788,15 @@ void VoteChangeMap(int client, const char[] item) {
 	int team;
 	int clients[1];
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && !IsFakeClient(i) && ((team = GetClientTeam(i)) == 2) || team == 3) {
-			fmt_Translate(info[0], info[0], sizeof info[], i, info[0]);
-			fmt_Translate(info[1], info[1], sizeof info[], i, info[1]);
-			vote.SetTitle("更换地图: %s (%s)", info[0], info[1]);
+		if (!IsClientInGame(i) || IsFakeClient(i) || (team = GetClientTeam(i)) < 2 || team > 3)
+			continue;
 
-			clients[0] = i;
-			vote.DisplayVote(clients, 1, 20);
-		}
+		fmt_Translate(info[0], info[0], sizeof info[], i, info[0]);
+		fmt_Translate(info[1], info[1], sizeof info[], i, info[1]);
+		vote.SetTitle("更换地图: %s (%s)", info[0], info[1]);
+
+		clients[0] = i;
+		vote.DisplayVote(clients, 1, 20);
 	}
 }
 
