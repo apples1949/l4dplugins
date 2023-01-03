@@ -3,11 +3,6 @@ git remote
 git remote remove origin
 git remote add origin https://github.com/apples1949/l4dplugins.git
 git clone https://github.com/apples1949/l4dplugins.git
-
-fatal: unable to access 'http://github.com/apples1949/l4dplugins.git/': SSL certificate problem: unable to get local issuer certificate
-↓
-git config --global http.sslverify false
-
 git add .
 git commit -m "test"
 git push -u origin main
