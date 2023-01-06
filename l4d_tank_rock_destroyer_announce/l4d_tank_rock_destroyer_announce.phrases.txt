@@ -1,0 +1,60 @@
+﻿/*
+	******************************************************************************************************************************************************
+
+	You can display phrases in chat with color using any of the methods below:
+
+	Using color codes:
+		•  // Default (use instead of \x01), Alt + 01 Keyboard Shortcut
+		•  // Light Green (use instead of \x03), Alt + 03 Keyboard Shortcut
+		•  // Orange (use instead of \x04), Alt + 04 Keyboard Shortcut
+		•  // Olive (use instead of \x05), Alt + 05 Keyboard Shortcut
+
+	or
+
+	Using color tags:
+		• {default} // Default (use instead of \x01)
+		• {lightgreen} // Light Green (use instead of \x03)
+		• {orange} // Orange (use instead of \x04)
+		• {olive} // Green (use instead of \x05)
+
+	******************************************************************************************************************************************************
+*/
+
+"Phrases"
+{
+	"Rock"
+	{
+		"#format"	"{1:N}"
+		"en"		"{orange}{1} {lightgreen}destroyed the {olive}rock"
+		"es"		"{orange}{1} {lightgreen}ha destruido la {olive}piedra"
+		"hu"		"{orange}{1} {lightgreen}elpusztította a {olive}sziklát"
+		"pt"		"{orange}{1} {lightgreen}destruiu a {olive}pedra"
+		"pt_p"		"{orange}{1} {lightgreen}destruiu a {olive}pedra"
+		"ru"		"{orange}{1} {lightgreen}уничтожил {olive}камень"
+		"chi"		"{orange}{1} {lightgreen}打爆了 {olive}石头"
+		"zho"		"{orange}{1} {lightgreen}打掉了 {olive}石頭"
+	}
+	"Trunk"
+	{
+		"#format"	"{1:N}"
+		"en"		"{orange}{1} {lightgreen}destroyed the {olive}trunk"
+		"es"		"{orange}{1} {lightgreen}ha destruido el {olive}tronco"
+		"hu"		"{orange}{1} {lightgreen}elpusztította a {olive}fatörzset"
+		"pt"		"{orange}{1} {lightgreen}destruiu o {olive}tronco"
+		"pt_p"		"{orange}{1} {lightgreen}destruiu o {olive}tronco"
+		"ru"		"{orange}{1} {lightgreen}уничтожил {olive}бревно"
+		"chi"		"{orange}{1} {lightgreen}击碎了 {olive}树干"
+		"zho"		"{orange}{1} {lightgreen}擊碎了 {olive}樹幹"
+	}
+	"Unknown"
+	{
+		"en"		"{orange}{1} {lightgreen}destroyed the Tank {olive}projectile"
+		"es"		"{orange}{1} {lightgreen}ha destruido el {olive}proyectil{lightgreen} del Tank"
+		"hu"		"{orange}{1} {lightgreen}elpusztította a Tank {olive}lövedékét"
+		"pt"		"{orange}{1} {lightgreen}destruiu o {olive}projétil{lightgreen} do Tank"
+		"pt_p"		"{orange}{1} {lightgreen}destruiu o {olive}projétil{lightgreen} do Tank"
+		"ru"		"{orange}{1} {lightgreen}уничтожил {olive}снаряд{lightgreen} Танка"
+		"chi"		"{orange}{1} {lightgreen}摧毁了坦克的 {olive}投掷物"
+		"zho"		"{orange}{1} {lightgreen}摧毀了Tank的 {olive}投擲物"
+	}
+}
