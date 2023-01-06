@@ -141,6 +141,15 @@
 [xZk](https://forums.alliedmods.net/member.php?u=282888):  
 [l4d2_incapped_pickup](https://forums.alliedmods.net/showthread.php?t=320828) 倒地可拾取物品 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_pickup)   
 
+[Marttt](https://forums.alliedmods.net/member.php?u=290327):  
+[l4d_healing_dist_fix](https://forums.alliedmods.net/showthread.php?t=341128) 修复爬梯打包问题 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d_healing_dist_fix.sp)  
+[l4d2_multiple_gascan_fill](https://forums.alliedmods.net/showthread.php?p=2734968) 允许同时罐油灌可乐 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d2_multiple_gascan_fill.sp)  
+[l4d_random_tank_rock](https://forums.alliedmods.net/showthread.php?p=2648693) 坦克可以扔树干（伤害不变） [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_random_tank_rock.sp)  
+[l4d_tank_rock_destroyer_announce](https://forums.alliedmods.net/showthread.php?p=2648989) 坦克扔石头提示 [翻译cvar提示](https://github.com/apples1949/l4dplugins/tree/main/l4d_tank_rock_destroyer_announce)  
+[l4d2_unlock_finales](https://forums.alliedmods.net/showthread.php?t=333274) 官图结局不会因为安全屋的人而运行不了 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d2_unlock_finales.sp)  
+[l4d_triggers_ignore_incap](https://forums.alliedmods.net/showthread.php?p=2732062) 机关不会因为倒地的玩家而继续 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d_triggers_ignore_incap.sp)  
+[l4d_hp_laser](https://forums.alliedmods.net/showthread.php?t=330590) 玩家感染者头顶显示血条 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_hp_laser.sp)
+
 zm:  
 [l4d2_stats/l4d2_skill_detect](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting) 技能检测插件 [使用东哥翻译文本](https://github.com/fantasylidong/CompetitiveWithAnne/tree/master/addons/sourcemod/translations/chi)  
 [l4dhots](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4dhots.sp) 吃药缓慢回血 [更改默认设置以及增加自动生成cfg](https://github.com/apples1949/l4dplugins/blob/main/l4dhots.sp)   
