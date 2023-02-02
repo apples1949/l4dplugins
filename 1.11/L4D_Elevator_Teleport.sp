@@ -10,19 +10,15 @@
 
 ===========================================================================================================
 
+Version 1.6 (03-Jan-2023) - Added A Cvar To Teleport Survivors That Are Hanged Or Held By Infected.
 Version 1.5 (22-Dec-2022) - Added A Cvar To Activate The Plugin In Specific Maps.
-
 Version 1.4 (22-Dec-2022) - Added 1 Teleportation Point In c7m3_port.
-
 Version 1.3 (17-Aug-2022) - Added 2 Teleportation Points In c3m1_plankcountry and c5m2_park.
-
 Version 1.2 (10-Aug-2022) - Added countdown, elevator auto-activated after teleport.
-
 Version 1.1 (06-Aug-2022) - Rewrote the plugin, made it more simple.
-
 Version 1.0 (06-Aug-2022) - Initial release.
 
-/* =============================================================================================================== *
+ * =============================================================================================================== *
  *											Includes, Pragmas and Defines			   							   *
  *================================================================================================================ */
 
@@ -32,7 +28,7 @@ Version 1.0 (06-Aug-2022) - Initial release.
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.5"
+#define PLUGIN_VERSION "1.6"
 
 /* =============================================================================================================== *
  *									Plugin Variables - Float, Int, Bool, ConVars			   					   *
@@ -50,6 +46,7 @@ bool g_bUnlockedButtonPressed;
 ConVar g_Cvar_PluginEnable;
 ConVar g_Cvar_TeleportTime;
 ConVar g_Cvar_MapsIncluded;
+ConVar g_Cvar_RescueClient;
 
 enum
 {
@@ -105,6 +102,7 @@ public void OnPluginStart()
 	g_Cvar_PluginEnable   = CreateConVar("l4d_elevator_teleport_enable", "1.0", "是否启用插件（0=禁用，1=启用）", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_Cvar_TeleportTime  = CreateConVar("l4d_elevator_teleport_time", "60.0", "电梯传送倒计时", FCVAR_NOTIFY, true, 1.0, true, 5400.0);
 	g_Cvar_MapsIncluded = CreateConVar("l4d_elevator_teleport_maps", "all", "插件将在这些地图中被激活，用逗号分开（没有空格）（all=所有地图）", FCVAR_NOTIFY);
+	g_Cvar_RescueClient = CreateConVar("l4d_elevator_teleport_entire", "1", "该插件将传送所有幸存者, 包括挂边的幸存者.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	AutoExecConfig (true, "L4D_Elevator_Teleport");
 	
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
@@ -284,23 +282,23 @@ Action Timer_CountDown(Handle timer)
 	
 	if (g_bUnlockedButtonPressed || !g_bLockedButtonPressed) return Plugin_Stop;
 	
-	else if (timeleft >= 0)
+	else if (timeleft <= 0)
 	{
-		PrintHintTextToAll("机关传送时间还有 %d 秒", timeleft);
-		return Plugin_Continue;
+		Release_HeldSurvivors();
+		ReviveHangedSurvivors();
+		Activate_ElevatorTeleport();
+		return Plugin_Stop;
 	}
 	
-	else if (timeleft < 0)
-		CreateTimer(0.1, Timer_ElevatorTeleport, _, TIMER_FLAG_NO_MAPCHANGE);
-	
-	return Plugin_Stop;
+	PrintHintTextToAll("机关传送时间还有 %d 秒", timeleft);
+	return Plugin_Continue;
 }
 
 /* =============================================================================================================== *
  *             	 	Timer: After Countdown Reaches 0, Teleport Survivors and Unlock Elevator					   *
  *================================================================================================================ */
  
-Action Timer_ElevatorTeleport(Handle timer)
+void Activate_ElevatorTeleport()
 {
 	float vPos[3];
 	
@@ -477,7 +475,50 @@ Action Timer_ElevatorTeleport(Handle timer)
 					TeleportEntity(i, vPos, NULL_VECTOR, NULL_VECTOR); 
 		}
 	}
-	return Plugin_Continue;
+}
+
+/* =============================================================================================================== *
+ *                     					  		Release Held Players											   *
+ *================================================================================================================ */
+
+void Release_HeldSurvivors()
+{
+	for(int i = 1; i <= MaxClients; i++)
+	{
+		if(IsRescueClientValid(i) && GetClientTeam(i) == 3)
+		{
+			if(GetEntProp(i, Prop_Send, "m_carryVictim", 1) || GetEntProp(i, Prop_Send, "m_pummelVictim", 1) ||
+			GetEntProp(i, Prop_Send, "m_jockeyVictim ", 1)  || GetEntProp(i, Prop_Send, "m_pounceVictim", 1) ||
+			GetEntProp(i, Prop_Send, "m_tongueVictim", 1)) ForcePlayerSuicide(i);
+		}
+	}
+}
+
+void ReviveHangedSurvivors()
+{
+	for(int i = 1; i <= MaxClients; i++)
+	{
+		if(IsRescueClientValid(i) && GetClientTeam(i) == 2 && GetEntProp(i, Prop_Send, "m_isHangingFromLedge", 1))
+		{
+			int CmdFlags = GetCommandFlags("give");
+			SetCommandFlags("give", CmdFlags & ~FCVAR_CHEAT);
+			FakeClientCommand(i, "give health");
+			SetCommandFlags("give", CmdFlags);
+			
+			int TempHealth = FindSendPropInfo("CTerrorPlayer","m_healthBuffer");
+			int iMaxHealth = GetEntProp(i, Prop_Send, "m_iMaxHealth");
+			float fBuffer = (float(iMaxHealth) * 30.0) / 100.0;
+			
+			SetEntDataFloat(i, TempHealth, fBuffer, true);
+			SetEntityHealth(i, 1);
+		}
+	}
+}
+
+bool IsRescueClientValid(int client)
+{
+	if (g_Cvar_RescueClient.BoolValue && client > 0 && client <= MaxClients && IsClientInGame(client) && IsPlayerAlive(client)) return true;
+	return false;
 }
 
 /* =============================================================================================================== *

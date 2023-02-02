@@ -1,6 +1,6 @@
 /*
 *	Plane Crash
-*	Copyright (C) 2022 Silvers
+*	Copyright (C) 2023 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.10"
+#define PLUGIN_VERSION		"1.11"
 
 /*======================================================================================
 	Plugin Info:
@@ -31,6 +31,10 @@
 
 ========================================================================================
 	Change Log:
+
+1.11 (10-Jan-2023)
+	- Changed the method of calling a panic event to support some 3rd party maps with random director names. Thanks to "Qoo_" for reporting.
+	- Fixed Temp crashes also spawning the saved crash. Spawning a temporary crash will prevent the trigger box from spawning a saved crash.
 
 1.10 (20-Sep-2022)
 	- Added cvar "l4d_plane_crash_chance" to set the chance of a plane crash being created, either saved or using the random cvar. Requested by "Sam B".
@@ -71,7 +75,7 @@
 
 1.1 (01-Apr-2012)
 	- Added command "sm_crash_clear" to clear crashes from the map (does not delete from the config).
-	- Added cvar "l4d_plane_crash_angle" to control if the plane spawns infront or crashes infront.
+	- Added cvar "l4d_plane_crash_angle" to control if the plane spawns in front or crashes in front.
 	- Fixed cvar "l4d_plane_crash_damage" not working.
 
 1.0 (30-Mar-2012)
@@ -117,7 +121,7 @@ Handle g_hTimerBeam;
 Menu g_hMenuPos, g_hMenuVMaxs, g_hMenuVMins;
 ConVar g_hCvarAllow, g_hCvarAngle, g_hCvarClear, g_hCvarChance, g_hCvarDamage, g_hCvarHorde, g_hCvarMPGameMode, g_hCvarModes, g_hCvarModesOff, g_hCvarModesTog, g_hCvarTime;
 int g_iCvarAngle, g_iCvarClear, g_iCvarChance, g_iCvarDamage, g_iCvarHorde, g_iEntities[MAX_ENTITIES], g_iHaloMaterial, g_iLaserMaterial, g_iPlayerSpawn, g_iRoundStart, g_iSaved, g_iTrigger;
-bool g_bCvarAllow, g_bMapStarted;
+bool g_bCvarAllow, g_bMapStarted, g_bLeft4Dead2;
 float g_fCvarTime;
 
 
@@ -137,7 +141,9 @@ public Plugin myinfo =
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion test = GetEngineVersion();
-	if( test != Engine_Left4Dead && test != Engine_Left4Dead2 )
+	if( test == Engine_Left4Dead ) g_bLeft4Dead2 = false;
+	else if( test == Engine_Left4Dead2 ) g_bLeft4Dead2 = true;
+	else
 	{
 		strcopy(error, err_max, "Plugin only supports Left 4 Dead 1 & 2.");
 		return APLRes_SilentFailure;
@@ -519,7 +525,7 @@ Action CmdPlaneTime(int client, int args)
 			else
 			{
 				hFile.SetNum("time", value);
-				PrintToChat(client, "%s在飞机坠毁触发前节省的秒数。", CHAT_TAG);
+				PrintToChat(client, "%s在飞机坠毁触发前节省的秒数", CHAT_TAG);
 			}
 
 			hFile.Rewind();
@@ -527,7 +533,7 @@ Action CmdPlaneTime(int client, int args)
 		}
 		else
 		{
-			PrintToChat(client, "%s没有保存到此地图。", CHAT_TAG);
+			PrintToChat(client, "%s没有保存到此地图", CHAT_TAG);
 		}
 
 		delete hFile;
@@ -612,14 +618,22 @@ int MainMenuHandler(Menu menu, MenuAction action, int client, int index)
 				ResetPlugin();
 
 				if( IsValidEntRef(g_iEntities[0]) )
+				{
+					PrintToChat(client, "%s生成保存的坠机", CHAT_TAG);
 					AcceptEntityInput(g_iEntities[0], "Trigger");
+				}
 				else
 				{
 					CreateCrash(0);
 					if( IsValidEntRef(g_iEntities[0]) )
+					{
+						PrintToChat(client, "%s生成保存的坠机", CHAT_TAG);
 						AcceptEntityInput(g_iEntities[0], "Trigger");
+					}
 					else
-						PrintToChat(client, "%sN没有保存坠机", CHAT_TAG);
+					{
+						PrintToChat(client, "%s没有保存坠机", CHAT_TAG);
+					}
 				}
 				ShowMenuMain(client);
 			}
@@ -1068,6 +1082,8 @@ void CreateCrash(int client)
 		method = g_iCvarAngle;
 		GetClientAbsOrigin(client, vPos);
 		GetClientEyeAngles(client, vAng);
+
+		ResetPlugin();
 	}
 	else
 	{
@@ -1226,13 +1242,17 @@ void CreatePlaneCrash(float vPos[3], float vAng[3], int method)
 
 	if( g_iCvarHorde )
 	{
+		HookSingleEntityOutput(entity, "OnTrigger", OnTriggerCrash);
+
+		/* Some maps have different director names, so using hook above with different methods
 		char sTemp[64];
-		Format(sTemp, sizeof(sTemp), "OnTrigger director:ForcePanicEvent::%d:-1",g_iCvarHorde);
+		Format(sTemp, sizeof(sTemp), "OnTrigger director:ForcePanicEvent::%d:-1", g_iCvarHorde);
 		SetVariantString(sTemp);
 		AcceptEntityInput(entity, "AddOutput");
-		Format(sTemp, sizeof(sTemp), "OnTrigger @director:ForcePanicEvent::%d:-1",g_iCvarHorde);
+		Format(sTemp, sizeof(sTemp), "OnTrigger @director:ForcePanicEvent::%d:-1", g_iCvarHorde);
 		SetVariantString(sTemp);
 		AcceptEntityInput(entity, "AddOutput");
+		*/
 	}
 
 	SetVariantString("OnTrigger silver_planecrash_collision:FireUser2::27:-1");
@@ -1595,6 +1615,52 @@ void CreatePlaneCrash(float vPos[3], float vAng[3], int method)
 		AcceptEntityInput(entity, "SetParentAttachment");
 		g_iEntities[count++] = EntIndexToEntRef(entity);
 	}
+}
+
+void OnTriggerCrash(const char[] output, int caller, int activator, float delay)
+{
+	if( g_iCvarHorde )
+	{
+		if( caller > 0 ) caller = EntIndexToEntRef(caller);
+
+		if( caller == g_iEntities[0] )
+		{
+			CreateTimer(float(g_iCvarHorde), TimerHorde, g_iEntities[2], TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
+}
+
+Action TimerHorde(Handle timer, int entity)
+{
+	if( EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE )
+	{
+		if( g_bLeft4Dead2 )
+		{
+			static int director = INVALID_ENT_REFERENCE;
+
+			if( director == INVALID_ENT_REFERENCE || EntRefToEntIndex(director) == INVALID_ENT_REFERENCE )
+			{
+				director = FindEntityByClassname(-1, "info_director");
+				if( director != INVALID_ENT_REFERENCE )
+				{
+					director = EntIndexToEntRef(director);
+				}
+			}
+
+			if( director != INVALID_ENT_REFERENCE )
+			{
+				AcceptEntityInput(director, "ForcePanicEvent");
+				return Plugin_Continue;
+			}
+		}
+
+		int flags = GetCommandFlags("director_force_panic_event");
+		SetCommandFlags("director_force_panic_event", flags & ~FCVAR_CHEAT);
+		ServerCommand("director_force_panic_event");
+		SetCommandFlags("director_force_panic_event", flags);
+	}
+
+	return Plugin_Continue;
 }
 
 void OnUserCollision(const char[] output, int caller, int activator, float delay)

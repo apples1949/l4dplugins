@@ -1,31 +1,10 @@
-/*
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.	If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/*
-All4Dead - A modification for the game Left4Dead
-Copyright 2009 James Richardson
-Copyright 2020 Harry Potter
-*/
-
 #pragma semicolon 1
 #pragma newdecls required
 
 // Define constants
 #define PLUGIN_NAME					"All4Dead"
 #define PLUGIN_TAG					"[A4D]"
-#define PLUGIN_VERSION				"3.4"
+#define PLUGIN_VERSION				"3.5"
 #define MENU_DISPLAY_TIME		15
 
 // Include necessary files
@@ -37,6 +16,7 @@ Copyright 2020 Harry Potter
 #include <adminmenu>
 // Make the left4dhooks optional
 #include <left4dhooks>
+#include <multicolors>
 
 // Create ConVar Handles
 ConVar notify_players, zombies_increment, always_force_bosses, refresh_zombie_location = null;
@@ -64,47 +44,46 @@ bool automatic_placement = true;
 bool g_bSpawnWitchBride;
 
 // Global variables to hold menu position
-int g_iSpecialInfectedMenuPosition[MAXPLAYERS+1]	= 0;
-int g_iUInfectedMenuPosition[MAXPLAYERS+1]	= 0;
-int g_iItemMenuPosition[MAXPLAYERS+1]	= 0;
-int g_iWeaponMenuPosition[MAXPLAYERS+1]	= 0;
-int g_iMeleeMenuPosition[MAXPLAYERS+1]	= 0;
+int g_iSpecialInfectedMenuPosition[MAXPLAYERS+1];
+int g_iUInfectedMenuPosition[MAXPLAYERS+1];
+int g_iItemMenuPosition[MAXPLAYERS+1];
+int g_iWeaponMenuPosition[MAXPLAYERS+1];
+int g_iMeleeMenuPosition[MAXPLAYERS+1];
 
 #define ZOMBIESPAWN_Attempts 6
 
 #define	MAX_WEAPONS2		29
 static char g_sWeaponModels2[MAX_WEAPONS2][] =
 {
+	"models/w_models/weapons/w_pistol_B.mdl",
+	"models/w_models/weapons/w_desert_eagle.mdl",
 	"models/w_models/weapons/w_rifle_m16a2.mdl",
-	"models/w_models/weapons/w_autoshot_m4super.mdl",
-	"models/w_models/weapons/w_sniper_mini14.mdl",
-	"models/w_models/weapons/w_smg_uzi.mdl",
-	"models/w_models/weapons/w_pumpshotgun_A.mdl",
-	"models/w_models/weapons/w_pistol_a.mdl",
-	"models/w_models/weapons/w_eq_molotov.mdl",
-	"models/w_models/weapons/w_eq_pipebomb.mdl",
-	"models/w_models/weapons/w_eq_medkit.mdl",
-	"models/w_models/weapons/w_eq_painpills.mdl",
-
-	"models/w_models/weapons/w_shotgun.mdl",
-	"models/w_models/weapons/w_desert_rifle.mdl",
-	"models/w_models/weapons/w_grenade_launcher.mdl",
-	"models/w_models/weapons/w_m60.mdl",
 	"models/w_models/weapons/w_rifle_ak47.mdl",
 	"models/w_models/weapons/w_rifle_sg552.mdl",
+	"models/w_models/weapons/w_desert_rifle.mdl",
+	"models/w_models/weapons/w_autoshot_m4super.mdl",
 	"models/w_models/weapons/w_shotgun_spas.mdl",
+	"models/w_models/weapons/w_shotgun.mdl",
+	"models/w_models/weapons/w_pumpshotgun_A.mdl",
+	"models/w_models/weapons/w_smg_uzi.mdl",
 	"models/w_models/weapons/w_smg_a.mdl",
 	"models/w_models/weapons/w_smg_mp5.mdl",
+	"models/w_models/weapons/w_sniper_mini14.mdl",
 	"models/w_models/weapons/w_sniper_awp.mdl",
 	"models/w_models/weapons/w_sniper_military.mdl",
 	"models/w_models/weapons/w_sniper_scout.mdl",
+	"models/w_models/weapons/w_m60.mdl",
+	"models/w_models/weapons/w_grenade_launcher.mdl",
 	"models/weapons/melee/w_chainsaw.mdl",
-	"models/w_models/weapons/w_desert_eagle.mdl",
+	"models/w_models/weapons/w_eq_molotov.mdl",
+	"models/w_models/weapons/w_eq_pipebomb.mdl",
 	"models/w_models/weapons/w_eq_bile_flask.mdl",
+	"models/w_models/weapons/w_eq_painpills.mdl",
+	"models/w_models/weapons/w_eq_adrenaline.mdl",
+	"models/w_models/weapons/w_eq_Medkit.mdl",
 	"models/w_models/weapons/w_eq_defibrillator.mdl",
 	"models/w_models/weapons/w_eq_explosive_ammopack.mdl",
 	"models/w_models/weapons/w_eq_incendiary_ammopack.mdl",
-	"models/w_models/weapons/w_eq_adrenaline.mdl"
 };
 
 #define MODEL_COLA			"models/w_models/weapons/w_cola.mdl"
@@ -159,6 +138,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 /// Create plugin Convars, register all our commands and hook any events we need. View the generated all4dead.cfg file for a list of generated Convars.
 public void OnPluginStart() {
+
+	// Translations
+	LoadTranslations("all4dead2.phrases");
+	
 	GetGameData();
 
 	director_force_tank = FindConVar("director_force_tank");
@@ -259,7 +242,7 @@ public void OnPluginEnd() {
  * 	Command_SpawnInfected
  * </seealso>
 */
-public Action Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast) {
+public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast) {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	/* If something spawns and we have just requested something to spawn - assume it is the same thing and make sure it has max health */
 	if (GetClientTeam(client) == 3 && currently_spawning) {
@@ -287,7 +270,7 @@ public Action Event_PlayerSpawn(Event event, const char[] name, bool dontBroadca
  * 	Command_SpawnBossesContinuously
  * </seealso>
 */
-public Action Event_BossSpawn(Event event, const char[] name, bool dontBroadcast) {
+public void Event_BossSpawn(Event event, const char[] name, bool dontBroadcast) {
 	if (always_force_bosses.BoolValue == false)
 		if (strcmp(name, "tank_spawn") == 0 && director_force_tank.BoolValue)
 			Do_ForceTank(0, false);
@@ -345,33 +328,37 @@ public Action Timer_RefreshLocation(Handle timer) {
 public Action Timer_TeleportZombie(Handle timer, any entity) {
 	TeleportEntity(entity, last_zombie_spawn_location, NULL_VECTOR, NULL_VECTOR);
 	// PrintToChatAll("Zombie being teleported to int location");
+
+	return Plugin_Continue;
 }
 
 /// Handles the top level "All4Dead" category and how it is displayed on the core admin menu
 public int Menu_CategoryHandler(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int client, char[] buffer, int maxlength) {
 	if (action == TopMenuAction_DisplayTitle)
-		Format(buffer, maxlength, "All4Dead菜单:");
+		Format(buffer, maxlength, Translate(client, "%t", "All4Dead Commands"));
 	else if (action == TopMenuAction_DisplayOption)
-		Format(buffer, maxlength, "All4Dead菜单-apples1949汉化");
+		Format(buffer, maxlength, Translate(client, "%t", "All4Dead Commands"));
+
+	return 0;
 }
 /// Handles what happens someone opens the "All4Dead" category from the menu.
 public int Menu_TopItemHandler(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int client, char[] buffer, int maxlength) {
 /* When an item is displayed to a player tell the menu to Format the item */
 	if (action == TopMenuAction_DisplayOption) {
 		if (object_id == director_menu)
-			Format(buffer, maxlength, "僵尸管理");
+			Format(buffer, maxlength, Translate(client, "%t", "Director Commands"));
 		else if (object_id == spawn_special_infected_menu)
-			Format(buffer, maxlength, "生成特感");
+			Format(buffer, maxlength, Translate(client, "%t", "Spawn Special Infected"));
 		else if (object_id == spawn_uncommon_infected_menu)
-			Format(buffer, maxlength, "生成特殊僵尸");
+			Format(buffer, maxlength, Translate(client, "%t", "Spawn Uncommon Infected"));
 		else if (object_id == spawn_melee_weapons_menu)
-			Format(buffer, maxlength, "生成近战");
+			Format(buffer, maxlength, Translate(client, "%t", "Spawn Melee Weapons"));
 		else if (object_id == spawn_weapons_menu)
-			Format(buffer, maxlength, "生成武器");
+			Format(buffer, maxlength, Translate(client, "%t", "Spawn Weapons"));
 		else if (object_id == spawn_items_menu)
-			Format(buffer, maxlength, "生成物品");
+			Format(buffer, maxlength, Translate(client, "%t", "Spawn Items"));
 		else if (object_id == config_menu)
-			Format(buffer, maxlength, "消息管理及恢复默认设置");
+			Format(buffer, maxlength, Translate(client, "%t", "Configuration Options"));
 	} else if (action == TopMenuAction_SelectOption) {
 		if (object_id == director_menu)
 			Menu_CreateDirectorMenu(client, false);
@@ -388,33 +375,34 @@ public int Menu_TopItemHandler(TopMenu topmenu, TopMenuAction action, TopMenuObj
 		else if (object_id == config_menu)
 			Menu_CreateConfigMenu(client, false);
 	}
+
+	return 0;
 }
 
 // Infected spawning functions
 
 /// Creates the infected spawning menu when it is selected from the top menu and displays it to the client.
-public Action Menu_CreateSpecialInfectedMenu(int client, int args) {
+public void Menu_CreateSpecialInfectedMenu(int client, int args) {
 	Menu menu;
 	menu = new Menu(Menu_SpawnSInfectedHandler);
 	 
-	menu.SetTitle("生成特感");
+	menu.SetTitle(Translate(client, "%t", "Spawn Special Infected"));
 	menu.ExitBackButton = true;
 	menu.ExitButton = true;
 	if (automatic_placement)
-		menu.AddItem("ap", "关闭自动放置");
+		menu.AddItem("ap", Translate(client, "%t", "Disable automatic placement"));
 	else 
-		menu.AddItem("ap", "开启自动放置");
-	menu.AddItem("st", "生成坦克");
-	menu.AddItem("sw", "生成女巫");
-	menu.AddItem("sb", "生成胖子");
-	menu.AddItem("sh", "生成猎人");
-	menu.AddItem("ss", "生成烟鬼");
-	menu.AddItem("sp", "生成口水");
-	menu.AddItem("sj", "生成猴子");
-	menu.AddItem("sc", "生成牛牛");
-	menu.AddItem("sb", "生成尸潮");
+		menu.AddItem("ap", Translate(client, "%t", "Enable automatic placement"));
+	menu.AddItem("st", Translate(client, "%t", "Spawn a tank"));
+	menu.AddItem("sw", Translate(client, "%t", "Spawn a witch"));
+	menu.AddItem("sb", Translate(client, "%t", "Spawn a boomer"));
+	menu.AddItem("sh", Translate(client, "%t", "Spawn a hunter"));
+	menu.AddItem("ss", Translate(client, "%t", "Spawn a smoker"));
+	menu.AddItem("sp", Translate(client, "%t", "Spawn a spitter"));
+	menu.AddItem("sj", Translate(client, "%t", "Spawn a jockey"));
+	menu.AddItem("sc", Translate(client, "%t", "Spawn a charger"));
+	menu.AddItem("sb", Translate(client, "%t", "Spawn a mob"));
 	menu.DisplayAt(client, g_iSpecialInfectedMenuPosition[client], MENU_TIME_FOREVER);
-	return Plugin_Handled;
 }
 /// Handles callbacks from a client using the spawning menu.
 public int Menu_SpawnSInfectedHandler(Menu menu, MenuAction action, int cindex, int itempos) {
@@ -455,25 +443,27 @@ public int Menu_SpawnSInfectedHandler(Menu menu, MenuAction action, int cindex, 
 	else if (action == MenuAction_Cancel)
 		if (itempos == MenuCancel_ExitBack && admin_menu != null)
 			admin_menu.Display( cindex, TopMenuPosition_LastCategory);
+
+	return 0;
 }
 
 /// Creates the infected spawning menu when it is selected from the top menu and displays it to the client.
 public Action Menu_CreateUInfectedMenu(int client, int args) {
 	Menu menu = new Menu(Menu_SpawnUInfectedHandler);
-	menu.SetTitle("生成特殊僵尸");
+	menu.SetTitle(Translate(client, "%t", "Spawn Uncommon Infected"));
 	menu.ExitBackButton = true;
 	menu.ExitButton = true;
 	if (automatic_placement)
-		menu.AddItem("ap", "关闭自动放置");
+		menu.AddItem("ap", Translate(client, "%t", "Disable automatic placement"));
 	else 
-		menu.AddItem("ap", "开启自动放置");
-	menu.AddItem("s1", "生成防爆僵尸");
-	menu.AddItem("s2", "生成防护服僵尸");
-	menu.AddItem("s3", "生成小丑僵尸");
-	menu.AddItem("s4", "生成泥人僵尸");
-	menu.AddItem("s5", "生成工人僵尸");
-	menu.AddItem("s6", "生成赛车服僵尸");
-	menu.AddItem("s7", "生成堕落生还者僵尸");
+		menu.AddItem("ap", Translate(client, "%t", "Enable automatic placement"));
+	menu.AddItem("s1", Translate(client, "%t", "Spawn a riot zombie"));
+	menu.AddItem("s2", Translate(client, "%t", "Spawn a ceda zombie"));
+	menu.AddItem("s3", Translate(client, "%t", "Spawn a clown zombie"));
+	menu.AddItem("s4", Translate(client, "%t", "Spawn a mudmen zombie"));
+	menu.AddItem("s5", Translate(client, "%t", "Spawn a roadworker zombie"));
+	menu.AddItem("s6", Translate(client, "%t", "Spawn a jimmie gibbs zombie"));
+	menu.AddItem("s7", Translate(client, "%t", "Spawn a fallen survivor zombie"));
 	menu.DisplayAt(client, g_iUInfectedMenuPosition[client], MENU_TIME_FOREVER);
 	return Plugin_Handled;
 }
@@ -512,13 +502,15 @@ public int Menu_SpawnUInfectedHandler(Menu menu, MenuAction action, int cindex, 
 	else if (action == MenuAction_Cancel)
 		if (itempos == MenuCancel_ExitBack && admin_menu != null)
 			admin_menu.Display( cindex, TopMenuPosition_LastCategory);
+	
+	return 0;
 }
 
 /// Sourcemod Action for the SpawnInfected command.
 public Action Command_SpawnInfected(int client, int args) { 
 	if (client == 0)
 	{
-		PrintToServer("This Command cannot be used by server.");
+		PrintToServer("[TS] This Command cannot be used by server.");
 		return Plugin_Handled;
 	}
 
@@ -606,14 +598,14 @@ void Do_SpawnInfected(int client, const char[] type) {
 	{
 		if(L4D_GetRandomPZSpawnPosition(L4D_GetHighestFlowSurvivor(), zombieclass, 5, vPos) == false)
 		{
-			PrintToChat(client, "尝试五次后无法为此特感找到有效的生成位置");
+			PrintToChat(client, "%T", "Could not find a valid spawn position for S.I. in 5 tries", client);
 			return;
 		}
 	}
 	else
 	{
 		if( !SetTeleportEndPoint(client, vPos, vAng) ) {
-			PrintToChat(client, "生成失败，请再次尝试");
+			PrintToChat(client, "%T", "Can not spawn, please try again", client);
 			return;
 		}
 	}
@@ -702,7 +694,7 @@ void Do_SpawnInfected(int client, const char[] type) {
 		TeleportEntity(bot, vPos, NULL_VECTOR, NULL_VECTOR); //移動到相同位置
 
 		char feedback[64];
-		Format(feedback, sizeof(feedback), "A %s has been spawned", type);
+		Format(feedback, sizeof(feedback), "{olive}%s {lightgreen}%t", type, "has been spawned");
 		NotifyPlayers(client, feedback);
 		LogAction(client, -1, "[NOTICE]: (%L) has spawned a %s", client, type);
 	}
@@ -712,9 +704,9 @@ void Do_SpawnInfected_Old(int client, const char[] type, bool spawning_uncommon 
 
 	char arguments[16];
 	char feedback[64];
-	Format(feedback, sizeof(feedback), "A %s has been spawned", type);
+	Format(feedback, sizeof(feedback), "{olive}%s {lightgreen}%t", type, "has been spawned");
 	if (automatic_placement == true && !spawning_uncommon)
-		Format(arguments, sizeof(arguments), "%s %s", type, "auto");
+		Format(arguments, sizeof(arguments), "%s %t", type, "auto");
 	else
 		Format(arguments, sizeof(arguments), "%s", type);
 	// If we are spawning an uncommon
@@ -722,7 +714,7 @@ void Do_SpawnInfected_Old(int client, const char[] type, bool spawning_uncommon 
 		currently_spawning = true;
 	// If we are spawning from the console make sure we force auto placement on	
 	if (client == 0) {
-		Format(arguments, sizeof(arguments), "%s %s", type, "auto");
+		Format(arguments, sizeof(arguments), "%s %t", type, "auto");
 		StripAndExecuteClientCommand(Misc_GetAnyClient(), "z_spawn_old", arguments);
 	} else if (spawning_uncommon && automatic_placement == true) {
 		currently_spawning = false;
@@ -749,13 +741,13 @@ void Do_SpawnWitch(const int client, const bool bAutoSpawn)
 	float vPos[3], vAng[3] = {0.0, 0.0, 0.0};
 	if (bAutoSpawn) {
 		if(L4D_GetRandomPZSpawnPosition(L4D_GetHighestFlowSurvivor(),7,ZOMBIESPAWN_Attempts,vPos) == false) {
-			PrintToChat(client, "Can't spawn witch in %d tries at this moment.", ZOMBIESPAWN_Attempts);
+			PrintToChat(client, "%T", "Can not spawn witch in tries at this moment", client, ZOMBIESPAWN_Attempts);
 			return;
 		}
 	} 
 	else {
 		if( !SetTeleportEndPoint(client, vPos, vAng) ) {
-			PrintToChat(client, "无法生成，请再次尝试");
+			PrintToChat(client, "%T", "Can not spawn, please try again", client);
 			return;
 		}
 	}
@@ -816,9 +808,9 @@ public Action Command_EnableAutoPlacement(int client, int args) {
 void Do_EnableAutoPlacement(int client, bool value) {
 	automatic_placement = value;
 	if (value == true)
-		NotifyPlayers(client, "自动放置感染者已启动.");
+		NotifyPlayers(client, "{lightgreen}%t", "Automatic placement of spawned infected has been enabled");
 	else
-		NotifyPlayers(client, "自动放置感染者已关闭");
+		NotifyPlayers(client, "{lightgreen}%t", "Automatic placement of spawned infected has been disabled");
 	//LogAction(client, -1, "(%L) set %s to %i", client, "a4d_automatic_placement", value);	
 }
 
@@ -827,26 +819,26 @@ void Do_EnableAutoPlacement(int client, bool value) {
 /// Creates the item spawning menu when it is selected from the top menu and displays it to the client */
 public Action Menu_CreateItemMenu(int client, int args) {
 	Menu menu = new Menu(Menu_SpawnItemsHandler);
-	menu.SetTitle("生成物品");
+	menu.SetTitle(Translate(client, "%t", "Spawn Items"));
 	menu.ExitBackButton = true;
 	menu.ExitButton = true;
-	menu.AddItem("sd", "生成除颤器");
-	menu.AddItem("sm", "生成医疗包");
-	menu.AddItem("sp", "生成药丸");
-	menu.AddItem("sa", "生成肾上腺素");
-	menu.AddItem("sv", "生成燃烧瓶");
-	menu.AddItem("sb", "生成引诱手雷");
-	menu.AddItem("sb", "生成胆汁");
-	menu.AddItem("sg", "生成油桶");
-	menu.AddItem("st", "生成烟花盒");
-	menu.AddItem("so", "生成煤气罐");
-	menu.AddItem("sa", "生成氧气瓶");
-	menu.AddItem("si", "生成弹药堆");
-	menu.AddItem("sn", "生成激光瞄准器");
-	menu.AddItem("se", "生成燃烧弹药包");
-	menu.AddItem("sf", "生成爆炸弹药包");
-	menu.AddItem("sg", "生成侏儒");
-	menu.AddItem("sh", "生成可乐");
+	menu.AddItem("sd", Translate(client, "%t", "Spawn a defibrillator"));
+	menu.AddItem("sm", Translate(client, "%t", "Spawn a medkit"));
+	menu.AddItem("sp", Translate(client, "%t", "Spawn some pills"));
+	menu.AddItem("sa", Translate(client, "%t", "Spawn some adrenaline"));
+	menu.AddItem("sv", Translate(client, "%t", "Spawn a molotov"));
+	menu.AddItem("sb", Translate(client, "%t", "Spawn a pipe bomb"));
+	menu.AddItem("sb", Translate(client, "%t", "Spawn a bile jar"));
+	menu.AddItem("sg", Translate(client, "%t", "Spawn a gas tank"));
+	menu.AddItem("st", Translate(client, "%t", "Spawn a firework"));
+	menu.AddItem("so", Translate(client, "%t", "Spawn a propane tank"));
+	menu.AddItem("sa", Translate(client, "%t", "Spawn an oxygen tank"));
+	menu.AddItem("si", Translate(client, "%t", "Spawn an ammo pile"));
+	menu.AddItem("sn", Translate(client, "%t", "Spawn laser sight pack"));
+	menu.AddItem("se", Translate(client, "%t", "Spawn incendiary ammo"));
+	menu.AddItem("sf", Translate(client, "%t", "Spawn explosive ammo"));
+	menu.AddItem("sg", Translate(client, "%t", "Spawn a gnome"));
+	menu.AddItem("sh", Translate(client, "%t", "Spawn cola bottles"));
 	menu.DisplayAt( client, g_iItemMenuPosition[client], MENU_TIME_FOREVER);
 	return Plugin_Handled;
 }
@@ -906,6 +898,8 @@ public int Menu_SpawnItemsHandler(Menu menu, MenuAction action, int cindex, int 
 		if (itempos == MenuCancel_ExitBack && admin_menu != null)
 			admin_menu.Display( cindex, TopMenuPosition_LastCategory);
 	}
+
+	return 0;
 }
 /// Sourcemod Action for the Do_SpawnItem command.
 public Action Command_SpawnItem(int client, int args) { 
@@ -934,7 +928,7 @@ public Action Command_SpawnItem(int client, int args) {
 */
 void Do_SpawnItem(int client, const char[] type) {
 	char feedback[64];
-	Format(feedback, sizeof(feedback), "A %s has been spawned", type);
+	Format(feedback, sizeof(feedback), "{olive}%s {lightgreen}%t", type, "has been spawned");
 	if (client == 0) {
 		ReplyToCommand(client, "Can not use this command from the console."); 
 	} else {
@@ -966,29 +960,29 @@ void Do_CreateEntity(int client, const char[] name, const char[] model, float lo
 /// Creates the weapon spawning menu when it is selected from the top menu and displays it to the client.
 public Action Menu_CreateWeaponMenu(int client, int args) {
 	Menu menu = new Menu(Menu_SpawnWeaponHandler);
-	menu.SetTitle("生成武器");
+	menu.SetTitle(Translate(client, "%t", "Spawn Weapons"));
 	menu.ExitBackButton = true;
 	menu.ExitButton = true;
 	
-	menu.AddItem("s1", "生成手枪");
-	menu.AddItem("s2", "生成马格南");
-	menu.AddItem("s3", "生成木喷");
-	menu.AddItem("s4", "生成铁喷");
-	menu.AddItem("s5", "生成冲锋枪");
-	menu.AddItem("s6", "生成消音冲锋枪");
-	menu.AddItem("s7", "生成MP5");
-	menu.AddItem("s8", "生成步枪");
-	menu.AddItem("s9", "生成SG552");
-	menu.AddItem("s0", "生成AK47");
-	menu.AddItem("sa", "生成SCAR");
-	menu.AddItem("sb", "生成SPAS霰弹枪");
-	menu.AddItem("sc", "生成自动霰弹枪");
-	menu.AddItem("sd", "生成猎枪");
-	menu.AddItem("se", "生成军用狙击枪");
-	menu.AddItem("sf", "生成鸟狙");
-	menu.AddItem("sg", "生成AWP");
-	menu.AddItem("sh", "生成榴弹发射器");
-	menu.AddItem("si", "生成M60");
+	menu.AddItem("s1", Translate(client, "%t", "Spawn a pistol"));
+	menu.AddItem("s2", Translate(client, "%t", "Spawn a magnum"));
+	menu.AddItem("s3", Translate(client, "%t", "Spawn a pumpshotgun"));
+	menu.AddItem("s4", Translate(client, "%t", "Spawn a shotgun chrome"));
+	menu.AddItem("s5", Translate(client, "%t", "Spawn a sub machine gun"));
+	menu.AddItem("s6", Translate(client, "%t", "Spawn a silenced smg"));
+	menu.AddItem("s7", Translate(client, "%t", "Spawn a mp5"));
+	menu.AddItem("s8", Translate(client, "%t", "Spawn an assault rifle"));
+	menu.AddItem("s9", Translate(client, "%t", "Spawn a sg552 rifle"));
+	menu.AddItem("s0", Translate(client, "%t", "Spawn an AK74"));
+	menu.AddItem("sa", Translate(client, "%t", "Spawn a desert rifle"));
+	menu.AddItem("sb", Translate(client, "%t", "Spawn a shotgun spas"));
+	menu.AddItem("sc", Translate(client, "%t", "Spawn an auto shotgun"));
+	menu.AddItem("sd", Translate(client, "%t", "Spawn a hunting rifle"));
+	menu.AddItem("se", Translate(client, "%t", "Spawn a military sniper"));
+	menu.AddItem("sf", Translate(client, "%t", "Spawn a scout"));
+	menu.AddItem("sg", Translate(client, "%t", "Spawn an awp"));
+	menu.AddItem("sh", Translate(client, "%t", "Spawn a grenade launcher"));
+	menu.AddItem("si", Translate(client, "%t", "Spawn a m60"));
 	menu.DisplayAt( client,  g_iWeaponMenuPosition[client], MENU_TIME_FOREVER);
 	return Plugin_Handled;
 }
@@ -1044,29 +1038,31 @@ public int Menu_SpawnWeaponHandler(Menu menu, MenuAction action, int cindex, int
 	else if (action == MenuAction_Cancel)
 		if (itempos == MenuCancel_ExitBack && admin_menu != null)
 			admin_menu.Display( cindex, TopMenuPosition_LastCategory);
+
+	return 0;
 }
 
 /// Creates the melee weapon spawning menu when it is selected from the top menu and displays it to the client.
 public Action Menu_CreateMeleeWeaponMenu(int client, int args) {
 	Menu menu = new Menu(Menu_SpawnMeleeWeaponHandler);
-	menu.SetTitle("生成近战");
+	menu.SetTitle(Translate(client, "%t", "Spawn Melee Weapons"));
 	menu.ExitBackButton = true;
 	menu.ExitButton = true;
 	
-	menu.AddItem("ma", "生成棒球棍");
-	menu.AddItem("mb", "生成电锯");
-	menu.AddItem("mc", "生成板球棍");
-	menu.AddItem("md", "生成撬棍");
-	menu.AddItem("me", "生成电吉他");
-	menu.AddItem("mf", "生成消防斧");
-	menu.AddItem("mg", "生成平底锅");
-	menu.AddItem("mh", "生成武士刀");
-	menu.AddItem("mi", "生成砍刀");
-	menu.AddItem("mj", "生成警棍");
-	menu.AddItem("mk", "生成小刀");
-	menu.AddItem("ml", "生成高尔夫球棍");
-	menu.AddItem("mm", "生成干草叉");
-	menu.AddItem("mn", "生成铁铲");
+	menu.AddItem("ma", Translate(client, "%t", "Spawn a baseball bat"));
+	menu.AddItem("mb", Translate(client, "%t", "Spawn a chainsaw"));
+	menu.AddItem("mc", Translate(client, "%t", "Spawn a cricket bat"));
+	menu.AddItem("md", Translate(client, "%t", "Spawn a crowbar"));
+	menu.AddItem("me", Translate(client, "%t", "Spawn an electric guitar"));
+	menu.AddItem("mf", Translate(client, "%t", "Spawn a fire axe"));
+	menu.AddItem("mg", Translate(client, "%t", "Spawn a frying pan"));
+	menu.AddItem("mh", Translate(client, "%t", "Spawn a katana"));
+	menu.AddItem("mi", Translate(client, "%t", "Spawn a machete"));
+	menu.AddItem("mj", Translate(client, "%t", "Spawn a police baton"));
+	menu.AddItem("mk", Translate(client, "%t", "Spawn a knife"));
+	menu.AddItem("ml", Translate(client, "%t", "Spawn a golf club"));
+	menu.AddItem("mm", Translate(client, "%t", "Spawn a pitchfork"));
+	menu.AddItem("mn", Translate(client, "%t", "Spawn a shovel"));
 	
 	menu.DisplayAt( client, g_iMeleeMenuPosition[client], MENU_TIME_FOREVER);
 	return Plugin_Handled;
@@ -1114,24 +1110,25 @@ public int Menu_SpawnMeleeWeaponHandler(Menu menu, MenuAction action, int cindex
 	else if (action == MenuAction_Cancel)
 		if (itempos == MenuCancel_ExitBack && admin_menu != null)
 			admin_menu.Display( cindex, TopMenuPosition_LastCategory);
+
+	return 0;
 }
 
 // Additional director commands
 
 /// Creates the director commands menu when it is selected from the top menu and displays it to the client.
-public Action Menu_CreateDirectorMenu(int client, int args) {
+public void Menu_CreateDirectorMenu(int client, int args) {
 	Menu menu = new Menu(Menu_DirectorMenuHandler);
-	menu.SetTitle("僵尸管理");
+	menu.SetTitle(Translate(client, "%t", "Director Commands"));
 	menu.ExitBackButton = true;
 	menu.ExitButton = true;
-	menu.AddItem("fp", "强制生成尸潮");
-	if (director_panic_forever.BoolValue) { menu.AddItem("pf", "终止无尽尸潮"); } else { menu.AddItem("pf", "强迫生成无尽尸潮"); }
-	if (director_force_tank.BoolValue) { menu.AddItem("ft", "停止导演系统在本局生成坦克"); } else { menu.AddItem("ft", "强制导演系统在本局生成一个坦克"); }
-	if (director_force_witch.BoolValue) { menu.AddItem("fw", "停止导演系统在本局生成女巫"); } else { menu.AddItem("fw", "强制导演系统在本局生成一个女巫"); }
-	if (always_force_bosses.BoolValue) { menu.AddItem("fd", "强制停止持续生成特感"); } else { menu.AddItem("fw", "强制持续生成特感"); }
-	menu.AddItem("mz", "设定更多的僵尸");	
+	menu.AddItem("fp", Translate(client, "%t", "Force a panic event to start"));
+	if (director_panic_forever.BoolValue) { menu.AddItem("pf", Translate(client, "%t", "End non-stop panic events")); } else { menu.AddItem("pf", Translate(client, "%t", "Force non-stop panic events")); }
+	if (director_force_tank.BoolValue) { menu.AddItem("ft", Translate(client, "%t", "Director controls if a tank spawns this round")); } else { menu.AddItem("ft", Translate(client, "%t", "Force a tank to spawn this round")); }
+	if (director_force_witch.BoolValue) { menu.AddItem("fw", Translate(client, "%t", "Director controls if a witch spawns this round")); } else { menu.AddItem("fw", Translate(client, "%t", "Force a witch to spawn this round")); }
+	if (always_force_bosses.BoolValue) { menu.AddItem("fd", Translate(client, "%t", "Stop bosses spawning continuously")); } else { menu.AddItem("fw", Translate(client, "%t", "Force bosses to spawn continuously")); }
+	menu.AddItem("mz", Translate(client, "%t", "Add more zombies to the horde"));	
 	menu.Display( client, MENU_TIME_FOREVER);
-	return Plugin_Handled;
 }
 /// Handles callbacks from a client using the director commands menu.
 public int Menu_DirectorMenuHandler(Menu menu, MenuAction action, int cindex, int itempos) {
@@ -1170,6 +1167,8 @@ public int Menu_DirectorMenuHandler(Menu menu, MenuAction action, int cindex, in
 		if (itempos == MenuCancel_ExitBack && admin_menu != null)
 			admin_menu.Display( cindex, TopMenuPosition_LastCategory);
 	}
+
+	return 0;
 }
 
 /// Sourcemod Action for the AlwaysForceBosses command.
@@ -1198,9 +1197,9 @@ public Action Command_AlwaysForceBosses(int client, int args) {
 void Do_AlwaysForceBosses(int client, bool value) {
 	SetConVarBool(always_force_bosses, value);
 	if (value == true)
-		NotifyPlayers(client, "现在将会持续生成特感.");
+		NotifyPlayers(client, "{lightgreen}%t", "Bosses will now spawn continuously");
 	else
-		NotifyPlayers(client, "现在将会在更长的时间生成特感.");
+		NotifyPlayers(client, "{lightgreen}%t", "Bosses will no longer spawn continuously");
 }
 
 /// Sourcemod Action for the Do_ForcePanic command.
@@ -1222,7 +1221,7 @@ void Do_ForcePanic(int client) {
 		StripAndExecuteClientCommand(Misc_GetAnyClient(), "director_force_panic_event", "");
 	else
 		StripAndExecuteClientCommand(client, "director_force_panic_event", "");
-	NotifyPlayers(client, "僵尸来了");	
+	NotifyPlayers(client, "{lightgreen}%t", "The zombies are coming!");	
 	LogAction(client, -1, "[NOTICE]: (%L) executed %s", client, "a4d_force_panic");
 }
 /// Sourcemod Action for the Do_PanicForever command.
@@ -1255,9 +1254,9 @@ public Action Command_PanicForever(int client, int args) {
 void Do_PanicForever(int client, bool value) {
 	StripAndChangeServerConVarBool(client, director_panic_forever, value);
 	if (value == true)
-		NotifyPlayers(client, "尸潮事件已开始");
+		NotifyPlayers(client, "{lightgreen}%t", "Endless panic events have started");
 	else
-		NotifyPlayers(client, "尸潮事件已结束");
+		NotifyPlayers(client, "{lightgreen}%t", "Endless panic events have ended");
 }
 /// Sourcemod Action for the Do_ForceTank command.
 public Action Command_ForceTank(int client, int args) {
@@ -1279,9 +1278,9 @@ public Action Command_ForceTank(int client, int args) {
 void Do_ForceTank(int client, bool value) {
 	StripAndChangeServerConVarBool(client, director_force_tank, value);
 	if (value == true)
-		NotifyPlayers(client, "本局将会生成一个坦克");
+		NotifyPlayers(client, "{lightgreen}%t", "A tank is guaranteed to spawn this round");
 	else
-		NotifyPlayers(client, "本局将不会生成坦克");
+		NotifyPlayers(client, "{lightgreen}%t", "A tank is no longer guaranteed to spawn this round");
 }
 /// Sourcemod Action for the Do_ForceWitch command.
 public Action Command_ForceWitch(int client, int args) {
@@ -1301,9 +1300,9 @@ public Action Command_ForceWitch(int client, int args) {
 void Do_ForceWitch(int client, bool value) {
 	StripAndChangeServerConVarBool(client, director_force_witch, value);
 	if (value == true)
-		NotifyPlayers(client, "本局将生成一个女巫");	
+		NotifyPlayers(client, "{lightgreen}%t", "A witch is guaranteed to spawn this round");
 	else 
-		NotifyPlayers(client, "本局将不会生成女巫");
+		NotifyPlayers(client, "{lightgreen}%t", "A witch is no longer guaranteed to spawn this round");
 }
 
 
@@ -1345,7 +1344,7 @@ void Do_AddZombies(int client, int zombies_to_add) {
 	StripAndChangeServerConVarInt(client, z_background_limit_size, new_zombie_total);
 	PrintToChat(client, "z_background_limit:%d", new_zombie_total);
 	PrintToChat(client, " ");
-	//NotifyPlayers(client, "The horde grows larger.");
+	NotifyPlayers(client, "{lightgreen}%t", "The horde grows larger");
 }
 
 // Configuration commands
@@ -1353,11 +1352,11 @@ void Do_AddZombies(int client, int zombies_to_add) {
 /// Creates the configuration commands menu when it is selected from the top menu and displays it to the client.
 public Action Menu_CreateConfigMenu(int client, int args) {
 	Menu menu = new Menu(Menu_ConfigCommandsHandler);
-	menu.SetTitle("消息管理及恢复默认设置");
+	menu.SetTitle(Translate(client, "%t", "Configuration Commands"));
 	menu.ExitBackButton = true;
 	menu.ExitButton = true;
-	if (notify_players.BoolValue) { menu.AddItem("pn", "关闭玩家通知"); } else { menu.AddItem("pn", "开启玩家通知"); }
-	menu.AddItem("rs", "恢复默认游戏设置");
+	if (notify_players.BoolValue) { menu.AddItem("pn", Translate(client, "%t", "Disable player notifications")); } else { menu.AddItem("pn", Translate(client, "%t", "Enable player notifications")); }
+	menu.AddItem("rs", Translate(client, "%t", "Restore all settings to game defaults now"));
 	menu.Display( client, MENU_TIME_FOREVER);
 	return Plugin_Handled;
 }
@@ -1382,6 +1381,8 @@ public int Menu_ConfigCommandsHandler(Menu menu, MenuAction action, int cindex, 
 		if (itempos == MenuCancel_ExitBack && admin_menu != null)
 			admin_menu.Display( cindex, TopMenuPosition_LastCategory);
 	}
+
+	return 0;
 }
 
 /// Sourcemod Action for the Do_EnableNotifications command.
@@ -1408,7 +1409,7 @@ public Action Command_EnableNotifications(int client, int args) {
 */
 void Do_EnableNotifications(int client, bool value) {
 	SetConVarBool(notify_players, value);
-	NotifyPlayers(client, "玩家通知功能已开启.");
+	NotifyPlayers(client, "{lightgreen}%t", "Player notifications have now been enabled");
 	LogAction(client, -1, "(%L) set %s to %i", client, "a4d_notify_players", value);	
 }
 /// Sourcemod Action for the Do_ResetToDefaults command.
@@ -1424,14 +1425,7 @@ void Do_ResetToDefaults(int client) {
 	StripAndChangeServerConVarInt(client, z_mega_mob_size, 50);
 	StripAndChangeServerConVarInt(client, z_mob_spawn_max_size, 30);
 	StripAndChangeServerConVarInt(client, z_mob_spawn_min_size, 10);
-	StripAndChangeServerConVarInt(client, z_common_limit_size, 30);
-	StripAndChangeServerConVarInt(client, z_background_limit_size, 20);
-	NotifyPlayers(client, "已恢复默认游戏设置.");
-	PrintToChat(client, "z_mega_mob_size:50");
-	PrintToChat(client, "z_mob_spawn_max:30");
-	PrintToChat(client, "z_mob_spawn_min:10");
-	PrintToChat(client, "z_common_limit:30");
-	PrintToChat(client, "z_background_limit:20");
+	NotifyPlayers(client, "{lightgreen}%t", "Restored the default settings");
 	LogAction(client, -1, "(%L) executed %s", client, "a4d_reset_to_defaults");
 }
 
@@ -1455,17 +1449,21 @@ public Action Command_EnableAllBotTeams(int client, int args) {
 void Do_EnableAllBotTeam(int client, bool value) {
 	StripAndChangeServerConVarBool(client, sb_all_bot_team, value);
 	if (value == true)
-		NotifyPlayers(client, "已运允许全bot生还者");	
+		NotifyPlayers(client, "{lightgreen}%t", "Allowing an all bot survivor team");	
 	else
-		NotifyPlayers(client, "现在要去生还者团队至少有一名真人玩家");
+		NotifyPlayers(client, "{lightgreen}%t", "We now require at least one human survivor before the game can start");
 }
 
 // Helper functions
 
 /// Wrapper for ShowActivity2 in case we want to change how this works later on
-void NotifyPlayers(int client, const char[] message) {
+// Replace ShowActivity2 with CPrintToChat to support colors chat and Also translating the text. (Zakikun)
+void NotifyPlayers(int client, const char[] message, any ...) {
+	char buffer[192];
+	SetGlobalTransTarget(client);
+	VFormat(buffer, sizeof(buffer), message, 3);
 	if (notify_players.BoolValue)
-		ShowActivity2(client, PLUGIN_TAG, message);
+		CPrintToChat(client, "{green}[A4D] %s", buffer);
 }
 /// Strip and change a ConVarBool to another value. This allows modification of otherwise cheat-protected ConVars.
 void StripAndChangeServerConVarBool(int client, ConVar convar, bool value) {
@@ -1543,6 +1541,8 @@ public Action kickbot(Handle timer, any client)
 	{
 		if (IsFakeClient(client)) KickClient(client);
 	}
+
+	return Plugin_Continue;
 }
 
 // ====================================================================================================
@@ -1854,4 +1854,13 @@ bool IsValidClient(int client)
 	if (client <= 0 || client > MaxClients) return false;
 	if (!IsClientInGame(client)) return false;
 	return true;
+}
+
+// Replace original text with translated text (Zakikun)
+char[] Translate(int client, const char[] format, any ...)
+{
+	char buffer[192];
+	SetGlobalTransTarget(client);
+	VFormat(buffer, sizeof(buffer), format, 3);
+	return buffer;
 }

@@ -1,6 +1,6 @@
 /*
 *	Gear Transfer
-*	Copyright (C) 2022 Silvers
+*	Copyright (C) 2023 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"2.28"
+#define PLUGIN_VERSION		"2.29"
 
 /*======================================================================================
 	Plugin Info:
@@ -31,6 +31,12 @@
 
 ========================================================================================
 	Change Log:
+
+2.29 (20-Jan-2023)
+	- Reverted change that broke equipping items on some servers. Thanks to "MilanesaTM" for reporting.
+
+2.28b (07-Jan-2023)
+	- Fixed incorrect Simplified Chinese translations. Thanks to "apples1949" and "a2121858" for reporting.
 
 2.28 (25-Dec-2022)
 	- Added Simplified Chinese translations. Thanks to "NoroHime" and "a2121858" for providing.
@@ -1715,7 +1721,7 @@ int CreateAndEquip(int client, int type)
 	int entity = GivePlayerItem(client, classname);
 	if( entity != INVALID_ENT_REFERENCE )
 	{
-		// EquipPlayerWeapon(client, entity);
+		EquipPlayerWeapon(client, entity);
 		return entity;
 	}
 

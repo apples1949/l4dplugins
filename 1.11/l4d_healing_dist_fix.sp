@@ -2,6 +2,9 @@
 // ====================================================================================================
 Change Log:
 
+1.0.2 (25-January-2023)
+    - Changed the radius check to be based on player_use_radius cvar.
+
 1.0.1 (03-January-2023)
     - Added L4D1 support. (thanks "KadabraZz" for reporting)
 
@@ -17,7 +20,7 @@ Change Log:
 #define PLUGIN_NAME                   "[L4D1 & L4D2] Healing Distance Exploit Fix"
 #define PLUGIN_AUTHOR                 "Mart"
 #define PLUGIN_DESCRIPTION            "Resets the healing progress bar when the healer distance exceeds the maximum allowed"
-#define PLUGIN_VERSION                "1.0.1"
+#define PLUGIN_VERSION                "1.0.2"
 #define PLUGIN_URL                    "https://forums.alliedmods.net/showthread.php?t=341128"
 
 // ====================================================================================================
@@ -59,11 +62,14 @@ public Plugin myinfo =
 // ====================================================================================================
 // Defines
 // ====================================================================================================
-#define MAX_HEALING_RADIUS            68.0
-
-#define USEACTION_HEALING             1
+#define L4D2_USEACTION_HEALING        1
 
 #define MAXENTITIES                   2048
+
+// ====================================================================================================
+// Game Cvars
+// ====================================================================================================
+ConVar g_hCvar_player_use_radius;
 
 // ====================================================================================================
 // Plugin Cvars
@@ -75,6 +81,11 @@ ConVar g_hCvar_Enabled;
 // ====================================================================================================
 bool g_bL4D2;
 bool g_bCvar_Enabled;
+
+// ====================================================================================================
+// float - Plugin Variables
+// ====================================================================================================
+float g_fCvar_player_use_radius;
 
 // ====================================================================================================
 // entity - Plugin Variables
@@ -103,10 +114,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+    g_hCvar_player_use_radius = FindConVar("player_use_radius");
+
     CreateConVar("l4d_healing_dist_fix_version", PLUGIN_VERSION, PLUGIN_DESCRIPTION, CVAR_FLAGS_PLUGIN_VERSION);
     g_hCvar_Enabled = CreateConVar("l4d_healing_dist_fix_enable", "1", "Enable/Disable the plugin.\n0 = Disable, 1 = Enable.", CVAR_FLAGS, true, 0.0, true, 1.0);
 
     // Hook plugin ConVars change
+    g_hCvar_player_use_radius.AddChangeHook(Event_ConVarChanged);
     g_hCvar_Enabled.AddChangeHook(Event_ConVarChanged);
 
     // Load plugin configs from .cfg
@@ -127,13 +141,14 @@ public void OnConfigsExecuted()
 
 void Event_ConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-    GetCvars();
+    OnConfigsExecuted();
 }
 
 /****************************************************************************************************/
 
 void GetCvars()
 {
+    g_fCvar_player_use_radius = g_hCvar_player_use_radius.FloatValue;
     g_bCvar_Enabled = g_hCvar_Enabled.BoolValue;
 }
 
@@ -157,7 +172,7 @@ void OnPlayerRunCmdPostL4D2(int client, int buttons)
     if (!(buttons & IN_ATTACK2))
         return;
 
-    if (GetEntProp(client, Prop_Send, "m_iCurrentUseAction") != USEACTION_HEALING)
+    if (GetEntProp(client, Prop_Send, "m_iCurrentUseAction") != L4D2_USEACTION_HEALING)
         return;
 
     int target = GetEntPropEnt(client, Prop_Send, "m_useActionTarget");
@@ -172,7 +187,7 @@ void OnPlayerRunCmdPostL4D2(int client, int buttons)
     GetClientEyePosition(client, vPos);
 
     ge_bValidRange[target] = false;
-    TR_EnumerateEntitiesSphere(vPos, MAX_HEALING_RADIUS, PARTITION_SOLID_EDICTS, TraceEntityEnumeratorFilter, target);
+    TR_EnumerateEntitiesSphere(vPos, g_fCvar_player_use_radius, PARTITION_SOLID_EDICTS, TraceEntityEnumeratorFilter, target);
 
     if (!ge_bValidRange[target])
     {
@@ -214,7 +229,7 @@ void OnPlayerRunCmdPostL4D1(int client)
     GetClientEyePosition(client, vPos);
 
     ge_bValidRange[target] = false;
-    TR_EnumerateEntitiesSphere(vPos, MAX_HEALING_RADIUS, PARTITION_SOLID_EDICTS, TraceEntityEnumeratorFilter, target);
+    TR_EnumerateEntitiesSphere(vPos, g_fCvar_player_use_radius, PARTITION_SOLID_EDICTS, TraceEntityEnumeratorFilter, target);
 
     if (!ge_bValidRange[target])
     {

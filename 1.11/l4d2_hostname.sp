@@ -1,4 +1,4 @@
-﻿#pragma semicolon 1
+#pragma semicolon 1
 #pragma newdecls required
 #include <sourcemod>
 #include <left4dhooks>
@@ -6,10 +6,10 @@
 #define PLUGIN_NAME				"L4D2 中文服务器名"
 #define PLUGIN_AUTHOR			"sorallll"
 #define PLUGIN_DESCRIPTION		""
-#define PLUGIN_VERSION			"1.0.1"
+#define PLUGIN_VERSION			"1.0.2"
 #define PLUGIN_URL				""
 
-#define FILE_HOSTNAME "configs/hostname/l4d2_hostname.txt"
+#define FILE_HOSTNAME "configs/hostname/hostname.txt"
 
 Handle
 	g_hTimer;
@@ -18,8 +18,7 @@ ConVar
 	g_hHostName;
 
 float
-	g_fMapMaxFlow,
-	g_fMapRunTime;
+	g_fMapMaxFlow;
 
 int
 	g_iFailures,
@@ -40,18 +39,16 @@ public Plugin myinfo = {
 public void OnPluginStart() {
 	g_hHostName = FindConVar("hostname");
 
-	vSetHostName();
+	SetHostName();
 	HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
 }
 
 public void OnConfigsExecuted() {
-	g_fMapRunTime = GetEngineTime();
-	g_fMapMaxFlow = L4D2Direct_GetMapMaxFlowDistance();
-
 	g_iMaxChapters = L4D_GetMaxChapters();
 	g_iCurrentChapter = L4D_GetCurrentChapter();
+	g_fMapMaxFlow = L4D2Direct_GetMapMaxFlowDistance();
 
-	vSetHostName();
+	SetHostName();
 
 	delete g_hTimer;
 	g_hTimer = CreateTimer(5.0, tmrUpdateHostName, _, TIMER_REPEAT);
@@ -75,20 +72,20 @@ Action tmrUpdateHostName(Handle timer) {
 	if (fHighestFlow)
 		fHighestFlow = fHighestFlow / g_fMapMaxFlow * 100;
 
-	static char sHostName[PLATFORM_MAX_PATH];
-	FormatEx(sHostName, sizeof sHostName, "%s [路程:%d%%][地图:%d/%d][重启:%d][运行:%dm]", g_sHostName, RoundToNearest(fHighestFlow), g_iCurrentChapter, g_iMaxChapters, g_iFailures, RoundToFloor((GetEngineTime() - g_fMapRunTime) / 60.0));
+	static char buf[PLATFORM_MAX_PATH];
+	FormatEx(buf, sizeof buf, "%s [路程:%d%%][地图:%d/%d][重启:%d][运行:%dm]", g_sHostName, RoundToNearest(fHighestFlow), g_iCurrentChapter, g_iMaxChapters, g_iFailures, GetEntProp(GetPlayerResourceEntity(), Prop_Send, "m_missionDuration") / 60);
 
-	g_hHostName.SetString(sHostName);
+	g_hHostName.SetString(buf);
 	return Plugin_Continue;
 }
 
-void vSetHostName() {
-	char sPath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sPath, sizeof sPath, FILE_HOSTNAME);
-	if (!FileExists(sPath))
+void SetHostName() {
+	char buf[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, buf, sizeof buf, FILE_HOSTNAME);
+	if (!FileExists(buf))
 		SetFailState("\n==========\n配置文件丢失: \"%s\".\n==========", FILE_HOSTNAME);
 
-	File file = OpenFile(sPath, "rb");
+	File file = OpenFile(buf, "rb");
 	if (file) {
 		while (!file.EndOfFile())
 			file.ReadLine(g_sHostName, sizeof g_sHostName);
