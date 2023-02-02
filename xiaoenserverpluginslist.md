@@ -70,7 +70,7 @@
 [all4dead2](https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2) 物品特感生成 [可以添加更多的僵尸参数 翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/all4dead2)   
 [show_mic](https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic) / [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?p=2529779) 屏幕中心显示谁在说话/第三人称指令查询简化 [仓库地址](https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2)  
 [l4d2_item_hint](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_item_hint)/[l4d_use_priority](https://forums.alliedmods.net/showthread.php?t=327511) 标记插件/相关修复插件 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d2_item_hint)  
-[bequiet](https://github.com/fbef0102/L4D1_2-Plugins/blob/master/bequiet/scripting/bequiet.sp) 过滤部分聊天输出   
+[bequiet](https://github.com/fbef0102/L4D1_2-Plugins/blob/master/bequiet/scripting/bequiet.sp) 过滤部分聊天输出 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/bequiet.sp)  
 [l4d_votes_5](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_votes_5) 投票插件 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_votes_5)   
 [l4d_graves](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves) 生还者死亡后生成坟墓 [自翻cvar介绍](https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp)   
 [l4d_rock_lagcomp](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp) 战役模式中给坦克石头提供滞后补偿 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d_rock_lagcomp)  
@@ -91,7 +91,7 @@
 [l4d2pause](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2pause) 管理员暂停游戏 [翻译游戏文本](https://github.com/apples1949/l4dplugins/blob/main/l4d2pause.sp)  
 [l4d_flying_car](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d_flying_car)c8m5救援直升机替换成出租车或者警车 [翻译cvar说明及游戏文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_flying_car)  
 [l4d2_weapon_csgo_reload](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_weapon_csgo_reload) 修改换弹方式为csgo机制 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_weapon_csgo_reload.sp)  
-[l4d2_karma_kill](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_karma_kill) [翻译cvar说明 注释文本(不需要提示文本)](https://github.com/apples1949/l4dplugins/blob/main/l4d2_karma_kill.sp)
+[l4d2_karma_kill](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_karma_kill) 因特感或玩家自己高处倒地或死亡触发慢动作特效 [翻译cvar说明 注释文本(不需要提示文本)](https://github.com/apples1949/l4dplugins/blob/main/l4d2_karma_kill.sp)
 
 [Silvers](https://forums.alliedmods.net/member.php?u=85778)  
 [l4d_gear_transfer](https://forums.alliedmods.net/showthread.php?t=137616) 按键给予物品 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_gear_transfer)  
@@ -165,7 +165,7 @@ zm:
 [l4d2_pistol_delay](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_pistol_delay.sp) 修复高tick下手枪射击间隔过快问题[翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_pistol_delay)
 [l4d2_ai_damagefix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ai_damagefix.sp)移除Hunter和Charger减伤[本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d2_ai_damagefix)  
 [l4d_fix_deathfall_cam](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_deathfall_cam)修复由point_deathfall_camera导致的永久锁定视图问题[本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d_fix_deathfall_cam)  
-[l4d2_hltv_crash_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_hltv_crash_fix.sp)修复玩家可能通过SourceTV使服务器崩溃的问题(注意gamedata文件)  
+[l4d2_hltv_crash_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_hltv_crash_fix.sp)修复玩家可能通过SourceTV使服务器崩溃的问题(注意gamedata文件)[本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d2_hltv_crash_fix)  
 [l4d2_getup_fixes](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_getup_fixes)修复双起身 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_getup_fixes)  
 [l4d_weapon_limits](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_weapon_limits.sp) 限制玩家整体可获取武器的数量 [汉化提示(注意gamedata)](https://github.com/apples1949/l4dplugins/tree/main/l4d_weapon_limits)  
 [l4d2_ellis_hunter_bandaid_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ellis_hunter_bandaid_fix.sp)修复Ellis被hunter扑中后起身比其他角色慢的问题[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_ellis_hunter_bandaid_fix)  
@@ -206,6 +206,7 @@ coleo:
 [killsound](https://github.com/GlowingTree880/L4D2_LittlePlugins/blob/main/KillSound/killsound.sp) 爆头提示音 [自改仅特感爆头提示音](https://github.com/apples1949/l4dplugins/blob/main/killsound.sp)   
 
 [NoroHime](https://forums.alliedmods.net/member.php?u=272518):  
+[l4d_medicines_unlimited](https://forums.alliedmods.net/showthread.php?t=336226) 设置血量上限及处理溢出的虚血 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_medicines_unlimited.sp)  
 [l4d_penetration_pistol](https://forums.alliedmods.net/showthread.php?t=337509) 调整小手枪对小僵尸的伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_penetration_pistol.sp)   
 
 [MasterMind420](https://forums.alliedmods.net/member.php?u=97257)(已退出A站):  
