@@ -28,6 +28,7 @@
 自选-动态大厅(v2.0.1)(Downtown1, Anime4000, sorallll)  
 自选-防止服务器人数不足而关闭(AtomicStryker)  
 自选-防止玩家一直挂机(可单独设置管理员的挂机时间)(豆瓣酱な)  
+自选-服务器没人后炸服或切换为官图(v1.1.1)(lakwsh, 豆瓣酱な)  
 自选-根据人数设置医疗物品倍数(v1.0.4)(豆瓣酱な)
 自选-管理员菜单更改难度(v1.0.2)(豆瓣酱な)  
 自选-管理员菜单更改游戏模式(v1.2.1)(豆瓣酱な)  
@@ -239,4 +240,5 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [mod]adminsyatem.vpk [创意工坊](https://steamcommunity.com/sharedfiles/filedetails/?id=214630948)的管理员菜单  
 [mod]Good baseballbat.vpk/[mod]Good crowbar.vpk/[mod]Good golfclub.vpk/[mod]shovel_enhancement.vpk  钝器变锐器  
 [mod]pitchfork_enhancement.vpk 草叉增强+砍舌+锋利  
+[mod]no_smoking.vpk 去除舌头烟雾 不知道有没有用  
 服务器自改地图：[stripper微改地图](https://github.com/apples1949/l4dplugins/tree/main/stripper)  
