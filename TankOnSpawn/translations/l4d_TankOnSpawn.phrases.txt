@@ -48,14 +48,14 @@
 		"en"		"{orange}Current vote is vetoed by {green}%N"
 		"ru"		"{orange}%N {orange}наложил вето на голосование"
 		"hu"		"{orange}A jelenlegi szavazás megszakítva {green}%N által"
-		"en"		"{orange}投票已被 {green}%N{orange}否决"
+		"en"		"{orange}投票已被 {green}%N{orange} 否决"
 	}
 	"votepass"
 	{
 		"en"		"{orange}Current vote is passed by {green}%N"
 		"ru"		"{orange}%N {orange}принудительно продвинул голосование"
 		"hu"		"{orange}A jelenlegi szavazás sikeres {green}%N által"
-		"en"		"{orange}投票已被 {green}%N{orange}强制通过"
+		"en"		"{orange}投票已被 {green}%N{orange} 强制通过"
 	}
 	"tank_count_vote"
 	{

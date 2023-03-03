@@ -861,7 +861,7 @@ public Action Timer_OnTankSpawn(Handle timer, int UserId)
 			if( g_ConVarAnnouncement.BoolValue )
 			{
 				int defhp = g_ConVarZTankHealth.IntValue;
-				CPrintToChatAll("\x04%t %i/%i \x01%t: %i", "Tank", iTanksCount, iTanksPlanned, "health", defhp);
+				CPrintToChatAll("\x04%t %i/%i ", "Tank", iTanksCount, iTanksPlanned);
 			}
 		}
 		

@@ -263,7 +263,7 @@ native int LMC_GetClientOverlayModel(int iClient);
 Handle g_hTimerHurt;
 ConVar g_hCvarAllow, g_hCvarCrawl, g_hCvarCrazy, g_hCvarGlow, g_hCvarHint, g_hCvarHintS, g_hCvarHurt, g_hCvarMPGameMode, g_hCvarModes, g_hCvarModesOff, g_hCvarModesTog, g_hCvarRate, g_hCvarSpeed, g_hCvarSpeeds, g_hCvarSpit, g_hCvarView;
 int g_iClone[MAXPLAYERS+1], g_iDisplayed[MAXPLAYERS+1], g_iHint, g_iHints, g_iHurt, g_iRate, g_iSpeed, g_iView;
-bool g_bCvarAllow, g_bMapStarted, g_bCrazy, g_bGlow, g_bRoundOver, g_bSpit, g_bTranslation;
+bool g_bCvarAllow, g_bMapStarted, g_bCrazy, g_bGlow, g_bRoundOver, g_bSpit;
 float g_fClientWait[MAXPLAYERS+1], g_fClientHurt[MAXPLAYERS+1];
 
 
@@ -315,6 +315,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+/*
 	char sPath[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, sPath, PLATFORM_MAX_PATH, "translations/incappedcrawling.phrases.txt");
 
@@ -325,7 +326,7 @@ public void OnPluginStart()
 		LoadTranslations("incappedcrawling.phrases");
 		g_bTranslation = true;
 	}
-
+*/
 	g_hCvarAllow =		CreateConVar(	"l4d2_crawling",			"1",			"0=Plugin off, 1=Plugin on.", CVAR_FLAGS);
 	g_hCvarCrazy =		CreateConVar(	"l4d2_crawling_crazy",		"0",			"0=Off. 1=Use crazy faces (original before version 2.0).", CVAR_FLAGS);
 	g_hCvarGlow =		CreateConVar(	"l4d2_crawling_glow",		"0",			"0=Disables survivor glow on crawling, 1=Enables glow if not realism.", CVAR_FLAGS);
@@ -611,6 +612,7 @@ void Event_Incapped(Event event, const char[] name, bool dontBroadcast)
 // Display hint message, allow crawling
 Action TimerResetStart(Handle timer, any client)
 {
+/*
 	client = GetClientOfUserId(client);
 
 	if( g_bRoundOver || !g_iHint || (g_iHint < 3 && g_iDisplayed[client] >= g_iHints) || !IsValidClient(client) )
@@ -641,7 +643,7 @@ Action TimerResetStart(Handle timer, any client)
 			PrintHintText(client, sBuffer);
 		}
 	}
-
+*/
 	return Plugin_Continue;
 }
 

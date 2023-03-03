@@ -1,157 +1,137 @@
 #pragma semicolon 1
 #pragma newdecls required
+
 #include <sourcemod>
 
-#define CVAR_FLAGS			FCVAR_NOTIFY
+#define VERSION "0.4"
 
-ConVar g_ConVarHibernate, sb_all_bot_game, sb_all_bot_team, g_ConVarUnloadExtNum;
-int g_iCvarUnloadExtNum;
-Handle COLD_DOWN_Timer;
+ConVar
+	sv_hibernate_when_empty,
+	sb_all_bot_game,
+	g_cvDelayTime;
+
+float
+	g_fDelayTime;
 
 public Plugin myinfo =
 {
-	name = "L4D auto restart",
-	author = "Harry Potter",
-	description = "make server restart (Force crash) when the last player disconnects from the server",
-	version = "2.3",
-	url	= "https://steamcommunity.com/profiles/76561198026784913"
-};
-
-static bool Isl4d2;
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	EngineVersion test = GetEngineVersion();
-
-	if( test == Engine_Left4Dead )
-	{
-		Isl4d2 = false;
-	}
-	else if( test == Engine_Left4Dead2 )
-	{
-		Isl4d2 = true;
-	}
-	else
-	{
-		strcopy(error, err_max, "Plugin only supports Left 4 Dead 1 & 2.");
-		return APLRes_SilentFailure;
-	}
-
-	return APLRes_Success;
+	name = "L4D2 Auto restart",
+	author = "Dragokas, Harry Potter, fdxx",
+	description = "Auto restart server when the last player disconnects from the server. Only support Linux system",
+	version = VERSION,
 }
 
 public void OnPluginStart()
 {
-	g_ConVarHibernate = FindConVar("sv_hibernate_when_empty");
+	sv_hibernate_when_empty = FindConVar("sv_hibernate_when_empty");
+	sb_all_bot_game = FindConVar("sb_all_bot_game");
 
-	if(Isl4d2)
+	CreateConVar("l4d2_auto_restart_version", VERSION, "插件版本", FCVAR_NONE | FCVAR_DONTRECORD);
+	g_cvDelayTime = CreateConVar("l4d2_auto_restart_delay", "5.0", "Restart grace period (in sec.)", FCVAR_NOTIFY);
+	g_fDelayTime = g_cvDelayTime.FloatValue;
+	g_cvDelayTime.AddChangeHook(OnConVarChanged);
+
+	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Pre);
+	RegAdminCmd("sm_restart", Cmd_RestartServer, ADMFLAG_ROOT);
+
+	//AutoExecConfig(true, "l4d2_auto_restart");
+}
+
+void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	g_fDelayTime = g_cvDelayTime.FloatValue;
+}
+
+Action Cmd_RestartServer(int client, int args)
+{
+	//LogToFilePlus("手动重启服务器...");
+	RestartServer();
+	return Plugin_Handled;
+}
+
+void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (client == 0 || !IsFakeClient(client))
 	{
-		sb_all_bot_game = FindConVar("sb_all_bot_game");
-	}
-	else
-	{
-		sb_all_bot_team = FindConVar("sb_all_bot_team");
-	}
-	
-	g_ConVarUnloadExtNum = CreateConVar("liunx_auto_restart_unload_ext_num", 			"0", 	"If you have Accelerator extension, you need specify here order number of this extension in the list: sm exts list", CVAR_FLAGS);
-	
-	GetCvars();
-	g_ConVarUnloadExtNum.AddChangeHook(OnCvarChanged);
-
-	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Pre);	
-}
-
-public void OnPluginEnd()
-{
-	delete COLD_DOWN_Timer;
-}
-
-public void OnCvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-	GetCvars();
-}
-
-void GetCvars()
-{
-	g_iCvarUnloadExtNum = g_ConVarUnloadExtNum.IntValue;
-}
-
-public void OnMapEnd()
-{
-	delete COLD_DOWN_Timer;
-}
-
-public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if(!client || IsFakeClient(client) || (IsClientConnected(client) && !IsClientInGame(client))) return; //連線中尚未進來的玩家離線
-	if(client && !CheckPlayerInGame(client)) //檢查是否還有玩家以外的人還在伺服器
-	{
-		if(Isl4d2)
-			sb_all_bot_game.SetInt(1);
-		else
-			sb_all_bot_team.SetInt(1);
-
-		g_ConVarHibernate.SetInt(0);
-
-		delete COLD_DOWN_Timer;
-		COLD_DOWN_Timer = CreateTimer(15.0, COLD_DOWN);
+		if (!HaveRealPlayer(client))
+		{
+			sv_hibernate_when_empty.IntValue = 0;
+			sb_all_bot_game.IntValue = 1;
+			CreateTimer(g_fDelayTime, RestServer_Timer);
+			//LogToFilePlus("服务器已没有真实玩家, %.1f 秒后重启服务器", g_fDelayTime);
+		}
 	}
 }
-public Action COLD_DOWN(Handle timer, any client)
+
+Action RestServer_Timer(Handle timer)
 {
-	if(CheckPlayerInGame(0)) //有玩家在伺服器中
+	if (!HaveRealPlayer())
 	{
-		COLD_DOWN_Timer = null;
-		return Plugin_Continue;
+		//LogToFilePlus("自动重启服务器...");
+		RestartServer();
 	}
-	
-	if(CheckPlayerConnectingSV()) //沒有玩家在伺服器但是有玩家正在連線
-	{
-		COLD_DOWN_Timer = CreateTimer(20.0, COLD_DOWN); //重新計時
-		return Plugin_Continue;
-	}
-	
-	LogMessage("Last one player left the server, Restart server now");
-
-	UnloadAccelerator();
-
-	CreateTimer(0.1, Timer_RestartServer);
-
-	COLD_DOWN_Timer = null;
+	//else 
+	//LogToFilePlus("服务器重启失败, 还有真实玩家");
 	return Plugin_Continue;
 }
 
-Action Timer_RestartServer(Handle timer)
+void RestartServer()
 {
+	UnloadAccelerator();
 	SetCommandFlags("crash", GetCommandFlags("crash") &~ FCVAR_CHEAT);
 	ServerCommand("crash");
+}
 
-	//SetCommandFlags("sv_crash", GetCommandFlags("sv_crash") &~ FCVAR_CHEAT);
-	//ServerCommand("sv_crash");//crash server, make linux auto restart server
+bool HaveRealPlayer(int iExclude = 0)
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (i != iExclude && IsClientConnected(i) && !IsFakeClient(i))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void UnloadAccelerator()
 {
-	if( g_iCvarUnloadExtNum )
+	int Id = GetAcceleratorId();
+	if (Id != -1)
 	{
-		ServerCommand("sm exts unload %i 0", g_iCvarUnloadExtNum);
+		ServerCommand("sm exts unload %i 0", Id);
+		ServerExecute();
 	}
 }
 
-bool CheckPlayerInGame(int client)
+//by sorallll
+int GetAcceleratorId()
 {
-	for (int i = 1; i < MaxClients+1; i++)
-		if(IsClientInGame(i) && !IsFakeClient(i) && i!=client)
-			return true;
+	char sBuffer[512];
+	ServerCommandEx(sBuffer, sizeof(sBuffer), "sm exts list");
+	int index = SplitString(sBuffer, "] Accelerator (", sBuffer, sizeof(sBuffer));
+	if(index == -1)
+		return -1;
 
-	return false;
+	for(int i = strlen(sBuffer); i >= 0; i--)
+	{
+		if(sBuffer[i] == '[')
+			return StringToInt(sBuffer[i + 1]);
+	}
+
+	return -1;
 }
-
-bool CheckPlayerConnectingSV()
+/*
+void LogToFilePlus(const char[] sMsg, any ...)
 {
-	for (int i = 1; i < MaxClients+1; i++)
-		if(IsClientConnected(i) && !IsClientInGame(i) && !IsFakeClient(i))
-			return true;
+	static char sDate[32], sLogPath[PLATFORM_MAX_PATH];
+	static char sBuffer[256];
 
-	return false;
+	FormatTime(sDate, sizeof(sDate), "%Y%m%d");
+	BuildPath(Path_SM, sLogPath, sizeof(sLogPath), "logs/%s_logging.log", sDate);
+	VFormat(sBuffer, sizeof(sBuffer), sMsg, 2);
+
+	LogToFileEx(sLogPath, "%s", sBuffer);
 }
+*/

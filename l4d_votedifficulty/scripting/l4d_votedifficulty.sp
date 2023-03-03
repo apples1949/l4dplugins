@@ -183,8 +183,8 @@ public void OnPluginStart()
 	
 	RegConsoleCmd("sm_vd", CmdVoteMenu, "Show menu to vote for difficulty");
 	
-	RegAdminCmd("sm_veto", 			Command_Veto, 		ADMFLAG_VOTE, 	"允许管理员否决当前投票");
-	RegAdminCmd("sm_votepass", 		Command_Votepass, 	ADMFLAG_VOTE, 	"允许管理员强制通过当前投票");
+	RegAdminCmd("sm_vetovd", 			Command_Veto, 		ADMFLAG_VOTE, 	"允许管理员否决当前投票");
+	RegAdminCmd("sm_votepassvd", 		Command_Votepass, 	ADMFLAG_VOTE, 	"允许管理员强制通过当前投票");
 	
 	g_ConVarDifficulty 		= FindConVar("z_difficulty");
 	

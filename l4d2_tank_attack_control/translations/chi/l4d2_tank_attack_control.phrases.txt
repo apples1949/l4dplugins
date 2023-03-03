@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Title"
+	{
+		"chi"	"{blue}[{default}坦克投抛控制{blue}]"
+	}
+	"Reload"
+	{
+		"chi"	"{olive}换弹键{default} = {blue}低抛{default}"
+	}
+	"Use"
+	{
+		"chi"	"{olive}使用键{default} = {blue}侧抛{default}"
+	}
+	"M2"
+	{
+		"chi"	"{olive}鼠标右键{default} = {blue}高抛{default}"
+	}
+}

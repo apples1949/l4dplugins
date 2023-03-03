@@ -22,8 +22,7 @@ float fAdrenalineDuration, fDelay, fTempHP, fLastPos[MAXPLAYERS+1][3], fSelfHelp
 int iSurvivorClass, iUse, iBotChance, iHardHP, iMaxCount, iAttacker[MAXPLAYERS+1],
 	iBotHelp[MAXPLAYERS+1], iReviveDuration, iMaxIncapCount, iSHCount[MAXPLAYERS+1];
 
-Handle hSHTime[MAXPLAYERS+1] = null, hSHGameData = null, hSHSetTempHP = null, hSHAdrenalineRush = null,
-	hSHOnRevived = null, hSHStagger = null;
+Handle hSHTime[MAXPLAYERS+1] = {null,...}, hSHGameData = null, hSHSetTempHP = null, hSHAdrenalineRush = null, hSHOnRevived = null, hSHStagger = null;
 
 SelfHelpState shsBit[MAXPLAYERS+1];
 
@@ -341,8 +340,8 @@ public void OnPlayerDown(Event event, const char[] name, bool dontBroadcast)
 		
 		if (StrEqual(name, "player_incapacitated"))
 		{
-			PrintHintText(wounded, "按住下蹲键自救\n按住换弹键救起活其他倒地的生还者");
-			CPrintToChat(wounded,"按住{green}下蹲键{default}自救!\n按住{green}换弹键{default}救起其他倒地的生还者!");
+			PrintHintText(wounded, "你重伤倒地了!\n按住下蹲键自救\n按 方向键 倒地爬行\n倒地时按住 换弹键 无代价扶起其他倒地的生还者");
+			CPrintToChat(wounded,"你重伤倒地了!\n按住{green}下蹲键{default}自救!按{green}方向键{default}倒地爬行\n\n倒地时按住{green}换弹键{default}无代价扶起其他倒地的生还者");
 			if (bIsL4D)
 			{
 				if (iSHCount[wounded] + 1 > iMaxCount)
@@ -350,7 +349,7 @@ public void OnPlayerDown(Event event, const char[] name, bool dontBroadcast)
 					iSHCount[wounded] = iMaxCount - 1;
 				}
 				
-				CPrintToChat(wounded, "你倒地了! 倒地次数：[{green}%d{default}/{green}%i{default}]", iSHCount[wounded] + 1, iMaxCount);
+				CPrintToChat(wounded, "你重伤倒地了! 倒地次数：[{green}%d{default}/{green}%i{default}]", iSHCount[wounded] + 1, iMaxCount);
 				if (iSHCount[wounded] == iMaxCount)
 				{
 					for (int i = 1; i <= MaxClients; i++)
@@ -360,7 +359,7 @@ public void OnPlayerDown(Event event, const char[] name, bool dontBroadcast)
 							continue;
 						}
 						
-						PrintHintText(i, "%N将在倒地/自救后处于黑白状态！", wounded);
+						PrintHintText(i, " %N 将在倒地/自救后处于黑白状态！", wounded);
 					}
 				}
 			}
@@ -372,7 +371,7 @@ public void OnPlayerDown(Event event, const char[] name, bool dontBroadcast)
 					iReviveCount = iMaxIncapCount - 1;
 				}
 				
-				CPrintToChat(wounded, "你倒地了! 倒地次数：[{green}%d{default}/{green}%i{default}]", iReviveCount + 1, iMaxIncapCount);
+				CPrintToChat(wounded, "你重伤倒地了! 倒地次数：[{green}%d{default}/{green}%i{default}]", iReviveCount + 1, iMaxIncapCount);
 				if (iReviveCount == iMaxIncapCount)
 				{
 					for (int i = 1; i <= MaxClients; i++)
@@ -382,7 +381,7 @@ public void OnPlayerDown(Event event, const char[] name, bool dontBroadcast)
 							continue;
 						}
 						
-						PrintHintText(i, "%N将在倒地/自救后处于黑白状态！", wounded);
+						PrintHintText(i, " %N 将在倒地/自救后处于黑白状态！", wounded);
 					}
 				}
 			}
@@ -423,8 +422,8 @@ public Action FireUpMechanism(Handle timer, any userid)
 		
 		if (IsSelfHelpAble(client) && !IsFakeClient(client))
 		{
-			PrintHintText(client,"按住下蹲键自救\n按住换弹键救起活其他倒地的生还者");
-			CPrintToChat(client,"按住{green}下蹲键{default}自救!\n按住{green}换弹键{default}救起其他倒地的生还者!");
+			PrintHintText(client,"你还没有倒地!\n快按住下蹲键自救");
+			CPrintToChat(client,"你还没有倒地!\n快按住{green}下蹲键{default}自救!");
 		}
 		hSHTime[client] = CreateTimer(0.1, AnalyzePlayerState, GetClientUserId(client), TIMER_REPEAT);
 	}
@@ -547,7 +546,7 @@ public Action AnalyzePlayerState(Handle timer, any userid)
 					
 					if (!bIsL4D)
 					{
-						PrintHintText(client, "你正在救助%N!", iTarget);
+						PrintHintText(client, "你正在救助 %N!", iTarget);
 					}
 				}
 				
@@ -558,7 +557,7 @@ public Action AnalyzePlayerState(Handle timer, any userid)
 					
 					if (!bIsL4D)
 					{
-						PrintHintText(iTarget, "%N救了你!", client);
+						PrintHintText(iTarget, "%N 救了你!", client);
 					}
 				}
 				
@@ -939,12 +938,12 @@ public void OnReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 			{
 				if (!IsFakeClient(reviver))
 				{
-					CPrintToChat(reviver, "你救了{olive}%N{default}!", revived);
+					CPrintToChat(reviver, "你救了{olive} %N {default}!", revived);
 				}
 				
 				if (!IsFakeClient(revived))
 				{
-					CPrintToChat(revived, "{olive}%N{default}救了你!", reviver);
+					CPrintToChat(revived, "{olive} %N {default}救了你!", reviver);
 				}
 			}
 			else
@@ -978,15 +977,15 @@ public void OnReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 					{
 						if (GetEntProp(reviver, Prop_Send, "m_isIncapacitated", 1))
 						{
-							CPrintToChatAll("%N在黑白状态下救了{olive}%N!", reviver, revived);
+							CPrintToChatAll("%N 在黑白状态下救了{olive}%N!", reviver, revived);
 						}
 						
-						CPrintToChat(reviver, "你救了{olive}%N{default}! 倒地次数:[{green}%d{default}/{green}%i{default}]", revived, iReviveCount, iMaxIncapCount);
+						CPrintToChat(reviver, "你救了{olive} %N {default}! 倒地次数:[{green}%d{default}/{green}%i{default}]", revived, iReviveCount, iMaxIncapCount);
 					}
 					
 					if (!IsFakeClient(revived))
 					{
-						CPrintToChat(revived, "{olive}%N{default}救了你! 倒地次数:[{green}%d{default}/{green}%i{default}]", reviver, iReviveCount, iMaxIncapCount);
+						CPrintToChat(revived, "{olive} %N {default}救了你! 倒地次数:[{green}%d{default}/{green}%i{default}]", reviver, iReviveCount, iMaxIncapCount);
 					}
 				}
 			}
@@ -1013,7 +1012,7 @@ public void OnReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 				{
 					if (!IsFakeClient(revived))
 					{
-						CPrintToChat(revived, "你救了你自己! 倒地次数：[{green}%d{default}/{green}%i{default}]", iSHCount[revived], iMaxCount);
+						CPrintToChat(revived, "你自救了! 倒地次数：[{green}%d{default}/{green}%i{default}]", iSHCount[revived], iMaxCount);
 					}
 				}
 				else
@@ -1022,15 +1021,15 @@ public void OnReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 					{
 						if (GetEntProp(reviver, Prop_Send, "m_isIncapacitated", 1))
 						{
-							CPrintToChatAll("%N在黑白状态下救了{olive}%N", reviver, revived);
+							CPrintToChatAll("%N 在黑白状态下救了{olive}%N", reviver, revived);
 						}
 						
-						CPrintToChat(reviver, "你救了{olive}%N{default}! 倒地次数：[{green}%d{default}/{green}%i{default}]", revived, iSHCount[revived], iMaxCount);
+						CPrintToChat(reviver, "你救了{olive} %N {default}! 倒地次数：[{green}%d{default}/{green}%i{default}]", revived, iSHCount[revived], iMaxCount);
 					}
 					
 					if (!IsFakeClient(revived))
 					{
-						CPrintToChat(revived, "%N{default}救了你! 倒地次数：[{green}%d{default}/{green}%i{default}]", reviver, iSHCount[revived], iMaxCount);
+						CPrintToChat(revived, "{olive} %N {default}救了你! 倒地次数：[{green}%d{default}/{green}%i{default}]", reviver, iSHCount[revived], iMaxCount);
 					}
 				}
 			}
@@ -1061,7 +1060,14 @@ public void OnHealSuccess(Event event, const char[] name, bool dontBroadcast)
 		{
 			return;
 		}
-		PrintHintTextToAll("[%N]被[%N]完全治愈!", healed, healer);
+		if( healer == healer )
+		{
+			PrintHintTextToAll("%N 完全治愈了自己!", healed);
+		}
+		else
+		{
+			PrintHintTextToAll("%N 被 %N 完全治愈!", healed, healer);
+		}
 		
 		if (bIsL4D && iSHCount[healed] != 0)
 		{
@@ -1161,19 +1167,19 @@ public Action DelaySHNotify(Handle timer, Handle dpDefibAnnounce)
 	{
 		if (!IsFakeClient(defibbed))
 		{
-			CPrintToChat(defibbed, "{blue}}你自杀了! 倒地次数：[{green}%d{default}/{green}%i{default}]", iReviveCount, iMaxIncapCount);
+			CPrintToChat(defibbed, "{blue}你自杀了! 倒地次数：[{green}%d{default}/{green}%i{default}]", iReviveCount, iMaxIncapCount);
 		}
 	}
 	else
 	{
 		if (!IsFakeClient(defibber))
 		{
-			CPrintToChat(defibber, "你杀死了{olive}%N{default}! 倒地次数：[{green}%d{default}/{green}%i{default}]", defibbed, iReviveCount, iMaxIncapCount);
+			CPrintToChat(defibber, "你杀死了{olive} %N {default}! 倒地次数：[{green}%d{default}/{green}%i{default}]", defibbed, iReviveCount, iMaxIncapCount);
 		}
 		
 		if (!IsFakeClient(defibbed))
 		{
-			CPrintToChat(defibbed, "%N{default}杀死了你! 倒地次数：[{green}%d{default}/{green}%i{default}]", defibber, iReviveCount, iMaxIncapCount);
+			CPrintToChat(defibbed, "{olive} %N {default}杀死了你! 倒地次数：[{green}%d{default}/{green}%i{default}]", defibber, iReviveCount, iMaxIncapCount);
 		}
 	}
 	
@@ -1466,7 +1472,7 @@ void SHStatsFixer(int client, bool bDoNotTamper, bool bUseItem = true, bool &bMe
 			
 			if (bFirstAidUsed)
 			{
-				CPrintToChatAll("{olive}%N{default}用{green}急救包{default}自救了!", client);
+				CPrintToChatAll("{olive} %N {default}用{green}急救包{default}自救了!", client);
 				
 				if (bSmartHeal)
 				{	
@@ -1504,7 +1510,7 @@ void SHStatsFixer(int client, bool bDoNotTamper, bool bUseItem = true, bool &bMe
 					eAdrenalineUsed.Fire();
 					
 					SDKCall(hSHAdrenalineRush, client, fAdrenalineDuration);
-					CPrintToChatAll("{olive}%N{default}用{green}肾上腺素{default}自救了!", client);
+					CPrintToChatAll("{olive} %N {default}用{green}肾上腺素{default}自救了!", client);
 				}
 				else
 				{
@@ -1513,7 +1519,7 @@ void SHStatsFixer(int client, bool bDoNotTamper, bool bUseItem = true, bool &bMe
 					ePillsUsed.SetInt("subject", GetClientUserId(client));
 					ePillsUsed.Fire();
 					
-					CPrintToChatAll("{olive}%N{default}用{green}止痛药{default}自救了!", client);
+					CPrintToChatAll("{olive} %N {default}用{green}止痛药{default}自救了!", client);
 				}
 			}
 		}

@@ -296,11 +296,13 @@ Action umDisconnectToLobby(UserMsg msg_id, BfRead msg, const int[] players, int 
 }
 
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast) {
-	if (!g_bIsFinalMap)
-		return;
+//	if (!g_bIsFinalMap)
+//		return;
 
 	g_iFailureCount++;
+	PrintToChatAll("\x05[提示]\x03团灭次数+1, 团灭总数: %d , 团灭次数超过后 %d 强制换牢房!", g_iFailureCount, g_iFinaleFailureCount);
 	if (g_iFinaleFailureCount && g_iFailureCount >= g_iFinaleFailureCount)
+	PrintToChatAll("\x05[提示]\x03团灭次数已超过 %d ! 即将更换牢房!", g_iFinaleFailureCount);
 		FinaleMapChange();
 }
 

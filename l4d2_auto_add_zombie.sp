@@ -62,13 +62,13 @@ public void OnPluginStart()
 	AI_EnabledZombie = CreateConVar("ai_enabled_zombie", "1", "是否动态改变僵尸数量. 0=固定, 1=动态.", CVAR_FLAGS);
 	AI_PlayerCountZombie = CreateConVar("ai_playercount_zombie", "4", "幸存者大于这个人数的时候才启用动态模式.", CVAR_FLAGS);
 	
-	h_CommonLimit = CreateConVar("l4d2_common_limit", "30", "每次刷新丧尸的数量", CVAR_FLAGS);
-	h_MegamobLimit = CreateConVar("l4d2_mega_mob_size", "30", "警报时刷新丧尸的数量", CVAR_FLAGS);
+	h_CommonLimit = CreateConVar("l4d2_common_limit", "15", "每次刷新丧尸的数量", CVAR_FLAGS);
+	h_MegamobLimit = CreateConVar("l4d2_mega_mob_size", "25", "警报时刷新丧尸的数量", CVAR_FLAGS);
 	
-	h_MobSpawnMin = CreateConVar("l4d2_mob_spawn_min_size", "10", "每次尸潮出现的最小僵尸数量.", CVAR_FLAGS);
-	h_MobSpawnMax = CreateConVar("l4d2_mob_spawn_max_size", "30", "每次尸潮出现的最大僵尸数量.", CVAR_FLAGS);
+	h_MobSpawnMin = CreateConVar("l4d2_mob_spawn_min_size", "5", "每次尸潮出现的最小僵尸数量.", CVAR_FLAGS);
+	h_MobSpawnMax = CreateConVar("l4d2_mob_spawn_max_size", "15", "每次尸潮出现的最大僵尸数量.", CVAR_FLAGS);
 	
-	h_AutoAddZombie = CreateConVar("l4d2_ai_auto_add_zombie", "8", "每多一个人僵尸增加几个.", CVAR_FLAGS);
+	h_AutoAddZombie = CreateConVar("l4d2_ai_auto_add_zombie", "5", "每多一个人僵尸增加几个.", CVAR_FLAGS);
 	
 	h_MaxZombie = CreateConVar("l4d2_ai_max_zombie", "120", "尸潮数量限制,调整尸潮数量的四个参数不会超过这个值, 0=不限制.", CVAR_FLAGS);
 	

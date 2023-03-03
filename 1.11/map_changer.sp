@@ -122,8 +122,8 @@ public void OnPluginStart() {
 	CreateConVar("map_changer_version", PLUGIN_VERSION, "Map Changer plugin version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
 	g_cvFinaleChangeType = 		CreateConVar("mapchanger_finale_change_type",		"12",	"0 - 终局不换地图(返回大厅); 1 - 救援载具离开时; 2 - 终局获胜时; 4 - 统计屏幕出现时; 8 - 统计屏幕结束时", CVAR_FLAGS);
-	g_cvFinaleFailureCount =	CreateConVar("mapchanger_finale_failure_count",		"2",	"终局团灭几次自动换到下一张图", CVAR_FLAGS);
-	g_cvFinaleRandomNextMap =	CreateConVar("mapchanger_finale_random_nextmap",	"0",	"终局是否启用随机下一关地图", CVAR_FLAGS);
+	g_cvFinaleFailureCount =	CreateConVar("mapchanger_finale_failure_count",		"2",	"团灭几次自动换到下一张图", CVAR_FLAGS);
+	g_cvFinaleRandomNextMap =	CreateConVar("mapchanger_finale_random_nextmap",	"0",	"是否启用随机下一关地图", CVAR_FLAGS);
 	g_cvFinaleChangeType.AddChangeHook(CvarChanged);
 	g_cvFinaleFailureCount.AddChangeHook(CvarChanged);
 	g_cvFinaleRandomNextMap.AddChangeHook(CvarChanged);
@@ -296,12 +296,16 @@ Action umDisconnectToLobby(UserMsg msg_id, BfRead msg, const int[] players, int 
 }
 
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast) {
-	if (!g_bIsFinalMap)
-		return;
+//	if (!g_bIsFinalMap)
+//		return;
 
 	g_iFailureCount++;
+	PrintToChatAll("\x05[提示]\x03团灭次数+1, 团灭总数: %d , 团灭次数超过后 %d 强制换牢房!", g_iFailureCount, g_iFinaleFailureCount);
 	if (g_iFinaleFailureCount && g_iFailureCount >= g_iFinaleFailureCount)
+	{
+		PrintToChatAll("\x05[提示]\x03团灭次数已超过 %d ! 即将更换牢房!", g_iFinaleFailureCount);
 		FinaleMapChange();
+	}
 }
 
 void Event_FinaleWin(Event event, const char[] name, bool dontBroadcast) {

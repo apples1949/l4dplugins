@@ -1,4 +1,4 @@
-豆瓣包:([2023-1-14豆瓣酱な (v1.1.1)(6926-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))  
+不再更新的豆瓣包:([2023-1-14豆瓣酱な (v1.1.1)(6926-1148)战役整合包](https://jq.qq.com/?_wv=1027&k=Uwrj0Sxb))  
 1.1.1插件平台linux版(6926-1148)(必须先启用这个)  
 必选-功能类插件(left4dhooks)(v1.127)(SilverShot)  
 必选-功能类插件(WeaponHandling)(v1.0.6)(Lux)  
@@ -28,7 +28,6 @@
 自选-动态大厅(v2.0.1)(Downtown1, Anime4000, sorallll)  
 自选-防止服务器人数不足而关闭(AtomicStryker)  
 自选-防止玩家一直挂机(可单独设置管理员的挂机时间)(豆瓣酱な)  
-自选-服务器没人后炸服或切换为官图(v1.1.1)(lakwsh, 豆瓣酱な)  
 自选-根据人数设置医疗物品倍数(v1.0.4)(豆瓣酱な)
 自选-管理员菜单更改难度(v1.0.2)(豆瓣酱な)  
 自选-管理员菜单更改游戏模式(v1.2.1)(豆瓣酱な)  
@@ -65,7 +64,7 @@
 自选-tick解锁扩展(启动项加 -tickrate 100)(需要配合tick设置插件使用)  
 自选-阻止游戏自带的部分提示(v1.1.2)(豆瓣酱な)  
 
-自找插件 2023年1月3日已检查更新:  
+自找插件 2023年3月3日已检查更新:  
 [HarryPotter](https://github.com/fbef0102/)  
 [all4dead2](https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2) 物品特感生成 [可以添加更多的僵尸参数 翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/all4dead2)   
 [show_mic](https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic) / [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?p=2529779) 屏幕中心显示谁在说话/第三人称指令查询简化 [仓库地址](https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2)  
@@ -91,7 +90,10 @@
 [l4d2pause](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2pause) 管理员暂停游戏 [翻译游戏文本](https://github.com/apples1949/l4dplugins/blob/main/l4d2pause.sp)  
 [l4d_flying_car](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d_flying_car)c8m5救援直升机替换成出租车或者警车 [翻译cvar说明及游戏文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_flying_car)  
 [l4d2_weapon_csgo_reload](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_weapon_csgo_reload) 修改换弹方式为csgo机制 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_weapon_csgo_reload.sp)  
-[l4d2_karma_kill](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_karma_kill) 因特感或玩家自己高处倒地或死亡触发慢动作特效 [翻译cvar说明 注释文本(不需要提示文本)](https://github.com/apples1949/l4dplugins/blob/main/l4d2_karma_kill.sp)
+[l4d2_karma_kill](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_karma_kill) 因特感或玩家自己高处倒地或死亡触发慢动作特效 [翻译cvar说明 注释文本(不需要提示文本)](https://github.com/apples1949/l4dplugins/blob/main/l4d2_karma_kill.sp)  
+[l4d_game_files_precacher](https://github.com/fbef0102/L4D1_2-Plugins/blob/master/l4d_game_files_precacher)嘗試解決崩潰 "找不到模組"[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d_game_files_precacher.sp)  
+[l4d2_skill_detect](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_skill_detect)哈利版本的技能检测插件[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_skill_detect)  
+[linux_auto_restart](https://github.com/fantasylidong/anne/blob/main/left4dead2/addons/sourcemod/scripting/linux_auto_restart.sp) 老版本带sm_restart指令的空服重启插件[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/linux_auto_restart.sp)  
 
 [Silvers](https://forums.alliedmods.net/member.php?u=85778)  
 [l4d_gear_transfer](https://forums.alliedmods.net/showthread.php?t=137616) 按键给予物品 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_gear_transfer)  
@@ -107,19 +109,20 @@
 [l4d_christmas_tree](https://forums.alliedmods.net/showthread.php?p=2672241) 地图生成圣诞树及礼物补给 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_christmas_tree)   
 [l4d2_car_alarm_bots](https://forums.alliedmods.net/showthread.php?p=2671546) bot或者特感可以打警报车 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_car_alarm_bots)   
 [l4d_tongue_damage](https://forums.alliedmods.net/showthread.php?p=2668589) 战役下舌头拖拽伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_tongue_damage.sp)   
-[l4d_witch_damage](https://forums.alliedmods.net/showthread.php?p=2667165) 设置女巫不同难度伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_witch_damage.sp)   
 [l4d2_dead_air_barricade](https://forums.alliedmods.net/showthread.php?t=181516) 移除寂静时分救援火焰屏障 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_dead_air_barricade.sp)  
 [l4d2_global_shadow_fix](https://forums.alliedmods.net/showthread.php?p=1404537) 修复部分官图缺失阴影 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_global_shadow_fix.sp)  
-[l4d2_incapped_crawling](https://forums.alliedmods.net/showthread.php?p=1291588) 倒地可爬行及爬行第三人称 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_crawling)   
+[l4d2_incapped_crawling](https://forums.alliedmods.net/showthread.php?p=1291588) 倒地可爬行及爬行第三人称 [自用去除文本提示](https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_crawling)   
 [l4d_achievement_trophy](https://forums.alliedmods.net/showthread.php?p=1279984) 玩家达成steam成就时头上展示奖杯 [自翻cvar说明及文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_achievement_trophy.sp)   
 [l4d_pipebomb_shove](https://forums.alliedmods.net/showthread.php?p=1733534) 设置引诱手雷伤害及手雷可吸附感染者头部(主要是设置伤害) [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_pipebomb_shove)   
 [l4d_pipebomb_damage](https://forums.alliedmods.net/showthread.php?p=2680272) 设置手雷伤害对所有生物的倍数 可通过l4d_pipebomb_shove设置的伤害进行更改 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_pipebomb_damage.sp)   
 [l4d_anti_rush](https://forums.alliedmods.net/showthread.php?t=322392) 反跑图 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush)   
 [l4d_common_limiter](https://forums.alliedmods.net/showthread.php?p=2782587)根据游戏僵尸数量限制来限制僵尸数量 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d_common_limiter.sp)  
+[l4d2_riot_penetration](https://forums.alliedmods.net/showthread.php?t=341750子弹)近战可正面攻击防爆僵尸[本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d2_riot_penetration)  
 
 [Dragokas](https://forums.alliedmods.net/member.php?u=282667)  
 [TankOnSpawn](https://forums.alliedmods.net/showthread.php?t=323813) 每次生成多个坦克 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/TankOnSpawn)   
-[l4d_votedifficulty](https://forums.alliedmods.net/showthread.php?t=317257) 投票更改难度 [自翻译文本 自用删掉了简单难度选项](https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty)   
+[l4d_votedifficulty](https://forums.alliedmods.net/showthread.php?t=317257) 投票更改难度 [自翻译文本 自用删掉了简单难度选项](https://github.com/apples1949/l4dplugins/tree/main/l4d_votedifficulty)  
+[l4d_votemute](https://forums.alliedmods.net/showthread.php?t=317256)投票禁言/禁语音玩家[翻译cvar说明 增加中文文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_votemute)  
 
 [lux](https://forums.alliedmods.net/member.php?u=257841)  
 [l4d2_Survivor_Legs](https://forums.alliedmods.net/showthread.php?t=299560) 显示双腿 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_Survivor_Legs.sp)  
@@ -128,7 +131,7 @@
 
 [sorallll](https://github.com/umlka/)懒得更新到git 部分插件使用Q群作者版本:  
 [superversus1.8.15.5改(多人插件)-v1.11.1](https://github.com/umlka/l4d2/tree/main/superversus1.8.15.5-modify) sorallll改的多人插件 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/superversus1.8.15.5%E6%94%B9(%E5%A4%9A%E4%BA%BA%E6%8F%92%E4%BB%B6))  
-[map_changer/l4d2_map_vote/l4d2_nativevote/l4d2_source_keyvalues](https://github.com/umlka/l4d2/tree/main/map_changer) sorallll自动换图+投票换图 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/map_change)  
+[map_changer/l4d2_map_vote/l4d2_nativevote/l4d2_source_keyvalues](https://github.com/umlka/l4d2/tree/main/map_changer) sorallll自动换图+投票换图 [本仓库地址 解除团灭换图限制](https://github.com/apples1949/l4dplugins/tree/main/map_change)  
 [coop_boss_spawning](https://github.com/umlka/l4d2/tree/main/coop_boss_spawning) 战役路程刷克和妹子 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/coop_boss_spawning)  
 [l4d2_doorlock](https://github.com/umlka/l4d2/tree/main/l4d2_doorlock) 玩家连接完毕才能开始游戏 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_doorlock)  
 [skip_tank_taunt](https://forums.alliedmods.net/showthread.php?t=336707) 跳过AI坦克捶胸动作 [使用sorallll的git版本](https://github.com/umlka/l4d2/blob/main/skip_tank_taunt/skip_tank_taunt.sp) [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/skip_tank_taunt.sp)  
@@ -145,6 +148,8 @@
 
 [NoroHime](https://forums.alliedmods.net/member.php?u=272518):  
 [l4d2_unlimited_upgrade_pack](https://forums.alliedmods.net/showthread.php?t=335601) 弹药升级包部署后可无限拿取 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_unlimited_upgrade_pack)   
+[l4d_medicines_unlimited](https://forums.alliedmods.net/showthread.php?t=336226) 设置血量上限及处理溢出的虚血 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_medicines_unlimited.sp)  
+[l4d_penetration_pistol](https://forums.alliedmods.net/showthread.php?t=337509) 调整小手枪对小僵尸的伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_penetration_pistol.sp)   
 
 [xZk](https://forums.alliedmods.net/member.php?u=282888):  
 [l4d2_incapped_pickup](https://forums.alliedmods.net/showthread.php?t=320828) 倒地可拾取物品 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_pickup)   
@@ -157,9 +162,9 @@
 [l4d_triggers_ignore_incap](https://forums.alliedmods.net/showthread.php?p=2732062) 机关不会因为倒地的玩家而无法开始 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d_triggers_ignore_incap.sp)  
 [l4d_hp_laser](https://forums.alliedmods.net/showthread.php?t=330590) 玩家感染者头顶显示血条 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_hp_laser.sp)  
 [l4d2_random_glow_item](https://forums.alliedmods.net/showthread.php?t=329617) 所有武器道具靠近可隔墙发光 [翻译cvar说明、插件文本及数据文件说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_random_glow_item)  
+[l4d_remove_item_collision](https://forums.alliedmods.net/showthread.php?t=328327)将所有武器或携带物的碰撞更改为仅与世界和静态物体发生碰撞 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d_remove_item_collision.sp)  
 
 zm:  
-[l4d2_stats/l4d2_skill_detect](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting) 技能检测插件 [使用东哥翻译文本](https://github.com/fantasylidong/CompetitiveWithAnne/tree/master/addons/sourcemod/translations/chi)  
 [l4d_stuckzombiemeleefix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_stuckzombiemeleefix.sp) 近战砍僵尸修复 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d_stuckzombiemeleefix.sp)  
 [TickrateFixes](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/TickrateFixes.sp) 修复高tick下开关门速度问题 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/TickrateFixes.sp)  
 [l4d2_pistol_delay](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_pistol_delay.sp) 修复高tick下手枪射击间隔过快问题[翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_pistol_delay)
@@ -168,8 +173,10 @@ zm:
 [l4d2_hltv_crash_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_hltv_crash_fix.sp)修复玩家可能通过SourceTV使服务器崩溃的问题(注意gamedata文件)[本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d2_hltv_crash_fix)  
 [l4d2_getup_fixes](https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_getup_fixes)修复双起身 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_getup_fixes)  
 [l4d_weapon_limits](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_weapon_limits.sp) 限制玩家整体可获取武器的数量 [汉化提示(注意gamedata)](https://github.com/apples1949/l4dplugins/tree/main/l4d_weapon_limits)  
-[l4d2_ellis_hunter_bandaid_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ellis_hunter_bandaid_fix.sp)修复Ellis被hunter扑中后起身比其他角色慢的问题[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_ellis_hunter_bandaid_fix)  
+[l4d2_ellis_hunter_bandaid_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ellis_hunter_bandaid_fix.sp)修复Ellis被hunter扑中后起身比其他角色慢的问题[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_ellis_hunter_bandaid_fix.sp)  
 [l4d2_dominatorscontrol](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_dominatorscontrol.sp) 解除控制性特感生成限制 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_dominatorscontrol)  
+[l4d2_ultra_witch](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ultra_witch.sp)设置witch伤害及不会秒杀[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_ultra_witch)  
+[l4d2_tank_attack_control](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_tank_attack_control.sp)坦克扔石头姿势控制[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tank_attack_control)  
 
 ReFlexPoison:  
 [enhancedsprays](https://forums.alliedmods.net/showthread.php?p=1998984) 设定喷漆间隔和范围 [大红修改并更新语法(已获得上传许可)](https://github.com/apples1949/l4dplugins/blob/main/enhancedsprays.sp)  
@@ -205,9 +212,6 @@ coleo:
 [GlowingTree880](https://github.com/GlowingTree880/L4D2_LittlePlugins):  
 [killsound](https://github.com/GlowingTree880/L4D2_LittlePlugins/blob/main/KillSound/killsound.sp) 爆头提示音 [自改仅特感爆头提示音](https://github.com/apples1949/l4dplugins/blob/main/killsound.sp)   
 
-[NoroHime](https://forums.alliedmods.net/member.php?u=272518):  
-[l4d_medicines_unlimited](https://forums.alliedmods.net/showthread.php?t=336226) 设置血量上限及处理溢出的虚血 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_medicines_unlimited.sp)  
-[l4d_penetration_pistol](https://forums.alliedmods.net/showthread.php?t=337509) 调整小手枪对小僵尸的伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_penetration_pistol.sp)   
 
 [MasterMind420](https://forums.alliedmods.net/member.php?u=97257)(已退出A站):  
 [l4d_pills_pass_fix](https://forums.alliedmods.net/showthread.php?t=314488) 防止别人给药时切换到药 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d_pills_pass_fix.sp)  
@@ -223,8 +227,8 @@ King_OXO(社区热心修复玩家):
 
 其他：  
 witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples1949/l4dplugins/blob/main/witch_announce.smx) zm不支持多人   
-[L4D2_TankFK](https://github.com/apples1949/l4dplugins/blob/main/L4D2_TankFK.sp)坦克防卡 q群找的 难找出处 修改编译提示的问题  
-
+[l4d2_auto_add_zombie](https://github.com/apples1949/l4dplugins/tree/main/l4d2_auto_add_zombie.sp) 动态僵尸数量  
+[Little-Anti-Cheat](https://github.com/J-Tanzanite/Little-Anti-Cheat)作弊检测插件
 [vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)  
 [部分来自嘤喵](https://www.bilibili.com/read/cv14277674)  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  

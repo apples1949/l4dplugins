@@ -269,7 +269,7 @@ void OnElevatorUnlocked(const char[] output, int caller, int activator, float de
 {
 	if (!g_Cvar_PluginEnable.BoolValue) return;
 	g_bUnlockedButtonPressed = true;
-	//PrintHintTextToAll("Activated");
+	PrintHintTextToAll("机关已激活");
 }
 
 /* =============================================================================================================== *
