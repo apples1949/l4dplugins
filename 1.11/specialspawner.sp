@@ -169,17 +169,17 @@ public void OnPluginStart() {
 	g_cSpawnWeights[SI_CHARGER] =	CreateConVar("ss_charger_weight",		"200",						"charger产生比重", _, true, 0.0);
 	g_cScaleWeights =				CreateConVar("ss_scale_weights",		"1",						"缩放相应特感的产生比重 [0 = 关闭 | 1 = 开启](开启后,总比重越大的越容易先刷出来, 动态控制特感刷出顺序)", _, true, 0.0, true, 1.0);
 	g_cSpawnTimeMin =				CreateConVar("ss_time_min",				"15.0",						"特感的最小产生时间", _, true, 0.1);
-	g_cSpawnTimeMax =				CreateConVar("ss_time_max",				"18.0",						"特感的最大产生时间", _, true, 1.0);
+	g_cSpawnTimeMax =				CreateConVar("ss_time_max",				"16.0",						"特感的最大产生时间", _, true, 1.0);
 	g_cSpawnTimeMode =				CreateConVar("ss_time_mode",			"1",						"特感的刷新时间模式[0 = 随机 | 1 = 递增(杀的越快刷的越快) | 2 = 递减(杀的越慢刷的越快)]", _, true, 0.0, true, 2.0);
 
-	g_cBaseLimit =					CreateConVar("ss_base_limit",			"4",						"生还者团队不超过4人时有多少个特感", _, true, 0.0, true, 32.0);
-	g_cExtraLimit =					CreateConVar("ss_extra_limit",			"1",						"生还者团队每增加一人可增加多少个特感", _, true, 0.0, true, 32.0);
-	g_cBaseSize =					CreateConVar("ss_base_size",			"1",						"生还者团队不超过4人时一次产生多少只特感", _, true, 0.0, true, 32.0);
+	g_cBaseLimit =					CreateConVar("ss_base_limit",			"4",						"生还者团队不超过4人时最多多少特感", _, true, 0.0, true, 32.0);
+	g_cExtraLimit =					CreateConVar("ss_extra_limit",			"1",						"生还者团队每增加一人可增加多少特感上限", _, true, 0.0, true, 32.0);
+	g_cBaseSize =					CreateConVar("ss_base_size",			"4",						"生还者团队不超过4人时一次产生多少只特感", _, true, 0.0, true, 32.0);
 	g_cExtraSize =					CreateConVar("ss_extra_size",			"1",						"生还者团队每增加多少玩家人一次多产生一只特感", _, true, 1.0, true, 32.0);
 	g_cTankStatusAction =			CreateConVar("ss_tankstatus_action",	"1",						"坦克产生后是否对当前刷特参数进行修改, 坦克死完后恢复?[0 = 忽略(保持原有的刷特状态) | 1 = 自定义]", _, true, 0.0, true, 1.0);
-	g_cTankStatusLimits =			CreateConVar("ss_tankstatus_limits",	"2;1;4;1;4;4",				"坦克产生后每种特感数量的自定义参数");
-	g_cTankStatusWeights =			CreateConVar("ss_tankstatus_weights",	"100;400;100;200;100;100",	"坦克产生后每种特感比重的自定义参数");
-	g_cSuicideTime =				CreateConVar("ss_suicide_time",			"25.0",						"特感自动处死时间", _, true, 1.0);
+	g_cTankStatusLimits =			CreateConVar("ss_tankstatus_limits",	"0;0;0;0;0;0",				"坦克产生后每种特感数量的自定义参数");
+	g_cTankStatusWeights =			CreateConVar("ss_tankstatus_weights",	"0;0;0;0;0;0",	"坦克产生后每种特感比重的自定义参数");
+	g_cSuicideTime =				CreateConVar("ss_suicide_time",			"15.0",						"特感自动处死时间", _, true, 1.0);
 	g_cRushDistance =				CreateConVar("ss_rush_distance",		"1500.0",					"路程超过多少算跑图(最前面的玩家路程减去最后面的玩家路程, 忽略倒地玩家)", _, true, 0.0);
 
 	g_cSpawnRangeMin =				CreateConVar("ss_spawnrange_min",		"150.0",					"特感最小生成距离", _, true, 0.0);

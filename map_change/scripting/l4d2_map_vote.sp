@@ -103,7 +103,7 @@ public void OnPluginStart() {
 	g_cvNotifyMapNext =	CreateConVar("notify_map_next", "1", "终局开始后提示投票下一张地图的方式. \n0=不提示, 1=聊天栏, 2=屏幕中央, 4=弹出菜单.", FCVAR_NOTIFY);
 	g_cvNotifyMapNext.AddChangeHook(CvarChanged);
 
-	//AutoExecConfig(true);
+	AutoExecConfig(true,"l4d2_map_vote");
 
 	g_cvMPGameMode = FindConVar("mp_gamemode");
 	g_cvMPGameMode.AddChangeHook(CvarChanged_Mode);
@@ -535,7 +535,7 @@ int ShowNextMap_MenuHandler(Menu menu, MenuAction action, int client, int param2
 
 void VoteNextMap(int client, const char[] item) {
 	if (!L4D2NativeVote_IsAllowNewVote()) {
-		PrintToChat(client, "投票正在进行中, 暂不能发起新的投票");
+		PrintToChat(client, "投票正在进行中, 暂不能通过\x05 !mapnext \x01发起新的投票");
 		return;
 	}
 
@@ -596,7 +596,7 @@ void NextMap_Handler(L4D2NativeVote vote, VoteAction action, int param1, int par
 			for (int i = 1; i <= MaxClients; i++) {
 				if (IsClientInGame(i) && !IsFakeClient(i)) {
 					fmt_Translate(info[0], info[0], sizeof info[], i, info[0]);
-					CPrintToChat(i, "{blue}%N {default}发起投票 {olive}设置下一张地图为: %s", param1, info[0]);
+					CPrintToChat(i, "{blue}%N {default}发起投票 设置{olive}下一张地图为: %s", param1, info[0]);
 				}
 			}
 		}
@@ -619,7 +619,7 @@ void NextMap_Handler(L4D2NativeVote vote, VoteAction action, int param1, int par
 					for (int i = 1; i <= MaxClients; i++) {
 						if (IsClientInGame(i) && !IsFakeClient(i)) {
 							fmt_Translate(info[0], info[0], sizeof info[], i, info[0]);
-							PrintToChat(i, "\x01下一张地图已设置为 \x05%s", info[0]);
+							PrintToChat(i, "\x01下一张地图已设置为 \x05%s \n\x01可以使用\x05 !mapnext \x01重新投票更换下一张地图", info[0]);
 						}
 					}
 				}

@@ -15,7 +15,8 @@
 #define NEXTLEVEL_Seconds 6.0
 
 ConVar DefMCoop, DefMSurvival, DefMVersus, CheckRoundCounterCoop, CheckRoundCounterCoopFinal, ChDelayVS, 
-	ChDelaySurvival, CheckRoundCounterSurvival, ChDelayCOOPFinal, cvarAnnounce, h_GameMode;
+	ChDelaySurvival, CheckRoundCounterSurvival, cvarAnnounce, h_GameMode;
+//ConVar ChDelayCOOPFinal;
 
 int g_iCurrentMode;
 char current_map[64];
@@ -27,7 +28,8 @@ char next_mission_type[64];
 char next_mission_map[64];
 char next_mission_name[64];
 bool cvarAnnounceValue, g_bHasRoundEnd, g_bFinalMap;
-float ChDelayVSValue, ChDelayCOOPFinalValue, ChDelaySurvivalValue;
+float ChDelayVSValue, ChDelaySurvivalValue;
+//float ChDelayCOOPFinalValue;
 int CoopRoundEndCounter = 0;
 int CheckRoundCounterCoopFinalValue, CheckRoundCounterCoopValue, CheckRoundCounterSurvivalValue;
 
@@ -63,7 +65,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
-	HookEvent("finale_win", Event_FinalWin);
+	//HookEvent("finale_win", Event_FinalWin);
 	HookEvent("mission_lost", Event_MissionLost);
 	
 	h_GameMode = FindConVar("mp_gamemode");
@@ -72,11 +74,11 @@ public void OnPluginStart()
 	DefMSurvival = CreateConVar("sm_l4d_fmc_def_survival", "", "生还者模式中默认更换的地图(无内容=无默认更改地图)", FCVAR_NOTIFY);
 	DefMVersus = CreateConVar("sm_l4d_fmc_def_versus", "c8m1_apartment", "对抗模式中默认更换的地图(无内容=无默认更改地图)", FCVAR_NOTIFY);
 	CheckRoundCounterCoop = CreateConVar("sm_l4d_fmc_crec_coop_map", "3", "战役/写实模式中，非最后一关团灭多少次换图 (0=关)", FCVAR_NOTIFY, true, 0.0);
-	CheckRoundCounterCoopFinal = CreateConVar("sm_l4d_fmc_crec_coop_final", "3", "战役/写实模式中非最后一关团灭多少次换图 (0=关)", FCVAR_NOTIFY, true, 0.0);
+	CheckRoundCounterCoopFinal = CreateConVar("sm_l4d_fmc_crec_coop_final", "3", "战役/写实模式中,最后一关团灭多少次换图 (0=关)", FCVAR_NOTIFY, true, 0.0);
 	CheckRoundCounterSurvival = CreateConVar("sm_l4d_fmc_crec_survival_map", "5", "生还者模式中团灭多少次换图(0=关)", FCVAR_NOTIFY, true, 0.0);
 	ChDelayVS = CreateConVar("sm_l4d_fmc_delay_vs", "13.0", "对抗模式中一场游戏结束后多少秒换图 (0=关)", FCVAR_NOTIFY, true, 0.0);
 	ChDelaySurvival = CreateConVar("sm_l4d_fmc_delay_survival", "15.0", "生还者模式中一场游戏结束后多少秒换图 (0=关)", FCVAR_NOTIFY, true, 0.0);
-	ChDelayCOOPFinal = CreateConVar("sm_l4d_fmc_delay_coop_final", "15.0", "战役/写实模式中一场游戏结束后多少秒换图 (0=关)", FCVAR_NOTIFY, true, 0.0);
+	//ChDelayCOOPFinal = CreateConVar("sm_l4d_fmc_delay_coop_final", "15.0", "战役/写实模式中一场游戏结束后多少秒换图 (0=关)", FCVAR_NOTIFY, true, 0.0);
 	cvarAnnounce = CreateConVar("sm_l4d_fmc_announce", "1", "在最后一关开始时是否向玩家展示更换的地图", FCVAR_NOTIFY, true, 0.0, true, 1.0 );
 	AutoExecConfig(true, "sm_l4d_mapchanger");
 
@@ -90,7 +92,7 @@ public void OnPluginStart()
 	CheckRoundCounterSurvival.AddChangeHook(ConVarChanged_Cvars);
 	ChDelayVS.AddChangeHook(ConVarChanged_Cvars);
 	ChDelaySurvival.AddChangeHook(ConVarChanged_Cvars);
-	ChDelayCOOPFinal.AddChangeHook(ConVarChanged_Cvars);
+	//ChDelayCOOPFinal.AddChangeHook(ConVarChanged_Cvars);
 	cvarAnnounce.AddChangeHook(ConVarChanged_Cvars);
 
 	RegConsoleCmd("sm_fmc_nextmap", Cmd_NextMap, "Display Next Map");
@@ -121,7 +123,7 @@ void GetCvars()
 	CheckRoundCounterSurvivalValue = CheckRoundCounterSurvival.IntValue;
 	ChDelayVSValue = ChDelayVS.FloatValue;
 	ChDelaySurvivalValue = ChDelaySurvival.FloatValue;
-	ChDelayCOOPFinalValue = ChDelayCOOPFinal.FloatValue;
+	//ChDelayCOOPFinalValue = ChDelayCOOPFinal.FloatValue;
 	cvarAnnounceValue = cvarAnnounce.BoolValue;
 }
 
@@ -149,14 +151,14 @@ public void OnMapEnd()
 {
 	g_bMapStarted = false;
 }
-
+/*
 public void OnClientPutInServer(int client)
 {
 	// Make the announcement in 20 seconds unless announcements are turned off
 	if(client && !IsFakeClient(client) && cvarAnnounceValue)
 		CreateTimer(10.0, TimerAnnounce, client, TIMER_FLAG_NO_MAPCHANGE);
 }
-
+*/
 public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast) 
 {
 	g_bHasRoundEnd = false;
@@ -171,11 +173,11 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 				if(CheckRoundCounterCoopFinalValue > 0 && CoopRoundEndCounter > 0) 
 				{
 					left = CheckRoundCounterCoopFinalValue-CoopRoundEndCounter;//Intentos - Intentos Realizados
-					if(left > 0 && cvarAnnounceValue) CPrintToChatAll("%t","Finale Tries Left",left);
+					if(left > 0 && cvarAnnounceValue) CPrintToChatAll("%t","Finale Tries Left",left);/*
 					if(left == 1)
 					{
-						if(cvarAnnounceValue) CPrintToChatAll("%t","Finale 1 Try Left",announce_map);
-					}
+						if(cvarAnnounceValue) CPrintToChatAll("%t","Finale 1 Try Left");
+					}*/
 				}
 			}
 			else
@@ -210,7 +212,7 @@ public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 		{
 			if( ChDelayVSValue > 0 )
 			{
-				CreateTimer(ChDelayVSValue, Timer_ChangeMap, TIMER_FLAG_NO_MAPCHANGE);
+				//CreateTimer(ChDelayVSValue, Timer_ChangeMap, TIMER_FLAG_NO_MAPCHANGE);
 			}
 		}
 		else if(g_iCurrentMode == 3)
@@ -222,20 +224,20 @@ public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 				if( ChDelaySurvivalValue > 0)
 				{
 					CPrintToChatAll("%t","Force Pass Map No Tries Left", CheckRoundCounterSurvivalValue);
-					CreateTimer(ChDelaySurvivalValue, Timer_ChangeMap, TIMER_FLAG_NO_MAPCHANGE);
+					//CreateTimer(ChDelaySurvivalValue, Timer_ChangeMap, TIMER_FLAG_NO_MAPCHANGE);
 				}
 			}
 		}
 	}
 }
 
-
+/*
 public void Event_FinalWin(Event event, const char[] name, bool dontBroadcast) 
 {
 	if(ChDelayCOOPFinalValue > 0 && g_iCurrentMode == 1 && StrEqual(next_mission_map, "none") == false)
 		CreateTimer(ChDelayCOOPFinalValue, Timer_ChangeMap, TIMER_FLAG_NO_MAPCHANGE);
 }
-
+*/
 public void Event_MissionLost(Event event, const char[] name, bool dontBroadcast) 
 {
 	if(StrEqual(next_mission_map, "none") == false)
@@ -248,7 +250,7 @@ public void Event_MissionLost(Event event, const char[] name, bool dontBroadcast
 				if(CheckRoundCounterCoopFinalValue > 0 && CoopRoundEndCounter >= CheckRoundCounterCoopFinalValue)
 				{
 					CPrintToChatAll("%t","Force Pass Campaign No Tries Left", CheckRoundCounterCoopFinalValue);
-					CreateTimer(NEXTLEVEL_Seconds, Timer_ChangeMap, TIMER_FLAG_NO_MAPCHANGE);
+					//CreateTimer(NEXTLEVEL_Seconds, Timer_ChangeMap, TIMER_FLAG_NO_MAPCHANGE);
 				}
 			}
 			else
@@ -262,7 +264,7 @@ public void Event_MissionLost(Event event, const char[] name, bool dontBroadcast
 		}
 		}
 }
-
+/*
 public Action TimerAnnounce(Handle timer, any client)
 {
 	if(IsClientInGame(client))
@@ -279,7 +281,7 @@ public Action TimerAnnounce(Handle timer, any client)
 
 	return Plugin_Continue;
 }
-
+*/
 public Action Timer_ChangeMap(Handle timer)
 {
 	ServerCommand("changelevel %s", next_mission_map);

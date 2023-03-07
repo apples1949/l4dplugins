@@ -95,6 +95,7 @@
 [l4d_game_files_precacher](https://github.com/fbef0102/L4D1_2-Plugins/blob/master/l4d_game_files_precacher)嘗試解決崩潰 "找不到模組"[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d_game_files_precacher.sp)  
 [l4d2_skill_detect](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_skill_detect)哈利版本的技能检测插件[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_skill_detect)  
 [linux_auto_restart](https://github.com/fantasylidong/anne/blob/main/left4dead2/addons/sourcemod/scripting/linux_auto_restart.sp) 老版本带sm_restart指令的空服重启插件[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/linux_auto_restart.sp)  
+[sm_l4d_mapchanger](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/sm_l4d_mapchanger)[仅保留非救援关团灭换下一关及救援关团灭提示](https://github.com/apples1949/l4dplugins/blob/main/sm_l4d_mapchanger)  
 
 [Silvers](https://forums.alliedmods.net/member.php?u=85778)  
 [l4d_gear_transfer](https://forums.alliedmods.net/showthread.php?t=137616) 按键给予物品 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_gear_transfer)  
@@ -132,7 +133,7 @@
 
 [sorallll](https://github.com/umlka/)懒得更新到git 部分插件使用Q群作者版本:  
 [superversus1.8.15.5改(多人插件)-v1.11.1](https://github.com/umlka/l4d2/tree/main/superversus1.8.15.5-modify) sorallll改的多人插件 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/superversus1.8.15.5%E6%94%B9(%E5%A4%9A%E4%BA%BA%E6%8F%92%E4%BB%B6))  
-[map_changer/l4d2_map_vote/l4d2_nativevote/l4d2_source_keyvalues](https://github.com/umlka/l4d2/tree/main/map_changer) sorallll自动换图+投票换图 [本仓库地址 解除团灭换图限制](https://github.com/apples1949/l4dplugins/tree/main/map_change)  
+[map_changer/l4d2_map_vote/l4d2_nativevote/l4d2_source_keyvalues](https://github.com/umlka/l4d2/tree/main/map_changer) sorallll自动换图+投票换图 [增加提示 增加生成cfg](https://github.com/apples1949/l4dplugins/tree/main/map_change)  
 [coop_boss_spawning](https://github.com/umlka/l4d2/tree/main/coop_boss_spawning) 战役路程刷克和妹子 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/coop_boss_spawning)  
 [l4d2_doorlock](https://github.com/umlka/l4d2/tree/main/l4d2_doorlock) 玩家连接完毕才能开始游戏 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_doorlock)  
 [skip_tank_taunt](https://forums.alliedmods.net/showthread.php?t=336707) 跳过AI坦克捶胸动作 [使用sorallll的git版本](https://github.com/umlka/l4d2/blob/main/skip_tank_taunt/skip_tank_taunt.sp) [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/skip_tank_taunt.sp)  
@@ -178,6 +179,7 @@ zm:
 [l4d2_dominatorscontrol](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_dominatorscontrol.sp) 解除控制性特感生成限制 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_dominatorscontrol)  
 [l4d2_ultra_witch](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ultra_witch.sp)设置witch伤害及不会秒杀[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_ultra_witch)  
 [l4d2_tank_attack_control](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_tank_attack_control.sp)坦克扔石头姿势控制[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tank_attack_control)  
+[l4d2_si_staggers](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_si_staggers.sp)特感制造的震动不会影响到其他特感 如胖子爆炸[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_si_staggers.sp)  
 
 ReFlexPoison:  
 [enhancedsprays](https://forums.alliedmods.net/showthread.php?p=1998984) 设定喷漆间隔和范围 [大红修改并更新语法(已获得上传许可)](https://github.com/apples1949/l4dplugins/blob/main/enhancedsprays.sp)  
@@ -240,5 +242,4 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [mod]adminsyatem.vpk [创意工坊](https://steamcommunity.com/sharedfiles/filedetails/?id=214630948)的管理员菜单  
 [mod]Good baseballbat.vpk/[mod]Good crowbar.vpk/[mod]Good golfclub.vpk/[mod]shovel_enhancement.vpk  钝器变锐器  
 [mod]pitchfork_enhancement.vpk 草叉增强+砍舌+锋利  
-[mod]no_smoking.vpk 去除舌头烟雾 不知道有没有用  
-服务器自改地图：[stripper微改地图](https://github.com/apples1949/l4dplugins/tree/main/stripper)  
+服务器自改地图 各个初始地图增加木狙：[stripper微改地图](https://github.com/apples1949/l4dplugins/tree/main/stripper)  

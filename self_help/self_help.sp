@@ -340,7 +340,7 @@ public void OnPlayerDown(Event event, const char[] name, bool dontBroadcast)
 		
 		if (StrEqual(name, "player_incapacitated"))
 		{
-			PrintHintText(wounded, "你重伤倒地了!\n按住下蹲键自救\n按 方向键 倒地爬行\n倒地时按住 换弹键 无代价扶起其他倒地的生还者");
+			PrintHintText(wounded, "你重伤倒地了! 按住下蹲键自救! 按 方向键 倒地爬行\n倒地时按住 换弹键 无代价扶起其他倒地的生还者");
 			CPrintToChat(wounded,"你重伤倒地了!\n按住{green}下蹲键{default}自救!按{green}方向键{default}倒地爬行\n\n倒地时按住{green}换弹键{default}无代价扶起其他倒地的生还者");
 			if (bIsL4D)
 			{
