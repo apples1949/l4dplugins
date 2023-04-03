@@ -1,6 +1,6 @@
 /*
 *	Anti Rush
-*	Copyright (C) 2022 Silvers
+*	Copyright (C) 2023 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION 		"1.18"
+#define PLUGIN_VERSION 		"1.19"
 #define DEBUG_BENCHMARK		0			// 0=Off. 1=Benchmark logic function.
 
 /*======================================================================================
@@ -32,6 +32,11 @@
 
 ========================================================================================
 	Change Log:
+
+1.19 (10-Mar-2023)
+	- Added cvar "l4d_anti_rush_health" to hurt players who are rushing. Requested by "Voevoda".
+	- Changed cvar "l4d_anti_rush_type" to allow disabling teleport or slowdown, to only enable health drain.
+	- Translation phrases updated to support the health drain only type. Thanks to "Voevoda" and "HarryPotter" for updating Russian and Chinese translations.
 
 1.18 (01-Jun-2022)
 	- L4D1: Fixed throwing errors.
@@ -140,8 +145,8 @@ float g_iBenchTicks;
 #define EVENTS_CONFIG		"data/l4d_anti_rush.cfg"
 
 
-ConVar g_hCvarAllow, g_hCvarMPGameMode, g_hCvarModes, g_hCvarModesOff, g_hCvarModesTog, g_hCvarFinale, g_hCvarFlags, g_hCvarIgnore, g_hCvarIncap, g_hCvarPlayers, g_hCvarRangeLast, g_hCvarRangeLead, g_hCvarSlow, g_hCvarTank, g_hCvarText, g_hCvarTime, g_hCvarType, g_hCvarWarnLast, g_hCvarWarnLead, g_hCvarWarnTime;
-float g_fCvarRangeLast, g_fCvarRangeLead, g_fCvarSlow, g_fCvarTime, g_fCvarWarnLast, g_fCvarWarnLead, g_fCvarWarnTime;
+ConVar g_hCvarAllow, g_hCvarMPGameMode, g_hCvarModes, g_hCvarModesOff, g_hCvarModesTog, g_hCvarFinale, g_hCvarFlags, g_hCvarIgnore, g_hCvarHealth, g_hCvarIncap, g_hCvarPlayers, g_hCvarRangeLast, g_hCvarRangeLead, g_hCvarSlow, g_hCvarTank, g_hCvarText, g_hCvarTime, g_hCvarType, g_hCvarWarnLast, g_hCvarWarnLead, g_hCvarWarnTime;
+float g_fCvarHealth, g_fCvarRangeLast, g_fCvarRangeLead, g_fCvarSlow, g_fCvarTime, g_fCvarWarnLast, g_fCvarWarnLead, g_fCvarWarnTime;
 int g_iCvarFinale, g_iCvarFlags, g_iCvarIgnore, g_iCvarIncap, g_iCvarPlayers, g_iCvarTank, g_iCvarText, g_iCvarType;
 bool g_bCvarAllow, g_bMapStarted, g_bLeft4Dead2;
 
@@ -197,6 +202,7 @@ public void OnPluginStart()
 	g_hCvarModesTog =	CreateConVar(	"l4d_anti_rush_modes_tog",		"0",							"在这些游戏模式中启用插件. 0=全部游戏模式, 1=战役, 2=生还者, 4=对抗, 8=清道夫. 将这些数字叠加在一起(如248).", CVAR_FLAGS );
 	g_hCvarFinale =		CreateConVar(	"l4d_anti_rush_finale",			g_bLeft4Dead2 ? "2" : "0",		"是否在最后一关(activate in finales)中激活插件. 0=关闭. 1=全部的最后一关. 2=(Gauntlet type finales)仅擂台类型模式 (L4D2 only).", CVAR_FLAGS );
 	g_hCvarFlags =		CreateConVar(	"l4d_anti_rush_flags",			"",								"拥有这些标志的玩家。落后情况下免疫传送，领先的情况下免疫减速。", CVAR_FLAGS );
+	g_hCvarHealth =		CreateConVar(	"l4d_anti_rush_health",			"0",							"0=关闭. 跑图玩家每秒扣多少血.", CVAR_FLAGS);
 	g_hCvarIgnore =		CreateConVar(	"l4d_anti_rush_ignore",			"0",							"拥有免疫标志的玩家，在计算是否落后的情况中是否纳入计算？ 0=忽略他们. 1=计算他们.", CVAR_FLAGS );
 	g_hCvarIncap =		CreateConVar(	"l4d_anti_rush_incapped",		"0",							"0=关闭. 在跑图和落后的玩家中，多少玩家可以因为倒地而被忽略。", CVAR_FLAGS );
 	g_hCvarPlayers =	CreateConVar(	"l4d_anti_rush_players",		"3",							"在插件功能启动前，存活的幸存者必须大于3个，否则无法检测跑图玩家和落后玩家的平均数", CVAR_FLAGS, true, 3.0 );
@@ -221,6 +227,7 @@ public void OnPluginStart()
 	g_hCvarAllow.AddChangeHook(ConVarChanged_Allow);
 	g_hCvarFinale.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarFlags.AddChangeHook(ConVarChanged_Cvars);
+	g_hCvarHealth.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarIgnore.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarIncap.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarPlayers.AddChangeHook(ConVarChanged_Cvars);
@@ -270,6 +277,7 @@ void GetCvars()
 	g_iCvarIgnore = g_hCvarIgnore.IntValue;
 
 	g_iCvarFinale = g_hCvarFinale.IntValue;
+	g_fCvarHealth = g_hCvarHealth.FloatValue;
 	g_iCvarIncap = g_hCvarIncap.IntValue;
 	g_iCvarPlayers = g_hCvarPlayers.IntValue;
 	g_fCvarTime = g_hCvarTime.FloatValue;
@@ -794,10 +802,12 @@ Action TimerTest(Handle timer)
 						{
 							g_fHintWarn[client] = GetGameTime() + g_fCvarWarnTime;
 
-							if( g_iCvarType == 1 )
-								ClientHintMessage(client, "Warn_Slowdown");
-							else
-								ClientHintMessage(client, "Warn_Ahead");
+							switch( g_iCvarType )
+							{
+								case 0: ClientHintMessage(client, "Warn_Health");
+								case 1: ClientHintMessage(client, "Warn_Slowdown");
+								case 2: ClientHintMessage(client, "Warn_Ahead");
+							}
 						}
 
 						// Compare higher flow with next survivor, they're rushing
@@ -807,7 +817,7 @@ Action TimerTest(Handle timer)
 							flowBack = false;
 
 							// Slowdown enabled?
-							if( g_iCvarType == 1 )
+							if( g_fCvarHealth || g_iCvarType == 1 )
 							{
 								// Inhibit moving forward
 								// Only check > or < because when == the same flow distance, they're either already being slowed or running back, so we don't want to change/affect them within the same flow NavMesh.
@@ -815,7 +825,7 @@ Action TimerTest(Handle timer)
 								{
 									g_fLastFlow[client] = flow;
 
-									if( g_bInhibit[client] == false )
+									if( g_iCvarType == 1 && g_bInhibit[client] == false )
 									{
 										g_bInhibit[client] = true;
 										SDKHook(client, SDKHook_PreThinkPost, PreThinkPost);
@@ -826,7 +836,17 @@ Action TimerTest(Handle timer)
 									{
 										g_fHintLast[client] = GetGameTime() + g_fCvarTime;
 
-										ClientHintMessage(client, "Rush_Slowdown");
+										switch( g_iCvarType )
+										{
+											case 0: ClientHintMessage(client, "Rush_Health");
+											case 1: ClientHintMessage(client, "Rush_Slowdown");
+										}
+									}
+
+									// Hurt for rushing?
+									if( g_fCvarHealth )
+									{
+										SDKHooks_TakeDamage(client, 0, 0, g_fCvarHealth);
 									}
 								}
 								else if( flow < g_fLastFlow[client] )

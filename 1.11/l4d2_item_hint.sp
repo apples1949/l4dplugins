@@ -25,11 +25,11 @@
 ConVar g_hItemHintCoolDown, g_hSpotMarkCoolDown, g_hInfectedMarkCoolDown,
 	g_hItemUseHintRange, g_hItemUseSound, g_hItemAnnounceType, g_hItemGlowTimer, g_hItemGlowRange, g_hItemCvarColor,
 	g_hItemInstructorHint, g_hItemInstructorColor, g_hItemInstructorIcon,
-	g_hSpotMarkUseRange, g_hSpotMarkUseSound, g_hSpotMarkGlowTimer, g_hSpotMarkCvarColor, g_hSpotMarkSpriteModel,
+	g_hSpotMarkUseRange, g_hSpotMarkUseSound, g_hSpotMarkAnnounceType, g_hSpotMarkGlowTimer, g_hSpotMarkCvarColor, g_hSpotMarkSpriteModel,
 	g_hSpotMarkInstructorHint, g_hSpotMarkInstructorColor, g_hSpotMarkInstructorIcon,
 	g_hInfectedMarkUseRange, g_hInfectedMarkUseSound, g_hInfectedMarkAnnounceType, g_hInfectedMarkGlowTimer, g_hInfectedMarkGlowRange, g_hInfectedMarkCvarColor, g_hInfectedMarkWitch;
 int g_iItemAnnounceType, g_iItemGlowRange, g_iItemCvarColor,
-	g_iSpotMarkCvarColorArray[3],
+	g_iSpotMarkCvarColorArray[3], g_iSpotMarkAnnounceType,
 	g_iInfectedMarkAnnounceType, g_iInfectedMarkGlowRange, g_iInfectedMarkCvarColor;
 float g_fItemHintCoolDown, g_fSpotMarkCoolDown, g_fInfectedMarkCoolDown,
 	g_fItemUseHintRange, g_fItemGlowTimer,
@@ -64,7 +64,7 @@ public Plugin myinfo =
 	name        = "L4D2 Item hint",
 	author      = "BHaType, fdxx, HarryPotter",
 	description = "When using 'Look' in vocalize menu, print corresponding item to chat area and make item glow or create spot marker/infeced maker like back 4 blood.",
-	version     = "2.5",
+	version     = "2.7",
 	url         = "https://forums.alliedmods.net/showpost.php?p=2765332&postcount=30"
 };
 
@@ -94,6 +94,8 @@ public void OnAllPluginsLoaded()
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_item_hint.phrases");
+
 	GameData hGameData = new GameData("l4d2_item_hint");
 	if (hGameData != null)
 	{
@@ -122,7 +124,7 @@ public void OnPluginStart()
 	g_hItemHintCoolDown		= CreateConVar("l4d2_item_hint_cooldown_time", "1.0", "玩家使用语音菜单的‘看’创建查看物品的冷却时间", FCVAR_NOTIFY, true, 0.0);
 	g_hItemUseHintRange		= CreateConVar("l4d2_item_hint_use_range", "150", "玩家使用语音菜单查看物品最远距离", FCVAR_NOTIFY, true, 1.0);
 	g_hItemUseSound			= CreateConVar("l4d2_item_hint_use_sound", "buttons/blip1.wav", "物品提示音(格式一般是：sound/,无内容：禁用)", FCVAR_NOTIFY);
-	g_hItemAnnounceType		= CreateConVar("l4d2_item_hint_announce_type", "1", "物品提示的显示方式。(0：禁用，1：在聊天中，2：在提示框中，3：在屏幕中心，4:2和3）", FCVAR_NOTIFY, true, 0.0, true, 4.0);
+	g_hItemAnnounceType		= CreateConVar("l4d2_item_hint_announce_type", "1", "物品提示的显示方式。(0：禁用，1：在聊天中，2：在提示框中，3：在屏幕中心）", FCVAR_NOTIFY, true, 0.0, true, 3.0);
 	g_hItemGlowTimer		= CreateConVar("l4d2_item_hint_glow_timer", "10.0", "物品发光时间", FCVAR_NOTIFY, true, 0.0);
 	g_hItemGlowRange		= CreateConVar("l4d2_item_hint_glow_range", "800", "物品发光范围", FCVAR_NOTIFY, true, 0.0);
 	g_hItemCvarColor		= CreateConVar("l4d2_item_hint_glow_color", "0 255 255", "物品发光颜色，自行去https://tool.oschina.net/commons?type=3比对颜色(无内容=禁用物品发光)", FCVAR_NOTIFY);
@@ -133,6 +135,7 @@ public void OnPluginStart()
 	g_hSpotMarkCoolDown			= CreateConVar("l4d2_spot_marker_cooldown_time", "2.5", "玩家使用语音菜单的‘看’创建标记的冷却时间", FCVAR_NOTIFY, true, 0.0);
 	g_hSpotMarkUseRange     	= CreateConVar("l4d2_spot_marker_use_range", "1800", "玩家可以标记的最大范围", FCVAR_NOTIFY, true, 1.0);
 	g_hSpotMarkUseSound     	= CreateConVar("l4d2_spot_marker_use_sound", "buttons/blip1.wav", "标记提示音(格式一般是：sound/,无内容：禁用)", FCVAR_NOTIFY);
+	g_hSpotMarkAnnounceType		= CreateConVar("l4d2_spot_marker_announce_type", "2", "改变位置标记的显示方式. (0：禁用，1：在聊天中，2：在提示框中，3：在屏幕中心）", FCVAR_NOTIFY, true, 0.0, true, 3.0);
 	g_hSpotMarkGlowTimer		= CreateConVar("l4d2_spot_marker_duration", "10.0", "标记持续时间", FCVAR_NOTIFY, true, 0.0);
 	g_hSpotMarkCvarColor		= CreateConVar("l4d2_spot_marker_color", "200 200 200", "标记颜色，自行去https://tool.oschina.net/commons?type=3比对颜色(无内容=禁用标记)", FCVAR_NOTIFY);
 	g_hSpotMarkSpriteModel      = CreateConVar("l4d2_spot_marker_sprite_model", "materials/vgui/icon_arrow_down.vmt", "标记模型(无内容=禁用模型)");
@@ -166,6 +169,7 @@ public void OnPluginStart()
 	g_hSpotMarkCoolDown.AddChangeHook(ConVarChanged_Cvars);
 	g_hSpotMarkUseRange.AddChangeHook(ConVarChanged_Cvars);
 	g_hSpotMarkUseSound.AddChangeHook(ConVarChanged_Cvars);
+	g_hSpotMarkAnnounceType.AddChangeHook(ConVarChanged_Cvars);
 	g_hSpotMarkGlowTimer.AddChangeHook(ConVarChanged_Cvars);
 	g_hSpotMarkCvarColor.AddChangeHook(ConVarChanged_Cvars);
 	g_hSpotMarkSpriteModel.AddChangeHook(ConVarChanged_Cvars);
@@ -264,6 +268,7 @@ void GetCvars()
 	g_fSpotMarkUseRange = g_hSpotMarkUseRange.FloatValue;
 	g_hSpotMarkUseSound.GetString(g_sSpotMarkUseSound, sizeof(g_sSpotMarkUseSound));
 	if (strlen(g_sSpotMarkUseSound) > 0 && g_bMapStarted) PrecacheSound(g_sSpotMarkUseSound);
+	g_iSpotMarkAnnounceType = g_hSpotMarkAnnounceType.IntValue;
 	g_fSpotMarkGlowTimer = g_hSpotMarkGlowTimer.FloatValue;
 	FormatEx(g_sKillDelay, sizeof(g_sKillDelay), "OnUser1 !self:Kill::%.2f:-1", g_fSpotMarkGlowTimer);
 	g_hSpotMarkCvarColor.GetString(g_sSpotMarkCvarColor, sizeof(g_sSpotMarkCvarColor));
@@ -853,7 +858,7 @@ bool CreateInfectedMarker(int client, int infected, bool bIsWitch = false)
 	static char sItemName[64];
 	StringToLowerCase(sModelName);
 	g_smModelToName.GetString(sModelName, sItemName, sizeof(sItemName));
-	NotifyMessage(client, sItemName, view_as<EHintType>(eInfectedMaker));
+	NotifyMessage(client, sItemName, eInfectedMaker);
 
 	return true;
 }
@@ -1190,7 +1195,7 @@ void StringToLowerCase(char[] input)
 
 void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 {
-	if (eType == view_as<EHintType>(eItemHint))
+	if (eType == eItemHint)
 	{
 		switch(g_iItemAnnounceType)
 		{
@@ -1200,7 +1205,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						CPrintToChat(i, "({green}Vocalize{default}) {olive}%N{default}: %s", client, sItemName);
+						CPrintToChat(i, "%T", "Announce_Vocalize_ITEM (C)", i, client, sItemName);
 					}
 				}
 			}
@@ -1209,7 +1214,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintHintText(i, "(Vocalize) %N: %s", client, sItemName);
+						PrintHintText(i, "%T", "Announce_Vocalize_ITEM", i, client, sItemName);
 					}
 				}
 			}
@@ -1218,23 +1223,13 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintCenterText(i, "(Vocalize) %N: %s", client, sItemName);
-					}
-				}
-			}
-			case 4: {
-				for (int i=1; i <= MaxClients; i++)
-				{
-					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
-					{
-						PrintHintText(i, "(Vocalize) %N: %s", client, sItemName);
-						PrintCenterText(i, "(Vocalize) %N: %s", client, sItemName);
+						PrintCenterText(i, "%T", "Announce_Vocalize_ITEM", i, client, sItemName);
 					}
 				}
 			}
 		}
 	}
-	else if (eType == view_as<EHintType>(eInfectedMaker))
+	else if (eType == eInfectedMaker)
 	{
 		switch(g_iInfectedMarkAnnounceType)
 		{
@@ -1244,7 +1239,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintToChat(i, "\x01(\x04Vocalize\x01) \x05%N\x01: \x04%s", client, sItemName);
+						CPrintToChat(i, "%T", "Announce_Vocalize_INFECTED (C)", i, client, sItemName);
 					}
 				}
 			}
@@ -1253,7 +1248,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintHintText(i, "(Vocalize) %N: %s", client, sItemName);
+						PrintHintText(i, "%T", "Announce_Vocalize_INFECTED", i, client, sItemName);
 					}
 				}
 			}
@@ -1262,17 +1257,41 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintCenterText(i, "(Vocalize) %N: %s", client, sItemName);
+						PrintCenterText(i, "%T", "Announce_Vocalize_INFECTED", i, client, sItemName);
 					}
 				}
 			}
-			case 4: {
+		}
+	}
+	else if (eType == eSpotMarker)
+	{
+		switch(g_iSpotMarkAnnounceType)
+		{
+			case 0: {/*nothing*/}
+			case 1: {
 				for (int i=1; i <= MaxClients; i++)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintHintText(i, "(Vocalize) %N: %s", client, sItemName);
-						PrintCenterText(i, "(Vocalize) %N: %s", client, sItemName);
+						CPrintToChat(i, "%T", "Announce_Spot_Marker (C)", i, client);
+					}
+				}
+			}
+			case 2: {
+				for (int i=1; i <= MaxClients; i++)
+				{
+					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
+					{
+						PrintHintText(i, "%T", "Announce_Spot_Marker", i, client);
+					}
+				}
+			}
+			case 3: {
+				for (int i=1; i <= MaxClients; i++)
+				{
+					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
+					{
+						PrintCenterText(i, "%T", "Announce_Spot_Marker", i, client);
 					}
 				}
 			}
@@ -1369,20 +1388,22 @@ void CreateInstructorHint(int client, const float vOrigin[3], const char[] sItem
 
 	switch(type)
 	{
-		case view_as<EHintType>(eItemHint):
+		case eItemHint:
 		{
 			if( Create_info_target(iEntity, vOrigin, sTargetName, g_fItemGlowTimer) )
 			{
 				FormatEx(sCaption, sizeof sCaption, "%s", sItemName);
-				Create_env_instructor_hint(iEntity, view_as<EHintType>(eItemHint), vOrigin, sTargetName, g_sItemInstructorIcon, sCaption, g_sItemInstructorColor, g_fItemGlowTimer, float(g_iItemGlowRange));
+				Create_env_instructor_hint(iEntity, eItemHint, vOrigin, sTargetName, g_sItemInstructorIcon, sCaption, g_sItemInstructorColor, g_fItemGlowTimer, float(g_iItemGlowRange));
 			}
 		}
-		case view_as<EHintType>(eSpotMarker):
+		case eSpotMarker:
 		{
 			if( Create_info_target(iEntity, vOrigin, sTargetName, g_fSpotMarkGlowTimer) )
 			{
-				FormatEx(sCaption, sizeof sCaption, "%N在这里做了个标记", client);
-				Create_env_instructor_hint(iEntity, view_as<EHintType>(eSpotMarker), vOrigin, sTargetName, g_sSpotMarkInstructorIcon, sCaption, g_sSpotMarkInstructorColor, g_fSpotMarkGlowTimer, g_fSpotMarkUseRange);
+				FormatEx(sCaption, sizeof sCaption, "%T", "Spot_Maker", LANG_SERVER, client);
+				Create_env_instructor_hint(iEntity, eSpotMarker, vOrigin, sTargetName, g_sSpotMarkInstructorIcon, sCaption, g_sSpotMarkInstructorColor, g_fSpotMarkGlowTimer, g_fSpotMarkUseRange);
+			
+				NotifyMessage(client, "", eSpotMarker);
 			}
 		}
 	}
@@ -1413,8 +1434,8 @@ bool Create_info_target(int iEntity, const float vOrigin[3], const char[] sTarge
 	}
 	else
 	{
-		char szBuffer[36];
-		Format(szBuffer, sizeof szBuffer, "OnUser1 !self:Kill::%f:-1", duration);
+		static char szBuffer[36];
+		FormatEx(szBuffer, sizeof szBuffer, "OnUser1 !self:Kill::%f:-1", duration);
 
 		SetVariantString(szBuffer);
 		AcceptEntityInput(entity, "AddOutput");
@@ -1464,8 +1485,8 @@ void Create_env_instructor_hint(int iEntity, EHintType eType, const float vOrigi
 	}
 	else
 	{
-		char szBuffer[36];
-		Format(szBuffer, sizeof szBuffer, "OnUser1 !self:Kill::%f:-1", duration);
+		static char szBuffer[36];
+		FormatEx(szBuffer, sizeof szBuffer, "OnUser1 !self:Kill::%f:-1", duration);
 
 		SetVariantString(szBuffer);
 		AcceptEntityInput(entity, "AddOutput");
@@ -1622,7 +1643,7 @@ void PlayerMarkHint(int client)
 				{
 					if(GetEngineTime() > g_fItemHintCoolDownTime[client])
 					{
-						NotifyMessage(client, sItemName, view_as<EHintType>(eItemHint));
+						NotifyMessage(client, sItemName, eItemHint);
 
 						if (strlen(g_sItemUseSound) > 0)
 						{

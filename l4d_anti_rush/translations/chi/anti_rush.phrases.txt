@@ -2,31 +2,41 @@
 {
 	"Rush_Slowdown"
 	{
-		"chi" "{orange}[反跑图] {green}放慢脚步, 领先{orange}生还者队伍{green}太远, {orange}请回退{green}队伍."
+		"chi"	"{orange}[反跑图] {green}放慢脚步, 领先{orange}生还者队伍{green}太远, {orange}请回退{green}队伍."
 	}
 
 	"Rush_Ahead"
 	{
-		"chi" "{orange}[反跑图] {green}你领先{orange}生还者队伍{green}太远, 已传送遣返."
+		"chi"	"{orange}[反跑图] {green}你领先{orange}生还者队伍{green}太远, 已传送遣返."
 	}
 
 	"Rush_Behind"
 	{
-		"chi" "{orange}[反跑图] {green}你落后{orange}生还者队伍{green}太远, 已传送."
+		"chi"	"{orange}[反跑图] {green}你落后{orange}生还者队伍{green}太远, 已传送."
+	}
+
+	"Rush_Health"
+	{
+		"chi"	"{orange}[反跑图] {green}你落后{orange}生还者队伍{green}太远, {orange}请回退, {green}否则将失去血量."
 	}
 
 	"Warn_Slowdown"
 	{
-		"chi" "{orange}[反跑图] {green}你领先{orange}生还者队伍{green}太远, {orange}请回退, {green}否则将限速."
+		"chi"	"{orange}[反跑图] {green}你领先{orange}生还者队伍{green}太远, {orange}请回退, {green}否则将限速."
 	}
 
 	"Warn_Ahead"
 	{
-		"chi" "{orange}[反跑图] {green}你领先{orange}生还者队伍{green}太远, {orange}请回退 ,{green}否则将被传送遣返."
+		"chi"	"{orange}[反跑图] {green}你领先{orange}生还者队伍{green}太远, {orange}请回退 ,{green}否则将被传送遣返."
 	}
 
 	"Warn_Behind"
 	{
-		"chi" "{orange}[反跑图] {green}你落后{orange}生还者队伍{green}太远, {orange}请前进, {green}否则将被传送."
+		"chi"	"{orange}[反跑图] {green}你落后{orange}生还者队伍{green}太远, {orange}请前进, {green}否则将被传送."
+	}
+
+	"Warn_Health"
+	{
+		"chi"	"{orange}[反跑图] {green}你落后{orange}生还者队伍{green}太远, {orange}请前进, {green}否则将失去血量."
 	}
 }

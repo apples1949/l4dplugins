@@ -175,26 +175,27 @@
 		"en"		"{green}{1} {orange} microphone is disabled"
 		"ru"		"Микрофон {green}{1} {orange} был отключён"
 		"chi"		"{cyan}投票禁止玩家语音 {orange}功能被禁用"
+		"chi"		"{orange}已禁止{green}{1}{orange}语音"
 	}
 	"vote_success_unmute"
 	{
 		"#format"	"{1:s}"
 		"en"		"{green}{1} {orange} microphone is enabled"
 		"ru"		"Микрофон {green}{1} {orange} был включён"
-		"chi"		"{cyan}投票禁止玩家语音 {orange}功能已启用"
+		"chi"		"{orange}已恢复{green}{1}{orange}语音"
 	}
 	"vote_success_gag"
 	{
 		"#format"	"{1:s}"
 		"en"		"{green}{1} {orange} chat is disabled"
 		"ru"		"Чат {green}{1} {orange} был отключён"
-		"chi"		"{cyan}投票禁止玩家发言 {orange}功能已启用"
+		"chi"		"{orange}已禁止{green}{1}{orange}发言"
 	}
 	"vote_success_ungag"
 	{
 		"#format"	"{1:s}"
 		"en"		"{green}{1} {orange} chat is enabled"
 		"ru"		"Чат {green}{1} {orange} был включён"
-		"chi"		"{cyan}投票禁止玩家发言 {orange}功能已启用"
+		"chi"		"{orange}已恢复{green}{1}{orange}发言"
 	}
 }

@@ -177,7 +177,7 @@ zm:
 [l4d_weapon_limits](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_weapon_limits.sp) 限制玩家整体可获取武器的数量 [汉化提示(注意gamedata)](https://github.com/apples1949/l4dplugins/tree/main/l4d_weapon_limits)  
 [l4d2_ellis_hunter_bandaid_fix](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ellis_hunter_bandaid_fix.sp)修复Ellis被hunter扑中后起身比其他角色慢的问题[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_ellis_hunter_bandaid_fix.sp)  
 [l4d2_dominatorscontrol](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_dominatorscontrol.sp) 解除控制性特感生成限制 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_dominatorscontrol)  
-[l4d2_ultra_witch](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ultra_witch.sp)设置witch伤害及不会秒杀[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_ultra_witch)  
+[l4d2_ultra_witch](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ultra_witch.sp)设置witch伤害及不会秒杀(专家还是会秒杀)[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_ultra_witch)  
 [l4d2_tank_attack_control](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_tank_attack_control.sp)坦克扔石头姿势控制[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tank_attack_control)  
 [l4d2_si_staggers](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_si_staggers.sp)特感制造的震动不会影响到其他特感 如胖子爆炸[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_si_staggers.sp)  
 
@@ -229,9 +229,9 @@ King_OXO(社区热心修复玩家):
 [self_help](https://forums.alliedmods.net/showthread.php?p=2766775#post2766775) 自救插件 [自翻cvar介绍和文本和其他更改](https://github.com/apples1949/l4dplugins/tree/main/self_help)   
 
 其他：  
-witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples1949/l4dplugins/blob/main/witch_announce.smx) zm不支持多人   
+witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples1949/l4dplugins/blob/main/witch_announce.smx) zm不支持多人  
 [l4d2_auto_add_zombie](https://github.com/apples1949/l4dplugins/tree/main/l4d2_auto_add_zombie.sp) 动态僵尸数量  
-[Little-Anti-Cheat](https://github.com/J-Tanzanite/Little-Anti-Cheat)作弊检测插件
+[Little-Anti-Cheat](https://github.com/J-Tanzanite/Little-Anti-Cheat)作弊检测插件 管理员提示转公开  
 [vpk功能包](https://github.com/apples1949/l4dplugins/tree/main/vpk)  
 [部分来自嘤喵](https://www.bilibili.com/read/cv14277674)  
 [mod]awpandscout.vpk 自改awp和鸟狙伤害  
@@ -239,7 +239,6 @@ witch_announce 对妹子输出结算 [没保存源码](https://github.com/apples
 [mod]mat_fix_423311431.vpk 三方贴图修复补丁  
 [mod]mp5_enhancement.vpk MP5：稍微提高精准度  
 [mod]recover_knife.vpk 恢复小刀   
-[mod]adminsyatem.vpk [创意工坊](https://steamcommunity.com/sharedfiles/filedetails/?id=214630948)的管理员菜单  
 [mod]Good baseballbat.vpk/[mod]Good crowbar.vpk/[mod]Good golfclub.vpk/[mod]shovel_enhancement.vpk  钝器变锐器  
 [mod]pitchfork_enhancement.vpk 草叉增强+砍舌+锋利  
 服务器自改地图 各个初始地图增加木狙：[stripper微改地图](https://github.com/apples1949/l4dplugins/tree/main/stripper)  

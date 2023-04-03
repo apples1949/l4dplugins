@@ -1,6 +1,6 @@
 /*
 *	Anti Rush
-*	Copyright (C) 2022 Silvers
+*	Copyright (C) 2023 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION 		"1.18"
+#define PLUGIN_VERSION 		"1.19"
 #define DEBUG_BENCHMARK		0			// 0=Off. 1=Benchmark logic function.
 
 /*======================================================================================
@@ -32,6 +32,11 @@
 
 ========================================================================================
 	Change Log:
+
+1.19 (10-Mar-2023)
+	- Added cvar "l4d_anti_rush_health" to hurt players who are rushing. Requested by "Voevoda".
+	- Changed cvar "l4d_anti_rush_type" to allow disabling teleport or slowdown, to only enable health drain.
+	- Translation phrases updated to support the health drain only type. Thanks to "Voevoda" and "HarryPotter" for updating Russian and Chinese translations.
 
 1.18 (01-Jun-2022)
 	- L4D1: Fixed throwing errors.
@@ -140,8 +145,8 @@ float g_iBenchTicks;
 #define EVENTS_CONFIG		"data/l4d_anti_rush.cfg"
 
 
-ConVar g_hCvarAllow, g_hCvarMPGameMode, g_hCvarModes, g_hCvarModesOff, g_hCvarModesTog, g_hCvarFinale, g_hCvarFlags, g_hCvarIgnore, g_hCvarIncap, g_hCvarPlayers, g_hCvarRangeLast, g_hCvarRangeLead, g_hCvarSlow, g_hCvarTank, g_hCvarText, g_hCvarTime, g_hCvarType, g_hCvarWarnLast, g_hCvarWarnLead, g_hCvarWarnTime;
-float g_fCvarRangeLast, g_fCvarRangeLead, g_fCvarSlow, g_fCvarTime, g_fCvarWarnLast, g_fCvarWarnLead, g_fCvarWarnTime;
+ConVar g_hCvarAllow, g_hCvarMPGameMode, g_hCvarModes, g_hCvarModesOff, g_hCvarModesTog, g_hCvarFinale, g_hCvarFlags, g_hCvarIgnore, g_hCvarHealth, g_hCvarIncap, g_hCvarPlayers, g_hCvarRangeLast, g_hCvarRangeLead, g_hCvarSlow, g_hCvarTank, g_hCvarText, g_hCvarTime, g_hCvarType, g_hCvarWarnLast, g_hCvarWarnLead, g_hCvarWarnTime;
+float g_fCvarHealth, g_fCvarRangeLast, g_fCvarRangeLead, g_fCvarSlow, g_fCvarTime, g_fCvarWarnLast, g_fCvarWarnLead, g_fCvarWarnTime;
 int g_iCvarFinale, g_iCvarFlags, g_iCvarIgnore, g_iCvarIncap, g_iCvarPlayers, g_iCvarTank, g_iCvarText, g_iCvarType;
 bool g_bCvarAllow, g_bMapStarted, g_bLeft4Dead2;
 
@@ -191,26 +196,27 @@ public void OnPluginStart()
 {
 	LoadTranslations("anti_rush.phrases");
 
-	g_hCvarAllow =		CreateConVar(	"l4d_anti_rush_allow",			"1",							"0=¹Ø±Õ²å¼þ, 1=ÆôÓÃ²å¼þ.", CVAR_FLAGS );
-	g_hCvarModes =		CreateConVar(	"l4d_anti_rush_modes",			"",								"ÔÚÕâÐ©ÓÎÏ·Ä£Ê½ÖÐÆôÓÃ²å¼þ, ÓÃÓ¢ÎÄ¶ººÅ¸ô¿ª(ÎÞ¿Õ¸ñ). (ÎÞÄÚÈÝ=È«²¿ÓÎÏ·Ä£Ê½).", CVAR_FLAGS );
-	g_hCvarModesOff =	CreateConVar(	"l4d_anti_rush_modes_off",		"",								"ÔÚÕâÐ©ÓÎÏ·Ä£Ê½ÖÐ¹Ø±Õ²å¼þ, ÓÃÓ¢ÎÄ¶ººÅ¸ô¿ª(ÎÞ¿Õ¸ñ). (ÎÞÄÚÈÝ=ÎÞ).", CVAR_FLAGS );
-	g_hCvarModesTog =	CreateConVar(	"l4d_anti_rush_modes_tog",		"0",							"ÔÚÕâÐ©ÓÎÏ·Ä£Ê½ÖÐÆôÓÃ²å¼þ. 0=È«²¿ÓÎÏ·Ä£Ê½, 1=Õ½ÒÛ, 2=Éú»¹Õß, 4=¶Ô¿¹, 8=ÇåµÀ·ò. ½«ÕâÐ©Êý×Öµþ¼ÓÔÚÒ»Æð(Èç248).", CVAR_FLAGS );
-	g_hCvarFinale =		CreateConVar(	"l4d_anti_rush_finale",			g_bLeft4Dead2 ? "2" : "0",		"ÊÇ·ñÔÚ×îºóÒ»¹Ø(activate in finales)ÖÐ¼¤»î²å¼þ. 0=¹Ø±Õ. 1=È«²¿µÄ×îºóÒ»¹Ø. 2=(Gauntlet type finales)½öÀÞÌ¨ÀàÐÍÄ£Ê½ (L4D2 only).", CVAR_FLAGS );
-	g_hCvarFlags =		CreateConVar(	"l4d_anti_rush_flags",			"",								"ÓµÓÐÕâÐ©±êÖ¾µÄÍæ¼Ò¡£ÂäºóÇé¿öÏÂÃâÒß´«ËÍ£¬ÁìÏÈµÄÇé¿öÏÂÃâÒß¼õËÙ¡£", CVAR_FLAGS );
-	g_hCvarIgnore =		CreateConVar(	"l4d_anti_rush_ignore",			"0",							"ÓµÓÐÃâÒß±êÖ¾µÄÍæ¼Ò£¬ÔÚ¼ÆËãÊÇ·ñÂäºóµÄÇé¿öÖÐÊÇ·ñÄÉÈë¼ÆËã£¿ 0=ºöÂÔËûÃÇ. 1=¼ÆËãËûÃÇ.", CVAR_FLAGS );
-	g_hCvarIncap =		CreateConVar(	"l4d_anti_rush_incapped",		"0",							"0=¹Ø±Õ. ÔÚÅÜÍ¼ºÍÂäºóµÄÍæ¼ÒÖÐ£¬¶àÉÙÍæ¼Ò¿ÉÒÔÒòÎªµ¹µØ¶ø±»ºöÂÔ¡£", CVAR_FLAGS );
-	g_hCvarPlayers =	CreateConVar(	"l4d_anti_rush_players",		"3",							"ÔÚ²å¼þ¹¦ÄÜÆô¶¯Ç°£¬´æ»îµÄÐÒ´æÕß±ØÐë´óÓÚ3¸ö£¬·ñÔòÎÞ·¨¼ì²âÅÜÍ¼Íæ¼ÒºÍÂäºóÍæ¼ÒµÄÆ½¾ùÊý", CVAR_FLAGS, true, 3.0 );
-	g_hCvarRangeLast =	CreateConVar(	"l4d_anti_rush_range_last",		"3000.0",						"Éú»¹ÕßÔÚÂäºó¶àÉÙ¾àÀëºó´«ËÍ.", CVAR_FLAGS, true, MINIMUM_RANGE );
-	g_hCvarRangeLead =	CreateConVar(	"l4d_anti_rush_range_lead",		"3000.0",						"Éú»¹ÕßÔÚÁìÏÈ¶àÉÙ¾àÀëºó´«ËÍ»ò¼õËÙ.", CVAR_FLAGS, true, MINIMUM_RANGE );
-	g_hCvarSlow =		CreateConVar(	"l4d_anti_rush_slow",			"75.0",							"Éú»¹Õß±»ÏÞËÙºóµÄ×î´óËÙ¶È.", CVAR_FLAGS, true, 20.0 );
-	g_hCvarTank =		CreateConVar(	"l4d_anti_rush_tanks",			"1",							"0=¹Ø±Õ. 1=¿ªÆô. ÔÚÓÐÌ¹¿Ë´æ»îµÄÇé¿öÏÂÊÇ·ñÆôÓÃ²å¼þ¹¦ÄÜ.", CVAR_FLAGS );
-	g_hCvarText =		CreateConVar(	"l4d_anti_rush_text",			"1",							"0=·½Ê½. 1=ÔÚÁÄÌì¿òÖÐÕ¹Ê¾. 2=ÔÚÆÁÄ»ÖÐÕ¹Ê¾. ÏòÁìÏÈ»òÂäºóÍæ¼ÒÌáÊ¾ÏûÏ¢µÄ·½Ê½.", CVAR_FLAGS );
-	g_hCvarTime =		CreateConVar(	"l4d_anti_rush_time",			"10",							"Èç¹û¼õËÙ¹¦ÄÜ¿ªÊ¼Ó°Ïìµ½Íæ¼Ò£¬ÄÇÃ´¶à¾ÃÊ±¼äÏòÆäÌáÊ¾ÏûÏ¢.", CVAR_FLAGS );
-	g_hCvarType =		CreateConVar(	"l4d_anti_rush_type",			"1",							"ÈçºÎ´¦ÀíÁìÏÈÍæ¼Ò. 1=Ç°½øÊ±¼õÂýËÙ¶È. 2=´«ËÍ»ØÈ¥.", CVAR_FLAGS );
-	g_hCvarWarnLast =	CreateConVar(	"l4d_anti_rush_warn_last",		"2500.0",						"Íæ¼ÒÂäºó¶à³¤¾àÀëºó½«±»ÌáÊ¾´«ËÍ.", CVAR_FLAGS, true, MINIMUM_RANGE );
-	g_hCvarWarnLead =	CreateConVar(	"l4d_anti_rush_warn_lead",		"2500.0",						"Íæ¼ÒÁìÏÈ¶à³¤¾àÀëºó½«±»ÌáÊ¾´«ËÍ»ò¼õËÙ.", CVAR_FLAGS, true, MINIMUM_RANGE );
-	g_hCvarWarnTime =	CreateConVar(	"l4d_anti_rush_warn_time",		"15.0",							"0.0=Off. ´ïµ½Ô¤¶¨¾àÀëºó¶à³¤Ê±¼ä¶ÔÁìÏÈ»òÂäºóµÄÍæ¼ÒÌáÊ¾¼´½«´«ËÍ»ò¼õËÙ.", CVAR_FLAGS );
-	CreateConVar(						"l4d_anti_rush_version",		PLUGIN_VERSION,					"²å¼þ°æ±¾.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	g_hCvarAllow =		CreateConVar(	"l4d_anti_rush_allow",			"1",							"0=å…³é—­æ’ä»¶, 1=å¯ç”¨æ’ä»¶.", CVAR_FLAGS );
+	g_hCvarModes =		CreateConVar(	"l4d_anti_rush_modes",			"",								"åœ¨è¿™äº›æ¸¸æˆæ¨¡å¼ä¸­å¯ç”¨æ’ä»¶, ç”¨è‹±æ–‡é€—å·éš”å¼€(æ— ç©ºæ ¼). (æ— å†…å®¹=å…¨éƒ¨æ¸¸æˆæ¨¡å¼).", CVAR_FLAGS );
+	g_hCvarModesOff =	CreateConVar(	"l4d_anti_rush_modes_off",		"",								"åœ¨è¿™äº›æ¸¸æˆæ¨¡å¼ä¸­å…³é—­æ’ä»¶, ç”¨è‹±æ–‡é€—å·éš”å¼€(æ— ç©ºæ ¼). (æ— å†…å®¹=æ— ).", CVAR_FLAGS );
+	g_hCvarModesTog =	CreateConVar(	"l4d_anti_rush_modes_tog",		"0",							"åœ¨è¿™äº›æ¸¸æˆæ¨¡å¼ä¸­å¯ç”¨æ’ä»¶. 0=å…¨éƒ¨æ¸¸æˆæ¨¡å¼, 1=æˆ˜å½¹, 2=ç”Ÿè¿˜è€…, 4=å¯¹æŠ—, 8=æ¸…é“å¤«. å°†è¿™äº›æ•°å­—å åŠ åœ¨ä¸€èµ·(å¦‚248).", CVAR_FLAGS );
+	g_hCvarFinale =		CreateConVar(	"l4d_anti_rush_finale",			g_bLeft4Dead2 ? "2" : "0",		"æ˜¯å¦åœ¨æœ€åŽä¸€å…³(activate in finales)ä¸­æ¿€æ´»æ’ä»¶. 0=å…³é—­. 1=å…¨éƒ¨çš„æœ€åŽä¸€å…³. 2=(Gauntlet type finales)ä»…æ“‚å°ç±»åž‹æ¨¡å¼ (L4D2 only).", CVAR_FLAGS );
+	g_hCvarFlags =		CreateConVar(	"l4d_anti_rush_flags",			"",								"æ‹¥æœ‰è¿™äº›æ ‡å¿—çš„çŽ©å®¶ã€‚è½åŽæƒ…å†µä¸‹å…ç–«ä¼ é€ï¼Œé¢†å…ˆçš„æƒ…å†µä¸‹å…ç–«å‡é€Ÿã€‚", CVAR_FLAGS );
+	g_hCvarHealth =		CreateConVar(	"l4d_anti_rush_health",			"0",							"0=å…³é—­. è·‘å›¾çŽ©å®¶æ¯ç§’æ‰£å¤šå°‘è¡€.", CVAR_FLAGS);
+	g_hCvarIgnore =		CreateConVar(	"l4d_anti_rush_ignore",			"0",							"æ‹¥æœ‰å…ç–«æ ‡å¿—çš„çŽ©å®¶ï¼Œåœ¨è®¡ç®—æ˜¯å¦è½åŽçš„æƒ…å†µä¸­æ˜¯å¦çº³å…¥è®¡ç®—ï¼Ÿ 0=å¿½ç•¥ä»–ä»¬. 1=è®¡ç®—ä»–ä»¬.", CVAR_FLAGS );
+	g_hCvarIncap =		CreateConVar(	"l4d_anti_rush_incapped",		"0",							"0=å…³é—­. åœ¨è·‘å›¾å’Œè½åŽçš„çŽ©å®¶ä¸­ï¼Œå¤šå°‘çŽ©å®¶å¯ä»¥å› ä¸ºå€’åœ°è€Œè¢«å¿½ç•¥ã€‚", CVAR_FLAGS );
+	g_hCvarPlayers =	CreateConVar(	"l4d_anti_rush_players",		"3",							"åœ¨æ’ä»¶åŠŸèƒ½å¯åŠ¨å‰ï¼Œå­˜æ´»çš„å¹¸å­˜è€…å¿…é¡»å¤§äºŽ3ä¸ªï¼Œå¦åˆ™æ— æ³•æ£€æµ‹è·‘å›¾çŽ©å®¶å’Œè½åŽçŽ©å®¶çš„å¹³å‡æ•°", CVAR_FLAGS, true, 3.0 );
+	g_hCvarRangeLast =	CreateConVar(	"l4d_anti_rush_range_last",		"3000.0",						"ç”Ÿè¿˜è€…åœ¨è½åŽå¤šå°‘è·ç¦»åŽä¼ é€.", CVAR_FLAGS, true, MINIMUM_RANGE );
+	g_hCvarRangeLead =	CreateConVar(	"l4d_anti_rush_range_lead",		"3000.0",						"ç”Ÿè¿˜è€…åœ¨é¢†å…ˆå¤šå°‘è·ç¦»åŽä¼ é€æˆ–å‡é€Ÿ.", CVAR_FLAGS, true, MINIMUM_RANGE );
+	g_hCvarSlow =		CreateConVar(	"l4d_anti_rush_slow",			"75.0",							"ç”Ÿè¿˜è€…è¢«é™é€ŸåŽçš„æœ€å¤§é€Ÿåº¦.", CVAR_FLAGS, true, 20.0 );
+	g_hCvarTank =		CreateConVar(	"l4d_anti_rush_tanks",			"1",							"0=å…³é—­. 1=å¼€å¯. åœ¨æœ‰å¦å…‹å­˜æ´»çš„æƒ…å†µä¸‹æ˜¯å¦å¯ç”¨æ’ä»¶åŠŸèƒ½.", CVAR_FLAGS );
+	g_hCvarText =		CreateConVar(	"l4d_anti_rush_text",			"1",							"0=æ–¹å¼. 1=åœ¨èŠå¤©æ¡†ä¸­å±•ç¤º. 2=åœ¨å±å¹•ä¸­å±•ç¤º. å‘é¢†å…ˆæˆ–è½åŽçŽ©å®¶æç¤ºæ¶ˆæ¯çš„æ–¹å¼.", CVAR_FLAGS );
+	g_hCvarTime =		CreateConVar(	"l4d_anti_rush_time",			"10",							"å¦‚æžœå‡é€ŸåŠŸèƒ½å¼€å§‹å½±å“åˆ°çŽ©å®¶ï¼Œé‚£ä¹ˆå¤šä¹…æ—¶é—´å‘å…¶æç¤ºæ¶ˆæ¯.", CVAR_FLAGS );
+	g_hCvarType =		CreateConVar(	"l4d_anti_rush_type",			"1",							"å¦‚ä½•å¤„ç†é¢†å…ˆçŽ©å®¶. 1=å‰è¿›æ—¶å‡æ…¢é€Ÿåº¦. 2=ä¼ é€å›žåŽ».", CVAR_FLAGS );
+	g_hCvarWarnLast =	CreateConVar(	"l4d_anti_rush_warn_last",		"2500.0",						"çŽ©å®¶è½åŽå¤šé•¿è·ç¦»åŽå°†è¢«æç¤ºä¼ é€.", CVAR_FLAGS, true, MINIMUM_RANGE );
+	g_hCvarWarnLead =	CreateConVar(	"l4d_anti_rush_warn_lead",		"2500.0",						"çŽ©å®¶é¢†å…ˆå¤šé•¿è·ç¦»åŽå°†è¢«æç¤ºä¼ é€æˆ–å‡é€Ÿ.", CVAR_FLAGS, true, MINIMUM_RANGE );
+	g_hCvarWarnTime =	CreateConVar(	"l4d_anti_rush_warn_time",		"15.0",							"0.0=Off. è¾¾åˆ°é¢„å®šè·ç¦»åŽå¤šé•¿æ—¶é—´å¯¹é¢†å…ˆæˆ–è½åŽçš„çŽ©å®¶æç¤ºå³å°†ä¼ é€æˆ–å‡é€Ÿ.", CVAR_FLAGS );
+	CreateConVar(						"l4d_anti_rush_version",		PLUGIN_VERSION,					"æ’ä»¶ç‰ˆæœ¬.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	AutoExecConfig(true,				"l4d_anti_rush");
 
 	g_hCvarMPGameMode = FindConVar("mp_gamemode");
@@ -221,6 +227,7 @@ public void OnPluginStart()
 	g_hCvarAllow.AddChangeHook(ConVarChanged_Allow);
 	g_hCvarFinale.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarFlags.AddChangeHook(ConVarChanged_Cvars);
+	g_hCvarHealth.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarIgnore.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarIncap.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarPlayers.AddChangeHook(ConVarChanged_Cvars);
@@ -270,6 +277,7 @@ void GetCvars()
 	g_iCvarIgnore = g_hCvarIgnore.IntValue;
 
 	g_iCvarFinale = g_hCvarFinale.IntValue;
+	g_fCvarHealth = g_hCvarHealth.FloatValue;
 	g_iCvarIncap = g_hCvarIncap.IntValue;
 	g_iCvarPlayers = g_hCvarPlayers.IntValue;
 	g_fCvarTime = g_hCvarTime.FloatValue;
@@ -794,10 +802,12 @@ Action TimerTest(Handle timer)
 						{
 							g_fHintWarn[client] = GetGameTime() + g_fCvarWarnTime;
 
-							if( g_iCvarType == 1 )
-								ClientHintMessage(client, "Warn_Slowdown");
-							else
-								ClientHintMessage(client, "Warn_Ahead");
+							switch( g_iCvarType )
+							{
+								case 0: ClientHintMessage(client, "Warn_Health");
+								case 1: ClientHintMessage(client, "Warn_Slowdown");
+								case 2: ClientHintMessage(client, "Warn_Ahead");
+							}
 						}
 
 						// Compare higher flow with next survivor, they're rushing
@@ -807,7 +817,7 @@ Action TimerTest(Handle timer)
 							flowBack = false;
 
 							// Slowdown enabled?
-							if( g_iCvarType == 1 )
+							if( g_fCvarHealth || g_iCvarType == 1 )
 							{
 								// Inhibit moving forward
 								// Only check > or < because when == the same flow distance, they're either already being slowed or running back, so we don't want to change/affect them within the same flow NavMesh.
@@ -815,7 +825,7 @@ Action TimerTest(Handle timer)
 								{
 									g_fLastFlow[client] = flow;
 
-									if( g_bInhibit[client] == false )
+									if( g_iCvarType == 1 && g_bInhibit[client] == false )
 									{
 										g_bInhibit[client] = true;
 										SDKHook(client, SDKHook_PreThinkPost, PreThinkPost);
@@ -826,7 +836,17 @@ Action TimerTest(Handle timer)
 									{
 										g_fHintLast[client] = GetGameTime() + g_fCvarTime;
 
-										ClientHintMessage(client, "Rush_Slowdown");
+										switch( g_iCvarType )
+										{
+											case 0: ClientHintMessage(client, "Rush_Health");
+											case 1: ClientHintMessage(client, "Rush_Slowdown");
+										}
+									}
+
+									// Hurt for rushing?
+									if( g_fCvarHealth )
+									{
+										SDKHooks_TakeDamage(client, 0, 0, g_fCvarHealth);
 									}
 								}
 								else if( flow < g_fLastFlow[client] )

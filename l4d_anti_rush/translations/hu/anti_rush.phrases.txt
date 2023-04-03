@@ -2,31 +2,41 @@
 {
 	"Rush_Slowdown"
 	{
-		"hu"		"{orange}[Anti Rush] {green}Ne szaladj, túl messze vagy {orange}a társaidtól {green}menny vissza hozzájuk."
+		"hu"	"{orange}[Anti Rush] {green}Ne szaladj, túl messze vagy {orange}a társaidtól {green}menny vissza hozzájuk."
 	}
 
 	"Rush_Ahead"
 	{
-		"hu"		"{orange}[Anti Rush] {green}Túlságosan {orange}előre szaladtál {green}a társaidtól, vissza teleportálunk."
+		"hu"	"{orange}[Anti Rush] {green}Túlságosan {orange}előre szaladtál {green}a társaidtól, vissza teleportálunk."
 	}
 
 	"Rush_Behind"
 	{
-		"hu"		"{orange}[Anti Rush] {green}Túlságosan {orange}lemaradtál {green}a társaidtól, oda teleportálunk."
+		"hu"	"{orange}[Anti Rush] {green}Túlságosan {orange}lemaradtál {green}a társaidtól, oda teleportálunk."
+	}
+
+	"Rush_Health"
+	{
+		"hu"	"{orange}[Anti Rush] {green}Ne szaladj, túl messze vagy {orange}a társaidtól {green}vagy elveszíti az egészségét."
 	}
 
 	"Warn_Slowdown"
 	{
-		"hu"		"{orange}[Anti Rush] {green}Túl messze jársz a társaidtól, {orange}fordulj vissza vagy {green}le leszel lassítva."
+		"hu"	"{orange}[Anti Rush] {green}Túl messze jársz a társaidtól, {orange}fordulj vissza vagy {green}le leszel lassítva."
 	}
 
 	"Warn_Ahead"
 	{
-		"hu"		"{orange}[Anti Rush] {green}Túl messze jársz a társaidtól, {orange}fordulj vissza vagy {green}teleportálni fogunk."
+		"hu"	"{orange}[Anti Rush] {green}Túl messze jársz a társaidtól, {orange}fordulj vissza vagy {green}teleportálni fogunk."
 	}
 
 	"Warn_Behind"
 	{
-		"hu"		"{orange}[Anti Rush] {green}Le vagy maradva a társaidtól, {orange}igyekezz vagy {green}teleportálni fogunk."
+		"hu"	"{orange}[Anti Rush] {green}Le vagy maradva a társaidtól, {orange}igyekezz vagy {green}teleportálni fogunk."
+	}
+
+	"Warn_Health"
+	{
+		"hu"	"{orange}[Anti Rush] {green}Túl messze jársz a társaidtól, {orange}fordulj vissza vagy {green}vagy elveszíti az egészségét."
 	}
 }

@@ -2,31 +2,41 @@
 {
 	"Rush_Slowdown"
 	{
-		"zho"		"{orange}[反跑圖] {green}放慢腳步, 領先{orange}倖存者隊伍{green}太遠, {orange}請回退{green}隊伍."
+		"zho"	"{orange}[反跑圖] {green}放慢腳步, 領先{orange}倖存者隊伍{green}太遠, {orange}請回返{green}隊伍."
 	}
 
 	"Rush_Ahead"
 	{
-		"zho"		"{orange}[反跑圖] {green}你領先{orange}倖存者隊伍{green}太遠, 已傳送遣返."
+		"zho"	"{orange}[反跑圖] {green}你領先{orange}倖存者隊伍{green}太遠, 已傳送遣返."
 	}
 
 	"Rush_Behind"
 	{
-		"zho"		"{orange}[反跑圖] {green}你落後{orange}倖存者隊伍{green}太遠, 已傳送."
+		"zho"	"{orange}[反跑圖] {green}你落後{orange}倖存者隊伍{green}太遠, 已傳送."
+	}
+
+	"Rush_Health"
+	{
+		"zho"	"{orange}[反跑圖] {green}你落後{orange}倖存者隊伍{green}太遠, {orange}請回返 {green}否則將失去血量."
 	}
 
 	"Warn_Slowdown"
 	{
-		"zho"		"{orange}[反跑圖] {green}你領先{orange}倖存者隊伍{green}太遠, {orange}請回退, {green}否則將限速."
+		"zho"	"{orange}[反跑圖] {green}你領先{orange}倖存者隊伍{green}太遠, {orange}請回返, {green}否則將限速."
 	}
 
 	"Warn_Ahead"
 	{
-		"zho"		"{orange}[反跑圖] {green}你領先{orange}倖存者隊伍{green}太遠, {orange}請回退 ,{green}否則將被傳送遣返."
+		"zho"	"{orange}[反跑圖] {green}你領先{orange}倖存者隊伍{green}太遠, {orange}請回返, {green}否則將被傳送遣返."
 	}
 
 	"Warn_Behind"
 	{
-		"zho"		"{orange}[反跑圖] {green}你落後{orange}倖存者隊伍{green}太遠, {orange}請前進, {green}否則將被傳送."
+		"zho"	"{orange}[反跑圖] {green}你落後{orange}倖存者隊伍{green}太遠, {orange}請前進, {green}否則將被傳送."
+	}
+
+	"Warn_Health"
+	{
+		"zho"	"{orange}[反跑圖] {green}你落後{orange}倖存者隊伍{green}太遠, {orange}請前進, {green}否則將失去血量."
 	}
 }
