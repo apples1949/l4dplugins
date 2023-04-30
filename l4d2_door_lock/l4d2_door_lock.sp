@@ -1,17 +1,9 @@
-/*=========================================================================================================
-
-	Plugin Info:
-
-*	Name	:	L4D2 Door Lock
-*	Author	:	alasfourom
-*	Descp	:	Lock Saferoom Door Until All Players Are Ready
-*	Link	:	https://forums.alliedmods.net/showthread.php?t=341045
-*	Thanks	:	Silvers, HarryPotter.
-
-===========================================================================================================
+/*===========================================================================================================
 
 	General Updates:
 
+ *	26-02-2023 > Version 2.2: Added new cvar to prevent some commands from interfering with readup panel, and fix panel not closing after readyup time is over.
+ *	25-02-2023 > Version 2.1: Remove repeated timer to display menu, added color support and fixes a bug where sometimes survivors doesn't get full hp when teleported.
  *	27-01-2023 > Version 2.0: Fixed a bug, doors close when players are connecting and survivros already left safe area - Thanks to official instruction.
  *	22-01-2023 > Version 1.9: Adding a warning cvar when players leave safe area while players are not ready - Thanks to official instruction.
  *	19-01-2023 > Version 1.8: Adding a different method to ready up in first chapters using teleport
@@ -32,10 +24,11 @@
 #include <sdkhooks>
 #include <sdktools>
 #include <left4dhooks>
+#include <colors>
 
 #pragma semicolon 1
 #pragma newdecls required
-#define PLUGIN_VERSION "2.0"
+#define PLUGIN_VERSION "2.2"
 
 /* =============================================================================================================== *
  *										Bools, Handles, Integers and ConVars				   			 		   *
@@ -50,7 +43,7 @@ bool g_bLockSafeAreas;
 bool g_bIgnoreLoaders;
 bool g_bLeftSafeAreas;
 bool g_bClientIsReady [MAXPLAYERS+1];
-bool g_bDisablingMenu [MAXPLAYERS+1];
+bool g_bPanelIsOpened [MAXPLAYERS+1];
 
 Handle g_hTimer_IgnoreLoaders;
 Handle g_hTimer_PendingLoader;
@@ -58,7 +51,6 @@ Handle g_hTimer_WarmingUpTime;
 Handle g_hTimer_CountdownTime;
 Handle g_hTimer_UnreadyGiveUp;
 Handle g_hTimer_ReadyUpChecks;
-Handle g_hTimer_HealSurvivors;
 Handle g_hTimer_ForceVersusST;
 
 int g_iUnlocksTime;
@@ -101,7 +93,8 @@ ConVar Cvar_DoorLock_RdyTimeUp;
 ConVar Cvar_DoorLock_RdyPercnt;
 ConVar Cvar_DoorLock_UnrdyTime;
 ConVar Cvar_DoorLock_Announces;
-ConVar Cvar_DoorLock_LeaverMSG;
+ConVar Cvar_DoorLock_LeaverMsg;
+ConVar Cvar_DoorLock_EnableCmd;
 
 ConVar Cvar_DoorLock_MPGameMod;
 ConVar Cvar_DoorLock_NoBotMove;
@@ -144,22 +137,23 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 public void OnPluginStart()
 {
 	CreateConVar ("l4d2_door_lock_version", PLUGIN_VERSION, "L4D2 Door Lock", FCVAR_SPONLY | FCVAR_NOTIFY | FCVAR_DONTRECORD);
-	Cvar_DoorLock_AllowLock = CreateConVar("l4d2_doorlock_plugin_enable", "1", "Enable L4D2 Door Lock Plugin", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	Cvar_DoorLock_GameModes = CreateConVar("l4d2_doorlock_game_mode", "versus,coop", "Turn On Door Lock In These Game Modes, Separate By Commas (No Spaces, Empty = All).", FCVAR_NOTIFY);
-	Cvar_DoorLock_ModesType = CreateConVar("l4d2_doorlock_first_scenario_mode", "1", "Set First Chapters Mode (0 = Freeze Survivors, 1 = Teleport Survivors)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	Cvar_DoorLock_AddCheats = CreateConVar("l4d2_doorlock_add_cheats", "1", "Set Cheats While Safe Area Locked (0 = No Cheats, 1 = No DMG, 2 = Infine Ammo, 3 = Both)", FCVAR_NOTIFY, true, 0.0, true, 3.0);
-	Cvar_DoorLock_Countdown = CreateConVar("l4d2_doorlock_countdown", "10", "How Long You Want To Set The Countdown To Unlock The Safe Area (In Seconds)", FCVAR_NOTIFY);
-	Cvar_DoorLock_LoaderMax = CreateConVar("l4d2_doorlock_loaders_time", "30", "How Long Plugin Waits For Loaders Before Giving Up On Them (In Seconds)", FCVAR_NOTIFY);
-	Cvar_DoorLock_AllowGlow = CreateConVar("l4d2_doorlock_glow_enable", "1", "Set A Glow For The Saferoom Doors", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	Cvar_DoorLock_GlowRange = CreateConVar("l4d2_doorlock_glow_range", "500", "Set The Glow Range For Saferoom Doors", FCVAR_NOTIFY);
-	Cvar_DoorLock_LockColor = CreateConVar("l4d2_doorlock_lock_glow_color",	"255 0 0", "Set Saferoom Lock Glow Color, (0-255) Separated By Spaces.", FCVAR_NOTIFY);
-	Cvar_DoorLock_OpenColor = CreateConVar("l4d2_doorlock_unlock_glow_color", "0 255 0", "Set Saferoom Unlock Glow Color, (0-255) Separated By Spaces.", FCVAR_NOTIFY);
-	Cvar_DoorLock_EnableRdy = CreateConVar("l4d2_doorlock_enable_ready_mode", "1", "Enable Ready/Unready Feature.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	Cvar_DoorLock_UnrdyTime = CreateConVar("l4d2_doorlock_unready_counts", "2", "Set How Many Times Players Are Allowed To Use Unready Per Round.", FCVAR_NOTIFY);
-	Cvar_DoorLock_RdyTimeUp = CreateConVar("l4d2_doorlock_readyup_time", "120", "How Long Plugin Waits For Unready Teams Before Giving Up On Them (In Seconds)", FCVAR_NOTIFY);
-	Cvar_DoorLock_RdyPercnt = CreateConVar("l4d2_doorlock_readyup_percent", "75.0", "Set The Minimum Percentage Required For A Ready Team To Start The Round", FCVAR_NOTIFY);
-	Cvar_DoorLock_Announces = CreateConVar("l4d2_doorlock_readyup_notify", "1", "Display Chat Texts When A Team Is Ready", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	Cvar_DoorLock_LeaverMSG = CreateConVar("l4d2_doorlock_leavers_notify", "0", "Display Chat Texts To Leavers When Teleported (0 = Disable, 1 = Chat, 2 = Central Text)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	Cvar_DoorLock_AllowLock = CreateConVar("l4d2_doorlock_plugin_enable", "1", "如果为1，启用插件", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	Cvar_DoorLock_GameModes = CreateConVar("l4d2_doorlock_game_mode", "versus,coop", "在这些模式中启用插件，用英文逗号隔开 (无空格, 无内容 = 全模式).", FCVAR_NOTIFY);
+	Cvar_DoorLock_ModesType = CreateConVar("l4d2_doorlock_first_scenario_mode", "1", "地图第一关模式 (0 = 冻结生还者, 1 = 出安全区传送 Survivors)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	Cvar_DoorLock_AddCheats = CreateConVar("l4d2_doorlock_add_cheats", "1", "安全区准备锁定模式 (0 = 无特殊锁定, 1 = 禁友伤, 2 = 无限弹药, 3 = 1和2)", FCVAR_NOTIFY, true, 0.0, true, 3.0);
+	Cvar_DoorLock_Countdown = CreateConVar("l4d2_doorlock_countdown", "10", "你想设置多长时间的倒计时来解锁安全区？ (秒)", FCVAR_NOTIFY);
+	Cvar_DoorLock_LoaderMax = CreateConVar("l4d2_doorlock_loaders_time", "30", "最多等待加载玩家多长时间 (秒)", FCVAR_NOTIFY);
+	Cvar_DoorLock_AllowGlow = CreateConVar("l4d2_doorlock_glow_enable", "1", "如果为1，为安全室的门设置发光轮毂", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	Cvar_DoorLock_GlowRange = CreateConVar("l4d2_doorlock_glow_range", "500", "设置安全门的发光范围", FCVAR_NOTIFY);
+	Cvar_DoorLock_LockColor = CreateConVar("l4d2_doorlock_lock_glow_color",	"255 0 0", "设置安全门的发光颜色, (0-255RGB) 用空格隔开.", FCVAR_NOTIFY);
+	Cvar_DoorLock_OpenColor = CreateConVar("l4d2_doorlock_unlock_glow_color", "0 255 0", "设置解锁安全门的发光颜色, (0-255) Separated By Spaces.", FCVAR_NOTIFY);
+	Cvar_DoorLock_EnableRdy = CreateConVar("l4d2_doorlock_enable_ready_mode", "1", "如果为1，启用准备功能.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	Cvar_DoorLock_UnrdyTime = CreateConVar("l4d2_doorlock_unready_counts", "2", "设置每轮允许玩家使用未准备的次数.", FCVAR_NOTIFY);
+	Cvar_DoorLock_RdyTimeUp = CreateConVar("l4d2_doorlock_readyup_time", "120", "插件对未准备好的团队等待多长时间才会强制开始 (秒)", FCVAR_NOTIFY);
+	Cvar_DoorLock_RdyPercnt = CreateConVar("l4d2_doorlock_readyup_percent", "75.0", "一方设置准备好开始游戏所需的最低百分比", FCVAR_NOTIFY);
+	Cvar_DoorLock_Announces = CreateConVar("l4d2_doorlock_readyup_notify", "1", "团队准备就绪时显示聊天文本", FCVAR_NOTIFY, true, 0.0, true, 3.0);
+	Cvar_DoorLock_LeaverMsg = CreateConVar("l4d2_doorlock_leavers_notify", "0", "在被传送时向离开者显示聊天文本（0=禁用，1=聊天，2=中心文本）", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	Cvar_DoorLock_EnableCmd = CreateConVar("l4d2_doorlock_add_commands", "!map,!buy,!shop", "添加你想要的命令以防止干扰ReadyUp面板 (无空格)", FCVAR_NOTIFY);
 	AutoExecConfig(true, "l4d2_door_lock");
 	
 	Cvar_DoorLock_MPGameMod = FindConVar("mp_gamemode");
@@ -169,7 +163,6 @@ public void OnPluginStart()
 	
 	RegAdminCmd("sm_lock", Command_Lock, ADMFLAG_GENERIC, "Force Saferoom To Be Locked");
 	RegAdminCmd("sm_unlock", Command_Unlock, ADMFLAG_GENERIC, "Force Saferoom To Be Unlocked");
-	
 	RegConsoleCmd("sm_ready", Command_Ready, "Set Player's Status To Ready");
 	RegConsoleCmd("sm_unready", Command_Unready, "Set Player's Status To Unready");
 	
@@ -179,8 +172,23 @@ public void OnPluginStart()
 	HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Pre);
 	HookEvent("player_ledge_grab", Event_PlayerIncapacitated, EventHookMode_Pre);
 	HookEvent("player_incapacitated", Event_PlayerIncapacitated, EventHookMode_Post);
-	
 	LoadTranslations("l4d2_door_lock.phrases");
+}
+
+public Action OnClientSayCommand(int client, const char[] command, const char[] message)
+{
+	if (strcmp(command, "say_team", false) == 0 || strcmp(command, "say", false) == 0)
+	{
+		char sCvarCommand[512];
+		Cvar_DoorLock_EnableCmd.GetString(sCvarCommand, sizeof(sCvarCommand));
+		if(StrContains(sCvarCommand, message) != -1)
+		{
+			g_bPanelIsOpened[client] = false;
+			FakeClientCommand(client, message);
+			return Plugin_Continue;
+		}
+	}
+	return Plugin_Continue;
 }
 
 /* =============================================================================================================== *
@@ -251,7 +259,7 @@ void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
 	for(int i = 1; i <= MaxClients; i++)
 	{
 		g_bClientIsReady[i] = false;
-		g_bDisablingMenu[i] = false;
+		g_bPanelIsOpened[i] = false;
 		g_iUnrdyCounts[i] = Cvar_DoorLock_UnrdyTime.IntValue;
 	}
 	
@@ -289,7 +297,6 @@ void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 	if(g_hTimer_UnreadyGiveUp != null) delete g_hTimer_UnreadyGiveUp;
 	if(g_hTimer_CountdownTime != null) delete g_hTimer_CountdownTime;
 	if(g_hTimer_ReadyUpChecks != null) delete g_hTimer_ReadyUpChecks;
-	if(g_hTimer_HealSurvivors != null) delete g_hTimer_HealSurvivors;
 	if(g_hTimer_ForceVersusST != null) delete g_hTimer_ForceVersusST;
 }
 
@@ -349,12 +356,14 @@ Action Timer_WarmingUpBeforeStartingCountdown(Handle timer)
 {
 	if(Cvar_DoorLock_EnableRdy.BoolValue)
 	{
+		for(int i = 1; i <= MaxClients; i++)
+			if(IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != 1) Create_ShowTeamsReadyStatus(i);
+		
 		g_hTimer_UnreadyGiveUp = CreateTimer(1.0, Timer_WaitingForUnreadyPlayers, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		g_hTimer_ReadyUpChecks = CreateTimer(0.5, Timer_ReadyUpStatusChecker, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else g_hTimer_CountdownTime = CreateTimer(1.0, Timer_StartCountdownToUnlock, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	
-	g_hTimer_HealSurvivors = CreateTimer(0.5, Timer_CheckSurvivorsHealth, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	g_hTimer_WarmingUpTime = null;
 	return Plugin_Handled;
 }
@@ -414,10 +423,6 @@ Action Timer_WaitingForUnreadyPlayers(Handle timer)
 	
 	g_iGiveUpsTime -= 1;
 	PrintHintTextToAll("%t", "Ready Up Countdown", g_iGiveUpsTime);
-	
-	for(int i = 1; i <= MaxClients; i++)
-		if(IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != 1 && !g_bDisablingMenu[i]) Create_ShowTeamsReadyStatus(i);
-	
 	return Plugin_Continue;
 }
 
@@ -428,16 +433,16 @@ Action Timer_WaitingForUnreadyPlayers(Handle timer)
 Action Command_Lock(int client, int args)
 {
 	if(!L4D2_DoorLock_Enable()) return Plugin_Handled;
-	else if(g_bLeftSafeAreas) PrintToChat(client, "%t", "Round Started");
-	else if(g_bLockSafeAreas) PrintToChat(client, "%t", "Saferoom Locked");
-	else if(g_iGiveUpsTime <= 0) PrintToChat(client, "%t", "Ready Up Time Ended");
+	else if(g_bLeftSafeAreas) CPrintToChat(client, "%t", "Round Started");
+	else if(g_bLockSafeAreas) CPrintToChat(client, "%t", "Saferoom Locked");
+	else if(g_iGiveUpsTime <= 0) CPrintToChat(client, "%t", "Ready Up Time Ended");
 	else
 	{
 		g_bAdminTakeover = true;
 		FreezePlayersInFirstChapters();
 		LockAllRotatingSaferoomDoors();
 		TriggerSafeAreaLocksFeatures();
-		PrintToChatAll("%t", "Admin Locks", client);
+		CPrintToChatAll("%t", "Admin Locks", client);
 	}
 	return Plugin_Handled;
 }
@@ -445,7 +450,7 @@ Action Command_Lock(int client, int args)
 Action Command_Unlock(int client, int args)
 {
 	if (!L4D2_DoorLock_Enable()) return Plugin_Handled;
-	else if(!g_bLockSafeAreas) PrintToChat(client, "%t", "Saferoom Unlocked");
+	else if(!g_bLockSafeAreas) CPrintToChat(client, "%t", "Saferoom Unlocked");
 	else
 	{
 		g_bAdminTakeover = true;
@@ -453,7 +458,7 @@ Action Command_Unlock(int client, int args)
 		UnFreezePlayersInFirstChapters();
 		UnLockAllRotatingSaferoomDoors();
 		UnTriggerSafeAreaLocksFeatures();
-		PrintToChatAll("%t", "Admin Unlocks", client);
+		CPrintToChatAll("%t", "Admin Unlocks", client);
 	}
 	return Plugin_Handled;
 }
@@ -465,23 +470,18 @@ Action Command_Unlock(int client, int args)
 Action Command_Ready(int client, int args)
 {
 	if(!L4D2_DoorLock_Enable() || !Cvar_DoorLock_EnableRdy.BoolValue) return Plugin_Handled;
-	else if(GetClientTeam(client) == 1) PrintToChat(client, "%t", "Spectator Ready");
-	else if(g_bLeftSafeAreas) PrintToChat(client, "%t", "Round Started");
-	else if(g_bClientIsReady[client])PrintToChat(client, "%t", "You Are Ready");
-	else if(g_iGiveUpsTime <= 0) PrintToChat(client, "%t", "Ready Up Time Ended");
-	else if(g_bAdminTakeover) PrintToChat(client, "%t", "Admin Controls");
+	else if(GetClientTeam(client) == 1) CPrintToChat(client, "%t", "Spectator Ready");
+	else if(g_bLeftSafeAreas) CPrintToChat(client, "%t", "Round Started");
+	else if(g_bClientIsReady[client])CPrintToChat(client, "%t", "You Are Ready");
+	else if(g_iGiveUpsTime <= 0) CPrintToChat(client, "%t", "Ready Up Time Ended");
+	else if(g_bAdminTakeover) CPrintToChat(client, "%t", "Admin Controls");
 	else
 	{
-		g_bDisablingMenu[client] = false;
 		g_bClientIsReady[client] = true;
-		PrintToChat(client, "%t", "Player Is Ready");
+		CPrintToChat(client, "%t", "Player Is Ready");
 		
 		if(TeamReadyUpPercentageReached(2) && TeamReadyUpPercentageReached(3))
 		{
-			for (int i = 1; i <= MaxClients; i++)
-				if (IsClientInGame(i) && IsPlayerAlive(i) && !IsFakeClient(i) && !g_bDisablingMenu[i])
-					Create_ShowTeamsReadyStatus(i);
-			
 			if(g_hTimer_CountdownTime == null)
 			{
 				if(g_hTimer_UnreadyGiveUp != null) delete g_hTimer_UnreadyGiveUp;
@@ -496,25 +496,20 @@ Action Command_Ready(int client, int args)
 Action Command_Unready(int client, int args)
 {
 	if(!L4D2_DoorLock_Enable() || !Cvar_DoorLock_EnableRdy.BoolValue) return Plugin_Handled;
-	else if(GetClientTeam(client) == 1) PrintToChat(client, "%t", "Spectator Ready");
-	else if(g_bLeftSafeAreas) PrintToChat(client, "%t", "Round Started");
-	else if(!g_bClientIsReady[client]) PrintToChat(client, "%t", "You Are Unready");
-	else if(g_iUnrdyCounts[client] < 1) PrintToChat(client, "%t", "Ready Up Limit");
-	else if(g_iGiveUpsTime <= 0) PrintToChat(client, "%t", "Ready Up Time Ended");
-	else if(g_bAdminTakeover) PrintToChat(client, "%t", "Admin Controls");
+	else if(GetClientTeam(client) == 1) CPrintToChat(client, "%t", "Spectator Ready");
+	else if(g_bLeftSafeAreas) CPrintToChat(client, "%t", "Round Started");
+	else if(!g_bClientIsReady[client]) CPrintToChat(client, "%t", "You Are Unready");
+	else if(g_iUnrdyCounts[client] < 1) CPrintToChat(client, "%t", "Ready Up Limit");
+	else if(g_iGiveUpsTime <= 0) CPrintToChat(client, "%t", "Ready Up Time Ended");
+	else if(g_bAdminTakeover) CPrintToChat(client, "%t", "Admin Controls");
 	else
 	{
 		g_iUnrdyCounts[client] -= 1;
-		g_bDisablingMenu[client] = false;
 		g_bClientIsReady[client] = false;
-		PrintToChat(client, "%t", "Player Is Unready");
+		CPrintToChat(client, "%t", "Player Is Unready");
 	
 		if(!TeamReadyUpPercentageReached(2) || !TeamReadyUpPercentageReached(3))
 		{
-			for (int i = 1; i <= MaxClients; i++)
-				if(IsClientInGame(i) && IsPlayerAlive(i) && !IsFakeClient(i) && !g_bDisablingMenu[i])
-					Create_ShowTeamsReadyStatus(i);
-			
 			if(g_hTimer_UnreadyGiveUp == null)
 				g_hTimer_UnreadyGiveUp = CreateTimer(1.0, Timer_WaitingForUnreadyPlayers, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		}
@@ -547,9 +542,6 @@ Action Timer_ReadyUpStatusChecker(Handle timer)
 		
 		if(g_hTimer_UnreadyGiveUp == null)
 			g_hTimer_UnreadyGiveUp = CreateTimer(1.0, Timer_WaitingForUnreadyPlayers, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-		
-		for (int i = 1; i <= MaxClients; i++)
-			if (IsClientInGame(i) && IsPlayerAlive(i) && !IsFakeClient(i) && !g_bDisablingMenu[i]) Create_ShowTeamsReadyStatus(i);
 	}
 	else if(TeamReadyUpPercentageReached(2) && TeamReadyUpPercentageReached(3))
 	{
@@ -569,25 +561,25 @@ void Notify_ReadyStatus()
 	if(!g_bSurvivorReady && TeamReadyUpPercentageReached(2) && GetRealTeamCount(2) > 0)
 	{
 		g_bSurvivorReady = true;
-		PrintToChatAll("%t", "Notify Survivors Ready", GetReadyTeamCount(2), GetRealTeamCount(2), TeamReadyUpPercentage(2));
+		CPrintToChatAll("%t", "Notify Survivors Ready", GetReadyTeamCount(2), GetRealTeamCount(2), TeamReadyUpPercentage(2));
 	}
 	
 	else if(!g_bInfectedReady && TeamReadyUpPercentageReached(3) && GetRealTeamCount(3) > 0)
 	{
 		g_bInfectedReady = true;
-		PrintToChatAll("%t", "Notify Infected Ready", GetReadyTeamCount(3), GetRealTeamCount(3), TeamReadyUpPercentage(3));
+		CPrintToChatAll("%t", "Notify Infected Ready", GetReadyTeamCount(3), GetRealTeamCount(3), TeamReadyUpPercentage(3));
 	}
 	
 	if(g_bSurvivorReady && !TeamReadyUpPercentageReached(2))
 	{
 		g_bSurvivorReady = false;
-		PrintToChatAll("%t", "Notify Survivors Unready", GetReadyTeamCount(2), GetRealTeamCount(2), TeamReadyUpPercentage(2));
+		CPrintToChatAll("%t", "Notify Survivors Unready", GetReadyTeamCount(2), GetRealTeamCount(2), TeamReadyUpPercentage(2));
 	}
 	
 	else if(g_bInfectedReady && !TeamReadyUpPercentageReached(3))
 	{
 		g_bInfectedReady = false;
-		PrintToChatAll("%t", "Notify Infected Unready", GetReadyTeamCount(3), GetRealTeamCount(3), TeamReadyUpPercentage(3));
+		CPrintToChatAll("%t", "Notify Infected Unready", GetReadyTeamCount(3), GetRealTeamCount(3), TeamReadyUpPercentage(3));
 	}
 }
 
@@ -597,8 +589,8 @@ void Notify_ReadyStatus()
 
 void Create_ShowTeamsReadyStatus(int client)
 {
-	if(!IsClientInGame(client) || IsFakeClient(client)) return;
-
+	g_bPanelIsOpened[client] = true;
+	
 	Panel panel = new Panel();
 	static char sTemp[256];
 
@@ -606,7 +598,6 @@ void Create_ShowTeamsReadyStatus(int client)
 	panel.DrawItem(sTemp, ITEMDRAW_RAWLINE);
 	
 	panel.DrawItem(" ", ITEMDRAW_RAWLINE);
-	
 	FormatEx(sTemp, sizeof(sTemp), "%t", "Menu Ready");
 	panel.DrawItem(sTemp, !g_bClientIsReady[client] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 	
@@ -614,7 +605,6 @@ void Create_ShowTeamsReadyStatus(int client)
 	panel.DrawItem(sTemp, g_bClientIsReady[client] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 	
 	panel.DrawItem(" ", ITEMDRAW_RAWLINE);
-	
 	if(GetRealTeamCount(2) > 0) FormatEx(sTemp, sizeof(sTemp), "%s %t: [%.1f%%]", TeamReadyUpPercentageReached(2) ? "▣" : "▢", "Menu Survivor", TeamReadyUpPercentage(2));
 	else FormatEx(sTemp, sizeof(sTemp), "▣ %t: [100.0%%]", "Menu Survivor");
 	panel.DrawItem(sTemp, ITEMDRAW_RAWLINE);
@@ -624,11 +614,20 @@ void Create_ShowTeamsReadyStatus(int client)
 	panel.DrawItem(sTemp, ITEMDRAW_RAWLINE);
 	
 	panel.DrawItem(" ", ITEMDRAW_RAWLINE);
-	
 	FormatEx(sTemp, sizeof(sTemp), "%t", "Menu Close");
 	panel.DrawItem(sTemp);
 	
 	panel.Send(client, Handle_ShowPlayersReadyStatus, 1);
+	CreateTimer(0.1, Timer_ActivatePanel, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+}
+
+Action Timer_ActivatePanel(Handle timer, int userid)
+{
+	int client = GetClientOfUserId(userid);
+	if(client == 0 || !IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) == 1 || !g_bPanelIsOpened[client]) return Plugin_Handled;
+	
+	if(g_bLockSafeAreas) Create_ShowTeamsReadyStatus(client);
+	return Plugin_Handled;
 }
 
 int Handle_ShowPlayersReadyStatus(Menu panel, MenuAction action, int param1, int param2)
@@ -637,9 +636,8 @@ int Handle_ShowPlayersReadyStatus(Menu panel, MenuAction action, int param1, int
 	{
 		if (param2 == 1) Command_Ready(param1, 0);
 		else if (param2 == 2) Command_Unready(param1, 0);
-		else if (param2 == 3) g_bDisablingMenu[param1] = true;
+		else if (param2 == 3) g_bPanelIsOpened[param1] = false;
 	}
-	if(action == MenuAction_End) delete panel;
 	return 0;
 }
 
@@ -681,6 +679,10 @@ public void OnClientPutInServer(int client)
 	if(!L4D2_DoorLock_Enable() || !IsClientInGame(client)) return;
 	
 	g_bClientIsReady[client] = false;
+	
+	if(Cvar_DoorLock_EnableRdy.BoolValue)
+		CreateTimer(5.0, Timer_DisplayPanelOnConnect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+	
 	if(g_bLockSafeAreas && !g_bLeftSafeAreas)
 	{
 		AcceptEntityInput(client, "DisableLedgeHang");
@@ -688,6 +690,16 @@ public void OnClientPutInServer(int client)
 		if(Cvar_DoorLock_AddCheats.IntValue == 1 || Cvar_DoorLock_AddCheats.IntValue == 3)
 			SetEntProp(client, Prop_Data, "m_takedamage", 1);
 	}
+}
+
+Action Timer_DisplayPanelOnConnect(Handle timer, int userid)
+{
+	int client = GetClientOfUserId(userid);
+	if (client == 0 || !IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) == 1 || !g_bLockSafeAreas || g_bLeftSafeAreas || g_hTimer_WarmingUpTime != null)
+		return Plugin_Handled;
+	
+	Create_ShowTeamsReadyStatus(client);
+	return Plugin_Handled;
 }
 
 /* =============================================================================================================== *
@@ -810,10 +822,11 @@ void Activate_SurvivorTeleport(int client)
 {
 	if (!IsClientInGame(client) || !BlockClientRepetition(client) || GetClientTeam(client) != 2 || IsFakeClient(client)) return;
 	
-	if(Cvar_DoorLock_LeaverMSG.IntValue == 1) PrintToChat(client, "%t", "Leavers Message");
-	else if(Cvar_DoorLock_LeaverMSG.IntValue == 2) PrintCenterText(client, "%t", "Leavers Message");
+	if(Cvar_DoorLock_LeaverMsg.IntValue == 1) CPrintToChat(client, "%t", "Leavers Message");
+	else if(Cvar_DoorLock_LeaverMsg.IntValue == 2) PrintCenterText(client, "%t", "Leavers Message");
 	
 	TeleportSurvivorsToSafeAreas(client);
+	CreateTimer(0.1, Timer_HealSurvivor, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 }
 
 bool BlockClientRepetition(int client)
@@ -938,33 +951,23 @@ void TeleportSurvivorsToSafeAreas(int client)
  *													Healing Players												   *
  *================================================================================================================ */
 
-Action Timer_CheckSurvivorsHealth(Handle timer)
+Action Timer_HealSurvivor(Handle timer, int userid)
 {
-	if(g_bLeftSafeAreas)
-	{
-		g_hTimer_HealSurvivors = null;
-		return Plugin_Stop;
-	}
-	Heal_Survivors();
-	return Plugin_Continue;
+	int client = GetClientOfUserId(userid);
+	if(client == 0 || !IsClientInGame(client)) return Plugin_Handled;
+	
+	Heal_Survivor(client);
+	return Plugin_Handled;
 }
 
-void Heal_Survivors()
+void Heal_Survivor(int client)
 {
-	for(int i = 1; i <= MaxClients; i++)
-	{
-		if(!IsClientInGame(i) || GetClientTeam(i) != 2) return;
-		
-		int iMaxHealth = GetEntProp(i, Prop_Send, "m_iMaxHealth");
-		int iCurrentHealth = GetEntProp(i, Prop_Send, "m_iHealth");
-		if(iCurrentHealth >= iMaxHealth) return;
-		
-		int CmdFlags = GetCommandFlags("give");
-		SetCommandFlags("give", CmdFlags & ~FCVAR_CHEAT);
-		FakeClientCommand(i, "give health");
-		SetCommandFlags("give", CmdFlags);
-		L4D_SetTempHealth(i, 0.0);
-	}
+	if(!IsClientInGame(client) || GetClientTeam(client) != 2 || g_bLeftSafeAreas) return;
+	int CmdFlags = GetCommandFlags("give");
+	SetCommandFlags("give", CmdFlags & ~FCVAR_CHEAT);
+	FakeClientCommand(client, "give health");
+	SetCommandFlags("give", CmdFlags);
+	L4D_SetTempHealth(client, 0.0);
 }
 
 /* =============================================================================================================== *
@@ -1010,7 +1013,6 @@ void LockAllRotatingSaferoomDoors()
 	
 	Cvar_DoorLock_LockColor.GetString(sColor, sizeof(sColor));
 	GetColor(g_iDoorLockColors, sColor);
-
 	if(Cvar_DoorLock_AllowGlow.BoolValue)
 		L4D2_SetEntityGlow(iCheckPointDoor, L4D2Glow_Constant, Cvar_DoorLock_GlowRange.IntValue, 0, g_iDoorLockColors, false);
 }
@@ -1035,7 +1037,6 @@ void UnLockAllRotatingSaferoomDoors()
 	
 	Cvar_DoorLock_OpenColor.GetString(sColor, sizeof(sColor));
 	GetColor(iDoorUnlockColors, sColor);
-	
 	if(Cvar_DoorLock_AllowGlow.BoolValue)
 		L4D2_SetEntityGlow(iCheckPointDoor, L4D2Glow_Constant, Cvar_DoorLock_GlowRange.IntValue, 0, iDoorUnlockColors, false);
 }
@@ -1093,7 +1094,6 @@ int GetReadyTeamCount(int team)
 	for (int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) == team && g_bClientIsReady[i])
 			number++;
-	
 	return number;
 }
 
@@ -1135,7 +1135,6 @@ int GetAdminsCount()
 	for (int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i) && IsClientGenericAdmin(i))
 			number++;
-	
 	return number;
 }
 
@@ -1145,7 +1144,6 @@ int GetTotalSlots()
 	for (int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i) && GetClientTeam(i) == 2)
 			number += 2;
-	
 	return number;
 }
 
@@ -1155,7 +1153,6 @@ int GetLoadingPlayers()
 	for (int i = 1; i <= MaxClients; i++)
 		if(IsClientConnected(i) && !IsClientInGame(i) && !IsFakeClient(i))
 			number++;
-	
 	return number;
 }
 
@@ -1165,7 +1162,6 @@ int GetRealPlayers()
 	for (int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != 1)
 			number++;
-	
 	return number;
 }
 
@@ -1175,6 +1171,5 @@ int GetRealTeamCount(int team)
 	for (int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) == team)
 			number++;
-	
 	return number;
 }

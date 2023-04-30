@@ -1,3 +1,15 @@
+//--------------------------------------------------
+
+// To Customize The Texts Color, Use The Following:
+
+// default (white) - {default}
+// turquoise - {lightgreen}
+// orange - {green}
+// olive - {olive}
+
+// -------------------------------------------------
+
+
 "Phrases"
 {
 	"Ready Up Countdown"

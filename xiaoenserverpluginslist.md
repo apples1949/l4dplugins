@@ -75,7 +75,7 @@
 [l4d_graves](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_graves) 生还者死亡后生成坟墓 [自翻cvar介绍](https://github.com/apples1949/l4dplugins/blob/main/l4d_graves.sp)   
 [l4d_rock_lagcomp](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_rock_lagcomp) 战役模式中给坦克石头提供滞后补偿 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d_rock_lagcomp)  
 [l4d_death_soul](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_death_soul) 死去的幸存者的灵魂飞向天空 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d_death_soul)  
-[l4d2_biletheworld](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_biletheworld) 胖子死亡可糊其他感染者\胆汁砸中生还者被糊脸扣血 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_biletheworld.sp)     
+[l4d2_biletheworld](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_biletheworld) 胖子死亡可糊其他感染者\胆汁砸中生还者被糊脸扣血 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_biletheworld.sp)  
 [lerptracker](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/lerptracker) 显示lerp [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/blob/main/lerptracker.sp)   
 [cge_l4d2_deathcheck](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/cge_l4d2_deathcheck) 全部生还者死亡后游戏才失败 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/cge_l4d2_deathcheck.sp)   
 [l4d_ssi_teleport_fix](https://github.com/fbef0102/Game-Private_Plugin/tree/main/l4d_ssi_teleport_fix) 价值90r的仿Anne的特感传送 要的自己去买  
@@ -83,13 +83,13 @@
 [l4d2_si_ladder_booster](https://github.com/fbef0102/Rotoblin-AZMod/blob/master/SourceCode/scripting-az/l4d2_si_ladder_booster.sp)AI感染者爬梯加速 [增加cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_si_ladder_booster.sp)  
 [witch_target_override](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/witch_target_override) witch击倒玩家后可攻击其他生还者 [根据作者说明翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/witch_target_override.sp)  
 [l4d2_gifts](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_gifts) 击杀特感掉落礼物补给 [翻译cvar及自用修改](https://github.com/apples1949/l4dplugins/blob/main/l4d2_gifts)  
-[l4d_vocalize_antiflood](https://github.com/fbef0102/Rotoblin-AZMod/tree/master/SourceCode/scripting-az) 限制玩家使用语音表单的频率 [翻译cvar说明 去除文本限制](https://github.com/apples1949/l4dplugins/blob/main/l4d_vocalize_antiflood)  
+[vocal_block](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/vocal_block) 限制玩家使用语音表单的频率 [翻译cvar说明 翻译文本](https://github.com/apples1949/l4dplugins/blob/main/vocal_block.sp)  
 [lfd_noTeamSay](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/lfd_noTeamSay)将仅团队信息转为公开信息 隐藏聊天框发出的插件指令 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/lfd_noTeamSay.sp)  
 [l4d_texture_manager_block](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_texture_manager_block)检测mathack作弊并踢出 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d_texture_manager_block.sp)  
 [l4d_tanklimit](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_tanklimit) 限制服务器上的最大坦克数量 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d_tanklimit.sp)  
 [l4d_shotgun_sound_fix](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_shotgun_sound_fix)修复第三人称下霰弹无声音 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d_shotgun_sound_fix)  
 [l4d2pause](https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2pause) 管理员暂停游戏 [翻译游戏文本](https://github.com/apples1949/l4dplugins/blob/main/l4d2pause.sp)  
-[l4d_flying_car](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d_flying_car)c8m5救援直升机替换成出租车或者警车 [翻译cvar说明及游戏文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_flying_car)  
+[l4d_flying_car](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d_flying_car)c8m5救援直升机替换成出租车或者警车 [翻译cvar说明及游戏文本](https://github.com/apples1949/l4dplugins/blob/main/l4d_flying_car.sp)  
 [l4d2_weapon_csgo_reload](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_weapon_csgo_reload) 修改换弹方式为csgo机制 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d2_weapon_csgo_reload.sp)  
 [l4d2_karma_kill](https://github.com/fbef0102/L4D2-Plugins/tree/master/l4d2_karma_kill) 因特感或玩家自己高处倒地或死亡触发慢动作特效 [翻译cvar说明 注释文本(不需要提示文本)](https://github.com/apples1949/l4dplugins/blob/main/l4d2_karma_kill.sp)  
 [l4d_game_files_precacher](https://github.com/fbef0102/L4D1_2-Plugins/blob/master/l4d_game_files_precacher)嘗試解決崩潰 "找不到模組"[本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d_game_files_precacher.sp)  
@@ -119,7 +119,9 @@
 [l4d_pipebomb_damage](https://forums.alliedmods.net/showthread.php?p=2680272) 设置手雷伤害对所有生物的倍数 可通过l4d_pipebomb_shove设置的伤害进行更改 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_pipebomb_damage.sp)   
 [l4d_anti_rush](https://forums.alliedmods.net/showthread.php?t=322392) 反跑图 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/l4d_anti_rush)   
 [l4d_common_limiter](https://forums.alliedmods.net/showthread.php?p=2782587)根据游戏僵尸数量限制来限制僵尸数量 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d_common_limiter.sp)  
-[l4d2_riot_penetration](https://forums.alliedmods.net/showthread.php?t=341750子弹)近战可正面攻击防爆僵尸[本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d2_riot_penetration)  
+[l4d2_riot_penetration](https://forums.alliedmods.net/showthread.php?t=341750)子弹可穿透防爆僵尸[本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d2_riot_penetration)  
+[l4d2_fireworks](https://forums.alliedmods.net/showthread.php?t=153783) 烟花盒点燃后放烟花 [本仓库地址](https://github.com/apples1949/l4dplugins/tree/main/l4d2_fireworks.sp)  
+[l4d_hats](https://forums.alliedmods.net/showthread.php?p=1441080) 帽子插件 [机翻cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d_hats)  
 
 [Dragokas](https://forums.alliedmods.net/member.php?u=282667)  
 [TankOnSpawn](https://forums.alliedmods.net/showthread.php?t=323813) 每次生成多个坦克 [自翻cvar介绍和文本](https://github.com/apples1949/l4dplugins/tree/main/TankOnSpawn)   
@@ -152,6 +154,7 @@
 [l4d2_unlimited_upgrade_pack](https://forums.alliedmods.net/showthread.php?t=335601) 弹药升级包部署后可无限拿取 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_unlimited_upgrade_pack)   
 [l4d_medicines_unlimited](https://forums.alliedmods.net/showthread.php?t=336226) 设置血量上限及处理溢出的虚血 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_medicines_unlimited.sp)  
 [l4d_penetration_pistol](https://forums.alliedmods.net/showthread.php?t=337509) 调整小手枪对小僵尸的伤害 [翻译cvar说明](https://github.com/apples1949/l4dplugins/blob/main/l4d_penetration_pistol.sp)   
+[l4d_gametime](https://forums.alliedmods.net/showthread.php?t=341707) 玩家进服显示游戏时长 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d_gametime)  
 
 [xZk](https://forums.alliedmods.net/member.php?u=282888):  
 [l4d2_incapped_pickup](https://forums.alliedmods.net/showthread.php?t=320828) 倒地可拾取物品 [翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/l4d2_incapped_pickup)   
@@ -186,9 +189,6 @@ ReFlexPoison:
 
 [fantasylidong](https://github.com/fantasylidong):  
 [RestrictedGameModes](https://github.com/fantasylidong/L4d2_plugins/blob/main/RestrictGamemode/RestrictedGameModes.sp) 锁定模式 省的sb路人用指令到服务器开写实或者对抗 [去掉4人限制](https://github.com/apples1949/l4dplugins/blob/main/RestrictedGameModes.sp)   
-
-[nuviktor](https://github.com/nuviktor):  
-[l4d2_tooeasy](https://github.com/nuviktor/sm-l4d2-tooeasy) 禁止简单难度 [自改仅禁简单难度](https://github.com/apples1949/l4dplugins/blob/main/l4d2_tooeasy.sp)  
 
 [fdxx](https://github.com/fdxx):  
 [l4d2_gascan_guard](https://forums.alliedmods.net/showthread.php?p=2762850) 射击不会打破正飞在空中的油桶 [本仓库地址](https://github.com/apples1949/l4dplugins/blob/main/l4d2_gascan_guard.sp)  
