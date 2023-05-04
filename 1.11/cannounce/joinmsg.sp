@@ -11,17 +11,15 @@
 
 
 *****************************************************************/
-new Handle:hKVCustomJoinMessages = INVALID_HANDLE;
+ConVar g_CvarPlaySound = null;
+ConVar g_CvarPlaySoundFile = null;
 
-new Handle:g_CvarPlaySound = INVALID_HANDLE;
-new Handle:g_CvarPlaySoundFile = INVALID_HANDLE;
+ConVar g_CvarPlayDiscSound = null;
+ConVar g_CvarPlayDiscSoundFile = null;
 
-new Handle:g_CvarPlayDiscSound = INVALID_HANDLE;
-new Handle:g_CvarPlayDiscSoundFile = INVALID_HANDLE;
+ConVar g_CvarMapStartNoSound = null;
 
-new Handle:g_CvarMapStartNoSound = INVALID_HANDLE;
-
-new bool:noSoundPeriod = false;
+bool noSoundPeriod = false;
 
 /*****************************************************************
 
@@ -30,10 +28,10 @@ new bool:noSoundPeriod = false;
 
 
 *****************************************************************/
-#include "cannounce/joinmsg/allow.sp"
-#include "cannounce/joinmsg/disallow.sp"
-#include "cannounce/joinmsg/set.sp"
-#include "cannounce/joinmsg/sound.sp"
+//#include "cannounce/joinmsg/allow.sp"
+//#include "cannounce/joinmsg/disallow.sp"
+//#include "cannounce/joinmsg/set.sp"
+//#include "cannounce/joinmsg/sound.sp"
 
 
 /*****************************************************************
@@ -44,59 +42,41 @@ new bool:noSoundPeriod = false;
 
 *****************************************************************/
 
-SetupJoinMsg()
+void SetupJoinMsg()
 {
 	noSoundPeriod = false;
 	
 	//cvars
-	g_CvarPlaySound = CreateConVar("sm_ca_playsound", "0", "Plays a specified (sm_ca_playsoundfile) sound on player connect");
+	g_CvarPlaySound = CreateConVar("sm_ca_playsound", "1", "Plays a specified (sm_ca_playsoundfile) sound on player connect");
 	g_CvarPlaySoundFile = CreateConVar("sm_ca_playsoundfile", "ambient\\alarms\\klaxon1.wav", "Sound to play on player connect if sm_ca_playsound = 1");
 
 	g_CvarPlayDiscSound = CreateConVar("sm_ca_playdiscsound", "0", "Plays a specified (sm_ca_playdiscsoundfile) sound on player discconnect");
 	g_CvarPlayDiscSoundFile = CreateConVar("sm_ca_playdiscsoundfile", "weapons\\cguard\\charging.wav", "Sound to play on player discconnect if sm_ca_playdiscsound = 1");
 
 	g_CvarMapStartNoSound = CreateConVar("sm_ca_mapstartnosound", "30.0", "Time to ignore all player join sounds on a map load");
-
-	
-	//prepare kv custom messages file
-	hKVCustomJoinMessages = CreateKeyValues("CustomJoinMessages");
-	
-	if(!FileToKeyValues(hKVCustomJoinMessages, g_fileset))
-	{
-		KeyValuesToFile(hKVCustomJoinMessages, g_fileset);
-	}
-	
-	SetupJoinMsg_Allow();
-	
-	SetupJoinMsg_DisAllow();
-	
-	SetupJoinMsg_Set();
-	
-	SetupJoinSound_Set();
 }
 
-
-OnAdminMenuReady_JoinMsg()
+void OnAdminMenuReady_JoinMsg()
 {
 	//Build the "Player Commands" category
-	new TopMenuObject:player_commands = FindTopMenuCategory(hTopMenu, ADMINMENU_PLAYERCOMMANDS);
-	
-	if (player_commands != INVALID_TOPMENUOBJECT)
-	{
-		OnAdminMenuReady_JoinMsg_Allow(player_commands);
-			
-		OnAdminMenuReady_JoinMsg_DAllow(player_commands);
-	}
+	//TopMenuObject player_commands = FindTopMenuCategory(hTopMenu, ADMINMENU_PLAYERCOMMANDS);
+	//
+	//if (player_commands != INVALID_TOPMENUOBJECT)
+	//{
+	//	OnAdminMenuReady_JoinMsg_Allow(player_commands);
+	//		
+	//	OnAdminMenuReady_JoinMsg_DAllow(player_commands);
+	//}
 }
 
 
-OnMapStart_JoinMsg()
+void OnMapStart_JoinMsg()
 {
-	decl Float:waitPeriod;
+	float waitPeriod;
 	
 	noSoundPeriod = false;
 	
-	waitPeriod = GetConVarFloat(g_CvarMapStartNoSound);
+	waitPeriod = g_CvarMapStartNoSound.FloatValue;
 	
 	if( waitPeriod > 0 )
 	{
@@ -105,47 +85,14 @@ OnMapStart_JoinMsg()
 	}
 }
 
-OnPostAdminCheck_JoinMsg(const String:steamId[])
+stock void OnPostAdminCheck_JoinMsg(const char[] steamId)
 {
-	decl String:soundfile[SOUNDFILE_PATH_LEN];
-	
-	new String:message[MSGLENGTH + 1];
-	new String:output[301];
-	new String:soundFilePath[SOUNDFILE_PATH_LEN];
-	
-	new bool:customSoundPlayed = false;
-	
-	//get from kv file
-	KvRewind(hKVCustomJoinMessages);
-	if(KvJumpToKey(hKVCustomJoinMessages, steamId))
-	{
-		//Custom join MESSAGE
-		KvGetString(hKVCustomJoinMessages, "message", message, sizeof(message), "");
-		
-		if( strlen(message) > 0)
-		{
-			//print output
-			Format(output, sizeof(output), "%c\"%c%s%c\"", 4, 1, message, 4);
-	
-			PrintFormattedMessageToAll(output, -1);
-		}
-		
-		//Custom join SOUND
-		KvGetString(hKVCustomJoinMessages, "soundfile", soundFilePath, sizeof(soundFilePath), "");
-		
-		if( strlen(soundFilePath) > 0 && !noSoundPeriod )
-		{
-			EmitSoundToAll( soundFilePath );
-			customSoundPlayed = true;
-		}
-	} 
-	
-	KvRewind(hKVCustomJoinMessages);
+	char soundfile[SOUNDFILE_PATH_LEN];
 	
 	//if enabled and custom sound not already played, play all player sound
-	if( GetConVarInt(g_CvarPlaySound) && !customSoundPlayed)
+	if( g_CvarPlaySound.BoolValue)
 	{
-		GetConVarString(g_CvarPlaySoundFile, soundfile, sizeof(soundfile));
+		g_CvarPlaySoundFile.GetString(soundfile, sizeof(soundfile));
 		
 		if( strlen(soundfile) > 0 && !noSoundPeriod)
 		{
@@ -154,13 +101,13 @@ OnPostAdminCheck_JoinMsg(const String:steamId[])
 	}
 }
 
-OnClientDisconnect_JoinMsg()
+void OnClientDisconnect_JoinMsg()
 {
-	decl String:soundfile[SOUNDFILE_PATH_LEN];
+	char soundfile[SOUNDFILE_PATH_LEN];
 	
-	if( GetConVarInt(g_CvarPlayDiscSound))
+	if( g_CvarPlayDiscSound.BoolValue)
 	{
-		GetConVarString(g_CvarPlayDiscSoundFile, soundfile, sizeof(soundfile));
+		g_CvarPlayDiscSoundFile.GetString(soundfile, sizeof(soundfile));
 		
 		if( strlen(soundfile) > 0)
 		{
@@ -170,13 +117,12 @@ OnClientDisconnect_JoinMsg()
 }
 
 
-OnPluginEnd_JoinMsg()
+void OnPluginEnd_JoinMsg()
 {		
-	CloseHandle(hKVCustomJoinMessages);
 }
 
 
-public Action:Timer_MapStartNoSound(Handle:timer)
+public Action Timer_MapStartNoSound(Handle timer)
 {	
 	noSoundPeriod = false;
 	
@@ -191,18 +137,18 @@ public Action:Timer_MapStartNoSound(Handle:timer)
 
 
 *****************************************************************/
-LoadSoundFilesAll()
+void LoadSoundFilesAll()
 {
-	new String:c_soundFile[SOUNDFILE_PATH_LEN];
-	new String:c_soundFileFullPath[SOUNDFILE_PATH_LEN + 6];
+	char c_soundFile[SOUNDFILE_PATH_LEN];
+	char c_soundFileFullPath[SOUNDFILE_PATH_LEN + 6];
 	
-	new String:dc_soundFile[SOUNDFILE_PATH_LEN];
-	new String:dc_soundFileFullPath[SOUNDFILE_PATH_LEN + 6];
+	char dc_soundFile[SOUNDFILE_PATH_LEN];
+	char dc_soundFileFullPath[SOUNDFILE_PATH_LEN + 6];
 	
 	//download and cache connect sound
-	if( GetConVarInt(g_CvarPlaySound))
+	if( g_CvarPlaySound.BoolValue)
 	{
-		GetConVarString(g_CvarPlaySoundFile, c_soundFile, sizeof(c_soundFile));
+		g_CvarPlaySoundFile.GetString(c_soundFile, sizeof(c_soundFile));
 		Format(c_soundFileFullPath, sizeof(c_soundFileFullPath), "sound/%s", c_soundFile);
 		
 		if( FileExists( c_soundFileFullPath ) )
@@ -214,9 +160,9 @@ LoadSoundFilesAll()
 	}
 	
 	//cache disconnect sound
-	if( GetConVarInt(g_CvarPlayDiscSound))
+	if( g_CvarPlayDiscSound.BoolValue)
 	{
-		GetConVarString(g_CvarPlayDiscSoundFile, dc_soundFile, sizeof(dc_soundFile));
+		g_CvarPlayDiscSoundFile.GetString(dc_soundFile, sizeof(dc_soundFile));
 		Format(dc_soundFileFullPath, sizeof(dc_soundFileFullPath), "sound/%s", dc_soundFile);
 		
 		if( FileExists( dc_soundFileFullPath ) )

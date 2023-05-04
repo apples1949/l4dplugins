@@ -1,81 +1,103 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define L4D2Team_Infected 3
+#define L4D2Infected_Tank 8
+
 #include <sourcemod>
 #include <sdktools_sound>
-#include <left4dhooks>
 #include <colors>
+#undef REQUIRE_PLUGIN
+#include <l4d_tank_control_eq>
+#define REQUIRE_PLUGIN
 
-#define PLUGIN_VERSION "2.0"
+#define PLUGIN_VERSION "1.4"
+#define DANG "ui/pickup_secret01.wav"
 
 public Plugin myinfo = 
 {
-	name = "[L4D & 2] Tank Announcer",
+	name = "L4D2 Tank Announcer",
 	author = "Visor, Forgetest, xoxo",
 	description = "Announce in chat and via a sound when a Tank has spawned",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-ConVar g_cvSound;
-char g_sSound[PLATFORM_MAX_PATH];
-
-#define TRANSLATION_FILE "l4d2_tank_announce.phrases"
-void LoadPluginTranslations()
-{
-	char sPath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sPath, sizeof(sPath), "translations/"...TRANSLATION_FILE...".txt");
-	if (!FileExists(sPath))
-	{
-		SetFailState("Missing translation \""...TRANSLATION_FILE..."\"");
-	}
-	LoadTranslations(TRANSLATION_FILE);
-}
-
 public void OnPluginStart()
 {
-	LoadPluginTranslations();
-	
-	g_cvSound = CreateConVar("l4d2_tank_announce_sound", "ui/pickup_secret01.wav", "Sound emitted every tank spawn .", FCVAR_SPONLY);
-	g_cvSound.AddChangeHook(ConVarChanged_Sound);
-	ConVarChanged_Sound(g_cvSound, "", "");
-}
-
-void ConVarChanged_Sound(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-	convar.GetString(g_sSound, sizeof(g_sSound));
+	LoadTranslations("l4d2_tank_announce.phrases");
 }
 
 public void OnMapStart()
 {
-	PrecacheSound(g_sSound);
+	PrecacheSound(DANG);
 }
 
 public void L4D_OnSpawnTank_Post(int client, const float vecPos[3], const float vecAng[3])
 {
-	if (client <= 0 || !IsClientInGame(client))
-		return;
+	int tankClient = client;
+	char nameBuf[MAX_NAME_LENGTH];
 	
-	EmitSoundToAll(g_sSound);
-	CreateTimer(0.1, Timer_Announce, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-}
-
-Action Timer_Announce(Handle timer, int userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (!client || !IsClientInGame(client))
-		return Plugin_Stop;
-	
-	if (IsFakeClient(client))
+	if (IsTankSelection())
 	{
-		client = GetEntProp(L4D_GetResourceEntity(), Prop_Send, "m_pendingTankPlayerIndex");
-		if (client && IsClientInGame(client))
+		if (IsTank(tankClient) && !IsFakeClient(tankClient)) 
 		{
-			CPrintToChatAll("%t", "Announce_PlayerControlled", client);
-			return Plugin_Stop;
+			FormatEx(nameBuf, sizeof(nameBuf), "%N", tankClient);
+		} 
+		else 
+		{
+			tankClient = GetTankSelection();
+			if (tankClient > 0 
+			&& IsClientInGame(tankClient)) 
+			{
+				FormatEx(nameBuf, sizeof(nameBuf), "%N", tankClient);
+			} 
+			else 
+			{
+				FormatEx(nameBuf, sizeof(nameBuf), "AI");
+			}
 		}
 	}
+	else
+	{
+		HookEvent("player_spawn", Event_PlayerSpawn);
+		return;
+	}
 	
-	CPrintToChatAll("%t", "Announce_AI");
-	return Plugin_Stop;
+	CPrintToChatAll("%t", "Spawned", nameBuf);
+	EmitSoundToAll(DANG);
+}
+
+public void Event_PlayerSpawn(Event event, char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+
+	// Tanky Client?
+	if (IsTank(client) && !IsFakeClient(client))
+	{
+		CPrintToChatAll("%t", "Spawned2", client);
+		EmitSoundToAll(DANG);
+		UnhookEvent("player_spawn", Event_PlayerSpawn);
+	}
+}
+
+/**
+ * Is the player the tank? 
+ *
+ * @param client client ID
+ * @return bool
+ */
+bool IsTank(int client)
+{
+	return (IsClientInGame(client)
+		&& GetClientTeam(client) == L4D2Team_Infected
+		&& GetEntProp(client, Prop_Send, "m_zombieClass") == L4D2Infected_Tank);
+}
+
+/*
+ * @return			true if GetTankSelection exist false otherwise.
+ */
+bool IsTankSelection()
+{
+	return (GetFeatureStatus(FeatureType_Native, "GetTankSelection") != FeatureStatus_Unknown);
 }

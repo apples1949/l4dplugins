@@ -65,7 +65,7 @@
 自选-tick解锁扩展(启动项加 -tickrate 100)(需要配合tick设置插件使用)  
 自选-阻止游戏自带的部分提示(v1.1.2)(豆瓣酱な)  
 
-自找插件 2023年3月3日已检查更新:  
+自找插件 2023年4月29日已检查更新:  
 [HarryPotter](https://github.com/fbef0102/)  
 [all4dead2](https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2) 物品特感生成 [可以添加更多的僵尸参数 翻译cvar说明](https://github.com/apples1949/l4dplugins/tree/main/all4dead2)   
 [show_mic](https://github.com/fbef0102/L4D2-Plugins/tree/master/show_mic) / [ThirdPersonShoulder_Detect](https://forums.alliedmods.net/showthread.php?p=2529779) 屏幕中心显示谁在说话/第三人称指令查询简化 [仓库地址](https://github.com/fbef0102/L4D2-Plugins/tree/master/all4dead2)  

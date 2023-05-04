@@ -1,28 +1,28 @@
 
 
-SetupGeoList()
+void SetupGeoList()
 {
 	RegAdminCmd("sm_geolist", Command_GeoList, ADMFLAG_GENERIC, "sm_geolist <name or #userid> - prints geopraphical information about target(s)");
 }
 
 
-public Action:Command_GeoList(client, args)
+public Action Command_GeoList(int client, int args)
 {
-	decl String:target[65];
+	char target[65];
 	
-	decl String:target_name[MAX_TARGET_LENGTH];
-	decl target_list[MAXPLAYERS];
-	decl target_count;
-	decl bool:tn_is_ml;
-	decl String:name[32];
+	char target_name[MAX_TARGET_LENGTH];
+	int target_list[MAXPLAYERS];
+	int target_count;
+	bool tn_is_ml;
+	char name[32];
 	
-	decl String:ip[16];
-	decl String:city[46];
-	decl String:region[46];
-	decl String:country[46];
-	decl String:ccode[3];
-	decl String:ccode3[4];
-	new bool:bIsLanIp;
+	char ip[16];
+	char city[45];
+	char region[45];
+	char country[45];
+	char ccode[3];
+	char ccode3[4];
+	bool bIsLanIp;
 
 	//not enough arguments, display usage
 	if (args < 1)
@@ -59,66 +59,62 @@ public Action:Command_GeoList(client, args)
 		//detect LAN ip
 		bIsLanIp = IsLanIP( ip );
 		
-		// Using GeoIPCity extension...
-		if ( g_UseGeoIPCity )
+		if( !GeoipCode2(ip, ccode) )
 		{
-			if( !GeoipGetRecord( ip, city, region, country, ccode, ccode3 ) )
+			if( bIsLanIp )
 			{
-				if( bIsLanIp )
-				{
-					Format( city, sizeof(city), "%T", "LAN City Desc", LANG_SERVER );
-					Format( region, sizeof(region), "%T", "LAN Region Desc", LANG_SERVER );
-					Format( country, sizeof(country), "%T", "LAN Country Desc", LANG_SERVER );
-					Format( ccode, sizeof(ccode), "%T", "LAN Country Short", LANG_SERVER );
-					Format( ccode3, sizeof(ccode3), "%T", "LAN Country Short 3", LANG_SERVER );
-				}
-				else
-				{
-					Format( city, sizeof(city), "%T", "Unknown City Desc", LANG_SERVER );
-					Format( region, sizeof(region), "%T", "Unknown Region Desc", LANG_SERVER );
-					Format( country, sizeof(country), "%T", "Unknown Country Desc", LANG_SERVER );
-					Format( ccode, sizeof(ccode), "%T", "Unknown Country Short", LANG_SERVER );
-					Format( ccode3, sizeof(ccode3), "%T", "Unknown Country Short 3", LANG_SERVER );
-				}
+				Format( ccode, sizeof(ccode), "%T", "LAN Country Short", LANG_SERVER );
+			}
+			else
+			{
+				Format( ccode, sizeof(ccode), "%T", "Unknown Country Short", LANG_SERVER );
 			}
 		}
-		else // Using GeoIP default extension...
+		
+		if( !GeoipCountry(ip, country, sizeof(country)) )
 		{
-			if( !GeoipCode2(ip, ccode) )
+			if( bIsLanIp )
 			{
-				if( bIsLanIp )
-				{
-					Format( ccode, sizeof(ccode), "%T", "LAN Country Short", LANG_SERVER );
-				}
-				else
-				{
-					Format( ccode, sizeof(ccode), "%T", "Unknown Country Short", LANG_SERVER );
-				}
+				Format( country, sizeof(country), "%T", "LAN Country Desc", LANG_SERVER );
 			}
-			
-			if( !GeoipCountry(ip, country, sizeof(country)) )
+			else
 			{
-				if( bIsLanIp )
-				{
-					Format( country, sizeof(country), "%T", "LAN Country Desc", LANG_SERVER );
-				}
-				else
-				{
-					Format( country, sizeof(country), "%T", "Unknown Country Desc", LANG_SERVER );
-				}
+				Format( country, sizeof(country), "%T", "Unknown Country Desc", LANG_SERVER );
 			}
-			
-			// Since the GeoIPCity extension isn't loaded, we don't know the city or region.
+		}
+		
+		if(!GeoipCity(ip, city, sizeof(city)))
+		{
 			if( bIsLanIp )
 			{
 				Format( city, sizeof(city), "%T", "LAN City Desc", LANG_SERVER );
-				Format( region, sizeof(region), "%T", "LAN Region Desc", LANG_SERVER );
-				Format( ccode3, sizeof(ccode3), "%T", "LAN Country Short 3", LANG_SERVER );
 			}
 			else
 			{
 				Format( city, sizeof(city), "%T", "Unknown City Desc", LANG_SERVER );
+			}
+		}
+
+		if(!GeoipRegion(ip, region, sizeof(region)))
+		{
+			if( bIsLanIp )
+			{
+				Format( region, sizeof(region), "%T", "LAN Region Desc", LANG_SERVER );
+			}
+			else
+			{
 				Format( region, sizeof(region), "%T", "Unknown Region Desc", LANG_SERVER );
+			}
+		}
+
+		if(!GeoipCode3(ip, ccode3))
+		{
+			if( bIsLanIp )
+			{
+				Format( ccode3, sizeof(ccode3), "%T", "LAN Country Short 3", LANG_SERVER );
+			}
+			else
+			{
 				Format( ccode3, sizeof(ccode3), "%T", "Unknown Country Short 3", LANG_SERVER );
 			}
 		}

@@ -6,6 +6,29 @@
 #include <left4dhooks>
 
 #define ENTITY_SAFE_LIMIT 2000 //don't create model glow when entity index is above this
+#define ZC_SMOKER		1
+#define ZC_BOOMER		2
+#define ZC_HUNTER		3
+#define ZC_SPITTER		4
+#define ZC_JOCKEY		5
+#define ZC_CHARGER		6
+
+bool g_bLateLoad;
+int ZC_TANK;
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max) 
+{
+	EngineVersion test = GetEngineVersion();
+	
+	if( test != Engine_Left4Dead2 )
+	{
+		strcopy(error, err_max, "Plugin only supports Left 4 Dead 2.");
+		return APLRes_SilentFailure;
+	}
+	
+	ZC_TANK = 8;
+	g_bLateLoad = late;
+	return APLRes_Success; 
+}
 
 ConVar g_hCvarColorGhost, g_hCvarColorAlive, g_hCommandAccess, g_hDefaultValue;
 
@@ -18,27 +41,12 @@ bool g_bMapStarted;
 static bool bSpecCheatActive[MAXPLAYERS + 1]; //spectatpr open watch
 int g_iModelIndex[MAXPLAYERS+1];			// Player Model entity reference
 
-bool g_bLateLoad;
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max) 
-{
-	EngineVersion test = GetEngineVersion();
-	
-	if( test != Engine_Left4Dead2 )
-	{
-		strcopy(error, err_max, "Plugin only supports Left 4 Dead 2.");
-		return APLRes_SilentFailure;
-	}
-	
-	g_bLateLoad = late;
-	return APLRes_Success; 
-}
-
 public Plugin myinfo = 
 {
     name = "l4d2 specating cheat",
     author = "Harry Potter",
     description = "A spectator who watching the survivor at first person view would see the infected model glows though the wall",
-    version = "2.2",
+    version = "2.6",
     url = "https://steamcommunity.com/profiles/76561198026784913"
 }
 
@@ -57,7 +65,8 @@ public void OnPluginStart()
 
 	//Autoconfig for plugin
 	AutoExecConfig(true, "l4d2_specting_cheat");
-	
+
+	HookEvent("tank_spawn", Event_TankSpawn);
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("player_death", Event_PlayerDeath);
 	HookEvent("player_team",	Event_PlayerTeam);
@@ -67,6 +76,7 @@ public void OnPluginStart()
 	HookEvent("finale_vehicle_leaving", Event_RoundEnd, EventHookMode_PostNoCopy); //救援載具離開之時  (沒有觸發round_end)
 	
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
+	HookEvent("tank_frustrated", OnTankFrustrated, EventHookMode_Post);
 	
 	RegConsoleCmd("sm_speccheat", ToggleSpecCheatCmd, "Toggle Speatator watching cheat");
 	RegConsoleCmd("sm_watchcheat", ToggleSpecCheatCmd, "Toggle Speatator watching cheat");
@@ -106,6 +116,11 @@ public void OnMapEnd()
 	g_bMapStarted = false;
 }
 
+public void OnClientDisconnect(int client)
+{
+    RemoveInfectedModelGlow(client);
+} 
+
 public Action ToggleSpecCheatCmd(int client, int args) 
 {
 	if(client == 0 || GetClientTeam(client)!= L4D_TEAM_SPECTATOR)
@@ -137,17 +152,33 @@ public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroa
 	bSpecCheatActive[client] = g_bDefaultValue;
 }
 
+void OnTankFrustrated(Event event, const char[] name, bool dontBroadcast)
+{
+	RemoveInfectedModelGlow(GetClientOfUserId(event.GetInt("userid"))); //Tank玩家變成AI
+}
+
 public void L4D_OnEnterGhostState(int client)
 {
-	CreateInfectedModelGlow(client);
+	RequestFrame(OnNextFrame, GetClientUserId(client));
+}
+
+//有插件在此事件把Tank變成靈魂克的時候不會觸發後續的player_spawn事件，譬如使用confoglcompmod
+public void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
+{ 
+	int userid = event.GetInt("userid");
+	int client = GetClientOfUserId(userid);
+	
+	RemoveInfectedModelGlow(client);
+	RequestFrame(OnNextFrame, userid);
 }
 
 public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 { 
-	int client = GetClientOfUserId(event.GetInt("userid"));
+	int userid = event.GetInt("userid");
+	int client = GetClientOfUserId(userid);
 	
 	RemoveInfectedModelGlow(client); //有可能特感變成坦克復活
-	CreateInfectedModelGlow(client);
+	RequestFrame(OnNextFrame, userid);
 }
 
 public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
@@ -176,13 +207,18 @@ public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 	RemoveAllModelGlow();
 }
 
-public void CreateInfectedModelGlow(int client)
+void CreateInfectedModelGlow(int client)
 {
 	if (!client || 
 	!IsClientInGame(client) || 
 	GetClientTeam(client) != L4D_TEAM_INFECTED || 
 	!IsPlayerAlive(client) ||
 	g_bMapStarted == false) return;
+
+	if ( IsPlayerGhost(client) && GetZombieClass(client) == ZC_TANK)
+	{
+		CreateTimer(0.25, Timer_CheckGhostTank, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+	}
 
 	///////設定發光物件//////////
 	// Spawn dynamic prop entity
@@ -358,10 +394,26 @@ void CreateAllModelGlow()
 {
 	if (g_bMapStarted == false) return;
 	
-	for (int i = 1; i <= MaxClients; i++) 
+	for (int client = 1; client <= MaxClients; client++) 
 	{
-		CreateInfectedModelGlow(i);
+		if(!IsClientInGame(client)) continue;
+
+		RequestFrame(OnNextFrame, GetClientUserId(client));
 	}
+}
+
+void OnNextFrame(int userid)
+{
+	CreateInfectedModelGlow(GetClientOfUserId(userid));
+}
+
+Action Timer_CheckGhostTank(Handle timer, int userid)
+{
+	int tank = GetClientOfUserId(userid);
+	
+	CreateInfectedModelGlow(tank);
+
+	return Plugin_Continue;
 }
 
 bool CheckIfEntityMax(int entity)
@@ -376,7 +428,7 @@ bool CheckIfEntityMax(int entity)
 	return true;
 }
 
-public bool HasAccess(int client, char[] g_sAcclvl)
+bool HasAccess(int client, char[] g_sAcclvl)
 {
 	// no permissions set
 	if (strlen(g_sAcclvl) == 0)
@@ -392,4 +444,15 @@ public bool HasAccess(int client, char[] g_sAcclvl)
 	}
 
 	return false;
+}
+
+int GetZombieClass(int client) 
+{
+	return GetEntProp(client, Prop_Send, "m_zombieClass");
+}
+
+// from l4d_zcs.smx by Harry, player can change Zombie Class during ghost state
+public void L4D2_OnClientChangeZombieClass(int client, int new_zombieclass)
+{
+	RequestFrame(OnNextFrame, GetClientUserId(client));
 }

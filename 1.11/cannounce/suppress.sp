@@ -5,8 +5,8 @@
 
 
 *****************************************************************/
-new Handle:g_CvarShowConnectionMsg = INVALID_HANDLE;
-new Handle:g_CvarShowDisonnectionMsg = INVALID_HANDLE;
+ConVar g_CvarShowConnectionMsg = null;
+ConVar g_CvarShowDisonnectionMsg = null;
 
 
 /*****************************************************************
@@ -16,7 +16,7 @@ new Handle:g_CvarShowDisonnectionMsg = INVALID_HANDLE;
 
 
 *****************************************************************/
-SetupSuppress()
+void SetupSuppress()
 {
 	g_CvarShowConnectionMsg = CreateConVar("sm_ca_showstandard", "0", "shows standard player connected message");
 	g_CvarShowDisonnectionMsg = CreateConVar("sm_ca_showstandarddisc", "0", "shows standard player discconnected message");
@@ -38,19 +38,19 @@ SetupSuppress()
 
 ****************************************************************/
 //For the newer event player_connect_client
-public Action:event_PlayerConnectClient(Handle:event, const String:name[], bool:dontBroadcast)
+public Action event_PlayerConnectClient(Event event, char[] name, bool dontBroadcast)
 {
-    if (!dontBroadcast && !GetConVarInt(g_CvarShowConnectionMsg))
+    if (!dontBroadcast && !g_CvarShowConnectionMsg.BoolValue)
     {
-        decl String:clientName[33], String:networkID[22];
-        GetEventString(event, "name", clientName, sizeof(clientName));
-        GetEventString(event, "networkid", networkID, sizeof(networkID));
+        char clientName[33],networkID[22];
+        event.GetString("name", clientName, sizeof(clientName));
+        event.GetString("networkid", networkID, sizeof(networkID));
 
-        new Handle:newEvent = CreateEvent("player_connect_client", true);
-        SetEventString(newEvent, "name", clientName);
-        SetEventInt(newEvent, "index", GetEventInt(event, "index"));
-        SetEventInt(newEvent, "userid", GetEventInt(event, "userid"));
-        SetEventString(newEvent, "networkid", networkID);
+        Event newEvent = CreateEvent("player_connect_client", true);
+        newEvent.SetString("name", clientName);
+        newEvent.SetInt("index", GetEventInt(event, "index"));
+        newEvent.SetInt("userid", GetEventInt(event, "userid"));
+        newEvent.SetString("networkid", networkID);
 
         FireEvent(newEvent, true);
 
@@ -61,21 +61,21 @@ public Action:event_PlayerConnectClient(Handle:event, const String:name[], bool:
 }
 
 //For the older event player_connect
-public Action:event_PlayerConnect(Handle:event, const String:name[], bool:dontBroadcast)
+public Action event_PlayerConnect(Event event, char[] name, bool dontBroadcast)
 {
-    if (!dontBroadcast && !GetConVarInt(g_CvarShowConnectionMsg))
+    if (!dontBroadcast && !g_CvarShowConnectionMsg.BoolValue)
     {
-        decl String:clientName[33], String:networkID[22], String:address[32];
-        GetEventString(event, "name", clientName, sizeof(clientName));
-        GetEventString(event, "networkid", networkID, sizeof(networkID));
-        GetEventString(event, "address", address, sizeof(address));
+        char clientName[33], networkID[22], address[32];
+        event.GetString("name", clientName, sizeof(clientName));
+        event.GetString("networkid", networkID, sizeof(networkID));
+        event.GetString("address", address, sizeof(address));
 
-        new Handle:newEvent = CreateEvent("player_connect", true);
-        SetEventString(newEvent, "name", clientName);
-        SetEventInt(newEvent, "index", GetEventInt(event, "index"));
-        SetEventInt(newEvent, "userid", GetEventInt(event, "userid"));
-        SetEventString(newEvent, "networkid", networkID);
-        SetEventString(newEvent, "address", address);
+        Event newEvent = CreateEvent("player_connect", true);
+        newEvent.SetString("name", clientName);
+        newEvent.SetInt("index", GetEventInt(event, "index"));
+        newEvent.SetInt("userid", GetEventInt(event, "userid"));
+        newEvent.SetString("networkid", networkID);
+        newEvent.SetString("address", address);
 
         FireEvent(newEvent, true);
 
@@ -86,20 +86,20 @@ public Action:event_PlayerConnect(Handle:event, const String:name[], bool:dontBr
 }
 
 
-public Action:event_PlayerDisconnect_Suppress(Handle:event, const String:name[], bool:dontBroadcast)
+public Action event_PlayerDisconnect_Suppress(Event event, char[] name, bool dontBroadcast)
 {
-    if (!dontBroadcast && !GetConVarInt(g_CvarShowDisonnectionMsg))
+    if (!dontBroadcast && !g_CvarShowDisonnectionMsg.BoolValue)
     {
-        decl String:clientName[33], String:networkID[22], String:reason[65];
-        GetEventString(event, "name", clientName, sizeof(clientName));
-        GetEventString(event, "networkid", networkID, sizeof(networkID));
-        GetEventString(event, "reason", reason, sizeof(reason));
+        char clientName[33], networkID[22], reason[65];
+        event.GetString("name", clientName, sizeof(clientName));
+        event.GetString("networkid", networkID, sizeof(networkID));
+        event.GetString("reason", reason, sizeof(reason));
 
-        new Handle:newEvent = CreateEvent("player_disconnect", true);
-        SetEventInt(newEvent, "userid", GetEventInt(event, "userid"));
-        SetEventString(newEvent, "reason", reason);
-        SetEventString(newEvent, "name", clientName);        
-        SetEventString(newEvent, "networkid", networkID);
+        Event newEvent = CreateEvent("player_disconnect", true);
+        newEvent.SetInt("userid", GetEventInt(event, "userid"));
+        newEvent.SetString("reason", reason);
+        newEvent.SetString("name", clientName);        
+        newEvent.SetString("networkid", networkID);
 
         FireEvent(newEvent, true);
 

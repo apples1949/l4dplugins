@@ -5,11 +5,10 @@
 
 
 *****************************************************************/
-new Handle:g_CvarShowConnect = INVALID_HANDLE;
-new Handle:g_CvarShowDisconnect = INVALID_HANDLE;
-new Handle:g_CvarShowEnhancedToAdmins = INVALID_HANDLE;
-
-new Handle:hKVCountryShow = INVALID_HANDLE;
+ConVar g_CvarShowConnect = null;
+ConVar g_CvarShowDisconnect = null;
+ConVar g_CvarShowEnhancedToAdmins = null;
+Handle hKVCountryShow = null;
 
 
 /*****************************************************************
@@ -19,11 +18,11 @@ new Handle:hKVCountryShow = INVALID_HANDLE;
 
 
 *****************************************************************/
-SetupCountryShow()
+void SetupCountryShow()
 {
 	g_CvarShowConnect = CreateConVar("sm_ca_showenhanced", "1", "displays enhanced message when player connects");
 	g_CvarShowDisconnect = CreateConVar("sm_ca_showenhanceddisc", "1", "displays enhanced message when player disconnects");
-	g_CvarShowEnhancedToAdmins = CreateConVar("sm_ca_showenhancedadmins", "0", "displays a different enhanced message to admin players (ADMFLAG_GENERIC)");
+	g_CvarShowEnhancedToAdmins = CreateConVar("sm_ca_showenhancedadmins", "1", "displays a different enhanced message to admin players (ADMFLAG_GENERIC)");
 	
 	//prepare kv for countryshow
 	hKVCountryShow = CreateKeyValues("CountryShow");
@@ -36,13 +35,13 @@ SetupCountryShow()
 	SetupDefaultMessages();
 }
 
-OnPostAdminCheck_CountryShow(client)
+void OnPostAdminCheck_CountryShow(int client)
 {
-	decl String:rawmsg[301];
-	decl String:rawadmmsg[301];
+	char rawmsg[301];
+	char rawadmmsg[301];
 
 	//if enabled, show message
-	if( GetConVarInt(g_CvarShowConnect) )
+	if( g_CvarShowConnect.BoolValue )
 	{
 		KvRewind(hKVCountryShow);
 		
@@ -63,7 +62,7 @@ OnPostAdminCheck_CountryShow(client)
 		}
 		
 		//if sm_ca_showenhancedadmins - show diff messages to admins
-		if( GetConVarInt(g_CvarShowEnhancedToAdmins) )
+		if( g_CvarShowEnhancedToAdmins.BoolValue )
 		{
 			PrintFormattedMessageToAdmins( rawadmmsg, client );
 			PrintFormattedMsgToNonAdmins( rawmsg, client );
@@ -75,7 +74,7 @@ OnPostAdminCheck_CountryShow(client)
 	}	
 }
 
-OnPluginEnd_CountryShow()
+void OnPluginEnd_CountryShow()
 {		
 	CloseHandle(hKVCountryShow);
 }
@@ -88,16 +87,16 @@ OnPluginEnd_CountryShow()
 
 
 ****************************************************************/
-public Action:event_PlayerDisc_CountryShow(Handle:event, const String:name[], bool:dontBroadcast)
+public void event_PlayerDisc_CountryShow(Event event, char[] name, bool dontBroadcast)
 {
-	decl String:rawmsg[301];
-	decl String:rawadmmsg[301];
-	decl String:reason[65];
+	char rawmsg[301];
+	char rawadmmsg[301];
+	char reason[65];
 	
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 
 	//if enabled, show message
-	if( GetConVarInt(g_CvarShowDisconnect) )
+	if( g_CvarShowDisconnect.BoolValue )
 	{
 		GetEventString(event, "reason", reason, sizeof(reason));
 
@@ -139,7 +138,7 @@ public Action:event_PlayerDisc_CountryShow(Handle:event, const String:name[], bo
 		}
 		
 		//if sm_ca_showenhancedadmins - show diff messages to admins
-		if( GetConVarInt(g_CvarShowEnhancedToAdmins) )
+		if( g_CvarShowEnhancedToAdmins.BoolValue )
 		{
 			PrintFormattedMessageToAdmins( rawadmmsg, client );
 			PrintFormattedMsgToNonAdmins( rawmsg, client );
@@ -160,7 +159,7 @@ public Action:event_PlayerDisc_CountryShow(Handle:event, const String:name[], bo
 
 
 *****************************************************************/
-SetupDefaultMessages()
+void SetupDefaultMessages()
 {
 	if(!KvJumpToKey(hKVCountryShow, "messages"))
 	{				
