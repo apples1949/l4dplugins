@@ -18,7 +18,7 @@
  * Copyright (C) 2017 "Accelerator74"
  *
  * Left 4 DHooks Direct SourceMod plugin
- * Copyright (C) 2022 "SilverShot" / "Silvers"
+ * Copyright (C) 2023 "SilverShot" / "Silvers"
  *
  * =============================================================================
  *
@@ -58,16 +58,16 @@
 
 
 
-// Natives: 246 (including 3 for L4D1 only)
-// L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 51 [silvers - mine!] + 4 [anim] = 149
-// L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 32 [l4d2addresses] + 87 [silvers - mine!] + 4 [anim] = 243
+// Natives: 253 (including 3 for L4D1 only)
+// L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 58 [silvers - mine!] + 4 [anim] = 156
+// L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 31 [l4d2addresses] + 95 [silvers - mine!] + 4 [anim] = 250
 
-// Forwards: 172 (including 2 for L4D1 only)
-// L4D1 = 126;
-// L4D2 = 170;
+// Forwards: 188 (including 2 for L4D1 only)
+// L4D1 = 132
+// L4D2 = 186
 
-// Stocks: 163 (L4D1 = 109, L4D2 = 159)
-// left4dhooks_silver			43 stocks	(L4D1 = 36,		L4D2 = 47)
+// Stocks: 168 (L4D1 = 111, L4D2 = 164)
+// left4dhooks_silver			45 stocks	(L4D1 = 38,		L4D2 = 52)
 // left4dhooks_stocks			83 stocks	(L4D1 = 44,		L4D2 = 79)
 // left4dhooks_lux_library		34 stocks	(L4D1 = 30,		L4D2 = 34)
 
@@ -114,6 +114,8 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D_GetNearestNavArea");
 	MarkNativeAsOptional("L4D_GetLastKnownArea");
 	MarkNativeAsOptional("L4D2_GetFurthestSurvivorFlow");
+	MarkNativeAsOptional("L4D2_GetFirstSpawnClass");
+	MarkNativeAsOptional("L4D2_SetFirstSpawnClass");
 	MarkNativeAsOptional("L4D_FindRandomSpot");
 	MarkNativeAsOptional("L4D2_IsVisibleToPlayer");
 	MarkNativeAsOptional("L4D_HasAnySurvivorLeftSafeArea");
@@ -208,6 +210,11 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D2_GetWitchCount");
 	MarkNativeAsOptional("L4D_GetCurrentChapter");
 	MarkNativeAsOptional("L4D_GetMaxChapters");
+	MarkNativeAsOptional("L4D_GetAllNavAreas");
+	MarkNativeAsOptional("L4D_GetNavAreaID");
+	MarkNativeAsOptional("L4D_GetNavAreaByID");
+	MarkNativeAsOptional("L4D_GetNavAreaPos");
+	MarkNativeAsOptional("L4D_GetNavAreaSize");
 	MarkNativeAsOptional("L4D_GetNavArea_SpawnAttributes");
 	MarkNativeAsOptional("L4D_SetNavArea_SpawnAttributes");
 	MarkNativeAsOptional("L4D_GetNavArea_AttributeFlags");
@@ -410,7 +417,8 @@ enum PointerType
 	POINTER_EVENTMANAGER	= 8,	// pScriptedEventManager (L4D2 Only)
 	POINTER_SCAVENGEMODE	= 9,	// pScavengeMode (L4D2 Only)
 	POINTER_VERSUSMODE		= 10,	// pVersusMode
-	POINTER_SCRIPTVM		= 11	// @g_pScriptVM (L4D2 Only)
+	POINTER_SCRIPTVM		= 11,	// @g_pScriptVM (L4D2 Only)
+	POINTER_THENAVAREAS		= 12	// @TheNavAreas
 };
 
 // Provided by "BHaType":
@@ -463,65 +471,192 @@ enum
 };
 
 // From: https://developer.valvesoftware.com/wiki/List_of_L4D_Series_Nav_Mesh_Attributes
+// Use by "L4D_GetNavArea_AttributeFlags" and "L4D_SetNavArea_AttributeFlags" natives.
 // NavArea Base Attributes:
 enum
 {
-	NAV_BASE_CROUCH = 1,
-	NAV_BASE_JUMP = 2,
-	NAV_BASE_PRECISE = 4,
-	NAV_BASE_NO_JUMP = 8,
-	NAV_BASE_STOP = 16,
-	NAV_BASE_RUN = 32,
-	NAV_BASE_WALK = 64,
-	NAV_BASE_AVOID = 128,
-	NAV_BASE_TRANSIENT = 256,
-	NAV_BASE_DONT_HIDE = 512,
-	NAV_BASE_STAND = 1024,
-	NAV_BASE_NO_HOSTAGES = 2048,
-	NAV_BASE_STAIRS = 4096,
-	NAV_BASE_NO_MERGE = 8192,
-	NAV_BASE_OBSTACLE_TOP = 16384,
-	NAV_BASE_CLIFF = 32768,
-	NAV_BASE_TANK_ONLY = 65536,
-	NAV_BASE_MOB_ONLY = 131072,
-	NAV_BASE_PLAYERCLIP = 262144,
-	NAV_BASE_BREAKABLEWALL = 524288,
-	NAV_BASE_FLOW_BLOCKED = 134217728,
-	NAV_BASE_OUTSIDE_WORLD = 268435456,
-	NAV_BASE_MOSTLY_FLAT = 536870912,
-	NAV_BASE_HAS_ELEVATOR = 1073741824,
-	NAV_BASE_NAV_BLOCKER = -2147483648
+	NAV_BASE_CROUCH = 1,							// (1<<0)
+	NAV_BASE_JUMP = 2,								// (1<<1)
+	NAV_BASE_PRECISE = 4,							// (1<<2)
+	NAV_BASE_NO_JUMP = 8,							// (1<<3)
+	NAV_BASE_STOP = 16,								// (1<<4)
+	NAV_BASE_RUN = 32,								// (1<<5)
+	NAV_BASE_WALK = 64,								// (1<<6)
+	NAV_BASE_AVOID = 128,							// (1<<7)
+	NAV_BASE_TRANSIENT = 256,						// (1<<8)
+	NAV_BASE_DONT_HIDE = 512,						// (1<<9)
+	NAV_BASE_STAND = 1024,							// (1<<10)
+	NAV_BASE_NO_HOSTAGES = 2048,					// (1<<11)
+	NAV_BASE_STAIRS = 4096,							// (1<<12)
+	NAV_BASE_NO_MERGE = 8192,						// (1<<13)
+	NAV_BASE_OBSTACLE_TOP = 16384,					// (1<<14)
+	NAV_BASE_CLIFF = 32768,							// (1<<15)
+	NAV_BASE_TANK_ONLY = 65536,						// (1<<16)
+	NAV_BASE_MOB_ONLY = 131072,						// (1<<17)
+	NAV_BASE_PLAYERCLIP = 262144,					// (1<<18)
+	NAV_BASE_BREAKABLEWALL = 524288,				// (1<<19)
+	NAV_BASE_FLOW_BLOCKED = 134217728,				// (1<<27)
+	NAV_BASE_OUTSIDE_WORLD = 268435456,				// (1<<28)
+	NAV_BASE_MOSTLY_FLAT = 536870912,				// (1<<29)
+	NAV_BASE_HAS_ELEVATOR = 1073741824,				// (1<<30)
+	NAV_BASE_NAV_BLOCKER = -2147483648				// (1<<31)
 };
 
+// Use by "L4D_GetNavArea_SpawnAttributes" and "L4D_SetNavArea_SpawnAttributes" natives.
 // NavArea Spawn Attributes:
 enum
 {
-	NAV_SPAWN_EMPTY = 2,
-	NAV_SPAWN_STOP_SCAN = 4,
-	NAV_SPAWN_BATTLESTATION = 32,
-	NAV_SPAWN_FINALE = 64,
-	NAV_SPAWN_PLAYER_START = 128,
-	NAV_SPAWN_BATTLEFIELD = 256,
-	NAV_SPAWN_IGNORE_VISIBILITY = 512,
-	NAV_SPAWN_NOT_CLEARABLE = 1024,
-	NAV_SPAWN_CHECKPOINT = 2048,
-	NAV_SPAWN_OBSCURED = 4096,
-	NAV_SPAWN_NO_MOBS = 8192,
-	NAV_SPAWN_THREAT = 16384,
-	NAV_SPAWN_RESCUE_VEHICLE = 32768,
-	NAV_SPAWN_RESCUE_CLOSET = 65536,
-	NAV_SPAWN_ESCAPE_ROUTE = 131072,
-	NAV_SPAWN_DESTROYED_DOOR = 262144,
-	NAV_SPAWN_NOTHREAT = 524288,
-	NAV_SPAWN_LYINGDOWN = 1048576,
-	NAV_SPAWN_COMPASS_NORTH = 16777216,
-	NAV_SPAWN_COMPASS_NORTHEAST = 33554432,
-	NAV_SPAWN_COMPASS_EAST = 67108864,
-	NAV_SPAWN_COMPASS_EASTSOUTH = 134217728,
-	NAV_SPAWN_COMPASS_SOUTH = 268435456,
-	NAV_SPAWN_COMPASS_SOUTHWEST = 536870912,
-	NAV_SPAWN_COMPASS_WEST = 1073741824,
-	NAV_SPAWN_COMPASS_WESTNORTH = -2147483648
+	NAV_SPAWN_EMPTY = 2,							// (1<<0)
+	NAV_SPAWN_STOP_SCAN = 4,						// (1<<1)
+	NAV_SPAWN_BATTLESTATION = 32,					// (1<<5)
+	NAV_SPAWN_FINALE = 64,							// (1<<6)
+	NAV_SPAWN_PLAYER_START = 128,					// (1<<7)
+	NAV_SPAWN_BATTLEFIELD = 256,					// (1<<8)
+	NAV_SPAWN_IGNORE_VISIBILITY = 512,				// (1<<9)
+	NAV_SPAWN_NOT_CLEARABLE = 1024,					// (1<<10)
+	NAV_SPAWN_CHECKPOINT = 2048,					// (1<<11)
+	NAV_SPAWN_OBSCURED = 4096,						// (1<<12)
+	NAV_SPAWN_NO_MOBS = 8192,						// (1<<13)
+	NAV_SPAWN_THREAT = 16384,						// (1<<14)
+	NAV_SPAWN_RESCUE_VEHICLE = 32768,				// (1<<15)
+	NAV_SPAWN_RESCUE_CLOSET = 65536,				// (1<<16)
+	NAV_SPAWN_ESCAPE_ROUTE = 131072,				// (1<<17)
+	NAV_SPAWN_DESTROYED_DOOR = 262144,				// (1<<18)
+	NAV_SPAWN_NOTHREAT = 524288,					// (1<<19)
+	NAV_SPAWN_LYINGDOWN = 1048576,					// (1<<20)
+	NAV_SPAWN_COMPASS_NORTH = 16777216,				// (1<<24)
+	NAV_SPAWN_COMPASS_NORTHEAST = 33554432,			// (1<<25)
+	NAV_SPAWN_COMPASS_EAST = 67108864,				// (1<<26)
+	NAV_SPAWN_COMPASS_EASTSOUTH = 134217728,		// (1<<27)
+	NAV_SPAWN_COMPASS_SOUTH = 268435456,			// (1<<28)
+	NAV_SPAWN_COMPASS_SOUTHWEST = 536870912,		// (1<<29)
+	NAV_SPAWN_COMPASS_WEST = 1073741824,			// (1<<30)
+	NAV_SPAWN_COMPASS_WESTNORTH = -2147483648		// (1<<31)
+};
+
+// List provided by "A1m`" taken from: https://github.com/A1mDev/l4d2_structs/blob/master/terror_player_animstate.h
+// There are constants that are not used, these constants were already inside the engine, the developers added their own over the existing code.
+// Some constants from 'l4d2util_contants.inc'.
+// These are used by the "L4D2Direct_DoAnimationEvent" native and "L4D_OnDoAnimationEvent*" forwards.
+// L4D1 seems to only have 35 animation events, the names may not be relative to those listed here.
+enum PlayerAnimEvent_t
+{
+	// Made by A1m`.
+
+	PLAYERANIMEVENT_ATTACK_PRIMARY = 1, // CMultiPlayerAnimState::DoAnimationEvent
+	PLAYERANIMEVENT_ATTACK_SECONDARY = 2, // CMultiPlayerAnimState::DoAnimationEvent
+	PLAYERANIMEVENT_ATTACK_GRENADE = 3, // CMultiPlayerAnimState::DoAnimationEvent
+	PLAYERANIMEVENT_RELOAD = 4, // CMultiPlayerAnimState::DoAnimationEvent, CTerrorGun::SendWeaponAnim
+	PLAYERANIMEVENT_RELOAD_LOOP = 5, // CMultiPlayerAnimState::DoAnimationEvent, CBaseShotgun::CheckReload->PlayReloadAnim
+	PLAYERANIMEVENT_RELOAD_END = 6, //CMultiPlayerAnimState::DoAnimationEvent, CBaseShotgun::CheckReload->PlayReloadAnim, CTerrorGun::AbortReload
+	PLAYERANIMEVENT_JUMP = 7, // CMultiPlayerAnimState::DoAnimationEvent, CTerrorGameMovement::DoJump, CCSGameMovement::CheckJumpButton
+	PLAYERANIMEVENT_LAND = 8, // CTerrorGameMovement::PlayerRoughLandingEffects
+
+	PLAYERANIMEVENT_SWIM = 9, // Not sure, not used in the game anyway
+
+	PLAYERANIMEVENT_DIE = 10, // CMultiPlayerAnimState::DoAnimationEvent, CTerrorPlayer::StartSurvivorDeathAnim, CTerrorPlayer::OnIncapacitatedAsTank
+	PLAYERANIMEVENT_FLINCH_CHEST = 11, // CMultiPlayerAnimState::DoAnimationEvent
+	PLAYERANIMEVENT_FLINCH_HEAD = 12, // CMultiPlayerAnimState::DoAnimationEvent
+	PLAYERANIMEVENT_FLINCH_LEFTARM = 13, // CMultiPlayerAnimState::DoAnimationEvent
+	PLAYERANIMEVENT_FLINCH_RIGHTARM = 14, // CMultiPlayerAnimState::DoAnimationEvent
+	PLAYERANIMEVENT_FLINCH_LEFTLEG = 15, // CMultiPlayerAnimState::DoAnimationEvent
+	PLAYERANIMEVENT_FLINCH_RIGHTLEG = 16, // CMultiPlayerAnimState::DoAnimationEvent
+
+	PLAYERANIMEVENT_DOUBLEJUMP = 17, // Not sure, not used in the game anyway
+
+	PLAYERANIMEVENT_CANCEL_GESTURE_ATTACK_AND_RELOAD = 18, // CTerrorPlayer::OnShovedByPounceLanding, CTerrorPlayer::OnShovedBySurvivor, CTerrorPlayer::OnRideEnded, CTerrorPlayer::OnPounceEnded
+
+	PLAYERANIMEVENT_CANCEL = 19, // Not sure, not used in the game anyway
+
+	PLAYERANIMEVENT_SPAWN = 20, // CMultiPlayerAnimState::DoAnimationEvent
+	PLAYERANIMEVENT_SNAP_YAW = 21, // CMultiPlayerAnimState::DoAnimationEvent
+	PLAYERANIMEVENT_CUSTOM = 22, // CMultiPlayerAnimState::DoAnimationEvent
+	PLAYERANIMEVENT_CUSTOM_GESTURE = 23, // CMultiPlayerAnimState::DoAnimationEvent
+	PLAYERANIMEVENT_CUSTOM_SEQUENCE = 24, // CMultiPlayerAnimState::DoAnimationEvent
+
+	PLAYERANIMEVENT_CUSTOM_GESTURE_SEQUENCE = 25, // Not sure, not used in the game anyway
+
+	// TF Specific. Here until there's a derived game solution to this.
+	PLAYERANIMEVENT_ATTACK_PRE = 26, // Not sure, not used in the game anyway
+	PLAYERANIMEVENT_ATTACK_POST = 27, // Not sure, not used in the game anyway
+	PLAYERANIMEVENT_GRENADE1_DRAW = 28, // Not sure, not used in the game anyway
+	PLAYERANIMEVENT_GRENADE2_DRAW = 29, // Not sure, not used in the game anyway
+	PLAYERANIMEVENT_GRENADE1_THROW = 30, // Not sure, not used in the game anyway
+	PLAYERANIMEVENT_GRENADE2_THROW = 31, // Not sure, not used in the game anyway
+	PLAYERANIMEVENT_VOICE_COMMAND_GESTURE = 32, // Not sure, not used in the game?. CTerrorPlayerAnimState::DoAnimationEvent
+
+	PLAYERANIMEVENT_HAND_ATTACK = 33, // CClaw::OnSwingStart, CTerrorPlayer::UpdateTankEffects, CTankClaw::OnSwingStart
+	PLAYERANIMEVENT_HAND_LOW_ATTACK = 34, // CTankClaw::OnSwingStart, CTerrorWeapon::OnSwingStart
+	PLAYERANIMEVENT_SHOVE_COMMON = 35, // CTerrorWeapon::OnSwingStart
+	PLAYERANIMEVENT_SHOVE = 36, // CTerrorWeapon::OnSwingStart
+	PLAYERANIMEVENT_SHOVE_ZOMBIE_STOMP = 37, //CTerrorWeapon::OnSwingStart
+	PLAYERANIMEVENT_START_RELOADING_SHOTGUN = 38, // CBaseShotgun::Reload->PlayReloadAnim
+	PLAYERANIMEVENT_START_CHAINSAW = 39, // CChainsaw::Deploy
+	PLAYERANIMEVENT_PRIMARY_ATTACK = 40, // CTerrorMeleeWeapon::StartMeleeSwing, CBaseBeltItem::PrimaryAttack, FireTerrorBullets, CGrenadeLauncher::PrimaryAttack
+	PLAYERANIMEVENT_SECONDARY_ATTACK = 41, // CTerrorMeleeWeapon::StartMeleeSwing, CVomit::ActivateAbility, FireTerrorBullets
+	PLAYERANIMEVENT_HEAL_SELF = 42,
+	PLAYERANIMEVENT_HEAL_OTHER = 43,
+	PLAYERANIMEVENT_CROUCH_HEAL_INCAP = 44, // CTerrorPlayer::StartReviving
+	PLAYERANIMEVENT_CROUCH_HEAL_INCAPACITATED_ABOVE = 45, // CTerrorPlayer::StartReviving
+	PLAYERANIMEVENT_STOP_USE_ACTION = 46, // CTerrorPlayer::StopRevivingSomeone, CTerrorPlayer::StopBeingRevived, CFirstAidKit::OnStopAction, CItemAmmoPack::OnStopAction, CItemBaseUpgradePack::OnStopAction, CItemDefibrillator::OnStopAction
+	PLAYERANIMEVENT_PICKUP_START_SUBJECT = 47, // CTerrorPlayer::StartReviving
+	PLAYERANIMEVENT_PICKUP_STOP_SUBJECT = 48, // CTerrorPlayer::CleanupPlayerState, CTerrorPlayer::StopBeingRevived, CTerrorPlayer::StopRevivingSomeone
+	PLAYERANIMEVENT_PICKUP_SUCCESS_SUBJECT = 49, // CTerrorPlayer::OnRevived
+	PLAYERANIMEVENT_DEFIB_START = 50,
+	PLAYERANIMEVENT_DEFIB_END = 51,
+	PLAYERANIMEVENT_DEPLOY_AMMO = 52,
+	PLAYERANIMEVENT_USE_GASCAN_START = 53,
+	PLAYERANIMEVENT_USE_GASCAN_END = 54, // CGasCan::OnStopAction
+	PLAYERANIMEVENT_USE_COLA_START = 55,
+	PLAYERANIMEVENT_USE_COLA_END = 56, // CColaBottles::OnStopAction
+	PLAYERANIMEVENT_FLINCH_EVENT_SHOVED_BY_TEAMMATE = 57, // CTerrorPlayer::OnTakeDamageInternal->GetFlinchEvent, CTerrorPlayer::OnTakeDamage_Alive->GetFlinchEvent, CTerrorWeapon::OnHit->GetFlinchEvent
+	PLAYERANIMEVENT_FLINCH_EVENT_TAKE_DAMAGE = 58, // CTerrorPlayer::GetFlinchEvent
+	PLAYERANIMEVENT_THROW_ITEM_START = 59, // CBaseCSGrenade::PrimaryAttack
+
+	PLAYERANIMEVENT_ROLL_GRENADE = 60, // Not sure, not used in the game anyway
+
+	PLAYERANIMEVENT_THROW_ITEM_FINISH = 61, // CBaseCSGrenade::ItemPostFrame
+	PLAYERANIMEVENT_THROW_GRENADE = 62, // CCSPlayer::DoAnimationEvent
+	PLAYERANIMEVENT_THROW_ITEM_HOLSTER = 63, // CBaseCSGrenade::Holster
+	PLAYERANIMEVENT_PLAYER_USE = 64, // CTerrorPlayer::OnUseEntity
+	PLAYERANIMEVENT_CHANGE_SLOT = 65, // CWeaponCSBase::DefaultDeploy
+
+	PLAYERANIMEVENT_UNKNOWN_START_GESTURE = 66, // Don't know. Not used in the game? Something like option 32? CTerrorPlayerAnimState::DoAnimationEvent
+
+	PLAYERANIMEVENT_TUG_HANGING_PLAYER = 67, // CTerrorPlayer::StartTug
+	PLAYERANIMEVENT_STUMBLE = 68, // CTerrorPlayer::UpdateStagger, CTerrorPlayer::OnShovedByPounceLanding, CTerrorPlayer::OnStaggered, CTerrorPlayer::UpdateStagger, CTerrorPlayer::OnShovedBySurvivor
+	PLAYERANIMEVENT_POUNCE_VICTIM_END = 69,
+	PLAYERANIMEVENT_SPIT_SPITTING = 70, // CSpitAbility::ActivateAbility
+	PLAYERANIMEVENT_CHARGER_START_CHARGE = 71, // CCharge::BeginCharge
+	PLAYERANIMEVENT_CHARGER_END_CHARGE = 72, // CCharge::EndCharge
+	PLAYERANIMEVENT_CHARGER_PUMMELING_START = 73,
+	PLAYERANIMEVENT_CHARGER_PUMMELING_END = 74, // ZombieReplacement::Restore, CTerrorPlayer::UpdatePound, ZombieReplacement::Restore
+	PLAYERANIMEVENT_CHARGER_SLAM_INTO_GROUND = 75, // CTerrorPlayer::OnSlammedSurvivor
+	PLAYERANIMEVENT_IMPACT_BY_CHARGER = 76,
+	PLAYERANIMEVENT_CHARGER_PUMMELED = 77, // ThrowImpactedSurvivor->CTerrorPlayer::Fling; CTerrorPlayerAnimState::HandleActivity_Pummeling
+	PLAYERANIMEVENT_POUNDED_BY_CHARGER = 78, // ZombieReplacement::Restore, CTerrorPlayer::UpdatePound, CTerrorPlayerAnimState::HandleActivity_Pummeling
+	PLAYERANIMEVENT_CARRIED_BY_CHARGER = 79, // ZombieReplacement::Restore, CTerrorPlayer::OnStartBeingCarried
+	PLAYERANIMEVENT_STAGGERING = 80, // CTerrorPlayer::OnSlammedSurvivor
+	PLAYERANIMEVENT_VICTIM_SLAMMED_INTO_GROUND = 81, // CTerrorPlayer::OnSlammedSurvivor
+	PLAYERANIMEVENT_HUNTER_POUNCING = 82, // ZombieReplacement::Restore, CTerrorPlayer::OnPouncedUpon, ZombieReplacement::Restore
+	PLAYERANIMEVENT_HUNTER_POUNCE_ON_VICTIM = 83, // CTerrorPlayer::OnPouncedOnSurvivor
+	PLAYERANIMEVENT_JOCKEY_RIDING = 84,
+	PLAYERANIMEVENT_JOCKEY_RIDDEN = 85, // ZombieReplacement::Restore
+	PLAYERANIMEVENT_HUNTER_GETUP = 86, // CTerrorPlayer::OnPouncedUpon, ZombieReplacement::Restore
+	PLAYERANIMEVENT_TONGUE_LAUNCH_START = 87, // SmokerTongueVictim::OnStart
+	PLAYERANIMEVENT_TONGUE_LAUNCH_END = 88, // CTongue::OnEnterExtendingState
+	PLAYERANIMEVENT_TONGUE_REELING_IN = 89, // CTongue::OnEnterAttachedToTargetState
+	PLAYERANIMEVENT_TONGUE_ATTACKING_START = 90, // CTongue::OnTouch
+	PLAYERANIMEVENT_TONGUE_ATTACKING_END = 91, // CTerrorPlayer::OnReleasingWithTongue
+	PLAYERANIMEVENT_VICTIM_PULLED = 92, // ZombieReplacement::Restore, CTerrorPlayer::OnGrabbedByTongue
+	PLAYERANIMEVENT_ROCK_THROW = 93, // CThrow::ActivateAbility
+	PLAYERANIMEVENT_TANK_CLIMB = 94, // TankLocomotion::ClimbUpToLedge
+	PLAYERANIMEVENT_TANK_RAGE = 95, // CTerrorPlayer::OnAttackSuccess, CTerrorPlayer::OnMissionLost, CTerrorPlayer::ClientCommand (dance)
+	PLAYERANIMEVENT_PLAYERHIT_BY_TANK = 96, // CTankClaw::OnPlayerHit, CTerrorPlayer::OnTakeDamage->Fling, CTerrorPlayer::OnKnockedDown
+	PLAYERANIMEVENT_PUSH_ENTITY = 97, // CTerrorPlayer::PlayerUse
+	PLAYERANIMEVENT_FIDGET = 98, // CTerrorPlayerAnimState::UpdateFidgeting
+
+	PLAYERANIMEVENT_COUNT // Total size 99. Function 'CTerrorPlayer::DoAnimationEvent'.
 };
 
 
@@ -747,7 +882,7 @@ forward void L4D2_OnSpawnWitchBride_Post(int entity, const float vecPos[3], cons
 /**
  * @brief Called whenever ZombieManager::SpawnWitchBride(Vector&,QAngle&) is invoked
  * @brief Called when a Witch Bride spawns
- * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param entity		Entity index that spawned (can be -1 if blocked)
  * @param vecPos		Vector coordinate where witch is spawned
@@ -763,7 +898,6 @@ forward void L4D2_OnSpawnWitchBride_PostHandled(int entity, const float vecPos[3
  * @remarks called on random hordes, mini and finale hordes, and boomer hordes, causes Zombies to attack
  *			Not called on "z_spawn mob", hook the console command and check arguments to catch plugin mobs
  *			This function is used to reset the Director's natural horde timer.
- * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @return				Plugin_Handled to block, Plugin_Continue otherwise
  */
@@ -794,7 +928,6 @@ forward void L4D_OnMobRushStart_PostHandled();
 /**
  * @brief Called whenever ZombieManager::SpawnITMob(int) is invoked
  * @remarks called on boomer hordes, increases Zombie Spawn Queue
- * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param amount		Amount of Zombies to add to Queue
  *
@@ -924,6 +1057,40 @@ forward void L4D_OnEnterGhostState(int client);
  * @noreturn
  */
 forward void L4D_OnEnterGhostState_PostHandled(int client);
+
+/**
+ * @brief Called whenever CTerrorPlayer::TakeOverBot(CTerrorPlayer*) is invoked
+ * @remarks This happens when player is looking to take over a bot
+ *
+ * @param client			the client that is looking to take over a bot
+ *
+ * @return					Plugin_Handled to block, Plugin_Continue otherwise
+ */
+forward Action L4D_OnTakeOverBot(int client);
+
+/**
+ * @brief Called whenever CTerrorPlayer::TakeOverBot(CTerrorPlayer*) is invoked
+ * @remarks This happens when player is looking to take over a bot
+ * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param client			the client that is looking to take over a bot
+ * @param success			true if the takeover was successful, false otherwise
+ *
+ * @noreturn
+ */
+forward void L4D_OnTakeOverBot_Post(int client, bool success);
+
+/**
+ * @brief Called whenever CTerrorPlayer::TakeOverBot(CTerrorPlayer*) is invoked
+ * @remarks This happens when player is looking to take over a bot
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param client			the client that is looking to take over a bot
+ * @param success			true if the takeover was successful, false otherwise
+ *
+ * @noreturn
+ */
+forward void L4D_OnTakeOverBot_PostHandled(int client, bool success);
 
 /**
  * @brief Called whenever CTerrorPlayer::MaterializeFromGhost is invoked
@@ -1401,7 +1568,6 @@ forward void L4D_TankClaw_GroundPound_Pre(int tank, int claw);
  * @remarks When hitting the ground (maybe only when hitting an incapped player)
  * @remarks The forwards "L4D_TankClaw_OnPlayerHit_Pre" and "L4D_TankClaw_OnPlayerHit_Post" trigger before this
  * @remarks The forwards "L4D_TankClaw_DoSwing_Pre" and "L4D_TankClaw_DoSwing_Post" can trigger after this
- * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param tank			tank client index
  * @param claw			the claw entity index
@@ -1625,6 +1791,17 @@ forward Action L4D_OnStartMeleeSwing(int client, bool boolean);
 forward void L4D_OnStartMeleeSwing_Post(int client, bool boolean);
 
 /**
+ * @brief Called whenever CTerrorMeleeWeapon::StartMeleeSwing(CTerrorPlayer *, bool) is invoked
+ * @remarks Called when a player uses his melee weapons primary attack. This is before the game
+ *			reads the melee weapon data (model etc) and decides if he CAN attack at all.
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @noreturn
+ */
+// L4D2 only.
+forward void L4D_OnStartMeleeSwing_PostHandled(int client, bool boolean);
+
+/**
  * @brief Called whenever CTerrorMeleeWeapon::GetDamageForVictim() is invoked
  * @remarks Called to calculate the damage when a melee weapon hits something
  * @remarks A headshot on Common Infected will still kill them.
@@ -1639,6 +1816,35 @@ forward void L4D_OnStartMeleeSwing_Post(int client, bool boolean);
  */
 // L4D2 only.
 forward Action L4D2_MeleeGetDamageForVictim(int client, int weapon, int victim, float &damage);
+
+/**
+ * @brief Called whenever CTerrorPlayer::DoAnimationEvent is invoked
+ * @note The event argument is NOT the same as the sequence numbers found in the model viewer
+ * @note You can get the number for your animation by looking at the disasm for virtual calls to DoAnimationEvent
+ *
+ * @return			Plugin_Handled to block, Plugin_Changed to modify value, Plugin_Continue otherwise
+ */
+forward Action L4D_OnDoAnimationEvent(int client, int &event, int &variant_param);
+
+/**
+ * @brief Called whenever CTerrorPlayer::DoAnimationEvent is invoked
+ * @note The event argument is NOT the same as the sequence numbers found in the model viewer
+ * @note You can get the number for your animation by looking at the disasm for virtual calls to DoAnimationEvent
+ * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @noreturn
+ */
+forward void L4D_OnDoAnimationEvent_Post(int client, int event, int variant_param);
+
+/**
+ * @brief Called whenever CTerrorPlayer::DoAnimationEvent is invoked
+ * @note The event argument is NOT the same as the sequence numbers found in the model viewer
+ * @note You can get the number for your animation by looking at the disasm for virtual calls to DoAnimationEvent
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @noreturn
+ */
+forward void L4D_OnDoAnimationEvent_PostHandled(int client, int event, int variant_param);
 
 /**
  * @brief Called whenever CDirectorScriptedEventManager::SendInRescueVehicle(void) is invoked
@@ -1678,6 +1884,21 @@ forward Action L4D2_OnChangeFinaleStage(int &finaleType, const char[] arg);
  */
 // L4D2 only.
 forward void L4D2_OnChangeFinaleStage_Post(int finaleType, const char[] arg);
+
+/**
+ * @brief Called whenever CDirectorScriptedEventManager::ChangeFinaleStage is invoked
+ * @remarks Called when the director stage changes
+ * @remarks some values for FinaleStageType: 1 - Finale Started; 6 - Rescue Vehicle Ready; 7 - Zombie Hordes; 8 - Tank; 10 - Combat Respite (nothing spawns)
+ * @remarks SendInRescueVehicle does not depend on Finale Stage being 6, that only signals endless Hordes/Tanks
+ * @remarks Can use the "FINALE_*" enums (search for them above) for the finaleType value.
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param FinaleStageType	integer value
+ *
+ * @noreturn
+ */
+// L4D2 only.
+forward void L4D2_OnChangeFinaleStage_PostHandled(int finaleType, const char[] arg);
 
 /**
  * @brief Called whenever CDirectorVersusMode::EndVersusModeRound(bool) is invoked
@@ -1981,7 +2202,6 @@ forward Action L4D_OnMotionControlledXY(int client, int activity);
 
 /**
  * @brief Called whenever CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*) is invoked
- * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param victim	the survivor that is about to get stumbled as a result of "attacker" capping someone in close proximity
  * @param attacker	the SI that is about to cause a stumble as a result of capping someone in close proximity to a survivor
@@ -2097,7 +2317,7 @@ forward void L4D2_OnThrowImpactedSurvivor_PostHandled(int attacker, int victim);
  * @remarks Does not trigger for all cases when someone is fatally falling.
  * @remarks Use this forward to check if the current map has death fall cameras (fatal falls).
  *
- * @param client		Client index of the player.
+ * @param client		Client index of the player. Can be 0.
  * @param camera		Death fall camera index.
  *
  * @return				Plugin_Handled to block the death fall camera, Plugin_Continue to allow.
@@ -2279,14 +2499,13 @@ forward void L4D_OnGrabWithTongue_PostHandled(int victim, int attacker);
 /**
  * @brief Called whenever CTerrorPlayer::OnLeptOnSurvivor() is invoked
  * @remarks Called when a Survivor player is about to be ridden by a Jockey
- * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param victim			the client who's being grabbed
  * @param attacker			the Jockey grabbing someone
  *
  * @return					Plugin_Handled to block, Plugin_Continue otherwise
  */
- // L4D2 only.
+// L4D2 only.
 forward Action L4D2_OnJockeyRide(int victim, int attacker);
 
 /**
@@ -2299,28 +2518,42 @@ forward Action L4D2_OnJockeyRide(int victim, int attacker);
  *
  * @noreturn
  */
- // L4D2 only.
+// L4D2 only.
 forward void L4D2_OnJockeyRide_Post(int victim, int attacker);
+
+/**
+ * @brief Called whenever CTerrorPlayer::OnLeptOnSurvivor() is invoked
+ * @remarks Called when a Survivor player is starting to be ridden by a Jockey
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param victim			the client who's being grabbed
+ * @param attacker			the Jockey grabbing someone
+ *
+ * @noreturn
+ */
+// L4D2 only.
+forward void L4D2_OnJockeyRide_PostHandled(int victim, int attacker);
 
 /**
  * @brief Called whenever CTerrorPlayer::OnSlammedSurvivor() is invoked
  * @remarks Called when a Survivor is slammed into a wall by a Charger, or on the first pummel if bWallSlam is 0
- * @bDeadlyCharge seems to always return 1 on Windows
+ * @remarks bDeadlyCharge seems to always return 1 on Windows
  *
  * @param victim			the client who's being slammed
  * @param attacker			the Charger slamming someone
  * @param bWallSlam			when slammed into a wall. Changing this can play a different animation
  * @param bDeadlyCharge		indicates the carry ends at a height down 360.0 units from the carry start, and adds DMG_PARALYZE to the damage flags to incap the victim. Changing this can incap the victim.
  *
- * @return					Plugin_Changed to use overwritten values from plugin, Plugin_Continue otherwise
+ * @return					Plugin_Handled to block, Plugin_Changed to use overwritten values from plugin, Plugin_Continue otherwise
  */
- // L4D2 only.
+// L4D2 only.
 forward Action L4D2_OnSlammedSurvivor(int victim, int attacker, bool &bWallSlam, bool &bDeadlyCharge);
 
 /**
  * @brief Called whenever CTerrorPlayer::OnSlammedSurvivor() is invoked
  * @remarks Called when a Survivor is slammed into a wall by a Charger, or on the first pummel if bWallSlam is 0
  * @bDeadlyCharge seems to always return 1 on Windows
+ * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param victim			the client who's being slammed
  * @param attacker			the Charger slamming someone
@@ -2329,26 +2562,40 @@ forward Action L4D2_OnSlammedSurvivor(int victim, int attacker, bool &bWallSlam,
  *
  * @noreturn
  */
- // L4D2 only.
+// L4D2 only.
 forward void L4D2_OnSlammedSurvivor_Post(int victim, int attacker, bool bWallSlam, bool bDeadlyCharge);
+
+/**
+ * @brief Called whenever CTerrorPlayer::OnSlammedSurvivor() is invoked
+ * @remarks Called when a Survivor is slammed into a wall by a Charger, or on the first pummel if bWallSlam is 0
+ * @bDeadlyCharge seems to always return 1 on Windows
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param victim			the client who's being slammed
+ * @param attacker			the Charger slamming someone
+ * @param bWallSlam			when slammed into a wall. Changing this can play a different animation
+ * @param bDeadlyCharge		indicates the carry ends at a height down 360.0 units from the carry start, and adds DMG_PARALYZE to the damage flags to incap the victim. Changing this can incap the victim.
+ *
+ * @noreturn
+ */
+// L4D2 only.
+forward void L4D2_OnSlammedSurvivor_PostHandled(int victim, int attacker, bool bWallSlam, bool bDeadlyCharge);
 
 /**
  * @brief Called whenever CTerrorPlayer::OnStartCarryingVictim() is invoked
  * @remarks Called when a Survivor player is about to be carried by a Charger
- * @remarks This forward will not trigger if there's no room to charge when grabbing a survivor, but "L4D2_OnPummelVictim" will trigger
  *
  * @param victim			the client who's being grabbed
  * @param attacker			the Charger picking up someone
  *
  * @return					Plugin_Handled to block, Plugin_Continue otherwise
  */
- // L4D2 only.
+// L4D2 only.
 forward Action L4D2_OnStartCarryingVictim(int victim, int attacker);
 
 /**
  * @brief Called whenever CTerrorPlayer::OnStartCarryingVictim() is invoked
  * @remarks Called when a Survivor player is about to be carried by a Charger
- * @remarks This forward will not trigger if there's no room to charge when grabbing a survivor, but "L4D2_OnPummelVictim" will trigger
  * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param victim			the client who's being grabbed
@@ -2356,8 +2603,21 @@ forward Action L4D2_OnStartCarryingVictim(int victim, int attacker);
  *
  * @noreturn
  */
- // L4D2 only.
+// L4D2 only.
 forward void L4D2_OnStartCarryingVictim_Post(int victim, int attacker);
+
+/**
+ * @brief Called whenever CTerrorPlayer::OnStartCarryingVictim() is invoked
+ * @remarks Called when a Survivor player is about to be carried by a Charger
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param victim			the client who's being grabbed
+ * @param attacker			the Charger picking up someone
+ *
+ * @noreturn
+ */
+// L4D2 only.
+forward void L4D2_OnStartCarryingVictim_PostHandled(int victim, int attacker);
 
 /**
  * @brief Called when CTerrorPlayer::QueuePummelVictim is invoked.
@@ -2440,7 +2700,6 @@ forward void L4D_OnVomitedUpon_PostHandled(int victim, int attacker, bool boomer
 /**
  * @brief Called whenever CTerrorPlayer::OnHitByVomitJar is invoked
  * @remarks Called when a Special Infected is about to be hit from a Bilejar explosion
- * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param victim			the client who's now it
  * @param attacker			the attacker who caused the vomit (can be 0)
@@ -2462,9 +2721,20 @@ forward Action L4D2_OnHitByVomitJar(int victim, int &attacker);
 forward void L4D2_OnHitByVomitJar_Post(int victim, int attacker);
 
 /**
+ * @brief Called whenever CTerrorPlayer::OnHitByVomitJar is invoked
+ * @remarks Called when a Special Infected is hit from a Bilejar explosion
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param victim			the client who's now it
+ * @param attacker			the attacker who caused the vomit (can be 0)
+ *
+ * @noreturn
+ */
+forward void L4D2_OnHitByVomitJar_PostHandled(int victim, int attacker);
+
+/**
  * @brief Called whenever CPipeBombProjectile::Create is invoked
  * @remarks Called when a PipeBomb projectile is being created
- * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param client			the client who is throwing the grenade (can be 0)
  * @param vecPos			the position vector of the projectile
@@ -2619,7 +2889,6 @@ forward void L4D2_VomitJar_Detonate_PostHandled(int entity, int client);
 /**
  * @brief Called whenever CInsectSwarm::CanHarm() is invoked
  * @remarks Called when Spitter Acid is determining if a client or entity can be damaged
- * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param acid				the acid entity index causing the damage
  * @param spitter			the Spitter or client who created the acid (can be 0 or -1)
@@ -2627,7 +2896,7 @@ forward void L4D2_VomitJar_Detonate_PostHandled(int entity, int client);
  *
  * @return					Plugin_Handled to block allowing damage to an entity, Plugin_Continue otherwise
  */
- // L4D2 only.
+// L4D2 only.
 forward Action L4D2_CInsectSwarm_CanHarm(int acid, int spitter, int entity);
 
 /**
@@ -2641,7 +2910,7 @@ forward Action L4D2_CInsectSwarm_CanHarm(int acid, int spitter, int entity);
  *
  * @noreturn
  */
- // L4D2 only.
+// L4D2 only.
 forward void L4D2_CInsectSwarm_CanHarm_Post(int acid, int spitter, int entity);
 
 /**
@@ -2655,7 +2924,7 @@ forward void L4D2_CInsectSwarm_CanHarm_Post(int acid, int spitter, int entity);
  *
  * @noreturn
  */
- // L4D2 only.
+// L4D2 only.
 forward void L4D2_CInsectSwarm_CanHarm_PostHandled(int acid, int spitter, int entity);
 
 /**
@@ -2678,10 +2947,36 @@ forward void L4D_CBreakableProp_Break(int prop, int entity);
  * @param inflictor			the inflictor entity index
  * @param attacker			the attacker entity index
  *
+ * @return					Plugin_Handled to block detonating, Plugin_Changed to change any values, Plugin_Continue otherwise
+ */
+// L4D2 only.
+forward Action L4D2_CGasCan_EventKilled(int gascan, int &inflictor, int &attacker);
+
+/**
+ * @brief Called whenever CGasCan::Event_Killed() is invoked
+ * @remarks Called when a gascan is broken
+ *
+ * @param gascan			the gascan entity index
+ * @param inflictor			the inflictor entity index
+ * @param attacker			the attacker entity index
+ *
  * @noreturn
  */
- // L4D2 only.
-forward void L4D2_CGasCan_EventKilled(int gascan, int inflictor, int attacker);
+// L4D2 only.
+forward void L4D2_CGasCan_EventKilled_Post(int gascan, int inflictor, int attacker);
+
+/**
+ * @brief Called whenever CGasCan::Event_Killed() is invoked
+ * @remarks Called when a gascan is broken
+ *
+ * @param gascan			the gascan entity index
+ * @param inflictor			the inflictor entity index
+ * @param attacker			the attacker entity index
+ *
+ * @noreturn
+ */
+// L4D2 only.
+forward void L4D2_CGasCan_EventKilled_PostHandled(int gascan, int inflictor, int attacker);
 
 /**
  * @brief Called whenever CGasCan::ShouldStartAction() is invoked
@@ -2693,7 +2988,7 @@ forward void L4D2_CGasCan_EventKilled(int gascan, int inflictor, int attacker);
  *
  * @return					Plugin_Handled to block adding to Scavenge score (see "Scavenge Score Fix" plugin for more details), Plugin_Continue otherwise
  */
- // L4D2 only.
+// L4D2 only.
 forward Action L4D2_CGasCan_ShouldStartAction(int client, int gascan, int nozzle);
 
 /**
@@ -2707,13 +3002,26 @@ forward Action L4D2_CGasCan_ShouldStartAction(int client, int gascan, int nozzle
  *
  * @noreturn
  */
- // L4D2 only.
+// L4D2 only.
 forward void L4D2_CGasCan_ShouldStartAction_Post(int client, int gascan, int nozzle);
+
+/**
+ * @brief Called whenever CGasCan::ShouldStartAction() is invoked
+ * @remarks Called when someone has started to pour a gascan into a nozzle
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param client			the client pouring
+ * @param gascan			the gascan entity index that is being consumed
+ * @param nozzle			the nozzle being poured into
+ *
+ * @noreturn
+ */
+// L4D2 only.
+forward void L4D2_CGasCan_ShouldStartAction_PostHandled(int client, int gascan, int nozzle);
 
 /**
  * @brief Called whenever CGasCan::OnActionComplete() is invoked
  * @remarks Called when someone is about to complete pouring a gascan into a nozzle
- * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param client			the client pouring
  * @param gascan			the gascan entity index that is being consumed
@@ -2721,7 +3029,7 @@ forward void L4D2_CGasCan_ShouldStartAction_Post(int client, int gascan, int noz
  *
  * @return					Plugin_Handled to block adding to Scavenge score (see "Scavenge Score Fix" plugin for more details), Plugin_Continue otherwise
  */
- // L4D2 only.
+// L4D2 only.
 forward Action L4D2_CGasCan_ActionComplete(int client, int gascan, int nozzle);
 
 /**
@@ -2735,11 +3043,25 @@ forward Action L4D2_CGasCan_ActionComplete(int client, int gascan, int nozzle);
  *
  * @noreturn
  */
- // L4D2 only.
+// L4D2 only.
 forward void L4D2_CGasCan_ActionComplete_Post(int client, int gascan, int nozzle);
 
 /**
- * @brief Returns the current game mode type when it changes. 0=Unknown or error. 1=Coop. 2=Survival. 4=Versus. 8=Scavenge (L4D2).
+ * @brief Called whenever CGasCan::OnActionComplete() is invoked
+ * @remarks Called when someone completes pouring a gascan into a nozzle
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param client			the client pouring
+ * @param gascan			the gascan entity index that is being consumed
+ * @param nozzle			the nozzle being poured into
+ *
+ * @noreturn
+ */
+// L4D2 only.
+forward void L4D2_CGasCan_ActionComplete_PostHandled(int client, int gascan, int nozzle);
+
+/**
+ * @brief Returns the current game mode type when it changes. 0=Unknown or error. 1=Coop. 2=Versus. 4=Survival. 8=Scavenge (L4D2).
  * @remarks You can use the "GAMEMODE_*" enums provided above to match the mode.
  * @remarks Only triggers when the server starts and after when the game mode changes.
  *
@@ -2766,7 +3088,7 @@ forward void L4D_OnServerHibernationUpdate(bool hibernating);
  *
  * @return			Plugin_Handled to let the client through with addons, Plugin_Continue otherwise.
  */
- // L4D2 only.
+// L4D2 only.
 forward Action L4D2_OnClientDisableAddons(const char[] SteamID);
 
 /**
@@ -2922,7 +3244,7 @@ native bool L4D2_ExecVScriptCode(char[] code);
 native bool L4D2_GetVScriptOutput(char[] code, char[] buffer, int maxlength);
 
 /**
- * @brief Returns the current game mode type. 0=Unknown or error. 1=Coop. 2=Survival. 4=Versus. 8=Scavenge (L4D2).
+ * @brief Returns the current game mode type. 0=Unknown or error. 1=Coop. 2=Versus. 4=Survival. 8=Scavenge (L4D2).
  * @remarks You can use the "GAMEMODE_*" enums provided above to match the mode.
  *
  * @return	Current game mode.
@@ -3096,9 +3418,27 @@ native any L4D_GetNearestNavArea(const float vecPos[3], float maxDist = 300.0, b
  *
  * @param client			The client to check
  *
- * @return					The nav area adress or 0 on fail
+ * @return					The nav area address or 0 on fail
  */
 native any L4D_GetLastKnownArea(int client);
+
+/**
+ * @brief Gets the first Special Infected type the Director will spawn. Value set on map start.
+ * @remarks zombieClass: 1=Smoker, 2=Boomer, 3=Hunter, 4=Spitter, 5=Jockey, 6=Charger
+ *
+ * @return			zombieClass of the Special Infected first spawning.
+ */
+// L4D2 only.
+native int L4D2_GetFirstSpawnClass();
+
+/**
+ * @brief Sets the first Special Infected type the Director will spawn.
+ * @remarks zombieClass: 1=Smoker, 2=Boomer, 3=Hunter, 4=Spitter, 5=Jockey, 6=Charger
+ *
+ * @noreturn
+ */
+// L4D2 only.
+native void L4D2_SetFirstSpawnClass(int zombieClass);
 
 /**
  * @brief Gets the maximum flow distance any survivor has achieved.
@@ -3133,6 +3473,15 @@ native void L4D_FindRandomSpot(int NavArea, float vecPos[3]);
 native bool L4D2_IsVisibleToPlayer(int client, int team, int team_target, int NavArea, float vecPos[3]);
 
 /**
+ * @brief Teleports a player to a valid position if they are stuck.
+ *
+ * @param client			Client to perform the action
+ *
+ * @noreturn
+ */
+native void L4D_WarpToValidPositionIfStuck(int client);
+
+/**
  * @brief Returns true when any survivor has left the starting area and true in Versus when the saferoom door automatically opens.
  *
  * @return			True if a survivor has left the starting area. False otherwise.
@@ -3162,6 +3511,9 @@ native bool L4D_AreAllSurvivorsInFinaleArea();
 
 /**
  * @brief Returns true when the specified Survivor or Special Infected is in the starting checkpoint area.
+ * @remarks This might return true on certain maps, maybe in Survival/Scavenge start areas if they are close enough to the saferoom.
+ * @remarks You could use the "L4D_IsPositionInFirstCheckpoint" native instead to accurately determine if someone is in the starting area.
+ * @remarks This will always returns false when the "Unlock Finales" plugin by "Marttt" is installed: https://forums.alliedmods.net/showthread.php?t=333274
  *
  * @param client	Client id to check their checkpoint.
  *
@@ -3233,11 +3585,10 @@ native bool L4D2_IsReachable(int client, const float vecPos[3]);
  *
  * @param startArea				NavArea address
  * @param endArea				NavArea address
- * @param ignoreNavBlockers		Bool to ignore blocked areas while checking (does not seem to work as expected)
+ * @param ignoreNavBlockers		Bool to ignore blocked areas while checking (does not seem to work as expected) (ignored in L4D1)
  *
  * @return						Distance between the areas, 0.0 if the same area or -1.0 on failure.
  */
-// L4D2 only.
 native float L4D2_NavAreaTravelDistance(float startPos[3], float endPos[3], bool ignoreNavBlockers);
 
 /**
@@ -3455,7 +3806,7 @@ native bool L4D_GoAwayFromKeyboard(int client);
  *
  * @return			True or false
  */
- // L4D2 only.
+// L4D2 only.
 native bool L4D2_AreWanderersAllowed();
 
 /**
@@ -4046,7 +4397,61 @@ native int L4D_GetCurrentChapter();
 native int L4D_GetMaxChapters();
 
 /**
+ * @brief Returns all TheNavAreas addresses
+ * @remarks Can only be called 1 frame after OnMapStart at the earliest otherwise the addresses are invalid
+ *
+ *param aList		The ArrayList to store all nav area addresses.
+ *
+ * @noreturn
+ */
+native void L4D_GetAllNavAreas(ArrayList aList);
+
+/**
+ * @brief Returns a given NavArea's ID from it's address
+ * @remarks Can only be called 1 frame after OnMapStart at the earliest otherwise the addresses are invalid
+ *
+ *param area		The NavArea address
+ *
+ * @return			NavArea ID
+ */
+native int L4D_GetNavAreaID(Address area);
+
+/**
+ * @brief Returns a given NavArea address from it's ID
+ * @remarks Can only be called 1 frame after OnMapStart at the earliest otherwise the addresses are invalid
+ *
+ *param id			The NavArea ID
+ *
+ * @return			NavArea address or Address_Null if invalid ID
+ */
+native Address L4D_GetNavAreaByID(int id);
+
+/**
+ * @brief Returns origin of a given NavArea
+ * @remarks Can only be called 1 frame after OnMapStart at the earliest otherwise the addresses are invalid
+ *
+ *param area		The address of the NavArea to read.
+ *param vecPos		The vector to store the position read.
+ *
+ * @noreturn
+ */
+native void L4D_GetNavAreaPos(Address area, float vecPos[3]);
+
+/**
+ * @brief Returns size of a given NavArea
+ * @remarks Can only be called 1 frame after OnMapStart at the earliest otherwise the addresses are invalid
+ *
+ *param area		The address of the NavArea to read.
+ *param vecPos		The vector to store the size read.
+ *
+ * @noreturn
+ */
+native void L4D_GetNavAreaSize(Address area, float vecSize[3]);
+
+/**
  * @brief Returns the nav area attribute flags
+ * @remarks See the "NAV_BASE_*" near the top of the include file
+ * @remarks Can only be called 1 frame after OnMapStart at the earliest otherwise the addresses are invalid
  *
  *param pTerrorNavArea		Pointer to a NavArea
  *
@@ -4056,6 +4461,8 @@ native int L4D_GetNavArea_AttributeFlags(Address pTerrorNavArea);
 
 /**
  * @brief Sets the nav area attribute flags
+ * @remarks See the "NAV_BASE_*" near the top of the include file
+ * @remarks Can only be called 1 frame after OnMapStart at the earliest otherwise the addresses are invalid
  *
  *param pTerrorNavArea		Pointer to a NavArea
  *param flags				Attribute flags to set
@@ -4066,6 +4473,8 @@ native void L4D_SetNavArea_AttributeFlags(Address pTerrorNavArea, int flags);
 
 /**
  * @brief Returns the terror nav area attribute flags
+ * @remarks See the "NAV_SPAWN_*" near the top of the include file
+ * @remarks Can only be called 1 frame after OnMapStart at the earliest otherwise the addresses are invalid
  *
  *param pTerrorNavArea		Pointer to a TerrorNavArea
  *
@@ -4075,6 +4484,8 @@ native int L4D_GetNavArea_SpawnAttributes(Address pTerrorNavArea);
 
 /**
  * @brief Sets the terror nav area attribute flags
+ * @remarks See the "NAV_SPAWN_*" near the top of the include file
+ * @remarks Can only be called 1 frame after OnMapStart at the earliest otherwise the addresses are invalid
  *
  *param pTerrorNavArea		Pointer to a TerrorNavArea
  *param flags				Attribute flags to set
@@ -5068,7 +5479,7 @@ native float L4D2Direct_GetFlowDistance(int client);
  *
  * @noreturn
  */
-native void L4D2Direct_DoAnimationEvent(int client, int event);
+native void L4D2Direct_DoAnimationEvent(int client, int event, int variant_param = 0);
 
 /**
  * Get the clients health bonus.
@@ -5555,6 +5966,7 @@ native void L4D2_SwapTeams();
  * @return					0=Not flipped. 1=Flipped
  */
 // L4D2 only.
+#pragma deprecated Use this instead: GameRules_GetProp("m_bAreTeamsFlipped");
 native bool L4D2_AreTeamsFlipped();
 
 /**

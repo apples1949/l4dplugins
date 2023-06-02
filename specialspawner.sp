@@ -793,11 +793,11 @@ Action tmrUpdate(Handle timer) {
 }
 
 void SetSpawnCount() {
-	int count = 0;
+	int count;
 	int limit;
 	int spawnSize;
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == 2)
+		if (IsClientInGame(i) && GetClientTeam(i) == 2)
 			count++;
 	}
 
@@ -811,9 +811,12 @@ void SetSpawnCount() {
 		spawnSize = g_iBaseSize + RoundToNearest(count / g_fExtraSize);
 	}
 
+	if (limit == g_iSILimit && spawnSize == g_iSpawnSize)
+		return;
+
 	g_cSILimit.IntValue = limit;
 	g_cSpawnSize.IntValue = spawnSize;
-	//PrintToChatAll("\x01[\x05%d特\x01/\x05次\x01] \x04最多\x05%d特 \x01[\x03%.1f\x01~\x03%.1f\x01]\x04秒", spawnSize <= limit ? spawnSize : limit, limit, g_fSpawnTimeMin, g_fSpawnTimeMax);
+	//PrintToChatAll("\x01[\x05%d特\x01/\x05次\x01] \x05%d特 \x01[\x03%.1f\x01~\x03%.1f\x01]\x04秒", spawnSize <= limit ? spawnSize : limit, limit, g_fSpawnTimeMin, g_fSpawnTimeMax);
 	PrintToChatAll("\x04刷特信息: \n刷特时间\x03%.1f\x01~\x03%.1f\x04秒 \n\x04每次刷出\x05%d只\x04特感 \n场上最多同时存在\x05%d只\x04特感", g_fSpawnTimeMin, g_fSpawnTimeMax, spawnSize <= limit ? spawnSize : limit, limit);
 }
 

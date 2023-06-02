@@ -7,7 +7,7 @@
 #define PLUGIN_NAME				"Transition Restore Fix"
 #define PLUGIN_AUTHOR			"sorallll"
 #define PLUGIN_DESCRIPTION		"Restoring transition data by player's UserId instead of character"
-#define PLUGIN_VERSION			"1.2.4"
+#define PLUGIN_VERSION			"1.2.5"
 #define PLUGIN_URL				"https://forums.alliedmods.net/showthread.php?t=336287"
 
 #define GAMEDATA				"transition_restore_fix"

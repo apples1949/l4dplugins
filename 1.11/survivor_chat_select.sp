@@ -1,65 +1,77 @@
 #pragma semicolon 1
 #pragma newdecls required
 #include <sourcemod>
-#include <sdktools>
-#include <clientprefs>
 #include <adminmenu>
+#include <dhooks>
+//#include <sdkhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.6.6"
-#define PLUGIN_NAME 	"Survivor Chat Select"
-#define PLUGIN_PREFIX	"\x01[\x04SCS\x01]"
+#define PLUGIN_PREFIX			"\x01[\x04SCS\x01]"
+#define PLUGIN_NAME				"Survivor Chat Select"
+#define PLUGIN_AUTHOR			"DeatChaos25, Mi123456 & Merudo, Lux, SilverShot"
+#define PLUGIN_DESCRIPTION		"Select a survivor character by typing their name into the chat."
+#define PLUGIN_VERSION			"1.8.4"
+#define PLUGIN_URL				"https://forums.alliedmods.net/showthread.php?p=2399163#post2399163"
 
-#define GAMEDATA		"survivor_chat_select"
+#define GAMEDATA				"survivor_chat_select"
 
-#define	 NICK		0, 0
-#define	 ROCHELLE	1, 1
-#define	 COACH		2, 2
-#define	 ELLIS		3, 3
-#define	 BILL		4, 4
-#define	 ZOEY		5, 5
-#define	 FRANCIS	6, 6
-#define	 LOUIS		7, 7
+#define DEBUG					0
+
+#define	 NICK					0, 0
+#define	 ROCHELLE				1, 1
+#define	 COACH					2, 2
+#define	 ELLIS					3, 3
+#define	 BILL					4, 4
+#define	 ZOEY					5, 5
+#define	 FRANCIS				6, 6
+#define	 LOUIS					7, 7
 
 Handle
-	g_hSDK_IsInTransition,
-	g_hSDK_IsTransitioned;
+	g_hSDK_CDirector_IsInTransition,
+	g_hSDK_KeyValues_GetInt;
 
-Cookie
-	g_ckClientID,
-	g_ckClientModel;
+DynamicDetour
+	g_ddRestoreTransitionedSurvivorBot,
+	g_ddInfoChangelevel_ChangeLevelNow;
+
+StringMap
+	g_smSurModels;
 
 TopMenu
-	hTopMenu;
+	g_TopMenu;
 
 Address
-	g_pDirector;
+	g_pDirector,
+	g_pSavedPlayersCount,
+	g_pSavedSurvivorBotsCount;
 
 ConVar
-	g_hCookie,
-	g_hAutoModel,
-	g_hAdminsOnly,
-	g_hFixDialogue,
-	g_hInTransition,
-	g_hPrecacheAllSur;
+	g_cAutoModel,
+	g_cTabHUDBar,
+	g_cAdminFlags,
+	g_cInTransition,
+	g_cPrecacheAllSur;
 
 int
-	g_iOrignalMapSet,
+	g_iTabHUDBar,
+	g_iAdminFlags,
+	g_iOrignalSet,
+	g_iTransitioning[MAXPLAYERS + 1],
 	g_iSelectedClient[MAXPLAYERS + 1];
 
 bool
-	g_bLateLoad,
-	g_bCookie,
 	g_bAutoModel,
-	g_bAdminsOnly,
-	g_bFixDialogue,
+	g_bTransition,
+	g_bTransitioned,
 	g_bInTransition,
-	g_bHideNameChange,
-	g_bShouldIgnoreOnce[MAXPLAYERS + 1];
+	g_bBlockUserMsg,
+	g_bRestoringBots,
+	g_bBotPlayer[MAXPLAYERS + 1],
+	g_bPlayerBot[MAXPLAYERS + 1],
+	g_bFirstSpawn[MAXPLAYERS + 1];
 
 static const char
-	g_sSurvivorNames[8][] =
-	{
+	g_sSurNames[][] = {
 		"Nick",
 		"Rochelle",
 		"Coach",
@@ -69,8 +81,7 @@ static const char
 		"Francis",
 		"Louis",
 	},
-	g_sSurvivorModels[8][] =
-	{
+	g_sSurModels[][] = {
 		"models/survivors/survivor_gambler.mdl",
 		"models/survivors/survivor_producer.mdl",
 		"models/survivors/survivor_coach.mdl",
@@ -81,149 +92,179 @@ static const char
 		"models/survivors/survivor_manager.mdl"
 	};
 
-public Plugin myinfo =
-{
+methodmap CPlayerResource {
+	public CPlayerResource() {
+		return view_as<CPlayerResource>(GetPlayerResourceEntity());
+	}
+
+	public int m_iTeam(int client) {
+		return GetEntProp(view_as<int>(this), Prop_Send, "m_iTeam", _, client);
+	}
+
+	public int m_bConnected(int client) {
+		return GetEntProp(view_as<int>(this), Prop_Send, "m_bConnected", _, client);
+	}
+}
+
+public Plugin myinfo = {
 	name = PLUGIN_NAME,
-	author = "DeatChaos25, Mi123456 & Merudo, Lux, SilverShot",
-	description = "Select a survivor character by typing their name into the chat.",
+	author = PLUGIN_AUTHOR,
+	description = PLUGIN_DESCRIPTION,
 	version = PLUGIN_VERSION,
-	url = "https://forums.alliedmods.net/showthread.php?p=2399163#post2399163"
-}
+	url = PLUGIN_URL
+};
 
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	g_bLateLoad = late;
-	return APLRes_Success;
-}
-
-public void OnPluginStart()
-{
-	vInitGameData();
-
-	if(g_bLateLoad)
-		g_pDirector = L4D_GetPointer(POINTER_DIRECTOR);
-
+public void OnPluginStart() {
+	InitGameData();
+	g_smSurModels = new StringMap();
 	HookUserMessage(GetUserMessageId("SayText2"), umSayText2, true);
 
-	g_ckClientID = new Cookie("Player_Character", "Player's default character ID.", CookieAccess_Protected);
-	g_ckClientModel = new Cookie("Player_Model", "Player's default character model.", CookieAccess_Protected);
+	RegConsoleCmd("sm_zoey",		cmdZoeyUse,		"Changes your survivor character into Zoey");
+	RegConsoleCmd("sm_nick",		cmdNickUse,		"Changes your survivor character into Nick");
+	RegConsoleCmd("sm_ellis",		cmdEllisUse,	"Changes your survivor character into Ellis");
+	RegConsoleCmd("sm_coach",		cmdCoachUse,	"Changes your survivor character into Coach");
+	RegConsoleCmd("sm_rochelle",	cmdRochelleUse,	"Changes your survivor character into Rochelle");
+	RegConsoleCmd("sm_bill",		cmdBillUse,		"Changes your survivor character into Bill");
+	RegConsoleCmd("sm_francis",		cmdBikerUse,	"Changes your survivor character into Francis");
+	RegConsoleCmd("sm_louis",		cmdLouisUse,	"Changes your survivor character into Louis");
 
-	RegConsoleCmd("sm_zoey", cmdZoeyUse, "Changes your survivor character into Zoey");
-	RegConsoleCmd("sm_nick", cmdNickUse, "Changes your survivor character into Nick");
-	RegConsoleCmd("sm_ellis", cmdEllisUse, "Changes your survivor character into Ellis");
-	RegConsoleCmd("sm_coach", cmdCoachUse, "Changes your survivor character into Coach");
-	RegConsoleCmd("sm_rochelle", cmdRochelleUse, "Changes your survivor character into Rochelle");
-	RegConsoleCmd("sm_bill", cmdBillUse, "Changes your survivor character into Bill");
-	RegConsoleCmd("sm_francis", cmdBikerUse, "Changes your survivor character into Francis");
-	RegConsoleCmd("sm_louis", cmdLouisUse, "Changes your survivor character into Louis");
+	RegConsoleCmd("sm_z",			cmdZoeyUse,		"Changes your survivor character into Zoey");
+	RegConsoleCmd("sm_n",			cmdNickUse,		"Changes your survivor character into Nick");
+	RegConsoleCmd("sm_e",			cmdEllisUse,	"Changes your survivor character into Ellis");
+	RegConsoleCmd("sm_c",			cmdCoachUse,	"Changes your survivor character into Coach");
+	RegConsoleCmd("sm_r",			cmdRochelleUse,	"Changes your survivor character into Rochelle");
+	RegConsoleCmd("sm_b",			cmdBillUse,		"Changes your survivor character into Bill");
+	RegConsoleCmd("sm_f",			cmdBikerUse,	"Changes your survivor character into Francis");
+	RegConsoleCmd("sm_l",			cmdLouisUse,	"Changes your survivor character into Louis");
 
-	RegConsoleCmd("sm_z", cmdZoeyUse, "Changes your survivor character into Zoey");
-	RegConsoleCmd("sm_n", cmdNickUse, "Changes your survivor character into Nick");
-	RegConsoleCmd("sm_e", cmdEllisUse, "Changes your survivor character into Ellis");
-	RegConsoleCmd("sm_c", cmdCoachUse, "Changes your survivor character into Coach");
-	RegConsoleCmd("sm_r", cmdRochelleUse, "Changes your survivor character into Rochelle");
-	RegConsoleCmd("sm_b", cmdBillUse, "Changes your survivor character into Bill");
-	RegConsoleCmd("sm_f", cmdBikerUse, "Changes your survivor character into Francis");
-	RegConsoleCmd("sm_l", cmdLouisUse, "Changes your survivor character into Louis");
+	RegConsoleCmd("sm_csm",			cmdCsm,			"Brings up a menu to select a client's character");
 
-	RegAdminCmd("sm_csc", cmdCsc, ADMFLAG_ROOT, "Brings up a menu to select a client's character");
-	RegConsoleCmd("sm_csm", cmdCsm, "Brings up a menu to select a client's character");
+	RegAdminCmd("sm_csc",			cmdCsc,			ADMFLAG_ROOT, "Brings up a menu to select a client's character");
+	RegAdminCmd("sm_setleast",		cmdSetLeast,	ADMFLAG_ROOT, "重新将所有生还者模型设置为重复次数最少的");
 
-	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
-	HookEvent("bot_player_replace", Event_BotPlayerReplace, EventHookMode_Pre);
-	HookEvent("player_bot_replace", Event_PlayerBotReplace, EventHookMode_Pre);
-	HookEvent("player_spawn", Event_PlayerSpawn, EventHookMode_Pre);
-	
-	g_hCookie = CreateConVar("l4d_scs_cookie", "0","保存玩家的模型角色喜好?", FCVAR_NOTIFY);
-	g_hAutoModel = CreateConVar("l4d_scs_auto_model", "1","开关8人独立模型?", FCVAR_NOTIFY);
-	g_hAdminsOnly = CreateConVar("l4d_csm_admins_only", "1","只允许管理员使用csm命令?", FCVAR_NOTIFY);
-	g_hFixDialogue = CreateConVar("l4d_csm_fix_dialogue", "0","修复2代人物在1代图中的对话?", FCVAR_NOTIFY);
-	g_hInTransition = CreateConVar("l4d_csm_in_transition", "1","启用8人独立模型后不对正在过渡的玩家设置?", FCVAR_NOTIFY);
-	g_hPrecacheAllSur = FindConVar("precache_all_survivors");
+	g_cAutoModel =			CreateConVar("l4d_scs_auto_model",		"1",	"开关8人独立模型?", FCVAR_NOTIFY);
+	g_cTabHUDBar =			CreateConVar("l4d_scs_tab_hud_bar",		"1",	"在哪些地图上显示一代人物的TAB状态栏? \n0=默认, 1=一代图, 2=二代图, 3=一代和二代图.", FCVAR_NOTIFY);
+	g_cAdminFlags =			CreateConVar("l4d_csm_admin_flags",		"z",	"允许哪些玩家使用csm命令(flag参考admin_levels.cfg)? \n留空=所有玩家都能使用, z=仅限root权限的玩家使用.", FCVAR_NOTIFY);
+	g_cInTransition =		CreateConVar("l4d_csm_in_transition",	"1",	"启用8人独立模型后不对正在过渡的玩家设置?", FCVAR_NOTIFY);
+	g_cPrecacheAllSur =		FindConVar("precache_all_survivors");
 
-	g_hCookie.AddChangeHook(vConVarChanged);
-	g_hAutoModel.AddChangeHook(vConVarChanged);
-	g_hAdminsOnly.AddChangeHook(vConVarChanged);
-	g_hFixDialogue.AddChangeHook(vConVarChanged);
-	g_hInTransition.AddChangeHook(vConVarChanged);
+	g_cAutoModel.AddChangeHook(CvarChanged);
+	g_cTabHUDBar.AddChangeHook(CvarChanged);
+	g_cAdminFlags.AddChangeHook(CvarChanged);
+	g_cInTransition.AddChangeHook(CvarChanged);
 
-	AutoExecConfig(true, "survivor_chat_select");
+	AutoExecConfig(true);
 
 	TopMenu topmenu;
-	if(LibraryExists("adminmenu") && ((topmenu = GetAdminTopMenu()) != null))
+	if (LibraryExists("adminmenu") && ((topmenu = GetAdminTopMenu())))
 		OnAdminMenuReady(topmenu);
+
+	for (int i; i < sizeof g_sSurModels; i++)
+		g_smSurModels.SetValue(g_sSurModels[i], i);
 }
 
-public void OnAdminMenuReady(Handle aTopMenu)
-{
-	TopMenu topmenu = TopMenu.FromHandle(aTopMenu);
+public void OnAllPluginsLoaded() {
+	g_pDirector = L4D_GetPointer(POINTER_DIRECTOR);
+}
 
-	if(topmenu == hTopMenu)
+public void OnAdminMenuReady(Handle topmenu) {
+	TopMenu tmenu = TopMenu.FromHandle(topmenu);
+	if (tmenu == g_TopMenu)
 		return;
 
-	hTopMenu = topmenu;
-
-	TopMenuObject player_commands = hTopMenu.FindCategory(ADMINMENU_PLAYERCOMMANDS);
-
-	if(player_commands != INVALID_TOPMENUOBJECT)
-		hTopMenu.AddItem("sm_csc", AdminMenu_Csc, player_commands, "sm_csc", ADMFLAG_ROOT);
+	g_TopMenu = tmenu;
+	TopMenuObject category = g_TopMenu.FindCategory(ADMINMENU_PLAYERCOMMANDS);
+	if (category != INVALID_TOPMENUOBJECT)
+		g_TopMenu.AddItem("sm_csc", ItemHandler, category, "sm_csc", ADMFLAG_ROOT);
 }
 
-void AdminMenu_Csc(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
-{
-	switch(action)
-	{
+void ItemHandler(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength) {
+	switch (action) {
 		case TopMenuAction_DisplayOption:
-			FormatEx(buffer, maxlength, "更改玩家人物模型", "", param);
+			FormatEx(buffer, maxlength, "更改生还者模型");
 
 		case TopMenuAction_SelectOption:
 			cmdCsc(param, 0);
 	}
 }
 
-Action cmdCsc(int client, int args)
-{
-	if(!client || !IsClientInGame(client))
-		return Plugin_Handled;
-
-	char sUserId[16];
-	char sName[MAX_NAME_LENGTH];
-
-	Menu menu = new Menu(iCscMenuHandler);
-	menu.SetTitle("目标玩家:");
-
-	for(int i = 1; i <= MaxClients; i++)
-	{
-		if(!IsClientInGame(i) || GetClientTeam(i) != 2)
-			continue;
-
-		FormatEx(sUserId, sizeof sUserId, "%d", GetClientUserId(i));
-		FormatEx(sName, sizeof sName, "%N", i);
-		menu.AddItem(sUserId, sName);
+Action cmdSetLeast(int client, int args) {
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i) && GetClientTeam(i) == 2)
+			SetLeastCharacter(i);
 	}
 
-	menu.ExitBackButton = true;
-	menu.Display(client, 30);
 	return Plugin_Handled;
 }
 
-int iCscMenuHandler(Menu menu, MenuAction action, int client, int param2)
-{
-	switch(action)
-	{
-		case MenuAction_Select:
-		{
-			char sItem[16];
-			menu.GetItem(param2, sItem, sizeof sItem);
-			g_iSelectedClient[client] = StringToInt(sItem);
+Action cmdCsc(int client, int args) {
+	if (!client || !IsClientInGame(client))
+		return Plugin_Handled;
 
-			vShowMenuAdmin(client);
+	char info[12];
+	char disp[MAX_NAME_LENGTH];
+	Menu menu = new Menu(Csc_MenuHandler);
+	menu.SetTitle("目标玩家:");
+
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsClientInGame(i) || GetClientTeam(i) != 2)
+			continue;
+
+		FormatEx(info, sizeof info, "%d", GetClientUserId(i));
+		FormatEx(disp, sizeof disp, "%s - %N", GetModelName(i), i);
+		menu.AddItem(info, disp);
+	}
+
+	menu.ExitBackButton = true;
+	menu.Display(client, MENU_TIME_FOREVER);
+	return Plugin_Handled;
+}
+
+// L4D2_Adrenaline_Recovery (https://github.com/LuxLuma/L4D2_Adrenaline_Recovery/blob/ac3f62eebe95d80fcf610fb6c7c1ed56bf4b31d2/%5BL4D2%5DAdrenaline_Recovery.sp#L96-L177)
+char[] GetModelName(int client) {
+	int idx;
+	char model[31];
+	GetClientModel(client, model, sizeof model);
+	switch (model[29]) {
+		case 'b'://nick
+			idx = 0;
+		case 'd'://rochelle
+			idx = 1;
+		case 'c'://coach
+			idx = 2;
+		case 'h'://ellis
+			idx = 3;
+		case 'v'://bill
+			idx = 4;
+		case 'n'://zoey
+			idx = 5;
+		case 'e'://francis
+			idx = 6;
+		case 'a'://louis
+			idx = 7;
+		default:
+			idx = 8;
+	}
+
+	strcopy(model, sizeof model, idx == 8 ? "未知" : g_sSurNames[idx]);
+	return model;
+}
+
+int Csc_MenuHandler(Menu menu, MenuAction action, int client, int param2) {
+	switch (action) {
+		case MenuAction_Select: {
+			char item[12];
+			menu.GetItem(param2, item, sizeof item);
+			g_iSelectedClient[client] = StringToInt(item);
+
+			ShowMenuAdmin(client);
 		}
-		case MenuAction_Cancel:
-		{
-			if(param2 == MenuCancel_ExitBack && hTopMenu != null)
-				DisplayTopMenu(hTopMenu, client, TopMenuPosition_LastCategory);
+
+		case MenuAction_Cancel: {
+			if (param2 == MenuCancel_ExitBack && g_TopMenu != null)
+				g_TopMenu.Display(client, TopMenuPosition_LastCategory);
 		}
+	
 		case MenuAction_End:
 			delete menu;
 	}
@@ -231,9 +272,8 @@ int iCscMenuHandler(Menu menu, MenuAction action, int client, int param2)
 	return 0;
 }
 
-void vShowMenuAdmin(int client)
-{
-	Menu menu = new Menu(iShowMenuAdminMenuHandler);
+void ShowMenuAdmin(int client) {
+	Menu menu = new Menu(ShowMenuAdmin_MenuHandler);
 	menu.SetTitle("人物:");
 
 	menu.AddItem("0", "Nick");
@@ -246,35 +286,16 @@ void vShowMenuAdmin(int client)
 	menu.AddItem("7", "Louis");
 
 	menu.ExitBackButton = true;
-	menu.Display(client, 30);
+	menu.Display(client, MENU_TIME_FOREVER);
 }
 
-int iShowMenuAdminMenuHandler(Menu menu, MenuAction action, int client, int param2)
-{
-	switch(action)
-	{
-		case MenuAction_Select:
-		{
-			switch(param2)
-			{
-				case 0:
-					vSetCharacter(GetClientOfUserId(g_iSelectedClient[client]), NICK, false);
-				case 1:
-					vSetCharacter(GetClientOfUserId(g_iSelectedClient[client]), ROCHELLE, false);
-				case 2:
-					vSetCharacter(GetClientOfUserId(g_iSelectedClient[client]), COACH, false);
-				case 3:
-					vSetCharacter(GetClientOfUserId(g_iSelectedClient[client]), ELLIS, false);
-				case 4:
-					vSetCharacter(GetClientOfUserId(g_iSelectedClient[client]), BILL, false);
-				case 5:
-					vSetCharacter(GetClientOfUserId(g_iSelectedClient[client]), ZOEY, false);
-				case 6:
-					vSetCharacter(GetClientOfUserId(g_iSelectedClient[client]), FRANCIS, false);
-				case 7:
-					vSetCharacter(GetClientOfUserId(g_iSelectedClient[client]), LOUIS, false);
-			}
+int ShowMenuAdmin_MenuHandler(Menu menu, MenuAction action, int client, int param2) {
+	switch (action) {
+		case MenuAction_Select: {
+			if (param2 >= 0 && param2 <= 7)
+				SetCharacter(GetClientOfUserId(g_iSelectedClient[client]), param2, param2);
 		}
+	
 		case MenuAction_End:
 			delete menu;
 	}
@@ -282,12 +303,11 @@ int iShowMenuAdminMenuHandler(Menu menu, MenuAction action, int client, int para
 	return 0;
 }
 
-Action cmdCsm(int client, int args)
-{
-	if(!bCanUse(client)) 
+Action cmdCsm(int client, int args) {
+	if (!CanUse(client)) 
 		return Plugin_Handled;
 
-	Menu menu = new Menu(iCsmMenuHandler);
+	Menu menu = new Menu(Csm_MenuHandler);
 	menu.SetTitle("选择人物:");
 
 	menu.AddItem("0", "Nick");
@@ -300,36 +320,17 @@ Action cmdCsm(int client, int args)
 	menu.AddItem("7", "Louis");
 
 	menu.ExitBackButton = true;
-	menu.Display(client, 30);
+	menu.Display(client, MENU_TIME_FOREVER);
 	return Plugin_Handled;
 }
 
-int iCsmMenuHandler(Menu menu, MenuAction action, int client, int param2)
-{
-	switch(action)
-	{
-		case MenuAction_Select:
-		{
-			switch(param2)
-			{
-				case 0:
-					vSetCharacter(client, NICK);
-				case 1:
-					vSetCharacter(client, ROCHELLE);
-				case 2:
-					vSetCharacter(client, COACH);
-				case 3:
-					vSetCharacter(client, ELLIS);
-				case 4:
-					vSetCharacter(client, BILL);
-				case 5:
-					vSetCharacter(client, ZOEY);
-				case 6:
-					vSetCharacter(client, FRANCIS);
-				case 7:
-					vSetCharacter(client, LOUIS);
-			}
+int Csm_MenuHandler(Menu menu, MenuAction action, int client, int param2) {
+	switch (action) {
+		case MenuAction_Select: {
+			if (param2 >= 0 && param2 <= 7)
+				SetCharacter(client, param2, param2);
 		}
+
 		case MenuAction_End:
 			delete menu;
 	}
@@ -337,366 +338,103 @@ int iCsmMenuHandler(Menu menu, MenuAction action, int client, int param2)
 	return 0;
 }
 
-bool bCanUse(int client, bool bCheckAdmin = true)
-{
-	if(!client || !IsClientInGame(client)) 
-	{
+bool CanUse(int client, bool checkAdmin = true) {
+	if (!client || !IsClientInGame(client)) {
 		ReplyToCommand(client, "角色选择菜单仅适用于游戏中的玩家.");
 		return false;
 	}
 
-	if(bCheckAdmin && g_bAdminsOnly && GetUserFlagBits(client) == 0)
-	{
+	if (checkAdmin && !CheckCommandAccess(client, "", g_iAdminFlags)) {
 		ReplyToCommand(client, "只有管理员才能使用该菜单.");
 		return false;
 	}
 
-	if(GetClientTeam(client) != 2)
-	{
+	if (GetClientTeam(client) != 2) {
 		ReplyToCommand(client, "角色选择菜单仅适用于幸存者.");
 		return false;
 	}
 
-	if(bIsGettingUp(client))
-	{
+	if (L4D_IsPlayerStaggering(client)) {
+		ReplyToCommand(client, "硬直状态下无法使用该指令.");
+		return false;
+	}
+
+	if (IsGettingUp(client)) {
 		ReplyToCommand(client, "起身过程中无法使用该指令.");
+		return false;
+	}
+
+	if (IsPinned(client)) {
+		ReplyToCommand(client, "被控制时无法使用该指令.");
 		return false;
 	}
 
 	return true;
 }
 
-Action cmdZoeyUse(int client, int args)
-{
-	if(!bCanUse(client))
-		return Plugin_Handled;
-
-	vSetCharacter(client, ZOEY);
-	return Plugin_Handled;
-}
-
-Action cmdNickUse(int client, int args)
-{
-	if(!bCanUse(client))
-		return Plugin_Handled;
-	
-	vSetCharacter(client, NICK);
-	return Plugin_Handled;
-}
-
-Action cmdEllisUse(int client, int args)
-{
-	if(!bCanUse(client))
-		return Plugin_Handled;
-	
-	vSetCharacter(client, ELLIS);
-	return Plugin_Handled;
-}
-
-Action cmdCoachUse(int client, int args)
-{
-	if(!bCanUse(client))
-		return Plugin_Handled;
-	
-	vSetCharacter(client, COACH);
-	return Plugin_Handled;
-}
-
-Action cmdRochelleUse(int client, int args)
-{
-	if(!bCanUse(client))
-		return Plugin_Handled;
-	
-	vSetCharacter(client, ROCHELLE);
-	return Plugin_Handled;
-}
-
-Action cmdBillUse(int client, int args)
-{
-	if(!bCanUse(client))
-		return Plugin_Handled;
-	
-	vSetCharacter(client, BILL);
-	return Plugin_Handled;
-}
-
-Action cmdBikerUse(int client, int args)
-{
-	if(!bCanUse(client))
-		return Plugin_Handled;
-	
-	vSetCharacter(client, FRANCIS);
-	return Plugin_Handled;
-}
-
-Action cmdLouisUse(int client, int args)
-{
-	if(!bCanUse(client))
-		return Plugin_Handled;
-	
-	vSetCharacter(client, LOUIS);
-	return Plugin_Handled;
-}
-
-Action umSayText2(UserMsg msg_id, BfRead msg, const int[] players, int playersNum, bool reliable, bool init)
-{
-	if(!g_bHideNameChange)
-		return Plugin_Continue;
-
-	msg.ReadByte();
-	msg.ReadByte();
-
-	char sMessage[254];
-	msg.ReadString(sMessage, sizeof sMessage, true);
-	if(strcmp(sMessage, "#Cstrike_Name_Change") == 0)
-		return Plugin_Handled;
-
-	return Plugin_Continue;
-}
-
-public void OnMapStart()
-{
-	g_hPrecacheAllSur.IntValue = 1;
-
-	for(int i; i < 8; i++)
-		PrecacheModel(g_sSurvivorModels[i], true);
-
-	g_pDirector = L4D_GetPointer(POINTER_DIRECTOR);
-}
-
-public void OnConfigsExecuted()
-{
-	vGetCvars();
-}
-
-void vConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-	vGetCvars();
-}
-
-void vGetCvars()
-{
-	g_bCookie = g_hCookie.BoolValue;
-	g_bAutoModel= g_hAutoModel.BoolValue;
-	g_bAdminsOnly = g_hAdminsOnly.BoolValue;
-	g_bFixDialogue = g_hFixDialogue.BoolValue;
-	g_bInTransition = g_hInTransition.BoolValue;
-}
-
-void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
-{
-	for(int i; i <= MaxClients; i++)
-		g_bShouldIgnoreOnce[i] = false;
-}
-
-void Event_BotPlayerReplace(Event event, char[] name, bool dontBroadcast)
-{
-	if(!g_bAutoModel)
-		return;
-
-	int player = GetClientOfUserId(event.GetInt("player"));
-	if(!player || !IsClientInGame(player) || IsFakeClient(player) || GetClientTeam(player) != 2) 
-		return;
-
-	int bot = GetClientOfUserId(event.GetInt("bot"));
-	if(!bot || !IsClientInGame(bot))
-	{
-		vSetLeastUsedCharacter(player);
-		return;
-	}
-
-	g_bShouldIgnoreOnce[bot] = false;
-}
-
-void Event_PlayerBotReplace(Event event, char[] name, bool dontBroadcast)
-{
-	if(!g_bAutoModel)
-		return;
-
-	int bot = GetClientOfUserId(event.GetInt("bot"));
-	if(!bot || !IsClientInGame(bot))
-		return;
-
-	int player = GetClientOfUserId(event.GetInt("player"));
-	if(!player || !IsClientInGame(player) || GetClientTeam(player) != 2)
-		return;
-
-	if(IsFakeClient(player))
-	{
-		vSetLeastUsedCharacter(bot);
-		RequestFrame(OnNextFrame_ResetVar, bot);
-		return;
-	}
-
-	g_bShouldIgnoreOnce[bot] = true;
-	RequestFrame(OnNextFrame_ResetVar, bot);
-}
-
-void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(event.GetInt("userid"));
-	if(!client || !IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != 2)
-		return;
-
-	if(g_bAutoModel && !g_bShouldIgnoreOnce[client] && !IsPlayerAlive(client) && !iGetBotOfIdlePlayer(client))
-		RequestFrame(OnNextFrame_PlayerSpawn, event.GetInt("userid"));
-
-	if(g_bCookie)
-		CreateTimer(0.6, tmrLoadCookie, event.GetInt("userid"), TIMER_FLAG_NO_MAPCHANGE);
-}
-
-void OnNextFrame_ResetVar(int iBot)
-{
-	g_bShouldIgnoreOnce[iBot] = false;
-}
-
-static int iGetBotOfIdlePlayer(int client)
-{
-	static int i;
-	for(i = 1; i <= MaxClients; i++)
-	{
-		if(IsClientInGame(i) && IsFakeClient(i) && iGetIdlePlayerOfBot(i) == client)
-			return i;
-	}
-	return 0;
-}
-
-static int iGetIdlePlayerOfBot(int client)
-{
-	static char sNetClass[64];
-	GetEntityNetClass(client, sNetClass, sizeof sNetClass);
-	if(FindSendPropInfo(sNetClass, "m_humanSpectatorUserID") < 1)
-		return 0;
-
-	return GetClientOfUserId(GetEntProp(client, Prop_Send, "m_humanSpectatorUserID"));
-}
-
-void OnNextFrame_PlayerSpawn(int client)
-{
-	if(!g_bAutoModel || !(client = GetClientOfUserId(client)) || g_bShouldIgnoreOnce[client] || !IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != 2)
-		return;
-
-	vSetLeastUsedCharacter(client);
-}
-
-Action tmrLoadCookie(Handle timer, int client)
-{
-	if(!(client = GetClientOfUserId(client)) || !IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != 2)
-		return Plugin_Stop;
-
-	if(!AreClientCookiesCached(client))
-	{
-		ReplyToCommand(client, "%s 无法载入你的人物角色,请输入 \x05!csm \x01来设置你的人物角色.", PLUGIN_PREFIX);
-		return Plugin_Stop;
-	}
-
-	char sID[2];
-	g_ckClientID.Get(client, sID, sizeof sID);
-
-	char sModel[128];
-	g_ckClientModel.Get(client, sModel, sizeof sModel);
-
-	if(sID[0] != '\0' && sModel[0] != '\0')
-	{
-		SetEntProp(client, Prop_Send, "m_survivorCharacter", StringToInt(sID));
-		SetEntityModel(client, sModel);
-	}
-
-	return Plugin_Continue;
-}
-
-void vSetCharacter(int client, int iCharacter, int iModelIndex, bool bSave = true)
-{
-	if(!bCanUse(client, false))
-		return;
-
-	vSetCharacterInfo(client, iCharacter, iModelIndex);
-
-	if(bSave && g_bCookie)
-	{
-		char sProp[2];
-		IntToString(iCharacter, sProp, sizeof sProp);
-		g_ckClientID.Set(client, sProp);
-		g_ckClientModel.Set(client, g_sSurvivorModels[iModelIndex]);
-		ReplyToCommand(client, "%s 你的人物角色现在已经被设为 \x03%s\x01.", PLUGIN_PREFIX, g_sSurvivorNames[iModelIndex]);
-	}
-}
-
-//https://github.com/LuxLuma/L4D2_Adrenaline_Recovery
-bool bIsGettingUp(int client)
-{
-	static char sModel[31];
-	GetEntPropString(client, Prop_Data, "m_ModelName", sModel, sizeof sModel);
-	switch(sModel[29])
-	{
-		case 'b'://nick
-		{
-			switch(GetEntProp(client, Prop_Send, "m_nSequence"))
-			{
+// L4D2_Adrenaline_Recovery (https://github.com/LuxLuma/L4D2_Adrenaline_Recovery/blob/ac3f62eebe95d80fcf610fb6c7c1ed56bf4b31d2/%5BL4D2%5DAdrenaline_Recovery.sp#L96-L177)
+bool IsGettingUp(int client) {
+	char model[31];
+	GetClientModel(client, model, sizeof model);
+	switch (model[29]) {
+		case 'b': {	//nick
+			switch (GetEntProp(client, Prop_Send, "m_nSequence")) {
 				case 680, 667, 671, 672, 630, 620, 627:
 					return true;
 			}
 		}
-		case 'd'://rochelle
-		{
-			switch(GetEntProp(client, Prop_Send, "m_nSequence"))
-			{
+
+		case 'd': {	//rochelle
+			switch (GetEntProp(client, Prop_Send, "m_nSequence")) {
 				case 687, 679, 678, 674, 638, 635, 629:
 					return true;
 			}
 		}
-		case 'c'://coach
-		{
-			switch(GetEntProp(client, Prop_Send, "m_nSequence"))
-			{
+
+		case 'c': {	//coach
+			switch (GetEntProp(client, Prop_Send, "m_nSequence")) {
 				case 669, 661, 660, 656, 630, 627, 621:
 					return true;
 			}
 		}
-		case 'h'://ellis
-		{
-			switch(GetEntProp(client, Prop_Send, "m_nSequence"))
-			{
+
+		case 'h': {	//ellis
+			switch (GetEntProp(client, Prop_Send, "m_nSequence")) {
 				case 684, 676, 675, 671, 625, 635, 632:
 					return true;
 			}
 		}
-		case 'v'://bill
-		{
-			switch(GetEntProp(client, Prop_Send, "m_nSequence"))
-			{
+
+		case 'v': {	//bill
+			switch (GetEntProp(client, Prop_Send, "m_nSequence")) {
 				case 772, 764, 763, 759, 538, 535, 528:
 					return true;
 			}
 		}
-		case 'n'://zoey
-		{
-			switch(GetEntProp(client, Prop_Send, "m_nSequence"))
-			{
+
+		case 'n': {	//zoey
+			switch (GetEntProp(client, Prop_Send, "m_nSequence")) {
 				case 824, 823, 819, 809, 547, 544, 537:
 					return true;
 			}
 		}
-		case 'e'://francis
-		{
-			switch(GetEntProp(client, Prop_Send, "m_nSequence"))
-			{
+
+		case 'e': {	//francis
+			switch (GetEntProp(client, Prop_Send, "m_nSequence")) {
 				case 775, 767, 766, 762, 541, 539, 531:
 					return true;
 			}
 		}
-		case 'a'://louis
-		{
-			switch(GetEntProp(client, Prop_Send, "m_nSequence"))
-			{
+
+		case 'a': {	//louis
+			switch (GetEntProp(client, Prop_Send, "m_nSequence")) {
 				case 772, 764, 763, 759, 538, 535, 528:
 					return true;
 			}
 		}
-		case 'w'://adawong
-		{
-			switch(GetEntProp(client, Prop_Send, "m_nSequence"))
-			{
+
+		case 'w': {	//adawong
+			switch (GetEntProp(client, Prop_Send, "m_nSequence")) {
 				case 687, 679, 678, 674, 638, 635, 629:
 					return true;
 			}
@@ -706,359 +444,713 @@ bool bIsGettingUp(int client)
 	return false;
 }
 
-public void OnEntityCreated(int entity, const char[] classname)
-{
-	if(!g_bAutoModel)
-		return;
-
-	if(entity < 1 || entity > MaxClients)
-		return;
-
-	if((classname[0] == 'p' && strcmp(classname, "player", false) == 0) || (classname[0] == 's' && strcmp(classname, "survivor_bot", false) == 0))
-	{
-		if(g_bInTransition && SDKCall(g_hSDK_IsInTransition, g_pDirector) && !SDKCall(g_hSDK_IsTransitioned, entity))
-			return;
-
-		SDKHook(entity, SDKHook_SpawnPost, OnSpawnPost);
-	}
+bool IsPinned(int client) {
+	if (GetEntPropEnt(client, Prop_Send, "m_tongueOwner") > 0)
+		return true;
+	if (GetEntPropEnt(client, Prop_Send, "m_pounceAttacker") > 0)
+		return true;
+	if (GetEntPropEnt(client, Prop_Send, "m_jockeyAttacker") > 0)
+		return true;
+	if (GetEntPropEnt(client, Prop_Send, "m_carryAttacker") > 0)
+		return true;
+	if (GetEntPropEnt(client, Prop_Send, "m_pummelAttacker") > 0)
+		return true;
+	return false;
 }
 
-void OnSpawnPost(int client)
-{
-	SDKUnhook(client, SDKHook_SpawnPost, OnSpawnPost);
+Action cmdZoeyUse(int client, int args) {
+	if (!CanUse(client))
+		return Plugin_Handled;
 
-	if(!g_bAutoModel)
-		return;
-
-	if(!IsValidEntity(client) || GetClientTeam(client) == 4 || iGetIdlePlayerOfBot(client))
-		return;
-
-	RequestFrame(OnNextFrame_SpawnPost, GetClientUserId(client));
-}
-/**
-bool bIsLeastCharacter(int client)
-{
-	static int i;
-	static int iCharBuffer;
-	static int iSurvivorChar;
-	int iLeastChar[8];
-
-	for(i = 1; i <= MaxClients; i++)
-	{
-		if(!IsClientInGame(i) || GetClientTeam(i) != 2)
-			continue;
-
-		if((iCharBuffer = GetEntProp(i, Prop_Send, "m_survivorCharacter")) < 0 || iCharBuffer > 7)
-			continue;
-
-		iLeastChar[iCharBuffer]++;
-	}
-
-	iCharBuffer = 0;
-	iSurvivorChar = iLeastChar[0];
-	for(i = 0; i <= 7; i++)
-	{
-		if(iLeastChar[i] < iSurvivorChar)
-		{
-			iSurvivorChar = iLeastChar[i];
-			iCharBuffer = i;
-		}
-	}
-
-	i = GetEntProp(client, Prop_Send, "m_survivorCharacter");
-	if(i < 0 || i > 7)
-		return false;
-
-	return iLeastChar[i] <= iLeastChar[iCharBuffer];
-}*/
-
-void OnNextFrame_SpawnPost(int client)
-{
-	if(!g_bAutoModel)
-		return;
-
-	if(!(client = GetClientOfUserId(client)) || g_bShouldIgnoreOnce[client] || !IsClientInGame(client) || GetClientTeam(client) != 2)
-		return;
-
-	vSetLeastUsedCharacter(client);
+	SetCharacter(client, ZOEY);
+	return Plugin_Handled;
 }
 
-void vSetLeastUsedCharacter(int client)
-{
-	switch(iCheckLeastUsedSurvivor(client))
-	{
-		case 0:
-			vSetCharacterInfo(client, NICK);
-		case 1:
-			vSetCharacterInfo(client, ROCHELLE);
-		case 2:
-			vSetCharacterInfo(client, COACH);
-		case 3:
-			vSetCharacterInfo(client, ELLIS);
-		case 4:
-			vSetCharacterInfo(client, BILL);
-		case 5:
-			vSetCharacterInfo(client, ZOEY);
-		case 6:
-			vSetCharacterInfo(client, FRANCIS);
-		case 7:
-			vSetCharacterInfo(client, LOUIS);	
-	}
-}
-
-int iCheckLeastUsedSurvivor(int client)
-{
-	int i = 1;
-	int iCharBuffer;
-	int iLeastChar[8];
-	for(; i <= MaxClients; i++)
-	{
-		if(i == client || !IsClientInGame(i) || GetClientTeam(i) != 2)
-			continue;
-
-		if((iCharBuffer = GetEntProp(i, Prop_Send, "m_survivorCharacter")) < 0 || iCharBuffer > 7)
-			continue;
-
-		iLeastChar[iCharBuffer]++;
-	}
-
-	switch(g_iOrignalMapSet)
-	{
-		case 1:
-		{
-			iCharBuffer = 7;
-			int iSurvivorChar = iLeastChar[7];
-			for(i = 7; i >= 0; i--)
-			{
-				if(iLeastChar[i] < iSurvivorChar)
-				{
-					iSurvivorChar = iLeastChar[i];
-					iCharBuffer = i;
-				}
-			}
-		}
-
-		case 2:
-		{
-			iCharBuffer = 0;
-			int iSurvivorChar = iLeastChar[0];
-			for(i = 0; i <= 7; i++)
-			{
-				if(iLeastChar[i] < iSurvivorChar)
-				{
-					iSurvivorChar = iLeastChar[i];
-					iCharBuffer = i;
-				}
-			}
-		}
-	}
-
-	return iCharBuffer;
-}
-
-void vSetCharacterInfo(int client, int iCharacter, int iModelIndex)
-{
-	SetEntProp(client, Prop_Send, "m_survivorCharacter", iCharacter);
-	SetEntityModel(client, g_sSurvivorModels[iModelIndex]);
-
-	if(IsFakeClient(client))
-	{
-		g_bHideNameChange = true;
-		SetClientName(client, g_sSurvivorNames[iModelIndex]);
-		g_bHideNameChange = false;
-	}
-		
-	vReEquipWeapons(client);
-}
-
-void vRemovePlayerWeapon(int client, int iWeapon)
-{
-	RemovePlayerItem(client, iWeapon);
-	RemoveEdict(iWeapon);
-}
-
-void vReEquipWeapons(int client)
-{
-	if(!IsPlayerAlive(client))
-		return;
-
-	int iweapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-	if(iweapon <= MaxClients)
-		return;
-
-	char sActive[32];
-	GetEntityClassname(iweapon, sActive, sizeof sActive);
-
-	char sWeapon[32];
-	for(int i; i <= 1; i++)
-	{
-		iweapon = GetPlayerWeaponSlot(client, i);
-		if(iweapon <= MaxClients)
-			continue;
-
-		switch(i)
-		{
-			case 0:
-			{
-				GetEntityClassname(iweapon, sWeapon, sizeof sWeapon);
+Action cmdNickUse(int client, int args) {
+	if (!CanUse(client))
+		return Plugin_Handled;
 	
-				int iClip1 = GetEntProp(iweapon, Prop_Send, "m_iClip1");
-				int iAmmo = iGetOrSetPlayerAmmo(client, iweapon);
-				int iUpgrade = GetEntProp(iweapon, Prop_Send, "m_upgradeBitVec");
-				int iUpgradeAmmo = GetEntProp(iweapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded");
-				int iWeaponSkin = GetEntProp(iweapon, Prop_Send, "m_nSkin");
+	SetCharacter(client, NICK);
+	return Plugin_Handled;
+}
 
-				vRemovePlayerWeapon(client, iweapon);
-				vCheatCommand(client, "give", sWeapon);
+Action cmdEllisUse(int client, int args) {
+	if (!CanUse(client))
+		return Plugin_Handled;
+	
+	SetCharacter(client, ELLIS);
+	return Plugin_Handled;
+}
 
-				iweapon = GetPlayerWeaponSlot(client, 0);
-				if(iweapon > MaxClients)
-				{
-					SetEntProp(iweapon, Prop_Send, "m_iClip1", iClip1);
-					iGetOrSetPlayerAmmo(client, iweapon, iAmmo);
+Action cmdCoachUse(int client, int args) {
+	if (!CanUse(client))
+		return Plugin_Handled;
+	
+	SetCharacter(client, COACH);
+	return Plugin_Handled;
+}
 
-					if(iUpgrade > 0)
-						SetEntProp(iweapon, Prop_Send, "m_upgradeBitVec", iUpgrade);
+Action cmdRochelleUse(int client, int args) {
+	if (!CanUse(client))
+		return Plugin_Handled;
+	
+	SetCharacter(client, ROCHELLE);
+	return Plugin_Handled;
+}
 
-					if(iUpgradeAmmo > 0)
-						SetEntProp(iweapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", iUpgradeAmmo);
+Action cmdBillUse(int client, int args) {
+	if (!CanUse(client))
+		return Plugin_Handled;
+	
+	SetCharacter(client, BILL);
+	return Plugin_Handled;
+}
+
+Action cmdBikerUse(int client, int args) {
+	if (!CanUse(client))
+		return Plugin_Handled;
+	
+	SetCharacter(client, FRANCIS);
+	return Plugin_Handled;
+}
+
+Action cmdLouisUse(int client, int args) {
+	if (!CanUse(client))
+		return Plugin_Handled;
+	
+	SetCharacter(client, LOUIS);
+	return Plugin_Handled;
+}
+
+Action umSayText2(UserMsg msg_id, BfRead msg, const int[] players, int playersNum, bool reliable, bool init) {
+	if (!g_bBlockUserMsg)
+		return Plugin_Continue;
+
+	msg.ReadByte();
+	msg.ReadByte();
+
+	char buffer[254];
+	msg.ReadString(buffer, sizeof buffer, true);
+	if (strcmp(buffer, "#Cstrike_Name_Change") == 0)
+		return Plugin_Handled;
+
+	return Plugin_Continue;
+}
+
+public void OnMapStart() {
+	g_cPrecacheAllSur.IntValue = 1;
+	for (int i; i < sizeof g_sSurModels; i++)
+		PrecacheModel(g_sSurModels[i], true);
+}
+
+public void OnConfigsExecuted() {
+	GetCvars();
+	g_iOrignalSet = L4D2_GetSurvivorSetMap();
+}
+
+void CvarChanged(ConVar convar, const char[] oldValue, const char[] newValue) {
+	GetCvars();
+}
+
+void GetCvars() {
+	g_bAutoModel =		g_cAutoModel.BoolValue;
+
+	Toggle(g_bAutoModel);
+
+	g_iTabHUDBar =		g_cTabHUDBar.IntValue;
+	char flags[16];
+	g_cAdminFlags.GetString(flags, sizeof flags);
+	g_iAdminFlags = ReadFlagString(flags);
+	g_bInTransition =	g_cInTransition.BoolValue;
+}
+
+void Toggle(bool enable) {
+	static bool enabled;
+	if (!enabled && enable) {
+		enabled = true;
+
+		HookEvent("round_start",			Event_RoundStart,			EventHookMode_PostNoCopy);
+		HookEvent("player_bot_replace",		Event_PlayerBotReplace,		EventHookMode_Pre);
+		HookEvent("bot_player_replace",		Event_BotPlayerReplace,		EventHookMode_Pre);
+		HookEvent("player_team",			Event_PlayerTeam,			EventHookMode_Pre);
+
+		if (!g_ddRestoreTransitionedSurvivorBot.Enable(Hook_Pre, DD_RestoreTransitionedSurvivorBot_Pre))
+			SetFailState("Failed to detour pre: \"DD::RestoreTransitionedSurvivorBots\"");
+
+		if (!g_ddRestoreTransitionedSurvivorBot.Enable(Hook_Post, DD_RestoreTransitionedSurvivorBot_Post))
+			SetFailState("Failed to detour post: \"DD::RestoreTransitionedSurvivorBots\"");
+
+		if (!g_ddInfoChangelevel_ChangeLevelNow.Enable(Hook_Post, DD_InfoChangelevel_ChangeLevelNow_Post))
+			SetFailState("Failed to detour post: \"DD::InfoChangelevel::ChangeLevelNow\"");
+	}
+	else if (enabled && !enable) {
+		enabled = false;
+		
+		UnhookEvent("round_start",			Event_RoundStart,			EventHookMode_PostNoCopy);
+		UnhookEvent("player_bot_replace",	Event_PlayerBotReplace,		EventHookMode_Pre);
+		UnhookEvent("bot_player_replace",	Event_BotPlayerReplace,		EventHookMode_Pre);
+		UnhookEvent("player_team",			Event_PlayerTeam,			EventHookMode_Pre);
+
+		if (!g_ddRestoreTransitionedSurvivorBot.Disable(Hook_Pre, DD_RestoreTransitionedSurvivorBot_Pre))
+			SetFailState("Failed to disable detour pre: \"DD::RestoreTransitionedSurvivorBots\"");
+
+		if (!g_ddRestoreTransitionedSurvivorBot.Disable(Hook_Post, DD_RestoreTransitionedSurvivorBot_Post))
+			SetFailState("Failed to disable detour post: \"DD::RestoreTransitionedSurvivorBots\"");
+
+		if (!g_ddInfoChangelevel_ChangeLevelNow.Disable(Hook_Post, DD_InfoChangelevel_ChangeLevelNow_Post))
+			SetFailState("Failed to disable detour post: \"DD::InfoChangelevel::ChangeLevelNow\"");
+
+		g_bTransition = false;
+		g_bTransitioned = false;
+
+		for (int i = 1; i <= MaxClients; i++) {
+			g_bBotPlayer[i] = false;
+			g_bPlayerBot[i] = false;
+			g_iTransitioning[i] = 0;
+			if (IsClientInGame(i))
+				SDKUnhook(i, SDKHook_SpawnPost, IsFakeClient(i) ? BotSpawnPost : PlayerSpawnPost);
+		}
+	}
+}
+
+void Event_RoundStart(Event event, char[] name, bool dontBroadcast) {
+	for (int i; i <= MaxClients; i++) {
+		g_bBotPlayer[i] = false;
+		g_bPlayerBot[i] = false;
+	}
+}
+
+void Event_PlayerBotReplace(Event event, char[] name, bool dontBroadcast) {
+	int bot = GetClientOfUserId(event.GetInt("bot"));
+	if (!bot || !IsClientInGame(bot))
+		return;
+
+	int player = GetClientOfUserId(event.GetInt("player"));
+	if (!player || !IsClientInGame(player) || GetClientTeam(player) != 2)
+		return;
+
+	if (IsFakeClient(player)) {
+		RequestFrame(NextFrame_PlayerBot, bot);
+		return;
+	}
+
+	g_bPlayerBot[bot] = true;
+	g_bBotPlayer[player] = false;
+	RequestFrame(NextFrame_PlayerBot, bot);
+}
+
+void Event_BotPlayerReplace(Event event, char[] name, bool dontBroadcast) {
+	int player = GetClientOfUserId(event.GetInt("player"));
+	if (!player || !IsClientInGame(player) || IsFakeClient(player) || GetClientTeam(player) != 2)
+		return;
+
+	int bot = GetClientOfUserId(event.GetInt("bot"));
+	if (!bot || !IsClientInGame(bot) || !CPlayerResource().m_bConnected(bot))
+		return;
+
+	g_bPlayerBot[bot] = false;
+	g_bBotPlayer[player] = true;
+	RequestFrame(NextFrame_BotPlayer, player);
+}
+
+void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast) {
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (!client || !IsClientInGame(client) || IsFakeClient(client))
+		return;
+
+	if (event.GetInt("team") != 2)
+		return;
+
+	switch (event.GetInt("oldteam")) {
+		case 1, 3, 4:
+			RequestFrame(NextFrame_Player, event.GetInt("userid"));
+	}
+}
+
+void NextFrame_PlayerBot(int bot) {
+	g_bPlayerBot[bot] = false;
+}
+
+void NextFrame_BotPlayer(int player) {
+	g_bPlayerBot[player] = false;
+}
+
+void SetCharacter(int client, int character, int modelIndex) {
+	if (!CanUse(client, false))
+		return;
+
+	SetCharacterInfo(client, character, modelIndex);
+}
+
+public void OnEntityCreated(int entity, const char[] classname) {
+	if (!g_bAutoModel)
+		return;
+
+	if (entity < 1 || entity > MaxClients)
+		return;
+
+	if (classname[0] == 'p' && strcmp(classname[1], "layer", false) == 0) {
+		g_bFirstSpawn[entity] = true;
+		SDKHook(entity, SDKHook_SpawnPost, PlayerSpawnPost);
+
+		if (g_iTransitioning[entity])
+			g_iTransitioning[entity] = -1;
+		else
+			g_iTransitioning[entity] = IsTransitioning(GetClientUserId(entity)) ? 1 : -1;
+	}
+
+	if (classname[0] == 's' && strcmp(classname[1], "urvivor_bot", false) == 0) {
+		if (!g_bInTransition || !PrepRestoreBots())
+			SDKHook(entity, SDKHook_SpawnPost, BotSpawnPost);
+	}
+}
+
+void PlayerSpawnPost(int client) {
+	if (GetClientTeam(client) != 4) {
+		switch (CPlayerResource().m_iTeam(client)) {
+			case 0: {
+				if (g_bInTransition && g_iTransitioning[client] == 1)
+					g_bFirstSpawn[client] = false;
+				else
+					RequestFrame(NextFrame_Player, GetClientUserId(client));
+			}
+
+			case 1, 3, 4:
+				RequestFrame(NextFrame_Player, GetClientUserId(client));
+		}
+	}
+}
+
+void NextFrame_Player(int client) {
+	client = GetClientOfUserId(client);
+	if (!client)
+		return;
+
+	if (!IsClientInGame(client) || GetClientTeam(client) != 2)
+		return;
+
+	if ((!g_bFirstSpawn[client] && g_bBotPlayer[client]) || g_bPlayerBot[client])
+		return;
+
+	static bool once[MAXPLAYERS + 1];
+	if (once[client] && !PrepTransition() && !PrepRestoreBots()) {
+		once[client] = false;
+		SetLeastCharacter(client);
+		g_bFirstSpawn[client] = false;
+	}
+	else {
+		once[client] = !PrepTransition() && !PrepRestoreBots();
+
+		if (!g_bInTransition) {
+			SetLeastCharacter(client);
+			g_bFirstSpawn[client] = false;
+		}
+		else
+			RequestFrame(NextFrame_Player, GetClientUserId(client));
+	}
+}
+
+void BotSpawnPost(int client) {
+	if (GetClientTeam(client) == 4)
+		return;
+
+	SDKUnhook(client, SDKHook_SpawnPost, BotSpawnPost);
+	RequestFrame(NextFrame_Bot, GetClientUserId(client));
+}
+
+void NextFrame_Bot(int client) {
+	client = GetClientOfUserId(client);
+	if (!client)
+		return;
+
+	if (g_bPlayerBot[client] || g_bBotPlayer[client])
+		return;
+
+	if (!IsClientInGame(client) || GetClientTeam(client) != 2)
+		return;
+
+	if (g_bInTransition) {
+		int userid = GetEntProp(client, Prop_Send, "m_humanSpectatorUserID");
+		if (GetClientOfUserId(userid) && IsTransitioning(userid))
+			return;
+	}
+
+	SetLeastCharacter(client);
+}
+
+void SetLeastCharacter(int client) {
+	switch (GetLeastCharacter(client)) {
+		case 0:
+			SetCharacterInfo(client, NICK);
+
+		case 1:
+			SetCharacterInfo(client, ROCHELLE);
+
+		case 2:
+			SetCharacterInfo(client, COACH);
+
+		case 3:
+			SetCharacterInfo(client, ELLIS);
+
+		case 4:
+			SetCharacterInfo(client, BILL);
+
+		case 5:
+			SetCharacterInfo(client, ZOEY);
+
+		case 6:
+			SetCharacterInfo(client, FRANCIS);
+
+		case 7:
+			SetCharacterInfo(client, LOUIS);
+	}
+}
+
+int GetLeastCharacter(int client) {
+	int i = 1, buf, least[8];
+	static char ModelName[128];
+	for (; i <= MaxClients; i++) {
+		if (i == client || !IsClientInGame(i) || IsClientInKickQueue(i) || GetClientTeam(i) != 2)
+			continue;
+
+		GetClientModel(i, ModelName, sizeof ModelName);
+		if (g_smSurModels.GetValue(ModelName, buf))
+			least[buf]++;
+	}
+
+	switch (g_iOrignalSet) {
+		case 1: {
+			buf = 7;
+			int tempChar = least[7];
+			for (i = 7; i >= 0; i--) {
+				if (least[i] < tempChar) {
+					tempChar = least[i];
+					buf = i;
+				}
+			}
+		}
+
+		case 2: {
+			buf = 0;
+			int tempChar = least[0];
+			for (i = 0; i <= 7; i++) {
+				if (least[i] < tempChar) {
+					tempChar = least[i];
+					buf = i;
+				}
+			}
+		}
+	}
+
+	return buf;
+}
+
+void SetCharacterInfo(int client, int character, int modelIndex) {
+	if (g_iTabHUDBar && g_iTabHUDBar & g_iOrignalSet)
+		character = ConvertToInternalCharacter(character);
+
+	#if DEBUG
+	int buf = -1;
+	static char ModelName[128];
+	GetClientModel(client, ModelName, sizeof ModelName);
+	g_smSurModels.GetValue(ModelName, buf);
+	LogError("Set \"%N\" Character \"%s\" to \"%s\"", client, buf != -1 ? g_sSurNames[buf] : ModelName, g_sSurNames[modelIndex]);
+	#endif
+
+	SetEntProp(client, Prop_Send, "m_survivorCharacter", character, 2);
+	SetEntityModel(client, g_sSurModels[modelIndex]);
+
+	if (IsFakeClient(client)) {
+		g_bBlockUserMsg = true;
+		SetClientInfo(client, "name", g_sSurNames[modelIndex]);
+		g_bBlockUserMsg = false;
+	}
+
+	ReEquipWeapons(client);
+}
+
+// https://github.com/LuxLuma/Left-4-fix/blob/master/left%204%20fix/Defib_Fix/scripting/Defib_Fix.sp
+int ConvertToInternalCharacter(int SurvivorCharacterType) {
+	switch (SurvivorCharacterType) {
+		case 4:
+			return 0;
+
+		case 5:
+			return 1;
+
+		case 6:
+			return 3;
+
+		case 7:
+			return 2;
+
+		case 9:
+			return 8;
+	}
+
+	return SurvivorCharacterType;
+}
+
+void ReEquipWeapons(int client) {
+	if (!IsPlayerAlive(client))
+		return;
+
+	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	if (weapon <= MaxClients)
+		return;
+
+	char active[32];
+	GetEntityClassname(weapon, active, sizeof active);
+
+	char cls[32];
+	for (int i; i <= 1; i++) {
+		weapon = GetPlayerWeaponSlot(client, i);
+		if (weapon <= MaxClients)
+			continue;
+
+		switch (i) {
+			case 0: {
+				GetEntityClassname(weapon, cls, sizeof cls);
+	
+				int clip1 = GetEntProp(weapon, Prop_Send, "m_iClip1");
+				int ammo = GetOrSetPlayerAmmo(client, weapon);
+				int upgrade = GetEntProp(weapon, Prop_Send, "m_upgradeBitVec");
+				int upgradeAmmo = GetEntProp(weapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded");
+				int weaponSkin = GetEntProp(weapon, Prop_Send, "m_nSkin");
+
+				RemovePlayerSlot(client, weapon);
+				GivePlayerItem(client, cls);
+
+				weapon = GetPlayerWeaponSlot(client, 0);
+				if (weapon > MaxClients) {
+					SetEntProp(weapon, Prop_Send, "m_iClip1", clip1);
+					GetOrSetPlayerAmmo(client, weapon, ammo);
+
+					if (upgrade > 0)
+						SetEntProp(weapon, Prop_Send, "m_upgradeBitVec", upgrade);
+
+					if (upgradeAmmo > 0)
+						SetEntProp(weapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", upgradeAmmo);
 			
-					if(iWeaponSkin > 0)
-						SetEntProp(iweapon, Prop_Send, "m_nSkin", iWeaponSkin);
+					if (weaponSkin > 0)
+						SetEntProp(weapon, Prop_Send, "m_nSkin", weaponSkin);
 				}
 			}
 
-			case 1:
-			{
-				int iClip1 = -1;
-				int iWeaponSkin;
-				bool bDualWielding;
+			case 1: {
+				int clip1 = -1;
+				int weaponSkin;
+				bool dualWielding;
 
-				GetEntityClassname(iweapon, sWeapon, sizeof sWeapon);
+				GetEntityClassname(weapon, cls, sizeof cls);
+				if (strcmp(cls, "weapon_melee") == 0) {
+					GetEntPropString(weapon, Prop_Data, "m_strMapSetScriptName", cls, sizeof cls);
+					if (cls[0] == '\0') {
+						// 防爆警察掉落的警棍m_strMapSetScriptName为空字符串 (感谢little_froy的提醒)
+						char ModelName[128];
+						GetEntPropString(weapon, Prop_Data, "m_ModelName", ModelName, sizeof ModelName);
+						if (strcmp(ModelName, "models/weapons/melee/v_tonfa.mdl") == 0)
+							strcopy(cls, sizeof cls, "tonfa");
+					}
+				}
+				else {
+					if (strncmp(cls, "weapon_pistol", 13) == 0 || strcmp(cls, "weapon_chainsaw") == 0)
+						clip1 = GetEntProp(weapon, Prop_Send, "m_iClip1");
 
-				if(strcmp(sWeapon[7], "melee") == 0)
-					GetEntPropString(iweapon, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof sWeapon);
-				else
-				{
-					if(strncmp(sWeapon[7], "pistol", 6) == 0 || strcmp(sWeapon[7], "chainsaw") == 0)
-						iClip1 = GetEntProp(iweapon, Prop_Send, "m_iClip1");
-
-					bDualWielding = strcmp(sWeapon[7], "pistol") == 0 && GetEntProp(iweapon, Prop_Send, "m_isDualWielding");
+					dualWielding = strcmp(cls, "weapon_pistol") == 0 && GetEntProp(weapon, Prop_Send, "m_isDualWielding");
 				}
 
-				iWeaponSkin = GetEntProp(iweapon, Prop_Send, "m_nSkin");
+				weaponSkin = GetEntProp(weapon, Prop_Send, "m_nSkin");
 
-				vRemovePlayerWeapon(client, iweapon);
+				RemovePlayerSlot(client, weapon);
 
-				switch(bDualWielding)
-				{
-					case true:
-					{
-						vCheatCommand(client, "give", "weapon_pistol");
-						vCheatCommand(client, "give", "weapon_pistol");
+				switch (dualWielding) {
+					case true: {
+						GivePlayerItem(client, "weapon_pistol");
+						GivePlayerItem(client, "weapon_pistol");
 					}
 
 					case false:
-						vCheatCommand(client, "give", sWeapon);
+						GivePlayerItem(client, cls);
 				}
 
-				iweapon = GetPlayerWeaponSlot(client, 1);
-				if(iweapon > MaxClients)
-				{
-					if(iClip1 != -1)
-						SetEntProp(iweapon, Prop_Send, "m_iClip1", iClip1);
+				weapon = GetPlayerWeaponSlot(client, 1);
+				if (weapon > MaxClients) {
+					if (clip1 != -1)
+						SetEntProp(weapon, Prop_Send, "m_iClip1", clip1);
 				
-					if(iWeaponSkin > 0)
-						SetEntProp(iweapon, Prop_Send, "m_nSkin", iWeaponSkin);
+					if (weaponSkin > 0)
+						SetEntProp(weapon, Prop_Send, "m_nSkin", weaponSkin);
 				}
 			}
 		}
 	}
 
-	FakeClientCommand(client, "use %s", sActive);
+	FakeClientCommand(client, "use %s", active);
 }
 
-void vCheatCommand(int client, const char[] sCommand, const char[] sArguments = "")
-{
-	static int iFlagBits, iCmdFlags;
-	iFlagBits = GetUserFlagBits(client);
-	iCmdFlags = GetCommandFlags(sCommand);
-	SetUserFlagBits(client, ADMFLAG_ROOT);
-	SetCommandFlags(sCommand, iCmdFlags & ~FCVAR_CHEAT);
-	FakeClientCommand(client, "%s %s", sCommand, sArguments);
-	SetUserFlagBits(client, iFlagBits);
-	SetCommandFlags(sCommand, iCmdFlags);
-}
-
-int iGetOrSetPlayerAmmo(int client, int iWeapon, int iAmmo = -1)
-{
-	int m_iPrimaryAmmoType = GetEntProp(iWeapon, Prop_Send, "m_iPrimaryAmmoType");
-	if(m_iPrimaryAmmoType != -1)
-	{
-		if(iAmmo != -1)
-			SetEntProp(client, Prop_Send, "m_iAmmo", iAmmo, _, m_iPrimaryAmmoType);
+int GetOrSetPlayerAmmo(int client, int weapon, int ammo = -1) {
+	int m_iPrimaryAmmoType = GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
+	if (m_iPrimaryAmmoType != -1) {
+		if (ammo != -1)
+			SetEntProp(client, Prop_Send, "m_iAmmo", ammo, _, m_iPrimaryAmmoType);
 		else
 			return GetEntProp(client, Prop_Send, "m_iAmmo", _, m_iPrimaryAmmoType);
 	}
-
 	return 0;
 }
 
-void vInitGameData()
-{
-	char sPath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sPath, sizeof sPath, "gamedata/%s.txt", GAMEDATA);
-	if(!FileExists(sPath)) 
-		SetFailState("\n==========\nMissing required file: \"%s\".\n==========", sPath);
+void RemovePlayerSlot(int client, int weapon) {
+	RemovePlayerItem(client, weapon);
+	RemoveEntity(weapon);
+}
+
+void InitGameData() {
+	char buffer[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, buffer, sizeof buffer, "gamedata/%s.txt", GAMEDATA);
+	if (!FileExists(buffer))
+		SetFailState("\n==========\nMissing required file: \"%s\".\n==========", buffer);
 
 	GameData hGameData = new GameData(GAMEDATA);
-	if(!hGameData)
+	if (!hGameData)
 		SetFailState("Failed to load \"%s.txt\" gamedata.", GAMEDATA);
 
-	//[L4D2] Real Zoey Unlock (1.2) (https://forums.alliedmods.net/showthread.php?p=2598539)
-	int iOffset = GameConfGetOffset(hGameData, "ZoeyUnlock_Offset");
-	if(iOffset != -1)
-	{
-		Address pZoeyUnlock = GameConfGetAddress(hGameData, "ZoeyUnlock");
-		if(!pZoeyUnlock)
-			SetFailState("Error finding the 'ZoeyUnlock' signature.");
+	g_pSavedPlayersCount = hGameData.GetAddress("SavedPlayersCount");
+	if (!g_pSavedPlayersCount)
+		SetFailState("Failed to find address: \"SavedPlayersCount\"");
 
-		int iByte = LoadFromAddress(pZoeyUnlock + view_as<Address>(iOffset), NumberType_Int8);
-		if(iByte == 0xE8)
-		{
-			for(int i; i < 5; i++)
-				StoreToAddress(pZoeyUnlock + view_as<Address>(iOffset + i), 0x90, NumberType_Int8);
-		}
-		else if(iByte != 0x90)
-			SetFailState("Error: the 'ZoeyUnlock_Offset' is incorrect.");
-	}
+	g_pSavedSurvivorBotsCount = hGameData.GetAddress("SavedSurvivorBotsCount");
+	if (!g_pSavedSurvivorBotsCount)
+		SetFailState("Failed to find address: \"SavedSurvivorBotsCount\"");
 
 	StartPrepSDKCall(SDKCall_Raw);
-	if(!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::IsInTransition"))
-		SetFailState("Failed to find signature: CDirector::IsInTransition");
+	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::IsInTransition"))
+		SetFailState("Failed to find signature: \"CDirector::IsInTransition\"");
 	PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-	g_hSDK_IsInTransition = EndPrepSDKCall();
-	if(!g_hSDK_IsInTransition)
-		SetFailState("Failed to create SDKCall: CDirector::IsInTransition");
+	if (!(g_hSDK_CDirector_IsInTransition = EndPrepSDKCall()))
+		SetFailState("Failed to create SDKCall: \"CDirector::IsInTransition\"");
 
-	StartPrepSDKCall(SDKCall_Player);
-	if(!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::IsTransitioned"))
-		SetFailState("Failed to find signature: CTerrorPlayer::IsTransitioned");
-	PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-	g_hSDK_IsTransitioned = EndPrepSDKCall();
-	if(!g_hSDK_IsTransitioned)
-		SetFailState("Failed to create SDKCall: CTerrorPlayer::IsTransitioned");
+	StartPrepSDKCall(SDKCall_Raw);
+	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "KeyValues::GetInt"))
+		SetFailState("Failed to find signature: \"KeyValues::GetInt\"");
+	PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
+	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+	g_hSDK_KeyValues_GetInt = EndPrepSDKCall();
+	if (!(g_hSDK_KeyValues_GetInt = EndPrepSDKCall()))
+		SetFailState("Failed to create SDKCall: \"KeyValues::GetInt\"");
+
+	SetupDetours(hGameData);
 
 	delete hGameData;
 }
 
-public Action L4D_OnGetSurvivorSet(int &retVal)
-{
-	g_iOrignalMapSet = retVal;
+void SetupDetours(GameData hGameData = null) {
+	g_ddRestoreTransitionedSurvivorBot = DynamicDetour.FromConf(hGameData, "DD::RestoreTransitionedSurvivorBots");
+	if (!g_ddRestoreTransitionedSurvivorBot)
+		SetFailState("Failed to create DynamicDetour: \"DD::RestoreTransitionedSurvivorBots\"");
 
-	if(!g_bFixDialogue)
-		return Plugin_Continue;
+	g_ddInfoChangelevel_ChangeLevelNow = DynamicDetour.FromConf(hGameData, "DD::InfoChangelevel::ChangeLevelNow");
+	if (!g_ddInfoChangelevel_ChangeLevelNow)
+		SetFailState("Failed to create DynamicDetour: \"DD::InfoChangelevel::ChangeLevelNow\"");
+}
 
-	retVal = 2;
-	return Plugin_Handled;
+MRESReturn DD_RestoreTransitionedSurvivorBot_Pre() {
+	g_bRestoringBots = true;
+	return MRES_Ignored;
+}
+
+MRESReturn DD_RestoreTransitionedSurvivorBot_Post() {
+	g_bRestoringBots = false;
+	return MRES_Ignored;
+}
+
+MRESReturn DD_InfoChangelevel_ChangeLevelNow_Post(Address pThis) {
+	g_bTransition = true;
+	return MRES_Ignored;
+}
+
+public void OnMapEnd() {
+	int val;
+	if (g_bTransition)
+		g_bTransitioned = true;
+	else {
+		val = -1;
+		g_bTransitioned = false;
+	}
+
+	for (int i; i <= MaxClients; i++)
+		g_iTransitioning[i] = val;
+
+	g_bTransition = false;
+	g_bRestoringBots = false;
+}
+
+bool PrepRestoreBots() {
+	return g_bTransitioned && (g_bRestoringBots || (SDKCall(g_hSDK_CDirector_IsInTransition, g_pDirector) && LoadFromAddress(g_pSavedSurvivorBotsCount, NumberType_Int32)));
+}
+
+bool PrepTransition() {
+	if (!g_bTransitioned)
+		return false;
+
+	if (!SDKCall(g_hSDK_CDirector_IsInTransition, g_pDirector))
+		return false;
+
+	int count = LoadFromAddress(g_pSavedPlayersCount, NumberType_Int32);
+	if (!count)
+		return false;
+
+	Address kv = view_as<Address>(LoadFromAddress(g_pSavedPlayersCount + view_as<Address>(4), NumberType_Int32));
+	if (!kv)
+		return false;
+
+	Address ptr;
+	for (int i; i < count; i++) {
+		ptr = view_as<Address>(LoadFromAddress(kv + view_as<Address>(4 * i), NumberType_Int32));
+		if (!ptr)
+			continue;
+
+		if (SDKCall(g_hSDK_KeyValues_GetInt, ptr, "teamNumber", 0) != 2)
+			continue;
+
+		if (SDKCall(g_hSDK_KeyValues_GetInt, ptr, "restoreState", 0))
+			return false;
+	}
+
+	return true;
+}
+
+bool IsTransitioning(int userid) {
+	if (!g_bTransitioned)
+		return false;
+
+	if (!SDKCall(g_hSDK_CDirector_IsInTransition, g_pDirector))
+		return false;
+
+	int count = LoadFromAddress(g_pSavedPlayersCount, NumberType_Int32);
+	if (!count)
+		return false;
+
+	Address kv = view_as<Address>(LoadFromAddress(g_pSavedPlayersCount + view_as<Address>(4), NumberType_Int32));
+	if (!kv)
+		return false;
+
+	Address ptr;
+	for (int i; i < count; i++) {
+		ptr = view_as<Address>(LoadFromAddress(kv + view_as<Address>(4 * i), NumberType_Int32));
+		if (!ptr)
+			continue;
+
+		if (SDKCall(g_hSDK_KeyValues_GetInt, ptr, "userID", 0) != userid)
+			continue;
+	
+		if (SDKCall(g_hSDK_KeyValues_GetInt, ptr, "teamNumber", 0) != 2)
+			continue;
+
+		if (!SDKCall(g_hSDK_KeyValues_GetInt, ptr, "restoreState", 0))
+			return true;
+	}
+
+	return false;
 }

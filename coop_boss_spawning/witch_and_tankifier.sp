@@ -99,11 +99,11 @@ public void OnPluginStart() {
 }
 
 void LoadMapInfo() {
-	char buffer[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, buffer, sizeof buffer, "configs/confogl/mapinfo.txt");
-	if (FileExists(buffer)) {
+	char file[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, file, sizeof file, "configs/confogl/mapinfo.txt");
+	if (FileExists(file)) {
 		g_kvMIData = new KeyValues("MapInfo");
-		if (!g_kvMIData.ImportFromFile(buffer))
+		if (!g_kvMIData.ImportFromFile(file))
 			delete g_kvMIData;
 	}
 }
@@ -175,12 +175,18 @@ Action AdjustBossFlow(Handle timer) {
 		if (IsValidInterval(interval))
 			aBannedFlows.PushArray(interval);
 
-		if (g_kvMIData) {
-			interval[0] = g_kvMIData.GetNum("tank_ban_flow_min", -1);
-			interval[1] = g_kvMIData.GetNum("tank_ban_flow_max", -1);
-			PrintDebug("[AdjustBossFlow] ban (%i, %i).", interval[0], interval[1]);
-			if (IsValidInterval(interval))
-				aBannedFlows.PushArray(interval);
+		if (g_kvMIData.JumpToKey("tank_ban_flow", false)) {
+			if (g_kvMIData.GotoFirstSubKey()) {
+				do {
+					interval[0] = g_kvMIData.GetNum("min", -1);
+					interval[1] = g_kvMIData.GetNum("max", -1);
+					PrintDebug("[AdjustBossFlow] ban (%i, %i).", interval[0], interval[1]);
+					if (IsValidInterval(interval))
+						aBannedFlows.PushArray(interval);
+				} while (g_kvMIData.GotoNextKey());
+				g_kvMIData.GoBack();
+			}
+			g_kvMIData.GoBack();
 		}
 
 		MergeIntervals(aBannedFlows);
@@ -219,12 +225,18 @@ Action AdjustBossFlow(Handle timer) {
 		if (IsValidInterval(interval))
 			aBannedFlows.PushArray(interval);
 
-		if (g_kvMIData) {
-			interval[0] = g_kvMIData.GetNum("witch_ban_flow_min", -1);
-			interval[1] = g_kvMIData.GetNum("witch_ban_flow_max", -1);
-			PrintDebug("[AdjustBossFlow] ban (%i, %i).", interval[0], interval[1]);
-			if (IsValidInterval(interval))
-				aBannedFlows.PushArray(interval);
+		if (g_kvMIData.JumpToKey("witch_ban_flow", false)) {
+			if (g_kvMIData.GotoFirstSubKey()) {
+				do {
+					interval[0] = g_kvMIData.GetNum("min", -1);
+					interval[1] = g_kvMIData.GetNum("max", -1);
+					PrintDebug("[AdjustBossFlow] ban (%i, %i).", interval[0], interval[1]);
+					if (IsValidInterval(interval))
+						aBannedFlows.PushArray(interval);
+				} while (g_kvMIData.GotoNextKey());
+				g_kvMIData.GoBack();
+			}
+			g_kvMIData.GoBack();
 		}
 
 		if (GetTankAvoidInterval(interval)) {

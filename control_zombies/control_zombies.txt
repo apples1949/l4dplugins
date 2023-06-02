@@ -185,8 +185,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector6UpdateEv"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x38\xA1\x2A\x2A\x2A\x2A\x53"
-				/* 55 8B EC 83 EC 38 A1 ? ? ? ? 53 */
+				"windows"	"\x55\x8B\xEC\x83\xEC\x34\xA1\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1"
+				/* 55 8B EC 83 EC 34 A1 ? ? ? ? 53 56 8B F1 */
 			}
 
 			/* CTerrorPlayer::CanBecomeGhost(CTerrorPlayer *__hidden this, bool) */

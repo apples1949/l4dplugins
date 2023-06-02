@@ -234,10 +234,10 @@ public void OnPluginStart()
 	g_hCvarAllow = CreateConVar(	"l4d_survivor_shove_allow",			"1",			"0=关闭插件，1=打开插件", CVAR_FLAGS );
 	g_hCvarBots = CreateConVar(		"l4d_survivor_shove_bots",			"0",			"谁可以被推动。0=所有人。1=仅机器人。2=仅生还者", CVAR_FLAGS );
 	g_hCvarDelay = CreateConVar(	"l4d_survivor_shove_delay",			"0",			"0=随意推动 多少秒后才会有人再次推动", CVAR_FLAGS, true, 0.0 );
-	g_hCvarFlags = CreateConVar(	"l4d_survivor_shove_flags",			"",			"空 =全部玩家。拥有这些标志的玩家可以使用推动功能", CVAR_FLAGS );
+	g_hCvarFlags = CreateConVar(	"l4d_survivor_shove_flags",			"",				"空 =全部玩家。拥有这些标志的玩家可以使用推动功能", CVAR_FLAGS );
 	g_hCvarKey = CreateConVar(		"l4d_survivor_shove_keys",			"1",			"1=推键 2=推键+使用键 如何推动玩家", CVAR_FLAGS );
 	g_hCvarStart = CreateConVar(	"l4d_survivor_shove_start",			"1",			"0=关闭 1=开启 当玩家加入时，推动功能应该被打开还是关闭", CVAR_FLAGS );
-	g_hCvarVoca = CreateConVar(		"l4d_survivor_shove_vocalize",		"50",			"0=Off. 0=关闭。被推动的幸存者发出尖叫的概率", CVAR_FLAGS );
+	g_hCvarVoca = CreateConVar(		"l4d_survivor_shove_vocalize",		"50",			"0=关闭 被推动的幸存者发出尖叫的概率", CVAR_FLAGS );
 	g_hCvarVocaType = CreateConVar(	"l4d_survivor_shove_vocal_type",	"1",			"0=D死亡尖叫声 1=痛苦尖叫声。幸存者将进行的发声类型", CVAR_FLAGS );
 	g_hCvarModes = CreateConVar(	"l4d_survivor_shove_modes",			"",				"在这些游戏模式下打开插件，用逗号分隔（没有空格）（空=全部）", CVAR_FLAGS );
 	g_hCvarModesOff = CreateConVar(	"l4d_survivor_shove_modes_off",		"",				"在这些游戏模式下关闭插件，用逗号分隔（没有空格）（空=无）", CVAR_FLAGS );

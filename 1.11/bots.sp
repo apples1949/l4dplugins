@@ -6,7 +6,7 @@
 #define PLUGIN_NAME				"bots(coop)"
 #define PLUGIN_AUTHOR			"DDRKhat, Marcus101RR, Merudo, Lux, Shadowysn, sorallll"
 #define PLUGIN_DESCRIPTION		"coop"
-#define PLUGIN_VERSION			"1.11.5"
+#define PLUGIN_VERSION			"1.11.7"
 #define PLUGIN_URL				"https://forums.alliedmods.net/showthread.php?p=2405322#post2405322"
 
 #define GAMEDATA 				"bots"
@@ -233,7 +233,7 @@ static const char
 		"models/w_models/weapons/w_sniper_awp.mdl",
 		"models/w_models/weapons/w_m60.mdl",
 		"models/w_models/weapons/w_grenade_launcher.mdl",
-	
+
 		"models/w_models/weapons/w_pistol_a.mdl",
 		"models/w_models/weapons/w_desert_eagle.mdl",
 		"models/weapons/melee/w_chainsaw.mdl",
@@ -309,7 +309,7 @@ public void OnPluginStart() {
 	g_cSpecNotify =				CreateConVar("bots_spec_notify",		"3",		"完全旁观玩家点击鼠标左键时, 提示加入生还者的方式 \n0=不提示, 1=聊天栏, 2=屏幕中央, 3=弹出菜单.", CVAR_FLAGS);
 	g_eWeapon[0].Flags =		CreateConVar("bots_give_slot0",			"131071",	"主武器给什么. \n0=不给, 131071=所有, 7=微冲, 1560=霰弹, 30720=狙击, 31=Tier1, 32736=Tier2, 98304=Tier0.", CVAR_FLAGS);
 	g_eWeapon[1].Flags =		CreateConVar("bots_give_slot1",			"1064",		"副武器给什么. \n0=不给, 131071=所有.(如果选中了近战且该近战在当前地图上未解锁,则会随机给一把).", CVAR_FLAGS);
-	g_eWeapon[2].Flags = 		CreateConVar("bots_give_slot2",			"0",		"投掷物给什么. \n0=不给, 7=所有.", CVAR_FLAGS);
+	g_eWeapon[2].Flags =		CreateConVar("bots_give_slot2",			"0",		"投掷物给什么. \n0=不给, 7=所有.", CVAR_FLAGS);
 	g_eWeapon[3].Flags =		CreateConVar("bots_give_slot3",			"1",		"医疗品给什么. \n0=不给, 15=所有.", CVAR_FLAGS);
 	g_eWeapon[4].Flags =		CreateConVar("bots_give_slot4",			"3",		"药品给什么. \n0=不给, 3=所有.", CVAR_FLAGS);
 	g_cGiveType =				CreateConVar("bots_give_type",			"2",		"根据什么来给玩家装备. \n0=不给, 1=每个槽位的设置, 2=当前存活生还者的平均装备质量(仅主副武器).", CVAR_FLAGS);
@@ -335,7 +335,7 @@ public void OnPluginStart() {
 
 	g_cGiveType.AddChangeHook(CvarChanged_Weapon);
 	g_cGiveTime.AddChangeHook(CvarChanged_Weapon);
-	
+
 	AutoExecConfig(true, "bots");
 
 	RegConsoleCmd("sm_afk",				cmdGoIdle,		"闲置");
@@ -399,7 +399,7 @@ Action cmdTeamPanel(int client, int args) {
 Action cmdJoinTeam2(int client, int args) {
 	if (!client || !IsClientInGame(client) || IsFakeClient(client))
 		return Plugin_Handled;
-	
+
 	if (!g_bRoundStart) {
 		PrintToChat(client, "回合尚未开始.");
 		return Plugin_Handled;
@@ -573,7 +573,7 @@ int TakeOverBot_MenuHandler(Menu menu, MenuAction action, int param1, int param2
 			menu.GetItem(param2, item, sizeof item);
 			if (item[0] == 'o') {
 				bot = GetEntPropEnt(param1, Prop_Send, "m_hObserverTarget");
-				if (bot > 0 && IsValidSurBot(bot)) {
+				if (bot > 0 && bot <= MaxClients && IsValidSurBot(bot)) {
 					SetHumanSpec(bot, param1);
 					TakeOverBot(param1);
 				}
@@ -765,7 +765,7 @@ void CvarChanged_General(ConVar convar, const char[] oldValue, const char[] newV
 }
 
 void GeCvars_General() {
-	g_iJoinLimit = 		g_cJoinLimit.IntValue;
+	g_iJoinLimit =		g_cJoinLimit.IntValue;
 	g_iJoinFlags =		g_cJoinFlags.IntValue;
 	g_bJoinRespawn =	g_cJoinRespawn.BoolValue;
 	g_iSpecNotify =		g_cSpecNotify.IntValue;
@@ -839,7 +839,7 @@ void SpawnCheck() {
 
 	for (; iSurvivorMax < iSurvivor; iSurvivorMax++)
 		KickUnusedSurBot();
-	
+
 	for (; iSurvivor < iSurvivorLimit; iSurvivor++)
 		SpawnExtraSurBot();
 }
@@ -1162,7 +1162,7 @@ int TeleportPlayer(int client) {
 	for (; target <= MaxClients; target++) {
 		if (target == client || !IsClientInGame(target) || GetClientTeam(target) != TEAM_SURVIVOR || !IsPlayerAlive(target))
 			continue;
-	
+
 		aClients.Set(aClients.Push(!GetEntProp(target, Prop_Send, "m_isIncapacitated") ? 0 : !GetEntProp(target, Prop_Send, "m_isHangingFromLedge") ? 1 : 2), target, 1);
 	}
 
@@ -1233,9 +1233,12 @@ void GiveMelee(int client, const char[] meleeName) {
 	char buffer[64];
 	if (g_aMeleeScripts.FindString(meleeName) != -1)
 		strcopy(buffer, sizeof buffer, meleeName);
-	else
-		g_aMeleeScripts.GetString(Math_GetRandomInt(0, g_aMeleeScripts.Length - 1), buffer, sizeof buffer);
-	
+	else {
+		int num = g_aMeleeScripts.Length;
+		if (num)
+			g_aMeleeScripts.GetString(Math_GetRandomInt(0, num - 1), buffer, sizeof buffer);
+	}
+
 	GivePlayerItem(client, buffer);
 }
 
@@ -1301,7 +1304,7 @@ void DrawTeamPanel(int client, bool autoRefresh) {
 				FormatEx(info, sizeof info, "黑白 - %dHP - %s", GetClientHealth(i) + GetTempHealth(i), name);
 			else
 				FormatEx(info, sizeof info, "%dHP - %s", GetClientHealth(i) + GetTempHealth(i), name);
-	
+
 		}
 
 		panel.DrawText(info);
@@ -1422,7 +1425,7 @@ void InitData() {
 	/*m_hWeaponHandle = hGameData.GetOffset("m_hWeaponHandle");
 	if (m_hWeaponHandle == -1)
 		SetFailState("Failed to find offset: \"m_hWeaponHandle\" (%s)", PLUGIN_VERSION);*/
-	
+
 	m_iRestoreAmmo = m_knockdownTimer + 104;
 	/*m_iRestoreAmmo = hGameData.GetOffset("m_iRestoreAmmo");
 	if (m_iRestoreAmmo == -1)
@@ -1484,7 +1487,7 @@ void InitData() {
 	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 	if (!(g_hSDK_SurvivorBot_SetHumanSpectator = EndPrepSDKCall()))
 		SetFailState("Failed to create SDKCall: \"SurvivorBot::SetHumanSpectator\" (%s)", PLUGIN_VERSION);
-	
+
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::TakeOverBot"))
 		SetFailState("Failed to find signature: \"CTerrorPlayer::TakeOverBot\" (%s)", PLUGIN_VERSION);
@@ -1517,7 +1520,7 @@ void InitPatchs(GameData hGameData = null) {
 	g_pStatsCondition = hGameData.GetMemSig("CTerrorPlayer::RoundRespawn");
 	if (!g_pStatsCondition)
 		SetFailState("Failed to find address: \"CTerrorPlayer::RoundRespawn\" (%s)", PLUGIN_VERSION);
-	
+
 	g_pStatsCondition += view_as<Address>(iOffset);
 	int iByteOrigin = LoadFromAddress(g_pStatsCondition, NumberType_Int8);
 	if (iByteOrigin != iByteMatch)
@@ -1614,14 +1617,14 @@ void SetupDetours(GameData hGameData = null) {
 	dDetour = DynamicDetour.FromConf(hGameData, "DD::SurvivorBot::SetHumanSpectator");
 	if (!dDetour)
 		SetFailState("Failed to create DynamicDetour: \"DD::SurvivorBot::SetHumanSpectator\" (%s)", PLUGIN_VERSION);
-		
+
 	if (!dDetour.Enable(Hook_Pre, DD_SurvivorBot_SetHumanSpectator_Pre))
 		SetFailState("Failed to detour pre: \"DD::SurvivorBot::SetHumanSpectator\" (%s)", PLUGIN_VERSION);
 
 	dDetour = DynamicDetour.FromConf(hGameData, "DD::CBasePlayer::SetModel");
 	if (!dDetour)
 		SetFailState("Failed to create DynamicDetour: \"DD::CBasePlayer::SetModel\" (%s)", PLUGIN_VERSION);
-		
+
 	if (!dDetour.Enable(Hook_Post, DD_CBasePlayer_SetModel_Post))
 		SetFailState("Failed to detour post: \"DD::CBasePlayer::SetModel\" (%s)", PLUGIN_VERSION);
 
@@ -1640,7 +1643,7 @@ public void OnEntityCreated(int entity, const char[] classname) {
 
 	if (entity < 1 || entity > MaxClients)
 		return;
-	
+
 	if (classname[0] != 's' || strcmp(classname[1], "urvivor_bot", false) != 0)
 		return;
 
@@ -1687,7 +1690,7 @@ MRESReturn DD_CBasePlayer_SetModel_Post(int pThis, DHookParam hParams) {
 		g_ePlayer[pThis].Model[0] = '\0';
 		return MRES_Ignored;
 	}
-	
+
 	char model[128];
 	hParams.GetString(1, model, sizeof model);
 	if (StrContains(model, "models/survivors/survivor_", false) == 0)
@@ -1786,7 +1789,7 @@ void GiveDefaultItems(int client) {
 	switch (g_cGiveType.IntValue) {
 		case 1:
 			GivePresetPrimary(client);
-		
+
 		case 2:
 			GiveAveragePrimary(client);
 	}

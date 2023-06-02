@@ -3,25 +3,15 @@
 #include <sourcemod>
 #include <basecomm>
 #include <multicolors>
-#define PLUGIN_VERSION "1.3"
-
-#define	PRIVAT_TRIGGER	"/"
-
-ConVar g_hForceOnly;
-ConVar g_hPausable;
-bool g_bIsPaused = false;
-bool g_bIsUnpausing = false;
-bool g_bAllowPause = false;
-bool g_bAllowUnpause = false;
-bool g_bPauseRequest[2] = { false, false };
+#define PLUGIN_VERSION "1.5"
 
 public Plugin myinfo =
 {
-	name = "L4D2 Pause",
+	name = "[L4D1/2] Admin Force Pause",
 	author = "pvtschlag, Harry",
 	description = "Allows admins to force the game to pause, only adm can unpause the game.",
 	version = PLUGIN_VERSION,
-	url = "http://forums.alliedmods.net/showthread.php?p=997585"
+	url = "https://steamcommunity.com/profiles/76561198026784913/"
 };
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max) 
@@ -37,20 +27,26 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success; 
 }
 
+#define	PRIVAT_TRIGGER	"/"
+
+ConVar g_hForceOnly;
+ConVar g_hPausable;
+bool g_bIsPaused = false;
+bool g_bIsUnpausing = false;
+bool g_bPauseRequest[2] = { false, false };
+int g_iPauseAdmin;
+
 public void OnPluginStart()
 {
 	g_hForceOnly = CreateConVar("l4d2pause_forceonly", "1", "只允许通过强制暂停命令来暂停游戏(仅限管理员)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-
 	AutoExecConfig(true, "l4d2pause"); //Create and/or load the plugin config
 
 	g_hPausable = FindConVar("sv_pausable");
-	
 	SetConVarInt(g_hPausable, 0);
 
-	RegConsoleCmd("pause", Command_Pause);
-	RegConsoleCmd("setpause", Command_Setpause);
+	HookEvent("player_disconnect", Event_PlayerDisconnect);
+
 	RegConsoleCmd("unpause", Command_Unpause);
-	
 	RegAdminCmd("sm_forcepause", Command_SMForcePause, ADMFLAG_ROOT, "Adm forces the game to pause/unpause");
 
 	AddCommandListener(Say_Command, "say");
@@ -74,56 +70,38 @@ public void OnMapEnd()
 	ResetPauseRequest(); //Reset any pause requests
 }
 
-public Action Command_Pause(int client, int args)
+Action Command_Unpause(int client, int args)
 {
-	return Plugin_Handled; //We don't want the pause command doing anything
-}
-
-public Action Command_Setpause(int client, int args)
-{
-	if (g_bAllowPause) //Only allow the command to go through if we have said it could previously
+	if (g_bIsPaused)
 	{
-		g_bIsPaused = true; //Game is now paused
-		g_bIsUnpausing = false; //Game was just paused and can no longer be unpausing if it was
-		g_bAllowPause = false; //Don't allow this command to be used again untill we say
-		return Plugin_Continue;
+		return Plugin_Handled;
 	}
-	return Plugin_Handled;
+
+	return Plugin_Continue;
 }
 
-public Action Command_Unpause(int client, int args)
-{
-	if (g_bAllowUnpause) //Only allow the command to go through if we have said it could previously
-	{
-		g_bIsPaused = false; //Game is now active
-		g_bIsUnpausing = false; //Game is active so it is no longer in the unpausing state
-		g_bAllowUnpause = false; //Don't allow this command to be used again untill we say
-		return Plugin_Continue;
-	}
-	return Plugin_Handled;
-}
-
-
-public Action Command_SMForcePause(int client, int args)
+Action Command_SMForcePause(int client, int args)
 {
 	if(g_hForceOnly.BoolValue == false) return Plugin_Handled;
 
 	if (g_bIsPaused && !g_bIsUnpausing) //Is paused and not currently unpausing
 	{
-		PrintToChatAll("\x01[\x05PAUSE\x01] 游戏已被管理员 \x03%N\x01 暂停",client);
+		CPrintToChatAll("[{olive}PAUSE{default}] 游戏已被管理员 {lightgreen}%N{default} 暂停.",client);
 		g_bIsUnpausing = true; //Set unpausing state
 		CreateTimer(1.0, UnpauseCountdown, client, TIMER_REPEAT); //Start unpause countdown
+		g_iPauseAdmin = 0;
 	}
 	else if (!g_bIsPaused) //Is not paused
 	{
-		PrintToChatAll("\x01[\x05PAUSE\x01] 游戏已被管理员 \x03%N\x01 解除暂停",client);
-		PrintToChatAll("\x01若解除暂停, 请管理员输入\x04!forcepause\x01");
+		CPrintToChatAll("[{olive}PAUSE{default}] 游戏已被管理员 {lightgreen}%N{default} 解除暂停.",client);
+		CPrintToChatAll("若解除暂停, 请管理员输入 \x04!forcepause{default}.");
 		Pause(client);
+		g_iPauseAdmin = client;
 	}
 	return Plugin_Handled;
 }
 
-public Action Say_Command(int client, const char[] command, int args)
+Action Say_Command(int client, const char[] command, int args)
 {
 	if (!g_bIsPaused || client == 0 || BaseComm_IsClientGagged(client) == true) return Plugin_Continue;
 
@@ -142,7 +120,7 @@ public Action Say_Command(int client, const char[] command, int args)
 	return Plugin_Handled;
 }
 
-public Action SayTeam_Command(int client, const char[] command, int args)
+Action SayTeam_Command(int client, const char[] command, int args)
 {
 	if (!g_bIsPaused || client == 0 || BaseComm_IsClientGagged(client) == true ) return Plugin_Continue;
 	if(g_hNoTeamSayPlugin != null) return Plugin_Continue;
@@ -151,23 +129,23 @@ public Action SayTeam_Command(int client, const char[] command, int args)
 	GetCmdArg(1, buffer, sizeof(buffer));
 	if (IsSayCommandPrivate(buffer)) return Plugin_Continue; // If its a private chat trigger, return continue
 	
-	int teamIndex = GetClientTeam(client);
+	int team = GetClientTeam(client);
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (!IsClientInGame(i) || IsFakeClient(i) || GetClientTeam(i) != teamIndex) continue;
-		if(teamIndex == 1)
-			CPrintToChat(i, "{default}(Spec) {default}%N{default} : %s", client, buffer);
-		else if(teamIndex == 2)
-			CPrintToChat(i, "{default}(Sur) {blue}%N{default} : %s", client, buffer);
-		else if(teamIndex == 3)
-			CPrintToChat(i, "{default}(Inf) {red}%N{default} : %s", client, buffer);
+		if (!IsClientInGame(i) || IsFakeClient(i) || GetClientTeam(i) != team) continue;
+		if(team == 1)
+			CPrintToChat(i, "{default}(Spec)(team) {default}%N{default} : %s", client, buffer);
+		else if(team == 2)
+			CPrintToChat(i, "{default}(Sur)(team) {blue}%N{default} : %s", client, buffer);
+		else if(team == 3)
+			CPrintToChat(i, "{default}(Inf)(team) {red}%N{default} : %s", client, buffer);
 	}
 		
 	return Plugin_Handled;
 
 }
 
-public Action UnpauseCountdown(Handle timer, any client)
+Action UnpauseCountdown(Handle timer, any client)
 {
 	if (!g_bIsUnpausing) //Server was repaused/unpaused before the countdown finished
 	{
@@ -183,34 +161,54 @@ public Action UnpauseCountdown(Handle timer, any client)
 	}
 	else if (iCountdown == 5) //Start of countdown
 	{
-		PrintToChatAll("游戏将在 %d 秒后恢复...", iCountdown);
+		CPrintToChatAll("游戏将在 %d 秒后恢复...", iCountdown);
 		iCountdown--;
 		return Plugin_Continue;
 	}
 	else //Countdown progress
 	{
-		PrintToChatAll("%d...", iCountdown);
+		CPrintToChatAll("%d...", iCountdown);
 		iCountdown--;
 		return Plugin_Continue;
 	}
 }
 
+void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+
+	if( !client || !IsClientInGame(client)) return;
+
+	if(client == g_iPauseAdmin)
+	{
+		CPrintToChatAll("[{olive}TS{default}] The game has been unpaused due to admin disconnecting: {lightgreen}%N{default}.", client);
+		g_bIsUnpausing = true; //Set unpausing state
+		PrintHintTextToAll("Game is Live!");
+		Unpause(client);
+		g_iPauseAdmin = 0;
+	}
+}
+
 void Pause(int client)
 {
-	ResetPauseRequest(); //Reset all pause requests since we are now pausing the game
-	g_bAllowPause = true; //Allow the next setpause command to go through
-	SetConVarInt(g_hPausable, 1); //Ensure sv_pausable is set to 1
-	FakeClientCommand(client, "setpause"); //Send pause command
-	SetConVarInt(g_hPausable, 0); //Rest sv_pausable back to 0
+	ResetPauseRequest(); 
+	g_bIsPaused = true; 
+	SetConVarInt(g_hPausable, 1);
+	FakeClientCommand(client, "setpause"); 
+	SetConVarInt(g_hPausable, 0);
+
+	g_bIsUnpausing = false; //Game was just paused and can no longer be unpausing if it was
 }
 
 void Unpause(int client)
 {
-	ResetPauseRequest(); //Reset all pause requests since we are now pausing the game
-	g_bAllowUnpause = true; //Allow the next unpause command to go through
-	SetConVarInt(g_hPausable, 1); //Ensure sv_pausable is set to 1
-	FakeClientCommand(client, "unpause"); //Send unpause command
-	SetConVarInt(g_hPausable, 0); //Rest sv_pausable back to 0
+	ResetPauseRequest(); 
+	g_bIsPaused = false; 
+	SetConVarInt(g_hPausable, 1); 
+	FakeClientCommand(client, "unpause");
+	SetConVarInt(g_hPausable, 0);
+
+	g_bIsUnpausing = false; //Game is active so it is no longer in the unpausing state
 }
 
 void ResetPauseRequest()
@@ -219,7 +217,7 @@ void ResetPauseRequest()
 	g_bPauseRequest[1] = false; //Infected request
 }
 
-stock bool IsSayCommandPrivate(const char[] command)
+bool IsSayCommandPrivate(const char[] command)
 {
 	if (StrContains(command, PRIVAT_TRIGGER) == 0) return true;
 	return false;

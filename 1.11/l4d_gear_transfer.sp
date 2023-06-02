@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"2.29"
+#define PLUGIN_VERSION		"2.30"
 
 /*======================================================================================
 	Plugin Info:
@@ -31,6 +31,9 @@
 
 ========================================================================================
 	Change Log:
+
+2.30 (25-May-2023)
+	- Fixed items not always equipping and possibly the rare bug of them being stuck under players feet. Thanks to "little_froy" for reporting.
 
 2.29 (20-Jan-2023)
 	- Reverted change that broke equipping items on some servers. Thanks to "MilanesaTM" for reporting.
@@ -382,6 +385,7 @@
 		static float g_fBenchGrabAvg;
 		static float g_fBenchGrabMax;
 		static int g_iBenchGrabTicks;
+		static bool g_bProfiling;
 	#endif
 #endif
 
@@ -1721,6 +1725,7 @@ int CreateAndEquip(int client, int type)
 	int entity = GivePlayerItem(client, classname);
 	if( entity != INVALID_ENT_REFERENCE )
 	{
+		RemovePlayerItem(client, entity);
 		EquipPlayerWeapon(client, entity);
 		return entity;
 	}
@@ -1744,6 +1749,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 {
 	#if BENCHMARK
 	StartProfiling(g_Profiler);
+	g_bProfiling = true;
 	#endif
 
 	if( g_bCvarAllow && g_iCvarGrab && classname[0] == 'w' ) // Match "w" from "weapon_"
@@ -1783,6 +1789,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 
 					#if BENCHMARK
 					StopProfiling(g_Profiler);
+					g_bProfiling = false;
 					float speed = GetProfilerTime(g_Profiler);
 					PrintToServer("GEAR:OnEntityCreated: %f. %d - (%s)", speed, entity, classname);
 					#endif
@@ -1795,6 +1802,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 
 	#if BENCHMARK
 	StopProfiling(g_Profiler);
+	g_bProfiling = false;
 	#endif
 }
 
@@ -1826,6 +1834,7 @@ Action TimerAutoGive(Handle timer)
 
 	#if BENCHMARK
 	StartProfiling(g_Profiler);
+	g_bProfiling = true;
 	#endif
 
 
@@ -1977,6 +1986,7 @@ Action TimerAutoGive(Handle timer)
 										{
 											#if BENCHMARK == 2
 											StopProfiling(g_Profiler);
+											g_bProfiling = false;
 											float speed = GetProfilerTime(g_Profiler);
 											if( speed < g_fBenchGiveMin ) g_fBenchGiveMin = speed;
 											if( speed > g_fBenchGiveMax ) g_fBenchGiveMax = speed;
@@ -2005,7 +2015,13 @@ Action TimerAutoGive(Handle timer)
 						GiveItem(bot, target, weapon, slot, type - 1, METHOD_GIVE);
 
 						#if BENCHMARK == 2
-						StopProfiling(g_Profiler);
+
+						if( g_bProfiling )
+						{
+							StopProfiling(g_Profiler);
+							g_bProfiling = false;
+						}
+
 						float speed = GetProfilerTime(g_Profiler);
 						if( speed < g_fBenchGiveMin ) g_fBenchGiveMin = speed;
 						if( speed > g_fBenchGiveMax ) g_fBenchGiveMax = speed;
@@ -2034,6 +2050,7 @@ Action TimerAutoGive(Handle timer)
 
 	#if BENCHMARK == 2
 	StopProfiling(g_Profiler);
+	g_bProfiling = false;
 	float speed = GetProfilerTime(g_Profiler);
 	if( speed < g_fBenchGiveMin ) g_fBenchGiveMin = speed;
 	if( speed > g_fBenchGiveMax ) g_fBenchGiveMax = speed;
@@ -2058,6 +2075,7 @@ Action TimerAutoGrab(Handle timer)
 
 	#if BENCHMARK
 	StartProfiling(g_Profiler);
+	g_bProfiling = true;
 	#endif
 	#if BENCHMARK == 2
 	#endif
@@ -2180,6 +2198,7 @@ Action TimerAutoGrab(Handle timer)
 
 											#if BENCHMARK == 2
 											StopProfiling(g_Profiler);
+											g_bProfiling = false;
 											float speed = GetProfilerTime(g_Profiler);
 											if( speed < g_fBenchGrabMin ) g_fBenchGrabMin = speed;
 											if( speed > g_fBenchGrabMax ) g_fBenchGrabMax = speed;
@@ -2301,6 +2320,7 @@ Action TimerAutoGrab(Handle timer)
 
 	#if BENCHMARK == 2
 	StopProfiling(g_Profiler);
+	g_bProfiling = false;
 	float speed = GetProfilerTime(g_Profiler);
 	if( speed < g_fBenchGrabMin ) g_fBenchGrabMin = speed;
 	if( speed > g_fBenchGrabMax ) g_fBenchGrabMax = speed;
