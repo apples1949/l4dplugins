@@ -1,6 +1,6 @@
 不再更新的豆瓣包:([2023-5-29豆瓣酱な (v1.11)(6934-1148)战役整合包](https://github.com/apples1949/douban-l4d2-plugins-set))  
 1.11插件平台linux版(6934-1148)(必须先启用这个)  
-必选-多人破解扩展(v1.0.1)(lakwsh)
+必选-多人破解扩展(v1.0.1)(lakwsh)  
 必选-功能类插件(left4dhooks)(v1.132)(SilverShot)  
 必选-功能类插件(WeaponHandling)(v1.0.6)(Lux)  
 必选-功能类扩展(sourcescramble.ext)(v0.7.0)  

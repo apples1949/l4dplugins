@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION		"3.0"
+#define PLUGIN_VERSION		"3.2-2023/6/9"
 
 /*
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -18,6 +18,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <left4dhooks>
+#include <l4d2_weapons>
 
 #define MAXENTITIES                   2048
 
@@ -129,14 +130,16 @@ int ColorCyan[3], ColorBlue[3], ColorGreen[3], ColorPink[3], ColorRed[3],
 
 #define ENTITY_SAFE_LIMIT 2000 //don't spawn boxes when it's index is above this
 
+ConVar pain_pills_decay_rate, survivor_max_incapacitated_count;
+
 ConVar cvar_gift_enable, cvar_gift_life, cvar_gift_color, cvar_gift_chance, cvar_gift_glowrange,
 	cvar_special_gift_color, cvar_special_gift_chance, cvar_special_gift_glowrange,
 	cvar_gift_infected_hp, cvar_special_gift_infected_hp,
-	cvar_gift_maxcollectMap, cvar_gift_maxcollectRound, cvar_gift_Announce;
-ConVar pain_pills_decay_rate, survivor_max_incapacitated_count;
+	cvar_gift_maxcollectMap, cvar_gift_maxcollectRound, cvar_gift_Announce,
+	cvar_blockSwitch;
 
 char g_sCvarGiftCols[12], g_sCvarSpecialGiftCols[12];
-bool g_bGiftEnable;
+bool g_bGiftEnable, g_bCvarBlockSwitch;
 float g_fGiftLife;
 int g_iGiftChance, g_iSpecialGiftChance, g_iGiftMaxMap, g_iGiftMaxRound,
 	g_iGiftGlowRange, g_iSpecialGiftGlowRange, g_iGiftHP, g_iSpecialGiftHP;
@@ -162,7 +165,10 @@ char sPath_gifts[PLATFORM_MAX_PATH];
 int g_iCountGifts;
 int g_iOffset_Incapacitated;        // Used to check if tank is dying
 int ammoOffset;	
-bool g_bFinalHasStart, g_bIsOpenSafeRoom;
+bool 
+	g_bFinalHasStart, 
+	g_bIsOpenSafeRoom,
+	g_bHooked[MAXPLAYERS+1];
 
 #define SOUND_SPECIAL			"level/gnomeftw.wav"
 #define SOUND_STANDARD			"level/loud/climber.wav"
@@ -177,6 +183,7 @@ public Plugin myinfo =
 }
 
 int ZC_TANK;
+bool bLate;
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max) 
 {
 	EngineVersion test = GetEngineVersion();
@@ -188,6 +195,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 	
 	ZC_TANK = 8;
+	bLate = late;
 	return APLRes_Success; 
 }
 
@@ -195,17 +203,17 @@ public void OnPluginStart()
 {
 	LoadTranslations("l4d2_gifts.phrases");
 	BuildPath(Path_SM, sPath_gifts, PLATFORM_MAX_PATH, "data/l4d2_gifts.cfg");
-	
+
 	if(!FileExists(sPath_gifts))
 	{
 		SetFailState("Cannot find the file 'data/l4d2_gifts.cfg'");
 	}
-	
+
 	if(!LoadConfigGifts(false))
 	{
 		SetFailState("Cannot load the file 'data/l4d2_gifts.cfg'");
 	}
-	
+
 	if(g_iCountGifts == 0 )
 	{
 		SetFailState("Do not have models in 'data/l4d2_gifts.cfg'");
@@ -230,6 +238,7 @@ public void OnPluginStart()
 	cvar_gift_Announce = CreateConVar("l4d2_gifts_announce_type",							"4",		"服务器是否向玩家通知获取礼物,以及如何通知 (0: 禁用, 1:聊天框, 2: 提示框, 3: 屏幕中心, 4:1+3)", FCVAR_NOTIFY, true, 0.0, true, 3.0);
 	cvar_gift_infected_hp = CreateConVar("l4d2_gifts_infected_reward_hp",					"0",		"特殊感染者获取正常礼物得到的血量 (0=禁用)", FCVAR_NOTIFY, true, 0.0);
 	cvar_special_gift_infected_hp = CreateConVar("l4d2_gifts_special_infected_reward_hp",	"0",		"特殊感染者获取特殊礼物得到的血量 (0=禁用)", FCVAR_NOTIFY, true, 0.0);
+	cvar_blockSwitch = 				CreateConVar("l4d2_gifts_block_switch",					"1",		"如果为1，防止幸存者在打开礼物时换成新的武器和物品", FCVAR_NOTIFY, true, 0.0);
 	AutoExecConfig(true, "l4d2_gifts");
 
 	GetCvars();
@@ -249,6 +258,7 @@ public void OnPluginStart()
 	cvar_gift_Announce.AddChangeHook(Cvar_Changed);
 	cvar_gift_infected_hp.AddChangeHook(Cvar_Changed);
 	cvar_special_gift_infected_hp.AddChangeHook(Cvar_Changed);
+	cvar_blockSwitch.AddChangeHook(Cvar_Changed);
 
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -263,6 +273,48 @@ public void OnPluginStart()
 	RegAdminCmd("sm_reloadgifts", Command_ReloadGift, ADMFLAG_CONFIG, "重新加载插件配置文件(data/l4d2_gifts.cfg)");
 
 	SetRandomColor();
+
+	if(bLate)
+	{
+		LateLoad();
+	}
+}
+
+void LateLoad()
+{
+    for (int client = 1; client <= MaxClients; client++)
+    {
+        if (!IsClientInGame(client))
+            continue;
+
+        OnClientPutInServer(client);
+    }
+}
+
+void Cvar_Changed(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	GetCvars();
+}
+
+void GetCvars()
+{
+	//Values of cvars
+	g_bGiftEnable = cvar_gift_enable.BoolValue;
+	g_fGiftLife = cvar_gift_life.FloatValue;
+	g_iGiftChance = cvar_gift_chance.IntValue;
+	cvar_gift_color.GetString(g_sCvarGiftCols, sizeof(g_sCvarGiftCols));
+	g_iGiftGlowRange = cvar_gift_glowrange.IntValue;
+	g_iSpecialGiftChance = cvar_special_gift_chance.IntValue;
+	cvar_special_gift_color.GetString(g_sCvarSpecialGiftCols, sizeof(g_sCvarSpecialGiftCols));
+	g_iSpecialGiftGlowRange = cvar_special_gift_glowrange.IntValue;
+	g_iGiftMaxMap = cvar_gift_maxcollectMap.IntValue;
+	g_iGiftMaxRound = cvar_gift_maxcollectRound.IntValue;
+	g_iCvarAnnounce = cvar_gift_Announce.IntValue;
+	g_iGiftHP = cvar_gift_infected_hp.IntValue;
+	g_iSpecialGiftHP = cvar_special_gift_infected_hp.IntValue;
+	g_bCvarBlockSwitch = cvar_blockSwitch.BoolValue;
+
+	pain_pills_decay_rate_float = pain_pills_decay_rate.FloatValue;
 }
 
 public void OnMapStart()
@@ -294,7 +346,7 @@ public void OnMapStart()
 	PrecacheModel(MODEL_GNOME, true);
 }
 
-public void PrecacheModelGifts()
+void PrecacheModelGifts()
 {
 	for( int i = 0; i < g_iCountGifts; i++ )
 	{
@@ -302,13 +354,13 @@ public void PrecacheModelGifts()
 	}
 }
 
-public void PrecacheSoundGifts()
+void PrecacheSoundGifts()
 {
 	PrecacheSound(SOUND_SPECIAL, true);
 	PrecacheSound(SOUND_STANDARD, true);
 }
 
-public void CheckPrecacheModel(char[] Model)
+void CheckPrecacheModel(char[] Model)
 {
 	if (!IsModelPrecached(Model))
 	{
@@ -321,32 +373,12 @@ public void OnConfigsExecuted()
 	GetCvars();
 }
 
-public void Cvar_Changed(ConVar convar, const char[] oldValue, const char[] newValue)
+public void OnClientPutInServer(int client)
 {
-	GetCvars();
+    SDKHook(client, SDKHook_WeaponCanUse, WeaponCanUse);
 }
 
-void GetCvars()
-{
-	//Values of cvars
-	g_bGiftEnable = cvar_gift_enable.BoolValue;
-	g_fGiftLife = cvar_gift_life.FloatValue;
-	g_iGiftChance = cvar_gift_chance.IntValue;
-	cvar_gift_color.GetString(g_sCvarGiftCols, sizeof(g_sCvarGiftCols));
-	g_iGiftGlowRange = cvar_gift_glowrange.IntValue;
-	g_iSpecialGiftChance = cvar_special_gift_chance.IntValue;
-	cvar_special_gift_color.GetString(g_sCvarSpecialGiftCols, sizeof(g_sCvarSpecialGiftCols));
-	g_iSpecialGiftGlowRange = cvar_special_gift_glowrange.IntValue;
-	g_iGiftMaxMap = cvar_gift_maxcollectMap.IntValue;
-	g_iGiftMaxRound = cvar_gift_maxcollectRound.IntValue;
-	g_iCvarAnnounce = cvar_gift_Announce.IntValue;
-	g_iGiftHP = cvar_gift_infected_hp.IntValue;
-	g_iSpecialGiftHP = cvar_special_gift_infected_hp.IntValue;
-
-	pain_pills_decay_rate_float = pain_pills_decay_rate.FloatValue;
-}
-
-public Action Command_Gift(int client, int args)
+Action Command_Gift(int client, int args)
 {
 	if (!g_bGiftEnable)
 		return Plugin_Handled;
@@ -382,11 +414,7 @@ public Action Command_Gift(int client, int args)
 	return Plugin_Handled;
 }
 
-//==========================================
-// CONSOLE COMMANDS
-//==========================================
-
-public Action Command_GiftCollected(int client, int args)
+Action Command_GiftCollected(int client, int args)
 {
 	if (!g_bGiftEnable)
 		return Plugin_Handled;
@@ -406,11 +434,7 @@ public Action Command_GiftCollected(int client, int args)
 	return Plugin_Handled;
 }
 
-//==========================================
-// ADMINS COMMANDS
-//==========================================
-
-public Action Command_ReloadGift(int client, int args)
+Action Command_ReloadGift(int client, int args)
 {
 	if(!LoadConfigGifts(true))
 	{
@@ -427,7 +451,7 @@ public Action Command_ReloadGift(int client, int args)
 	return Plugin_Handled;
 }
 
-public bool LoadConfigGifts(bool precache)
+bool LoadConfigGifts(bool precache)
 {
 	KeyValues hFile = CreateKeyValues("Gifts");
 	
@@ -478,7 +502,7 @@ public bool LoadConfigGifts(bool precache)
 	return true;
 }
 
-public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bFinalHasStart = false;
 	g_bIsOpenSafeRoom = false;
@@ -497,19 +521,19 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bFinalHasStart = false;
 	g_bIsOpenSafeRoom = false;
 	gifts_collected_round = 0;
 }
 
-public void Finale_Vehicle_Ready(Event event, const char[] name, bool dontBroadcast) 
+void Finale_Vehicle_Ready(Event event, const char[] name, bool dontBroadcast) 
 {
 	g_bFinalHasStart = true;
 }
 
-public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!g_bGiftEnable)
 		return;
@@ -547,7 +571,7 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 	}
 }
 
-public void OnWitchKilled(Event event, const char[] name, bool dontBroadcast)
+void OnWitchKilled(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!g_bGiftEnable)
 		return;
@@ -803,7 +827,8 @@ int DropGift(int client, char[] type = STRING_STANDARD)
 
 	return gift;
 }
-public Action ColdDown( Handle timer, any ref)
+
+Action ColdDown( Handle timer, any ref)
 {
 	int gift;
 	if (ref && (gift = EntRefToEntIndex(ref)) != INVALID_ENT_REFERENCE)
@@ -814,7 +839,7 @@ public Action ColdDown( Handle timer, any ref)
 	return Plugin_Continue;
 }
 
-public void OnTouchPost(int gift, int other)
+void OnTouchPost(int gift, int other)
 {
 	if (IsValidClient(other))
 	{
@@ -828,6 +853,7 @@ public void OnTouchPost(int gift, int other)
 			L4D_GetPinnedInfected(other) == 0 )
 		{
 
+			g_bHooked[other] = true;
 			if (strcmp(g_sGifType[gift], STRING_STANDARD) == 0)
 			{
 				NotifyGift(other, TYPE_STANDARD, gift);
@@ -836,6 +862,7 @@ public void OnTouchPost(int gift, int other)
 			{
 				NotifyGift(other, TYPE_SPECIAL, gift);
 			}
+			g_bHooked[other] = false;
 			gifts_collected_map += 1;
 			gifts_collected_round += 1;
 
@@ -878,6 +905,54 @@ public void OnTouchPost(int gift, int other)
 	}
 } 
 
+Action WeaponCanUse(int client, int weapon)
+{
+	if(!g_bGiftEnable || !g_bCvarBlockSwitch) return Plugin_Continue;
+
+	if(IsClientInGame(client) && GetClientTeam(client) == 2)
+	{
+		if(g_bHooked[client])
+		{
+			int wepid = IdentifyWeapon(weapon);
+			if(wepid == WEPID_NONE) return Plugin_Continue;
+			
+			if(wepid == WEPID_GASCAN ||
+				wepid == WEPID_PROPANE_TANK ||
+				wepid == WEPID_OXYGEN_TANK ||
+				wepid == WEPID_FIREWORKS_BOX ||
+				wepid == WEPID_COLA_BOTTLES ||
+				wepid == WEPID_GNOME_CHOMPSKI) 
+			{
+				Event hEvent = CreateEvent("weapon_drop");
+				if( hEvent != null )
+				{
+					hEvent.SetInt("userid", GetClientUserId(client));
+					hEvent.SetInt("propid", weapon);
+					hEvent.Fire();
+				}
+				return Plugin_Handled;
+			}
+
+			int slot = GetSlotFromWeaponId(wepid);
+			if(slot == L4D2WeaponSlot_None) return Plugin_Continue;
+
+			if(GetPlayerWeaponSlot(client, slot) == -1) return Plugin_Continue;
+
+			Event hEvent = CreateEvent("weapon_drop");
+			if( hEvent != null )
+			{
+				hEvent.SetInt("userid", GetClientUserId(client));
+				hEvent.SetInt("propid", weapon);
+				hEvent.Fire();
+			}
+
+			return Plugin_Handled;
+		}
+	}
+
+	return Plugin_Continue;
+}
+
 bool IsValidClient(int client)
 {
 	if (client < 1 || client > MaxClients) 
@@ -897,7 +972,7 @@ int GetZombieClass(int client)
 	return GetEntProp(client, Prop_Send, "m_zombieClass");
 }
 
-public Action Timer_GiftLife( Handle timer, any ref)
+Action Timer_GiftLife( Handle timer, any ref)
 {
 	if ( ref && EntRefToEntIndex(ref) != INVALID_ENT_REFERENCE)
 	{
@@ -907,7 +982,7 @@ public Action Timer_GiftLife( Handle timer, any ref)
 	return Plugin_Continue;
 }
 
-public void AddCollect(int client, int type)
+void AddCollect(int client, int type)
 {
 	CurrentGiftsForRound[client][type] += 1;
 	CurrentGiftsForMap[client][type] += 1;
@@ -1034,11 +1109,6 @@ bool CheckIfEntityMax(int entity)
 		return false;
 	}
 	return true;
-}
-
-public void L4D2_OnLockDownOpenDoorFinish(const char[] sKeyMan)
-{
-	g_bIsOpenSafeRoom = true;
 }
 
 void SetRandomColor()
@@ -1197,3 +1267,13 @@ void AnnounceToChat(int client, char[] buffer, int hp)
 			}
 		}
 	}
+}
+
+// Other API Forward-------------------------------
+
+// from lockdown_system-l4d2_b.smx
+// when door is fully opened
+public void L4D2_OnLockDownOpenDoorFinish(const char[] sKeyMan)
+{
+	g_bIsOpenSafeRoom = true;
+}

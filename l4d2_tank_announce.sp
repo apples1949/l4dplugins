@@ -166,7 +166,7 @@ void SetTankHealth(int client, float Multiples, char[] sName)
 	}
 	else
 	{
-		SetClientHealth(client, RoundFloat(Multiples * g_iTankHealth));
+		SetClientHealth(client, RoundFloat(Multiples * g_iTankHealth)));
 	}
 }
 
