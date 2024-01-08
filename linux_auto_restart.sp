@@ -45,12 +45,26 @@ public void OnPluginStart()
 	g_hConVarHibernate = FindConVar("sv_hibernate_when_empty");
 	g_hConVarHibernate.AddChangeHook(ConVarChanged_Hibernate);
 
-	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Pre);	
+	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Pre);
+	RegAdminCmd("sm_restart", Cmd_RestartServer, ADMFLAG_ROOT);
 }
 
 public void OnPluginEnd()
 {
 	delete COLD_DOWN_Timer;
+}
+
+Action Cmd_RestartServer(int client, int args)
+{
+	LogMessage("手动重启服务器...");
+	PrintToServer("手动重启服务器...");
+
+	UnloadAccelerator();
+
+	CreateTimer(0.1, Timer_RestartServer);
+
+	COLD_DOWN_Timer = null;
+	return Plugin_Continue;
 }
 
 void ConVarChanged_Hibernate(ConVar hCvar, const char[] sOldVal, const char[] sNewVal)
@@ -122,8 +136,8 @@ Action COLD_DOWN(Handle timer, any client)
 		return Plugin_Continue;
 	}
 	
-	LogMessage("Last one player left the server, Restart server now");
-	PrintToServer("Last one player left the server, Restart server now");
+	LogMessage("最后一位玩家离开游戏 立刻重启服务器");
+	PrintToServer("最后一位玩家离开游戏 立刻重启服务器");
 
 	UnloadAccelerator();
 

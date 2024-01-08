@@ -1381,7 +1381,7 @@ public Action:LoopParticleEffect(Handle:timer, Handle:pack)
 
 public Action:Msg(Handle:timer, any:data)
 {
-	PrintToChatAll("\x03想试试你的手气吗? 聊天框输入 \x04!ldw \x03打开 \x01【\x04抽奖系统\x01】");
+	//PrintToChatAll("\x03想试试你的手气吗? 聊天框输入 \x04!ldw \x03打开 \x01【\x04抽奖系统\x01】");
 	return Action:0;
 }
 

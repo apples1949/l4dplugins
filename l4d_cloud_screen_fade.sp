@@ -2,6 +2,9 @@
 // ====================================================================================================
 Change Log:
 
+1.0.2 (11-August-2022)
+    - Fixed resizing not working. (thanks "HarryPotter" for reporting)
+
 1.0.1 (11-August-2022)
     - Added team filter.
     - Fixed fade not triggering for incapacitated clients.
@@ -18,7 +21,7 @@ Change Log:
 #define PLUGIN_NAME                   "[L4D1 & L4D2] Smoker Cloud Screen Fade"
 #define PLUGIN_AUTHOR                 "Mart"
 #define PLUGIN_DESCRIPTION            "Adds a blind fade effect while in Smoker cloud"
-#define PLUGIN_VERSION                "1.0.1"
+#define PLUGIN_VERSION                "1.0.2"
 #define PLUGIN_URL                    "https://forums.alliedmods.net/showthread.php?t=339035"
 
 // ====================================================================================================
@@ -72,6 +75,8 @@ public Plugin myinfo =
 #define FLAG_TEAM_HOLDOUT             (1 << 3) // 8 | 1000
 
 #define L4D_ZOMBIECLASS_SMOKER        1
+
+#define SOLID_BBOX                    2
 
 #define FFADE_IN                      0x0001
 #define FFADE_OUT                     0x0002
@@ -447,12 +452,13 @@ void CreateTriggerFade(float vPos[3])
     ge_bTriggerFade[entity] = true;
     DispatchKeyValue(entity, "spawnflags", "1"); // Clients
     DispatchKeyValue(entity, "allowincap", "1"); // Yes
+    DispatchKeyValue(entity, "model", "error.mdl"); // Need a model, otherwise resizing doesn't work
     DispatchKeyValueVector(entity, "origin", vPos);
     DispatchSpawn(entity);
 
     SetEntPropVector(entity, Prop_Send, "m_vecMins", g_vFadeMins);
     SetEntPropVector(entity, Prop_Send, "m_vecMaxs", g_vFadeMaxs);
-    SetEntProp(entity, Prop_Send, "m_nSolidType", 2); // Bounding Box
+    SetEntProp(entity, Prop_Send, "m_nSolidType", SOLID_BBOX);
 
     HookSingleEntityOutput(entity, "OnStartTouch", OnStartTouch);
     HookSingleEntityOutput(entity, "OnEndTouch", OnEndTouch);
@@ -578,21 +584,6 @@ int GetTeamFlag(int team)
             return FLAG_TEAM_HOLDOUT;
         default:
             return FLAG_TEAM_NONE;
-    }
-}
-
-/****************************************************************************************************/
-
-/**
- * Converts the string to lower case.
- *
- * @param input         Input string.
- */
-void StringToLowerCase(char[] input)
-{
-    for (int i = 0; i < strlen(input); i++)
-    {
-        input[i] = CharToLower(input[i]);
     }
 }
 

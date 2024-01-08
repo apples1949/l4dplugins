@@ -1,0 +1,114 @@
+"VoteItems"
+{
+	"投票回血（votehp）"
+	{
+		"sm_hp"
+		{
+			"message" "投票回血(votehp)"
+		}
+	}
+
+	"更改全体语音（alltalk）"
+	{
+		"sv_alltalk 1"
+		{
+			"message" "打开全体语音（turn on）"
+		}
+		"sv_alltalk 0"
+		{
+			"message" "关闭全体语音（turn off）"
+		}
+	}
+
+	"投票踢人&旁观（votekick & spec）"
+	{
+		"sm_votekick"
+		{
+			"message" "投票踢人（votekick）"
+		}
+		"sm_votespec"
+		{
+			"message" "投票旁观（votespec）"
+		}
+	}
+
+	"增减旁观位置（toggle slots）"
+	{
+		"slots+4"
+		{
+			"message" "增加4个（+4 slots）"
+		}
+		"slots-4"
+		{
+			"message" "减少4个（-4 slots）"
+		}
+		"slotsfull"
+		{
+			"message" "增加至最多（add full slots）"
+		}
+		"slotsplayer"
+		{
+			"message" "减去所有空余位置（minu spare slots）"
+		}
+	}
+
+	"官方地图（official maps）"
+	{
+	    "changelevel c1m1_hotel"
+		{
+			"message" "C1-死亡中心"
+		}
+		"changelevel c2m1_highway"
+		{
+			"message" "C2-黑色狂欢节"
+		}
+		"changelevel c3m1_plankcountry"
+		{
+			"message" "C3-沼泽激战"
+		}
+		"changelevel c4m1_milltown_a"
+		{
+			"message" "C4-暴风骤雨"
+		}
+		"changelevel c5m1_waterfront"
+		{
+			"message" "C5-教区"
+		}
+		"changelevel c6m1_riverbank"
+		{
+			"message" "C6|C7-消逝|牺牲"
+		}
+		"changelevel c7m1_docks"
+		{
+			"message" "C7-牺牲"
+		}
+		"changelevel c8m1_apartment"
+		{
+			"message" "C8-毫不留情"
+		}
+		"changelevel c9m1_alleys"
+		{
+			"message" "C9|C14-坠机险途|临死一搏"
+		}
+		"changelevel c10m1_caves"
+		{
+			"message" "C10-死亡丧钟"
+		}
+		"changelevel c11m1_greenhouse"
+		{
+			"message" "C11-静寂时分"
+		}
+		"changelevel c12m1_hilltop"
+		{
+			"message" "C12-血腥收获"
+		}
+		"changelevel c13m1_alpinecreek"
+		{
+			"message" "C13-刺骨寒溪"
+		}
+		"chaggelevel c14m1_junkyard"
+		{
+			"message" "C14-临死一搏"
+		}
+	}
+}

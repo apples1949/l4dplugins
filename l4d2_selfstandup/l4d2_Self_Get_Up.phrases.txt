@@ -1,0 +1,87 @@
+"Phrases"
+{
+	"[GETUP]: %d of %d"
+	{
+		"en"		"{green}[{red}GETUP{green}]{default}: {red}%d {green}of {red}%d"
+		"ru"		"{green}[{red}GETUP{green}]{default}: {red}%d {green}из {red}%d"
+		"chi"		"{green}[{red}提示{green}]{default}: 当前倒地次数{red} %d {default}, 第{red}%d {default}次倒地后黑白!"
+	}
+	"[GETUP]: %N on last life!!"
+	{
+		"en"		"{green}[{red}GETUP{green}]{default}: {red}%N {green}on {red}last {green}life{red}!!"
+		"ru"		"{green}[{red}GETUP{green}]{default}: {red}%N {green}на {red}последнем {green}издыхании{red}!!"
+		"chi"		"{green}[{red}提示{green}]{default}: 玩家 {red}%N {default}黑白了!!"
+	}
+	"[GETUP]: %d of %d, revived by %N"
+	{
+		"en"		"{green}[{red}GETUP{green}]{default}: {red}%d {green}of {red}%d{default}, {red}revived {green}by {red}%N"
+		"ru"		"{green}[{red}GETUP{green}]{default}: {red}%d {green}из {red}%d{default}, {red}помощь {green}была {red}получена {green}от {red}%N"
+		"chi"		"{green}[{red}提示{green}]{default}: {red}%d {green}of {red}%d{default}, {red}revived {green}by {red}%N"
+	}
+	"[GETUP]: Your target is %N"
+	{
+		"en"		"[GETUP]: Your target is %N"
+		"ru"		"[GETUP]: Ваша цель %N"
+		"提示"		"[提示]: 你选择救助 %N"
+	}
+	"Required Item to Break Free"
+	{
+		"en"		"自救需要物品"
+		"ru"		"Отсутствуют необходимые предметы для того, чтобы освободиться"
+		"chi"		"Required Item to Break Free"
+	}
+	"Required Item to Get Up"
+	{
+		"en"		"自起需要物品"
+		"ru"		"Отсутствуют необходимые предметы для того, чтобы встать"
+		"chi"		"Required Item to Break Free"
+	}
+	"Hold CTRL key to help yourself"
+	{
+		"en"		"Hold CTRL key to help yourself"
+		"ru"		"Удерживайте CTRL, чтобы помочь себе"
+		"chi"		"按住 CTRL 键以自救"
+	}
+	"[GETUP]: Successfully revived %N"
+	{
+		"en"		"{green}[{red}GETUP{green}]{default}: {green}Successfully {green}revived {red}%N"
+		"ru"		"{green}[{red}GETUP{green}]{default}: {red}Помощь {green}игроку {red}%N {green}успешно {green}осуществлена"
+		"chi"		"{green}[{red}提示{green}]{default}: {green}成功被 {red}%N {green}救起"
+	}
+	"[GETUP]: Revived by %N"
+	{
+		"en"		"{green}[{red}GETUP{green}]{red}Revived {green}by {red}%N"
+		"ru"		"{green}[{red}GETUP{green}]{red}Помощь {green}была {red}получена {green}от {red}%N"
+		"chi"		"{green}[{red}GETUP{green}]{red} %N {green}救了{red}你"
+	}
+	"<< SELF GET UP IN PROGRESS >> %3.0f %\n<<< %s >>>"
+	{
+		"en"		"<< SELF GET UP IN PROGRESS >> %3.0f %\n<<< %s >>>"
+		"ru"		"<< ПРОГРЕСС САМОПОМОЩИ >> %3.0f %\n<<< %s >>>"
+		"chi"		"<< ...正在进行救助中... >> %3.0f %\n<<< %s >>>"
+	}
+	"[GETUP]: You too close to %N"
+	{
+		"en"		"[GETUP]: You too close to %N"
+		"ru"		"[GETUP]: Ты слишком близко к %N"
+		"chi"		"[提示] 你离 %N 太近了"
+	}
+	"[GETUP]: You too close to %s"
+	{
+		"en"		"[GETUP]: You too close to %s"
+		"ru"		"[GETUP]: Ты слишком близко к %s"
+		"chi"		"[提示] 你离 %s 太近了"
+	}
+	"[GETUP]: %d of %d, cost of %s"
+	{
+		"en"		"{green}[{red}GETUP{green}]{default}: {red}%d {green}of {red}%d{default}, {green}cost {green}of {red}%s"
+		"ru"		"{green}[{red}GETUP{green}]{default}: {red}%d {green}из {red}%d{default}, {green}за {green}счет {red}%s"
+		"chi"		"{green}[{red}提示{green}]{default}: {green}你用了{red}%s{default}自救! 当前倒地次数 {red}%d {default},{green}第{red} %d {default}次倒地后黑白!, "
+	}
+	"Advert"
+	{
+		"en"		"You can kill the boss who attacked you with adrenaline!(MOUSE 3)"
+		"ru"		"Вы можете убить напавшего на вас босса адреналином!(СКМ)"
+		"chi"		"你可以通过按住开镜键使用肾上腺素来击杀攻击你的boss!"
+	}
+}

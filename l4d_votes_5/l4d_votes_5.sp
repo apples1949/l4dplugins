@@ -95,10 +95,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 public Plugin myinfo =
 {
 	name = "L4D2 Vote Menu",
-	author = "HarryPotter",
+	author = "HarryPotter apples1949",
 	description = "Votes Commands",
 	version = "6.1",
-	url = "http://steamcommunity.com/profiles/76561198026784913"
+	url = "https://github.com/apples1949/l4dplugins"
 };
 
 public void OnPluginStart()
@@ -128,7 +128,7 @@ public void OnPluginStart()
 	VotensKickED = CreateConVar("l4d_VotesKickED", "1", "如果为1，则开启投票踢出玩家选项", FCVAR_NOTIFY);
 	VotensForceSpectateED = CreateConVar("l4d_VotesForceSpectateED", "1", "如果为1，则开启投票强制玩家旁观选项", FCVAR_NOTIFY);
 	g_hCvarPlayerLimit = CreateConVar("sm_vote_player_limit", "2", "当有多少玩家才能启动插件", FCVAR_NOTIFY);
-	g_hKickImmueAccess = CreateConVar("l4d_VotesKick_immue_access_flag", "z", "有这些标识的玩家不会被投票踢出(无内容=所有人, -1:没有人", FCVAR_NOTIFY);
+	g_hKickImmueAccess = CreateConVar("l4d_VotesKick_immue_access_flag", "z", "有这些标识的玩家不会被投票踢出以及强制旁观(无内容=所有人, -1:没有人", FCVAR_NOTIFY);
 	
 	HookEvent("round_start", event_Round_Start);
 
@@ -252,12 +252,12 @@ public Action Command_Votes(int client, int args)
 { 
 	if (client == 0)
 	{
-		PrintToServer("[votes] sm_votes cannot be used by server.");
+		PrintToServer("[VOTE] sm_votes cannot be used by server.");
 		return Plugin_Handled;
 	}
 	if(GetClientTeam(client) == 1)
 	{
-		ReplyToCommand(client, "[votes] 旁观无法发起投票. (spectators can not call a vote)");	
+		ReplyToCommand(client, "[VOTE] 旁观无法发起投票.");
 		return Plugin_Handled;
 	}
 
@@ -268,70 +268,70 @@ public Action Command_Votes(int client, int args)
 		SetPanelTitle(menu, "菜单");
 		if (VotensHpE_D == false)
 		{
-			DrawPanelItem(menu, "全体回血(禁用中) Give Hp(Disable)");
+			DrawPanelItem(menu, "全体回血(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "全体回血 Give hp");
+			DrawPanelItem(menu, "全体回血");
 		}
 		if (VotensAlltalkE_D == false)
 		{ 
-			DrawPanelItem(menu, "开启全体语音(禁用中) Turn on AllTalk(Disable)");
+			DrawPanelItem(menu, "开启全体语音(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "开启全体语音 All talk");
+			DrawPanelItem(menu, "开启全体语音");
 		}
 		if (VotensAlltalk2E_D == false)
 		{
-			DrawPanelItem(menu, "关闭全体语音(禁用中) Turn off AllTalk(Disable)");
+			DrawPanelItem(menu, "关闭全体语音(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "关闭全体语音 Turn off AllTalk");
+			DrawPanelItem(menu, "关闭全体语音");
 		}
 		if (VotensRestartmapE_D == false)
 		{
-			DrawPanelItem(menu, "重置当前地图(禁用中) Stop restartmap(Disable)");
+			DrawPanelItem(menu, "重置当前地图(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "重置当前地图 Restartmap");
+			DrawPanelItem(menu, "重置当前地图");
 		}
 		if (VotensMapE_D == false)
 		{
-			DrawPanelItem(menu, "投票更换官图(禁用中,请使用!votemap)Change Maps(Use !votemap)");
+			DrawPanelItem(menu, "投票更换官图(禁用中,请使用!votemap)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "投票更换官图 Change Maps");
+			DrawPanelItem(menu, "投票更换官图");
 		}
 
 		if (VotensMap2E_D == false)
 		{
-			DrawPanelItem(menu, "投票更换三方图 (禁用中,请使用!votemap) Change addon maps(Use !votemap)");
+			DrawPanelItem(menu, "投票更换三方图 (禁用中,请使用!votemap)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "投票更换三方图 Change addon maps");
+			DrawPanelItem(menu, "投票更换三方图");
 		}
 
 		if (g_bVotensKickED == false)
 		{
-			DrawPanelItem(menu, "踢出玩家(禁用中) Kick Player(Disable)");
+			DrawPanelItem(menu, "踢出玩家(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "踢出玩家 Kick Player");
+			DrawPanelItem(menu, "踢出玩家");
 		}
 
 		if (g_bVotensForceSpectateED == false)
 		{
-			DrawPanelItem(menu, "强制玩家旁观(禁用中) Forcespectate Player(Disable)");
+			DrawPanelItem(menu, "强制玩家旁观(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "强制玩家旁观 Forcespectate Player");
+			DrawPanelItem(menu, "强制玩家旁观");
 		}
 		DrawPanelText(menu, " \n");
 		DrawPanelText(menu, "0. 退出");
@@ -416,7 +416,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensMap2E_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "[{olive}VOTE{default}]投票更换三方图已禁用,请使用!votemap");
+					CPrintToChat(client, "[{olive}VOTE{default}]投票更换三方图已禁用");
 				}
 				else if (VotensMap2E_D == true)
 				{
@@ -598,7 +598,6 @@ public Action Command_VoteRestartmap(int client, int args)
 		{
 			return Plugin_Handled;
 		}	
-
 		if(CanStartVotes(client))
 		{
 			CPrintToChatAll("[{olive}VOTE{default}]{olive} %N {default}发起了一个投票: {blue}重置当前地图",client);
@@ -815,7 +814,7 @@ public Action Command_Votemaps2Menu(int client, int args)
 		}
 		Handle menu = CreateMenu(MapMenuHandler);
 	
-		SetMenuTitle(menu, "▲ Vote Custom Maps <%d map%s>", g_iCount, ((g_iCount > 1) ? "s": "") );
+		SetMenuTitle(menu, "▲ 选择三方图 <%d map%s>", g_iCount, ((g_iCount > 1) ? "s": "") );
 		for (int i = 0; i < g_iCount; i++)
 		{
 			AddMenuItem(menu, g_sMapinfo[i], g_sMapname[i]);
@@ -878,7 +877,6 @@ public void DisplayVoteMapsMenu(int client)
 		g_voteType = view_as<voteType>(map);
 		
 		g_hVoteMenu = CreateMenu(Handler_VoteCallback, MENU_ACTIONS_ALL);
-		//SetMenuTitle(g_hVoteMenu, "Vote to change map %s %s",votesmapsname, votesmaps);
 		SetMenuTitle(g_hVoteMenu, "是否更换地图: %s",votesmapsname);
 		AddMenuItem(g_hVoteMenu, VOTE_YES, "是");
 		AddMenuItem(g_hVoteMenu, VOTE_NO, "否");
@@ -913,7 +911,7 @@ void CreateVoteforcespectateMenu(int client)
 	int team = GetClientTeam(client);
 	char name[MAX_NAME_LENGTH];
 	char playerid[32];
-	SetMenuTitle(menu, "plz choose player u want to forcespectate");
+	SetMenuTitle(menu, "请选择你要强制旁观的玩家");
 	for(int i = 1;i <= MaxClients; i++)
 	{
 		if(IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i)==team)
@@ -971,7 +969,7 @@ public void DisplayVoteforcespectateMenu(int client)
 		LogMessage("%N(%s) starts a vote: forcespectate player %s", client, SteamId, forcespectateplayername);//紀錄在log文件
 		
 		int iTeam = GetClientTeam(client);
-		CPrintToChatAll("[{olive}VOTE{default}]{olive} %N {default}发起投票: {blue}强制玩家%s旁观{default}, 只有投票发起者的阵营能查看投票进度", client, forcespectateplayername);
+		CPrintToChatAll("[{olive}VOTE{default}]{olive} %N {default}发起投票: {blue}强制玩家%s旁观{default}, 只有投票发起者的阵营才能参与投票", client, forcespectateplayername);
 		
 		for(int i=1; i <= MaxClients; i++) 
 			if (IsClientConnected(i) && IsClientInGame(i) && GetClientTeam(i) == iTeam)
@@ -1023,12 +1021,12 @@ public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int pa
 			case 0: 
 			{
 				Votey += 1;
-				//CPrintToChatAll("[{olive}TS{default}] %N {blue}has voted{default}.", param1);
+				CPrintToChatAll("[{olive}VOTE{default}] %N {blue}同意了该投票{default}.", param1);
 			}
 			case 1: 
 			{
 				Voten += 1;
-				//CPrintToChatAll("[{olive}TS{default}] %N {blue}has voted{default}.", param1);
+				CPrintToChatAll("[{olive}VOTE{default}] %N {blue}拒绝了该投票{default}.", param1);
 			}
 		}
 	}
@@ -1036,7 +1034,7 @@ public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int pa
 	{
 		if (param1>0 && param1 <=MaxClients && IsClientConnected(param1) && IsClientInGame(param1) && !IsFakeClient(param1))
 		{
-			//CPrintToChatAll("[{olive}TS{default}] %N {blue}abandons the vote{default}.", param1);
+			CPrintToChatAll("[{olive}VOTE{default}] %N {blue}放弃了该投票{default}.", param1);
 		}
 	}
 	//==========================
@@ -1306,6 +1304,11 @@ public Action COLD_DOWN(Handle timer,any client)
 		case (view_as<voteType>(forcespectate)):
 		{
 			forcespectateid = GetClientOfUserId(forcespectateid);
+			if(HasAccess(forcespectateid, g_sKickImmueAccesslvl))
+			{
+				CPrintToChatAll("[{olive}VOTE{default}]该玩家因拥有权限而无法强制旁观!");
+				return Plugin_Handled;
+			}
 			if(forcespectateid && IsClientInGame(forcespectateid))
 			{
 				CPrintToChatAll("[{olive}VOTE{default}]玩家{blue}%s{default}已被强制旁观!", forcespectateplayername);

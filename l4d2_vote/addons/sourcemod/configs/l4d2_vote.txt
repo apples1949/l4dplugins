@@ -1,0 +1,216 @@
+"VoteItems"
+{
+	"投票回血（votehp）"
+	{
+		"sm_hp"
+		{
+			"message" "投票回血(votehp)"
+		}
+	}
+
+	"更改全体语音（alltalk）"
+	{
+		"sv_alltalk 1"
+		{
+			"message" "打开全体语音（turn on）"
+		}
+		"sv_alltalk 0"
+		{
+			"message" "关闭全体语音（turn off）"
+		}
+	}
+
+	"投票踢人&旁观（votekick & spec）"
+	{
+		"sm_votekick"
+		{
+			"message" "投票踢人（votekick）"
+		}
+		"sm_votespec"
+		{
+			"message" "投票旁观（votespec）"
+		}
+	}
+
+	"增减旁观位置（toggle slots）"
+	{
+		"slots+4"
+		{
+			"message" "增加4个（+4 slots）"
+		}
+		"slots-4"
+		{
+			"message" "减少4个（-4 slots）"
+		}
+		"slotsfull"
+		{
+			"message" "增加至最多（add full slots）"
+		}
+		"slotsplayer"
+		{
+			"message" "减去所有空余位置（minu spare slots）"
+		}
+	}
+
+	"官方地图（official maps）"
+	{
+	    "changelevel c1m1_hotel"
+		{
+			"message" "C1-死亡中心"
+		}
+		"changelevel c2m1_highway"
+		{
+			"message" "C2-黑色狂欢节"
+		}
+		"changelevel c3m1_plankcountry"
+		{
+			"message" "C3-沼泽激战"
+		}
+		"changelevel c4m1_milltown_a"
+		{
+			"message" "C4-暴风骤雨"
+		}
+		"changelevel c5m1_waterfront"
+		{
+			"message" "C5-教区"
+		}
+		"changelevel c6m1_riverbank"
+		{
+			"message" "C6|C7-消逝|牺牲"
+		}
+		"changelevel c8m1_apartment"
+		{
+			"message" "C8-毫不留情"
+		}
+		"changelevel c9m1_alleys"
+		{
+			"message" "C9|C14-坠机险途|临死一搏"
+		}
+		"changelevel c10m1_caves"
+		{
+			"message" "C10-死亡丧钟"
+		}
+		"changelevel c11m1_greenhouse"
+		{
+			"message" "C11-静寂时分"
+		}
+		"changelevel c12m1_hilltop"
+		{
+			"message" "C12-血腥收获"
+		}
+		"changelevel c13m1_alpinecreek"
+		{
+			"message" "C13-刺骨寒溪"
+		}
+	}
+	"比赛三方（unofficial versus）"
+	{
+	"sm_map dkr_m1_motel"
+		{
+			"message" "Dark Carnival: Remix-C2：重制"
+		}
+	"sm_map dprm1_milltown_a"
+		{
+			"message" "Hard Rain DownPour-C4：暴雨"
+		}
+	"sm_map PR1_Waterfront_F"
+		{
+			"message" "The Perish OverGrowth-C5：蔓延"
+		}
+	"sm_map CCR1_alleys"
+		{
+			"message" "Crash Course:ReRouted-C9：改航"
+		}
+	"sm_map daredux_map1_docks_aw"
+		{
+			"message" "Dead Air:Redux Another Way-C11：另辟蹊径"
+		}
+	"sm_map cdta_01detour"
+		{
+			"message" "Detour Ahead-迂回前进"
+		}
+	"sm_map l4d2_diescraper1_apartment_361"
+		{
+			"message" "Diescraper-喋血蜃楼"
+		}
+	"sm_map hf01_theforest"
+		{
+			"message" "Haunted Forest-颤栗森林"
+		}
+	"sm_map cwm1_intro"
+		{
+			"message" "Carried Off-绝境逢生"
+		}
+	"sm_map l4d2_stadium1_apartment"
+		{
+			"message" "Suicide Blitz 2-闪电突袭2"
+		}
+	"sm_map l4d_dbd2dc_anna_is_gone"
+		{
+			"message" "Dead Before Dawn DC-活死人黎明"
+		}
+	"sm_map l4d_ihm01_forest"
+		{
+			"message" "I Hate Mountains 2-我恨山2"
+		}
+	"sm_map x1m1_cliffs"
+		{
+			"message" "OpenRoad-绝命公路"
+		}
+	"sm_map l4d2_city17_01"
+		{
+			"message" "City 17-城市17"
+		}
+	"sm_map uz_crash"
+		{
+			"message" "The Undead Zone-亡灵区"
+		}
+	"sm_map uf1_boulevard"
+		{
+			"message" "Urban Flight-城市航班"
+		}
+	"sm_map l4d2_daybreak01_hotel"
+		{
+			"message" "Day Break-黎明"
+		}
+	}
+	"其他三方（unofficial others）"
+	{
+	"sm_map c5m1_darkwaterfront"
+		{
+			"message" "The Dark Perish-C5：黑暗教区"
+		}
+	"sm_map nmrm1_apartment"
+		{
+			"message" "No Mercy: Rehab-C8改"
+		}
+	"sm_map srocchurch"
+		{
+			"message" "Warcelona-巴塞罗那"
+		}
+	"sm_map l4d2_bts01_forest"
+		{
+			"message" "Back to School-返校"
+		}
+	"sm_map wfp1_track"
+		{
+			"message" "White Forest-白森林"
+		}
+	"sm_map jsarena201_town"
+		{
+			"message" "Arena of the dead 2-死亡竞技场2"
+		}
+	"sm_map l4d2_ff01_woods"
+		{
+			"message" "Fatal Freight-致命货运站"
+		}
+	"sm_map wow_map1"
+		{
+			"message" "Whispers of Winter-冬日的低语"
+		}
+	"sm_map l4d2_deathtoll01_clam"
+		{
+			"message" "Clam Toll-C10改：死寂丧钟"
+		}
+	}
+}

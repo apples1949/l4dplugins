@@ -1,0 +1,37 @@
+"Phrases"
+{
+	"Vote_HP_Pass"
+	{
+		"en"		"[SM] {blue} Admin {default}({olive}%N) {default}restored all players' health"
+		"chi"		"[SM] {blue}管理员 {default}({olive}%N) {default}已恢复所有玩家血量"
+	}
+
+	"Vote_Spec_Not"
+	{
+		"en"		"{olive}<Vote>{default}Spectator can't start a vote."
+		"chi"		"{olive}<Vote>{default}旁观者无法发起投票。"
+	}
+
+	"Vote_Initiate"
+	{
+		"en"		"{olive}<Vote>{default}Player {teamcolor}%N {orange}initiates a vote."
+		"chi"		"{olive}<Vote>{default}玩家 {teamcolor}%N {orange}发起了一个投票。"
+	}
+
+	"Vote_Process"
+	{
+		"en"		"{olive}<Vote>{default}There is a vote in processing."
+		"chi"		"{olive}<Vote>{default}已经有一个投票正在进行。"
+	}
+
+	"Vote_None_Player"
+	{
+		"en"		"{olive}<Vote>{default}There is no available player to vote."
+		"chi"		"{olive}<Vote>{default}当前无符合投票条件的玩家。"
+	}
+	"Vote_level_low"
+	{
+		"en"		"{olive}<Vote>{default}You have no access to kick  {teamcolor}%N {default}right now."
+		"chi"		"{olive}<Vote>{default}您当前权限不足，无法踢出{teamcolor}%N。"
+	}
+}

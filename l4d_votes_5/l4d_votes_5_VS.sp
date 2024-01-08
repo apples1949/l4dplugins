@@ -94,11 +94,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public Plugin myinfo =
 {
-	name = "L4D2 Vote Menu",
-	author = "HarryPotter",
+	name = "L4D2 Vote Menu but Versus",
+	author = "HarryPotter apples1949",
 	description = "Votes Commands",
 	version = "6.1",
-	url = "http://steamcommunity.com/profiles/76561198026784913"
+	url = "https://github.com/apples1949/l4dplugins"
 };
 
 public void OnPluginStart()
@@ -128,7 +128,7 @@ public void OnPluginStart()
 	VotensKickED = CreateConVar("l4d_VotesKickED", "1", "如果为1，则开启投票踢出玩家选项", FCVAR_NOTIFY);
 	VotensForceSpectateED = CreateConVar("l4d_VotesForceSpectateED", "1", "如果为1，则开启投票强制玩家旁观选项", FCVAR_NOTIFY);
 	g_hCvarPlayerLimit = CreateConVar("sm_vote_player_limit", "2", "当有多少玩家才能启动插件", FCVAR_NOTIFY);
-	g_hKickImmueAccess = CreateConVar("l4d_VotesKick_immue_access_flag", "z", "有这些标识的玩家不会被投票踢出(无内容=所有人, -1:没有人", FCVAR_NOTIFY);
+	g_hKickImmueAccess = CreateConVar("l4d_VotesKick_immue_access_flag", "z", "有这些标识的玩家不会被投票踢出以及强制旁观(无内容=所有人, -1:没有人)", FCVAR_NOTIFY);
 	
 	HookEvent("round_start", event_Round_Start);
 
@@ -146,7 +146,7 @@ public void OnPluginStart()
 	g_hCvarPlayerLimit.AddChangeHook(ConVarChanged_Cvars);
 	g_hKickImmueAccess.AddChangeHook(ConVarChanged_Cvars);
 
-	AutoExecConfig(true, "l4d_votes_5");
+	AutoExecConfig(true, "l4d_votes_5_VS");
 }
 
 public void ConVarChanged_Cvars(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -161,7 +161,7 @@ void GetCvars()
 	VotensHpE_D = VotensHpED.BoolValue;
 	VotensAlltalkE_D = VotensAlltalkED.BoolValue;
 	VotensAlltalk2E_D = VotensAlltalk2ED.BoolValue;
-	VotensRestartmapE_D = VotensRestartmapED.BoolValue;		
+	VotensRestartmapE_D = VotensRestartmapED.BoolValue;
 	VotensMapE_D = VotensMapED.BoolValue;
 	VotensMap2E_D = VotensMap2ED.BoolValue;
 	g_bVotensKickED = VotensKickED.BoolValue;
@@ -173,7 +173,7 @@ public Action CommandRestartMap(int client, int args)
 {	
 	if(!isMapRestartPending)
 	{
-		CPrintToChatAll("[{olive}VS{default}]地图将在{green}%d{default}秒后重置", READY_RESTART_MAP_DELAY+1);		
+		CPrintToChatAll("[{olive}VOTE{default}]地图将在{green}%d{default}秒后重置", READY_RESTART_MAP_DELAY+1);
 		RestartMapDelayed();
 	}
 	return Plugin_Handled;
@@ -252,12 +252,12 @@ public Action Command_Votes(int client, int args)
 { 
 	if (client == 0)
 	{
-		PrintToServer("[votes] sm_votes cannot be used by server.");
+		PrintToServer("[VOTE] sm_votes cannot be used by server.");
 		return Plugin_Handled;
 	}
 	if(GetClientTeam(client) == 1)
 	{
-		ReplyToCommand(client, "[votes] 旁观无法发起投票. (spectators can not call a vote)");	
+		ReplyToCommand(client, "[VOTE] 旁观无法发起投票.");
 		return Plugin_Handled;
 	}
 
@@ -268,70 +268,70 @@ public Action Command_Votes(int client, int args)
 		SetPanelTitle(menu, "菜单");
 		if (VotensHpE_D == false)
 		{
-			DrawPanelItem(menu, "全体回血(禁用中) Give Hp(Disable)");
+			DrawPanelItem(menu, "全体回血(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "全体回血 Give hp");
+			DrawPanelItem(menu, "全体回血");
 		}
 		if (VotensAlltalkE_D == false)
 		{ 
-			DrawPanelItem(menu, "开启全体语音(禁用中) Turn on AllTalk(Disable)");
+			DrawPanelItem(menu, "开启全体语音(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "开启全体语音 All talk");
+			DrawPanelItem(menu, "开启全体语音");
 		}
 		if (VotensAlltalk2E_D == false)
 		{
-			DrawPanelItem(menu, "关闭全体语音(禁用中) Turn off AllTalk(Disable)");
+			DrawPanelItem(menu, "关闭全体语音(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "关闭全体语音 Turn off AllTalk");
+			DrawPanelItem(menu, "关闭全体语音");
 		}
 		if (VotensRestartmapE_D == false)
 		{
-			DrawPanelItem(menu, "重置当前地图(禁用中) Stop restartmap(Disable)");
+			DrawPanelItem(menu, "重置当前地图(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "重置当前地图 Restartmap");
+			DrawPanelItem(menu, "重置当前地图");
 		}
 		if (VotensMapE_D == false)
 		{
-			DrawPanelItem(menu, "投票更换官图(禁用中)Change Maps(Disable)");
+			DrawPanelItem(menu, "投票更换官图(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "投票更换官图 Change Maps");
+			DrawPanelItem(menu, "投票更换官图");
 		}
 
 		if (VotensMap2E_D == false)
 		{
-			DrawPanelItem(menu, "投票更换三方图 (禁用中) Change addon maps(Disable)");
+			DrawPanelItem(menu, "投票更换三方图 (禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "投票更换三方图 Change addon maps");
+			DrawPanelItem(menu, "投票更换三方图");
 		}
 
 		if (g_bVotensKickED == false)
 		{
-			DrawPanelItem(menu, "踢出玩家(禁用中) Kick Player(Disable)");
+			DrawPanelItem(menu, "踢出玩家(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "踢出玩家 Kick Player");
+			DrawPanelItem(menu, "踢出玩家");
 		}
 
 		if (g_bVotensForceSpectateED == false)
 		{
-			DrawPanelItem(menu, "强制玩家旁观(禁用中) Forcespectate Player(Disable)");
+			DrawPanelItem(menu, "强制玩家旁观(禁用中)");
 		}
 		else
 		{
-			DrawPanelItem(menu, "强制玩家旁观 Forcespectate Player");
+			DrawPanelItem(menu, "强制玩家旁观");
 		}
 		DrawPanelText(menu, " \n");
 		DrawPanelText(menu, "0. 退出");
@@ -340,7 +340,7 @@ public Action Command_Votes(int client, int args)
 	}
 	else
 	{
-		CPrintToChat(client, "[{olive}VS{default}]投票菜单插件已关闭!");
+		CPrintToChat(client, "[{olive}VOTE{default}]投票菜单插件已关闭!");
 	}
 	
 	return Plugin_Stop;
@@ -356,7 +356,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensHpE_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "[{olive}VS{default}]回血已禁用");
+					CPrintToChat(client, "[{olive}VOTE{default}]全体回血已禁用");
 				}
 				else if (VotensHpE_D == true)
 				{
@@ -368,7 +368,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensAlltalkE_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "[{olive}VS{default}]开启全体语音已禁用");
+					CPrintToChat(client, "[{olive}VOTE{default}]开启全体语音已禁用");
 				}
 				else if (VotensAlltalkE_D == true)
 				{
@@ -380,7 +380,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensAlltalk2E_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "[{olive}VS{default}]关闭全体语音已禁用");
+					CPrintToChat(client, "[{olive}VOTE{default}]关闭全体语音已禁用");
 				}
 				else if (VotensAlltalk2E_D == true)
 				{
@@ -392,7 +392,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensRestartmapE_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "[{olive}VS{default}]重置当前地图已禁用");
+					CPrintToChat(client, "[{olive}VOTE{default}]重置当前地图已禁用");
 				}
 				else if (VotensRestartmapE_D == true)
 				{
@@ -404,7 +404,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensMapE_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "[{olive}VS{default}]投票更换官图已禁用,请使用自带投票");
+					CPrintToChat(client, "[{olive}VOTE{default}]投票更换官图已禁用,请使用游戏自带投票");
 				}
 				else if (VotensMapE_D == true)
 				{
@@ -416,7 +416,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (VotensMap2E_D == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "[{olive}VS{default}]投票更换三方图已禁用,请使用自带投票");
+					CPrintToChat(client, "[{olive}VOTE{default}]投票更换三方图已禁用");
 				}
 				else if (VotensMap2E_D == true)
 				{
@@ -428,7 +428,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (g_bVotensKickED == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "[{olive}VS{default}]踢出玩家已禁用");
+					CPrintToChat(client, "[{olive}VOTE{default}]踢出玩家已禁用");
 				}
 				else if (g_bVotensKickED == true)
 				{
@@ -440,7 +440,7 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 				if (g_bVotensForceSpectateED == false)
 				{
 					FakeClientCommand(client,"sm_votes");
-					CPrintToChat(client, "[{olive}VS{default}]强制玩家旁观已禁用");
+					CPrintToChat(client, "[{olive}VOTE{default}]强制玩家旁观已禁用");
 				}
 				else if (g_bVotensForceSpectateED == true)
 				{
@@ -463,19 +463,22 @@ public int Votes_Menu(Menu menu, MenuAction action, int client, int itemNum)
 
 public Action Command_VoteHp(int client, int args)
 {
+	int iTeam = GetClientTeam(client);
 	if(g_bEnable == true 
 	&& VotensHpE_D == true)
 	{
 		if (!TestVoteDelay(client))
 		{
 			return Plugin_Handled;
-		}	
+		}
 		if(CanStartVotes(client))
 		{
-			CPrintToChatAll("[{olive}VS{default}]{olive} %N {default}发起了一个投票: {blue}全体回血",client);
-			
-			
-			for(int i=1; i <= MaxClients; i++) ClientVoteMenu[i] = true;
+			CPrintToChatAll("[{olive}VOTE{default}]{olive} %N {default}发起了一个投票: {blue}全体回血{default}, 只有游戏中的玩家才能参与投票",client);
+			for(int i = 1; i <= MaxClients; i++)
+			{
+				if (iTeam == 1){continue;}
+				else {ClientVoteMenu[i] = true;}
+			}
 			
 			g_voteType = view_as<voteType>(hp);
 			char SteamId[35];
@@ -487,20 +490,27 @@ public Action Command_VoteHp(int client, int args)
 			AddMenuItem(g_hVoteMenu, VOTE_NO, "不同意");
 		
 			SetMenuExitButton(g_hVoteMenu, false);
-			VoteMenuToAll(g_hVoteMenu, 20);	
+			DisplayVoteMenuToNotSpec(g_hVoteMenu, 20);
 			
-			EmitSoundToAll("ui/beep_synthtone01.wav");
+			for (int i=1; i<=MaxClients; i++)
+			{
+				if(IsClientConnected(i)&&IsClientInGame(i)&&!IsFakeClient(i))
+				{
+					if(iTeam == 1){continue;}
+						else{EmitSoundToClient(i,"ui/beep_synthtone01.wav");}
+				}
+			}
 		}
 		else
 		{
 			return Plugin_Handled;
 		}
 		
-		return Plugin_Handled;	
+		return Plugin_Handled;
 	}
 	else if(g_bEnable == false || VotensHpE_D == false)
 	{
-		CPrintToChat(client, "[{olive}VS{default}]投票被禁止");
+		CPrintToChat(client, "[{olive}VOTE{default}]投票被禁止");
 	}
 	return Plugin_Handled;
 }
@@ -515,7 +525,7 @@ public Action Command_VoteAlltalk(int client, int args)
 		}
 		if(CanStartVotes(client))
 		{
-			CPrintToChatAll("[{olive}VS{default}]{olive}%N{default}发起了一个投票: {blue}开启全体语音",client);
+			CPrintToChatAll("[{olive}VOTE{default}]{olive}%N{default}发起了一个投票: {blue}开启全体语音",client);
 			
 			for(int i=1; i <= MaxClients; i++) ClientVoteMenu[i] = true;
 			
@@ -538,11 +548,11 @@ public Action Command_VoteAlltalk(int client, int args)
 			return Plugin_Handled;
 		}
 		
-		return Plugin_Handled;	
+		return Plugin_Handled;
 	}
 	else if(g_bEnable == false || VotensAlltalkE_D == false)
 	{
-		CPrintToChat(client, "[{olive}VS{default}]投票被禁止");
+		CPrintToChat(client, "[{olive}VOTE{default}]投票被禁止");
 	}
 	return Plugin_Handled;
 }
@@ -558,14 +568,14 @@ public Action Command_VoteAlltalk2(int client, int args)
 		
 		if(CanStartVotes(client))
 		{
-			CPrintToChatAll("[{olive}VS{default}]{olive} %N {default}发起投票: {blue}关闭全体语音",client);
+			CPrintToChatAll("[{olive}VOTE{default}]{olive} %N {default}发起投票: {blue}关闭全体语音",client);
 			
 			for(int i=1; i <= MaxClients; i++) ClientVoteMenu[i] = true;
 			
 			g_voteType = view_as<voteType>(alltalk2);
 			char SteamId[35];
 			GetClientAuthId(client, AuthId_Steam2, SteamId, sizeof(SteamId));
-			LogMessage("%N(%s) starts a vote: turn off Alltalk!",  client, SteamId);//紀錄在log文件
+			LogMessage("%N(%s) 发起了一个投票: 关闭全体语音!",  client, SteamId);//紀錄在log文件
 			g_hVoteMenu = CreateMenu(Handler_VoteCallback, MENU_ACTIONS_ALL);
 			SetMenuTitle(g_hVoteMenu, "是否关闭全体语音吗?");
 			AddMenuItem(g_hVoteMenu, VOTE_YES, "是");
@@ -581,16 +591,17 @@ public Action Command_VoteAlltalk2(int client, int args)
 			return Plugin_Handled;
 		}
 		
-		return Plugin_Handled;	
+		return Plugin_Handled;
 	}
 	else if(g_bEnable == false || VotensAlltalk2E_D == false)
 	{
-		CPrintToChat(client, "[{olive}VS{default}]投票被禁止");
+		CPrintToChat(client, "[{olive}VOTE{default}]投票被禁止");
 	}
 	return Plugin_Handled;
 }
 public Action Command_VoteRestartmap(int client, int args)
 {
+	int iTeam = GetClientTeam(client);
 	if(g_bEnable == true 
 	&& VotensRestartmapE_D == true)
 	{
@@ -598,50 +609,59 @@ public Action Command_VoteRestartmap(int client, int args)
 		{
 			return Plugin_Handled;
 		}	
-
 		if(CanStartVotes(client))
 		{
-			CPrintToChatAll("[{olive}VS{default}]{olive} %N {default}发起了一个投票: {blue}重置当前地图",client);
-			
-			for(int i=1; i <= MaxClients; i++) ClientVoteMenu[i] = true;
+			CPrintToChatAll("[{olive}VOTE{default}]{olive} %N {default}发起了一个投票: {blue}重置当前地图 {default}, 只有游戏中的玩家才能参与投票",client);
+			for(int i = 1; i <= MaxClients; i++)
+			{
+				if (iTeam == 1){continue;}
+				else {ClientVoteMenu[i] = true;}
+			}
 			
 			g_voteType = view_as<voteType>(restartmap);
 			char SteamId[35];
 			GetClientAuthId(client, AuthId_Steam2, SteamId, sizeof(SteamId));
-			LogMessage("%N(%s) starts a vote: restartmap!",  client, SteamId);//紀錄在log文件
+			LogMessage("%N(%s) 发起了一个投票: 重置当前地图!",  client, SteamId);//紀錄在log文件
 			g_hVoteMenu = CreateMenu(Handler_VoteCallback, MENU_ACTIONS_ALL);
 			SetMenuTitle(g_hVoteMenu, "是否重置当前地图吗?");
 			AddMenuItem(g_hVoteMenu, VOTE_YES, "是");
 			AddMenuItem(g_hVoteMenu, VOTE_NO, "否");
 		
 			SetMenuExitButton(g_hVoteMenu, false);
-			VoteMenuToAll(g_hVoteMenu, 20);
+			DisplayVoteMenuToNotSpec(g_hVoteMenu, 20);
 			
-			EmitSoundToAll("ui/beep_synthtone01.wav");
+			for (int i=1; i<=MaxClients; i++)
+			{
+				if(IsClientConnected(i)&&IsClientInGame(i)&&!IsFakeClient(i))
+				{
+					if(iTeam == 1){continue;}
+						else{EmitSoundToClient(i,"ui/beep_synthtone01.wav");}
+				}
+			}
 		}
 		else
 		{
 			return Plugin_Handled;
 		}
 		
-		return Plugin_Handled;	
+		return Plugin_Handled;
 	}
 	else if(g_bEnable == false || VotensRestartmapE_D == false)
 	{
-		CPrintToChat(client, "[{olive}VS{default}]投票被禁止");
+		CPrintToChat(client, "[{olive}VOTE{default}]投票被禁止");
 	}
 	return Plugin_Handled;
 }
 public Action Command_VotesKick(int client, int args)
 {
-	if(client==0) return Plugin_Handled;		
+	if(client==0) return Plugin_Handled;
 	if(g_bEnable == true && g_bVotensKickED == true)
 	{
-		CreateVoteKickMenu(client);	
+		CreateVoteKickMenu(client);
 	}	
 	else if(g_bEnable == false || g_bVotensKickED == false)
 	{
-		CPrintToChat(client, "[{olive}VS{default}]已禁止踢出玩家");
+		CPrintToChat(client, "[{olive}VOTE{default}]已禁止踢出玩家");
 	}	
 	return Plugin_Handled;
 }
@@ -649,7 +669,7 @@ public Action Command_VotesKick(int client, int args)
 void CreateVoteKickMenu(int client)
 {	
 	int team = GetClientTeam(client);
-	Handle menu = CreateMenu(Menu_VotesKick);		
+	Handle menu = CreateMenu(Menu_VotesKick);
 	char name[MAX_NAME_LENGTH];
 	char playerid[32];
 	SetMenuTitle(menu, "请选择你要踢出的玩家");
@@ -660,13 +680,13 @@ void CreateVoteKickMenu(int client)
 			Format(playerid,sizeof(playerid),"%i",GetClientUserId(i));
 			if(GetClientName(i,name,sizeof(name)))
 			{
-				AddMenuItem(menu, playerid, name);						
+				AddMenuItem(menu, playerid, name);
 			}
-		}		
+		}
 	}
 	SetMenuExitBackButton(menu, true);
 	SetMenuExitButton(menu, true);
-	DisplayMenu(menu, client, MENU_TIME);	
+	DisplayMenu(menu, client, MENU_TIME);
 }
 public int Menu_VotesKick(Menu menu, MenuAction action, int param1, int param2)
 {
@@ -680,15 +700,15 @@ public int Menu_VotesKick(Menu menu, MenuAction action, int param1, int param2)
 		{
 			if (player == param1)
 			{
-				CPrintToChatAll("[{olive}VS{default}]你确定要踢你自己吗?请重新选择");
+				CPrintToChatAll("[{olive}VOTE{default}]你确定要踢你自己吗?请重新选择");
 				CreateVoteKickMenu(param1);
 				return 0;
 			}
 			
 			if(HasAccess(player, g_sKickImmueAccesslvl))
 			{
-				CPrintToChat(param1, "[{olive}VS{default}]该玩家无法被踢出，请重新选择你想踢出的玩家!");
-				CPrintToChat(player, "[{olive}VS{default}]{olive}%N{default}尝试投票将你踢出, 但你拥有权限无法踢出", param1);
+				CPrintToChat(param1, "[{olive}VOTE{default}]该玩家无法被踢出，请重新选择你想踢出的玩家!");
+				CPrintToChat(player, "[{olive}VOTE{default}]{olive}%N{default}尝试投票将你踢出, 但你拥有权限无法踢出", param1);
 				CreateVoteKickMenu(param1);
 			}
 			else
@@ -701,7 +721,7 @@ public int Menu_VotesKick(Menu menu, MenuAction action, int param1, int param2)
 		}	
 		else
 		{
-			CPrintToChatAll("[{olive}VS{default}]该玩家已不在游戏中, 请重新选择!");
+			CPrintToChatAll("[{olive}VOTE{default}]该玩家已不在游戏中, 请重新选择!");
 			CreateVoteKickMenu(param1);
 		}	
 	}
@@ -733,10 +753,12 @@ public void DisplayVoteKickMenu(int client)
 		char SteamId[35];
 		GetClientAuthId(client, AuthId_Steam2, SteamId, sizeof(SteamId));
 		LogMessage("%N(%s) 发起投票: 踢出 %s(%s)",  client, SteamId, kickplayer_name, kickplayer_SteamId);//紀錄在log文件
-		CPrintToChatAll("[{olive}VS{default}]{olive} %N {default}发起投票: {blue}踢出 %s", client, kickplayer_name);
+		int iTeam = GetClientTeam(client);
+		CPrintToChatAll("[{olive}VOTE{default}]{olive} %N {default}发起投票: {blue}踢出 %s {default}, 只有投票发起者的阵营才能参与投票", client, kickplayer_name);
 		
 		for(int i=1; i <= MaxClients; i++) 
-			ClientVoteMenu[i] = true;
+			if (IsClientConnected(i) && IsClientInGame(i) && GetClientTeam(i) == iTeam)
+				ClientVoteMenu[i] = true;
 		
 		g_voteType = view_as<voteType>(kick);
 		
@@ -745,9 +767,11 @@ public void DisplayVoteKickMenu(int client)
 		AddMenuItem(g_hVoteMenu, VOTE_YES, "是");
 		AddMenuItem(g_hVoteMenu, VOTE_NO, "否");
 		SetMenuExitButton(g_hVoteMenu, false);
-		VoteMenuToAll(g_hVoteMenu, 20);
+		DisplayVoteMenuToTeam(g_hVoteMenu, 20 , iTeam);
 		
-		EmitSoundToAll("ui/beep_synthtone01.wav");
+		for (int i=1; i<=MaxClients; i++)
+			if(IsClientConnected(i)&&IsClientInGame(i)&&!IsFakeClient(i)&&GetClientTeam(i) == iTeam)
+				EmitSoundToClient(i,"ui/beep_synthtone01.wav");
 	}
 	else
 	{
@@ -800,7 +824,7 @@ public Action Command_VotemapsMenu(int client, int args)
 	}
 	else if(g_bEnable == false || VotensMapE_D == false)
 	{
-		CPrintToChat(client, "[{olive}VS{default}]官图投票已禁止,请使用自带投票");
+		CPrintToChat(client, "[{olive}VOTE{default}]官图投票已禁止,请使用自带投票");
 	}
 	return Plugin_Handled;
 }
@@ -815,7 +839,7 @@ public Action Command_Votemaps2Menu(int client, int args)
 		}
 		Handle menu = CreateMenu(MapMenuHandler);
 	
-		SetMenuTitle(menu, "▲ Vote Custom Maps <%d map%s>", g_iCount, ((g_iCount > 1) ? "s": "") );
+		SetMenuTitle(menu, "▲ 选择三方图 <%d map%s>", g_iCount, ((g_iCount > 1) ? "s": "") );
 		for (int i = 0; i < g_iCount; i++)
 		{
 			AddMenuItem(menu, g_sMapinfo[i], g_sMapname[i]);
@@ -829,7 +853,7 @@ public Action Command_Votemaps2Menu(int client, int args)
 	}
 	else if(g_bEnable == false || VotensMap2E_D == false)
 	{
-		CPrintToChat(client, "[{olive}VS{default}]三方图投票已禁止,请使用自带投票");
+		CPrintToChat(client, "[{olive}VOTE{default}]三方图投票已禁止,请使用自带投票");
 	}
 	return Plugin_Handled;
 }
@@ -841,8 +865,8 @@ public int MapMenuHandler(Menu menu, MenuAction action, int client, int itemNum)
 		char info[32], name[64];
 		GetMenuItem(menu, itemNum, info, sizeof(info), _, name, sizeof(name));
 		votesmaps = info;
-		votesmapsname = name;	
-		DisplayVoteMapsMenu(client);		
+		votesmapsname = name;
+		DisplayVoteMapsMenu(client);
 	}
 	else if ( action == MenuAction_Cancel)
 	{
@@ -867,25 +891,34 @@ public void DisplayVoteMapsMenu(int client)
 	}
 	if(CanStartVotes(client))
 	{
-	
+		int iTeam = GetClientTeam(client);
 		char SteamId[35];
 		GetClientAuthId(client, AuthId_Steam2, SteamId, sizeof(SteamId));
 		LogMessage("%N(%s) 发起投票: 更换地图 %s",  client, SteamId,votesmapsname);//紀錄在log文件
-		CPrintToChatAll("[{olive}VS{default}]{olive} %N {default}发起投票: {blue}更换地图%s", client, votesmapsname);
-		
-		for(int i=1; i <= MaxClients; i++) ClientVoteMenu[i] = true;
+		CPrintToChatAll("[{olive}VOTE{default}]{olive} %N {default}发起投票: {blue}更换地图%s{default}, 只有游戏中的玩家才能参与投票", client, votesmapsname);
+		for(int i = 1; i <= MaxClients; i++)
+		{
+			if (iTeam == 1){continue;}
+			else {ClientVoteMenu[i] = true;}
+		}
 		
 		g_voteType = view_as<voteType>(map);
 		
 		g_hVoteMenu = CreateMenu(Handler_VoteCallback, MENU_ACTIONS_ALL);
-		//SetMenuTitle(g_hVoteMenu, "Vote to change map %s %s",votesmapsname, votesmaps);
 		SetMenuTitle(g_hVoteMenu, "是否更换地图: %s",votesmapsname);
 		AddMenuItem(g_hVoteMenu, VOTE_YES, "是");
 		AddMenuItem(g_hVoteMenu, VOTE_NO, "否");
 		SetMenuExitButton(g_hVoteMenu, false);
-		VoteMenuToAll(g_hVoteMenu, 20);
+		DisplayVoteMenuToNotSpec(g_hVoteMenu, 20);
 		
-		EmitSoundToAll("ui/beep_synthtone01.wav");
+		for (int i=1; i<=MaxClients; i++)
+		{
+			if(IsClientConnected(i)&&IsClientInGame(i)&&!IsFakeClient(i))
+			{
+				if(iTeam == 1){continue;}
+					else{EmitSoundToClient(i,"ui/beep_synthtone01.wav");}
+			}
+		}
 	}
 	else
 	{
@@ -895,25 +928,25 @@ public void DisplayVoteMapsMenu(int client)
 
 public Action Command_Votesforcespectate(int client, int args)
 {
-	if(client==0) return Plugin_Handled;		
+	if(client==0) return Plugin_Handled;
 	if(g_bEnable == true && g_bVotensForceSpectateED == true)
 	{
 		CreateVoteforcespectateMenu(client);
 	}	
 	else if(g_bEnable == false || g_bVotensForceSpectateED == false)
 	{
-		CPrintToChat(client, "[{olive}VS{default}]强制玩家旁观已被禁止");
+		CPrintToChat(client, "[{olive}VOTE{default}]强制玩家旁观已被禁止");
 	}
 	return Plugin_Handled;
 }
 
 void CreateVoteforcespectateMenu(int client)
 {	
-	Handle menu = CreateMenu(Menu_Votesforcespectate);		
+	Handle menu = CreateMenu(Menu_Votesforcespectate);
 	int team = GetClientTeam(client);
 	char name[MAX_NAME_LENGTH];
 	char playerid[32];
-	SetMenuTitle(menu, "plz choose player u want to forcespectate");
+	SetMenuTitle(menu, "请选择你要强制旁观的玩家");
 	for(int i = 1;i <= MaxClients; i++)
 	{
 		if(IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i)==team)
@@ -921,13 +954,13 @@ void CreateVoteforcespectateMenu(int client)
 			Format(playerid,sizeof(playerid),"%d",i);
 			if(GetClientName(i,name,sizeof(name)))
 			{
-				AddMenuItem(menu, playerid, name);				
+				AddMenuItem(menu, playerid, name);
 			}
 		}		
 	}
 	SetMenuExitBackButton(menu, true);
 	SetMenuExitButton(menu, true);
-	DisplayMenu(menu, client, MENU_TIME);	
+	DisplayMenu(menu, client, MENU_TIME);
 }
 public int Menu_Votesforcespectate(Menu menu, MenuAction action, int param1, int param2)
 {
@@ -939,7 +972,7 @@ public int Menu_Votesforcespectate(Menu menu, MenuAction action, int param1, int
 		forcespectateid = GetClientUserId(forcespectateid);
 		forcespectateplayername = name;
 		
-		DisplayVoteforcespectateMenu(param1);		
+		DisplayVoteforcespectateMenu(param1);
 	}
 	else if ( action == MenuAction_Cancel)
 	{
@@ -968,10 +1001,10 @@ public void DisplayVoteforcespectateMenu(int client)
 	{
 		char SteamId[35];
 		GetClientAuthId(client, AuthId_Steam2, SteamId, sizeof(SteamId));
-		LogMessage("%N(%s) starts a vote: forcespectate player %s", client, SteamId, forcespectateplayername);//紀錄在log文件
+		LogMessage("%N(%s) 发起投票: 强制玩家 %s 旁观", client, SteamId, forcespectateplayername);//紀錄在log文件
 		
 		int iTeam = GetClientTeam(client);
-		CPrintToChatAll("[{olive}VS{default}]{olive} %N {default}发起投票: {blue}强制玩家%s旁观{default}, 只有投票发起者的阵营能查看投票进度", client, forcespectateplayername);
+		CPrintToChatAll("[{olive}VOTE{default}]{olive} %N {default}发起投票: {blue}强制玩家%s旁观{default}, 只有投票发起者的阵营才能参与投票", client, forcespectateplayername);
 		
 		for(int i=1; i <= MaxClients; i++) 
 			if (IsClientConnected(i) && IsClientInGame(i) && GetClientTeam(i) == iTeam)
@@ -1013,6 +1046,25 @@ stock bool DisplayVoteMenuToTeam(Handle hMenu,int iTime, int iTeam)
     
     return VoteMenu(hMenu, iPlayers, iTotal, iTime, 0);
 }    
+
+stock bool DisplayVoteMenuToNotSpec(Handle hMenu,int iTime)
+{
+    int iTotal = 0;
+    int[] iPlayers = new int[MaxClients];
+    
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (!IsClientConnected(i) || !IsClientInGame(i) || IsFakeClient(i) || GetClientTeam(i) == 1)
+        {
+            continue;
+        }
+        
+        iPlayers[iTotal++] = i;
+    }
+    
+    return VoteMenu(hMenu, iPlayers, iTotal, iTime, 0);
+}    
+
 public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int param2)
 {
 	//==========================
@@ -1023,12 +1075,12 @@ public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int pa
 			case 0: 
 			{
 				Votey += 1;
-				//CPrintToChatAll("[{olive}TS{default}] %N {blue}has voted{default}.", param1);
+				CPrintToChatAll("[{olive}VOTE{default}] %N {blue}同意了该投票{default}.", param1);
 			}
 			case 1: 
 			{
 				Voten += 1;
-				//CPrintToChatAll("[{olive}TS{default}] %N {blue}has voted{default}.", param1);
+				CPrintToChatAll("[{olive}VOTE{default}] %N {blue}拒绝了该投票{default}.", param1);
 			}
 		}
 	}
@@ -1036,7 +1088,7 @@ public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int pa
 	{
 		if (param1>0 && param1 <=MaxClients && IsClientConnected(param1) && IsClientInGame(param1) && !IsFakeClient(param1))
 		{
-			//CPrintToChatAll("[{olive}TS{default}] %N {blue}abandons the vote{default}.", param1);
+			CPrintToChatAll("[{olive}VOTE{default}] %N {blue}放弃了该投票{default}.", param1);
 		}
 	}
 	//==========================
@@ -1056,7 +1108,7 @@ public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int pa
 	CheckVotes();
 	if (action == MenuAction_VoteCancel && param1 == VoteCancel_NoVotes)
 	{
-		CPrintToChatAll("[{olive}VS{default}]没有投票");
+		CPrintToChatAll("[{olive}VOTE{default}]没有投票");
 		g_votedelay = VOTEDELAY_TIME;
 		EmitSoundToAll("ui/beep_error01.wav");
 		CreateTimer(2.0, VoteEndDelay);
@@ -1069,7 +1121,7 @@ public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int pa
 			g_votedelay = VOTEDELAY_TIME;
 			CreateTimer(1.0, Timer_VoteDelay, _, TIMER_REPEAT| TIMER_FLAG_NO_MAPCHANGE);
 			EmitSoundToAll("ui/beep_error01.wav");
-			CPrintToChatAll("[{olive}VS{default}]{lightgreen}投票未通过 {default}至少需要{green}%d%%{default}的玩家同意。(同意： {green}%d%%{default}, 投票人数： {green}%i {default})", RoundToNearest(100.0*g_fLimit), RoundToNearest(100.0*percent), totalVotes);
+			CPrintToChatAll("[{olive}VOTE{default}]{lightgreen}投票未通过 {default}至少需要{green}%d%%{default}的玩家同意。(同意： {green}%d%%{default}, 投票人数： {green}%i {default})", RoundToNearest(100.0*g_fLimit), RoundToNearest(100.0*percent), totalVotes);
 			CreateTimer(2.0, VoteEndDelay);
 		}
 		else
@@ -1077,7 +1129,7 @@ public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int pa
 			g_votedelay = VOTEDELAY_TIME;
 			CreateTimer(1.0, Timer_VoteDelay, _, TIMER_REPEAT| TIMER_FLAG_NO_MAPCHANGE);
 			EmitSoundToAll("ui/menu_enter05.wav");
-			CPrintToChatAll("[{olive}VS{default}]{lightgreen}投票通过 {default}(同意：{green}%d%%{default}, 投票人数：{green}%i{default})", RoundToNearest(100.0*percent), totalVotes);
+			CPrintToChatAll("[{olive}VOTE{default}]{lightgreen}投票通过 {default}(同意：{green}%d%%{default}, 投票人数：{green}%i{default})", RoundToNearest(100.0*percent), totalVotes);
 			CreateTimer(2.0, VoteEndDelay);
 			CreateTimer(3.0, COLD_DOWN,_);
 		}
@@ -1102,14 +1154,14 @@ public Action Timer_forcespectate(Handle timer, any client)
 		if ( (GetClientTeam(client) == 3 || GetClientTeam(client) == 2))
 		{
 			ChangeClientTeam(client, 1);
-			CPrintToChat(client, "[{olive}VS{default}] 你已被投票强制旁观! 等待 {green}%d {default}秒后重新回到游戏.", g_iSpectatePenaltyCounter[client]);
+			CPrintToChat(client, "[{olive}VOTE{default}] 你已被投票强制旁观! 等待 {green}%d {default}秒后重新回到游戏.", g_iSpectatePenaltyCounter[client]);
 			bClientJoinedTeam = true;	//client tried to join the infected again when not allowed
 		}
 		else if(GetClientTeam(client) == 1 && IsClientIdle(client))
 		{
 			L4D_TakeOverBot(client);
 			ChangeClientTeam(client, 1);
-			CPrintToChat(client, "[{olive}VS{default}] 你已被投票强制旁观! 等待 {green}%d {default}秒后重新回到游戏.", g_iSpectatePenaltyCounter[client]);
+			CPrintToChat(client, "[{olive}VOTE{default}] 你已被投票强制旁观! 等待 {green}%d {default}秒后重新回到游戏.", g_iSpectatePenaltyCounter[client]);
 			bClientJoinedTeam = true;	//client tried to join the infected again when not allowed
 		}
 		g_iSpectatePenaltyCounter[client]--;
@@ -1124,7 +1176,7 @@ public Action Timer_forcespectate(Handle timer, any client)
 		}
 		if (GetClientTeam(client) == 1 && bClientJoinedTeam)
 		{
-			CPrintToChat(client, "[{olive}VS{default}]你现在可以按M回到队伍了");	//only print this hint text to the spectator if he tried to join the infected team, and got swapped before
+			CPrintToChat(client, "[{olive}VOTE{default}]你现在可以按M回到队伍了");	//only print this hint text to the spectator if he tried to join the infected team, and got swapped before
 		}
 		bClientJoinedTeam = false;
 		g_iSpectatePenaltyCounter[client] = FORCESPECTATE_PENALTY;
@@ -1137,7 +1189,7 @@ public Action Timer_forcespectate(Handle timer, any client)
 public void AnyHp()
 {
 	//CPrintToChatAll("[{olive}TS{default}] All players{blue}");
-	int flags = GetCommandFlags("give");	
+	int flags = GetCommandFlags("give");
 	SetCommandFlags("give", flags & ~FCVAR_CHEAT);
 	for (int i = 1; i <= MaxClients; i++)
 	{
@@ -1189,11 +1241,11 @@ bool TestVoteDelay(int client)
  	{
  		if (delay > 60)
  		{
- 			CPrintToChat(client, "[{olive}VS{default}]你必须等待{red}%i{default}秒后再发起投票!", delay % 60);
+ 			CPrintToChat(client, "[{olive}VOTE{default}]你必须等待{red}%i{default}秒后再发起投票!", delay % 60);
  		}
  		else
  		{
- 			CPrintToChat(client, "[{olive}VS{default}]你必须等待{red}%i{default}秒后再发起投票!", delay);
+ 			CPrintToChat(client, "[{olive}VOTE{default}]你必须等待{red}%i{default}秒后再发起投票!", delay);
  		}
  		return false;
  	}
@@ -1201,7 +1253,7 @@ bool TestVoteDelay(int client)
 	delay = GetVoteDelay();
  	if (delay > 0)
  	{
- 		CPrintToChat(client, "[{olive}VS{default}]你必须等待{red}%i{default}秒后再发起投票!", delay);
+ 		CPrintToChat(client, "[{olive}VOTE{default}]你必须等待{red}%i{default}秒后再发起投票!", delay);
  		return false;
  	}
 	return true;
@@ -1211,7 +1263,7 @@ bool CanStartVotes(int client)
 {
  	if(g_hVoteMenu  != INVALID_HANDLE || IsVoteInProgress())
 	{
-		CPrintToChat(client, "[{olive}VS{default}]已经有了一个投票正在进行中");
+		CPrintToChat(client, "[{olive}VOTE{default}]已经有了一个投票正在进行中");
 		return false;
 	}
 	int iNumPlayers;
@@ -1226,7 +1278,7 @@ bool CanStartVotes(int client)
 	}
 	if (iNumPlayers < g_iCvarPlayerLimit)
 	{
-		CPrintToChat(client, "[{olive}VS{default}]无法发起投票。需要{red}%d{default}个玩家", g_iCvarPlayerLimit);
+		CPrintToChat(client, "[{olive}VOTE{default}]无法发起投票。需要{red}%d{default}个玩家", g_iCvarPlayerLimit);
 		return false;
 	}
 	return true;
@@ -1265,7 +1317,7 @@ public Action COLD_DOWN(Handle timer,any client)
 		{
 			AnyHp();
 			//DisplayBuiltinVotePass(vote, "vote to give hp pass");
-			LogMessage("全体回血通过");	
+			LogMessage("全体回血通过");
 		}
 		case (view_as<voteType>(alltalk)):
 		{
@@ -1288,34 +1340,40 @@ public Action COLD_DOWN(Handle timer,any client)
 		case (view_as<voteType>(map)):
 		{
 			CreateTimer(5.0, Changelevel_Map);
-			CPrintToChatAll("[{olive}VS{default}]{green}5{default}秒后将切换地图为{blue}%s",votesmapsname);
+			CPrintToChatAll("[{olive}VOTE{default}]{green}5{default}秒后将切换地图为{blue}%s",votesmapsname);
 			//CPrintToChatAll("{blue}%s",votesmaps);
 			//DisplayBuiltinVotePass(vote, "Vote to change map pass");
 			LogMessage("更换地图 %s %s 通过",votesmaps,votesmapsname);
 		}
 		case (view_as<voteType>(kick)):
 		{
-			//DisplayBuiltinVotePass(vote, "Vote to kick player pass");						
-			CPrintToChatAll("[{olive}VS{default}]%s 已被投票踢出!", kickplayer_name);
+			//DisplayBuiltinVotePass(vote, "Vote to kick player pass");
+			CPrintToChatAll("[{olive}VOTE{default}]%s 已被投票踢出!", kickplayer_name);
 			LogMessage("投票踢出玩家%s通过",kickplayer_name);
 
 			int player = GetClientOfUserId(kickplayer_userid);
-			if(player && IsClientInGame(player)) KickClient(player, "你已被投票踢出");				
+			if(player && IsClientInGame(player)) KickClient(player, "你已被投票踢出");
 			ServerCommand("sm_addban 5 \"%s\" \"你已被投票踢出\" ", kickplayer_SteamId);
 		}
 		case (view_as<voteType>(forcespectate)):
 		{
 			forcespectateid = GetClientOfUserId(forcespectateid);
+			if(HasAccess(forcespectateid, g_sKickImmueAccesslvl))
+			{
+				CPrintToChatAll("[{olive}VOTE{default}]玩家%s因拥有权限而无法强制旁观!",forcespectateplayername);
+				LogMessage("玩家%s因拥有权限而无法强制旁观",forcespectateplayername);
+				return Plugin_Handled;
+			}
 			if(forcespectateid && IsClientInGame(forcespectateid))
 			{
-				CPrintToChatAll("[{olive}VS{default}]玩家{blue}%s{default}已被强制旁观!", forcespectateplayername);
-				ChangeClientTeam(forcespectateid, 1);								
+				CPrintToChatAll("[{olive}VOTE{default}]玩家{blue}%s{default}已被强制旁观!", forcespectateplayername);
+				ChangeClientTeam(forcespectateid, 1);
 				LogMessage("玩家%s已经被强制旁观",forcespectateplayername);
 				CreateTimer(1.0, Timer_forcespectate, forcespectateid, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE); // Start unpause countdown
 			}
 			else
 			{
-				CPrintToChatAll("[{olive}VS{default}]无法找到玩家%s", forcespectateplayername);	
+				CPrintToChatAll("[{olive}VOTE{default}]无法找到玩家%s", forcespectateplayername);
 			}
 		}
 	}

@@ -162,11 +162,11 @@ void SetTankHealth(int client, float Multiples, char[] sName)
 	RequestFrame(IsTankPrint, hPack);
 	if (RealSurvival()>4)
 	{
-		SetClientHealth(client, RoundFloat(Multiples * (RealSurvival() - 4 * g_iTankHealth)));
+		SetClientHealth(client, RoundFloat(Multiples * (4000 + (RealSurvival() - 4) * g_iTankHealth)));
 	}
 	else
 	{
-		SetClientHealth(client, RoundFloat(Multiples * g_iTankHealth)));
+		SetClientHealth(client, RoundFloat(Multiples * 4000));
 	}
 }
 
@@ -185,7 +185,7 @@ void IsTankPrint(DataPack hPack)
 	if(IsValidTank(client) && g_iTankPrompt != 0)
 	{
 		if(g_iTankPrompt & PrintChat)
-			PrintToChatAll("\x04[提示]\x03坦克%s\x05出现\x04,\x05难度\x04:\x03%s\x04,\x05总共\x03%d\x05名幸存者,血量\x04:\x03%d", GetSurvivorName(client, true), sName, IsCountPlayersTeam(), GetEntProp(client, Prop_Data, "m_iMaxHealth"));//聊天窗提示.
+			PrintToChatAll("\x04[提示]\x03坦克%s\x05出现\x04,\x05难度\x04:\x03%s\x04,\x05总共\x03%d\x05名幸存者,血量\x04:\x03%d", GetSurvivorName(client, true), sName, RealSurvival(), GetEntProp(client, Prop_Data, "m_iMaxHealth"));//聊天窗提示.
 		if(g_iTankPrompt & PrintHint)
 			PrintHintTextToAll("坦克%s出现,难度:%s ,总共%d名幸存者,血量:%d", GetSurvivorName(client, false), sName, RealSurvival(), GetEntProp(client, Prop_Data, "m_iMaxHealth"));//屏幕中下提示.
 	}
@@ -256,8 +256,14 @@ int RealSurvival()
 {
 	int iCount;
 	for (int i = 1; i <= MaxClients; i++)
-		if (IsClientInGame(i) && GetClientTeam(i) && IsPlayerAlive(i) == 2)
-			iCount++;
-	
+	{
+		if (IsClientInGame(i) && GetClientTeam(i) == 2)
+		{
+			if(IsPlayerAlive(i))
+			{
+				iCount++;
+			}
+		}
+	}
 	return iCount;
 }

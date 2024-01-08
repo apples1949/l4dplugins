@@ -103,8 +103,8 @@ public void OnPluginStart()
 
 	g_hAfkWarnSpecTime 		= CreateConVar("l4d_specafk_warnspectime", "10", "游戏中检测到闲置后多少秒出现警告提示", FCVAR_NOTIFY, true, 0.0);
 	g_hAfkSpecTime 			= CreateConVar("l4d_specafk_spectime", "15", "警告后多少秒强制旁观", FCVAR_NOTIFY, true, 0.0);
-	g_hAfkWarnKickTime	 	= CreateConVar("l4d_specafk_warnkicktime", "60", "旁观检测到闲置后多少秒出现警告提示", FCVAR_NOTIFY, true, 0.0);
-	g_hAfkKickTime 			= CreateConVar("l4d_specafk_kicktime", "30", "旁观警告后多少秒踢出", FCVAR_NOTIFY, true, 0.0);
+	g_hAfkWarnKickTime	 	= CreateConVar("l4d_specafk_warnkicktime", "0", "旁观检测到闲置后多少秒出现警告提示", FCVAR_NOTIFY, true, 0.0);
+	g_hAfkKickTime 			= CreateConVar("l4d_specafk_kicktime", "15", "旁观警告后多少秒踢出", FCVAR_NOTIFY, true, 0.0);
 	g_hAfkCheckInterval 	= CreateConVar("l4d_specafk_checkinteral", "1", "多少秒检测所有玩家是否闲置", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_hAfkKickEnabled 		= CreateConVar("l4d_specafk_kickenabled", "1", "如果为1，则旁观闲置时踢出服务器", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_hAfkSaferoomIgnore 	= CreateConVar("l4d_specafk_saferoom_ignore", "1", "如果为1, 即使玩家在安全区域时仍然强制旁观并踢出服务器", FCVAR_NOTIFY, true, 0.0, true, 1.0);
