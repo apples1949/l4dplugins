@@ -31,8 +31,8 @@ public Plugin myinfo = {
 
 public void OnPluginStart() {
     /*
-        - While in edit mode, ladders you are aiming at can be selected using MOUSE1 and moved using MOUSE2 or WASD, USE, and RELOAD.
-        - TAB to toggle edit mode. SHIFT to rotate ladders in 90 degree increments.
+    - 在编辑模式下,可以使用鼠标 1 选择所瞄准的梯子,使用鼠标右键或WASD键、E键和R键移动梯子.
+    - TAB键切换编辑模式.SHIFT键以90度为增量旋转梯子。
     */
 
     RegConsoleCmd("sm_edit", Command_Edit, "开启或关闭编辑模式");
@@ -344,10 +344,10 @@ public Action Command_Step(int client, int args)
     int size = StringToInt(x);
     if (size > 0) {
         stepSize[client] = size * 1.0;
-        PrintToChat(client, "Step size set to（步长设置为） %i.", size);
+        PrintToChat(client, "设置的每次移动梯子距离为 %i.", size);
     }
     else {
-        PrintToChat(client, "Step size must be greater than（歩长必须大于） 0.");
+        PrintToChat(client, "设置的每次移动梯子距离必须大于 0.");
     }
     return Plugin_Handled;
 }
