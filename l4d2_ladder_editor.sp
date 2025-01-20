@@ -31,8 +31,8 @@ public Plugin myinfo = {
 
 public void OnPluginStart() {
     /*
-    - 在编辑模式下,可以使用鼠标 1 选择所瞄准的梯子,使用鼠标右键或WASD键、E键和R键移动梯子.
-    - TAB键切换编辑模式.SHIFT键以90度为增量旋转梯子。
+    - 在编辑模式下,可以使用鼠标左键选择所瞄准的梯子,使用鼠标右键或WASD键、E键和R键移动梯子.
+    - TAB键切换编辑模式.SHIFT键以90度为增量旋转梯子.
     */
 
     RegConsoleCmd("sm_edit", Command_Edit, "开启或关闭编辑模式");
