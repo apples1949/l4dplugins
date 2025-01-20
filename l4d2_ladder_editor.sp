@@ -396,7 +396,7 @@ public Action Command_Kill(int client, int args)
         char key[8];
         IntToString(entity, key, 8);
         hLadders.Remove(key);
-        PrintToChat(client, "在 %i, %s at (%.2f,%.2f,%.2f). 位置: (%.2f,%.2f,%.2f). 法线: (%.2f,%.2f,%.2f) 删除梯子实体实体", entity, modelname, position[0], position[1], position[2], origin[0], origin[1], origin[2], normal[0], normal[1], normal[2]);
+        PrintToChat(client, "在 (%.2f,%.2f,%.2f). 原点: (%.2f,%.2f,%.2f). 法线: (%.2f,%.2f,%.2f) 删除梯子实体 %i(%s)", position[0], position[1], position[2], origin[0], origin[1], origin[2], normal[0], normal[1], normal[2], entity, modelname);
     }
     else {
         PrintToChat(client, "没有选择梯子实体.");
