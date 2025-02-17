@@ -26,7 +26,7 @@ public Plugin myinfo = {
     author = "devilesk",
     version = "0.5.0.1",
     description = "Clone and move special infected ladders.",
-    url = "https://github.com/devilesk/rl4d2l-plugins"
+    url = "https://github.com/dragokas/rl4d2l-plugins/blob/master/l4d2_ladder_editor.sp"
 };
 
 public void OnPluginStart() {
@@ -46,7 +46,7 @@ public void OnPluginStart() {
     RegConsoleCmd("sm_info", Command_Info, "将梯子实体信息输出在控制台以便手动复制到stripper保存");
     RegConsoleCmd("sm_togglehud", Command_ToggleHud, "切换选定的梯子信息HUD的开启或关闭");
     RegConsoleCmd("sm_team", Command_Team, "sm_team <team> - 改变团队所能使用的阶梯");
-    //RegConsoleCmd("sm_create", Command_Create, "创建一个梯子(原插件禁用，请谨慎使用)"); // TODO
+    //RegConsoleCmd("sm_create", Command_Create, "创建一个梯子(原插件未完成)"); // TODO
     
     HookEvent("player_team", PlayerTeam_Event);
     hLadders = new StringMap();
@@ -62,7 +62,7 @@ public void OnPluginStart() {
     }
     CreateTimer(HUD_DRAW_INTERVAL, HudDrawTimer, _, TIMER_REPEAT);
 }
-
+/*
 public Action Command_Create(int client, int args)
 {
     float pos[3];
@@ -85,7 +85,7 @@ public Action Command_Create(int client, int args)
     PrintToChat(client, "已创建梯子实体. 索引: %i", entity);    
     return Plugin_Handled;
 }
-
+*/
 public Action Command_Team(int client, int args)
 {
     if (args < 1)
